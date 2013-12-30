@@ -47,47 +47,53 @@ The assignment will consist of the following development phases.  The consultant
 
 ### Deliverable I - (November-March 2013): Design of Web-Based Application and Mobile or Tablet Data Collection Tool.
 
-A. Mobile form customization
-B. Transfer Existing Project Data to Maps (Geo-Data Migration)
-C.  Create a custom dashboard for project management and data sharing between partners
+1. Mobile form customization
+2. Transfer Existing Project Data to Maps (Geo-Data Migration)
+3.  Create a custom dashboard for project management and data sharing between partners
 
-### Deliverable II – (April 2013): MIS Integration & Final Reporting & Recommendations for Scaling.
+### Deliverable II – (April 2013): MIS Integration & Final Reporting &  Recommendations for Scaling.
 
-Analysis of MIS Integration needs
-Exporting collected data out for input into MIS.
-Importing data from MIS (in CSV format) into WKCDD dashboard.
+* Analysis of MIS Integration needs
+* Exporting collected data out for input into MIS.
+* Importing data from MIS (in CSV format) into WKCDD dashboard.
 
 After analyzing the MIS integration needs, export the collected data for input into MIS and import appropriate data from the MIS into the WKCDD dashboard.
 
 Create and submit a final report outlining the full range of work and methodologies deployed including the participatory design process and agile software development processes. This should include photos, lessons learned, stumbling blocks, etc. and suggested steps for scaling up.
 
 
-SPECIFIC INPUTS TO BE PRESENTED BY THE CLIENT
+## SPECIFIC INPUTS TO BE PRESENTED BY THE CLIENT
 
-Phase 1
-Mobile form customization
+### Phase 1
+**Mobile form customization**
 Development/modification of mobile data collection forms as needed. 
-Geo-Data Migration
+
+**Geo-Data Migration**
 Migration of existing WKCDD mapped project data into new system where continuous mapping of new and existing projects can take place.
-Create a custom dashboard for project management and data sharing between partners
-Ability to view the locations of each project on a map.  Click on it and view the basic details of the project (including potentially some generated indicators).
-Ability to assign a different type of icon/map marker per project type.  Introduce idea of picking icons and multiple layers per map.
-Ability to view projects filtered by a property (different colours).
-Ability to view the indicators aggregated at a District, County and Sub-County Level in a data table or chloropleth map
-Hold on data before it is released.  Ability to view and vet data (say for 2 weeks on a monthly report) before it is released to the “live” dashboard.
-Work with WKCDD to program dynamic indicators, which will be generated from the data collection forms.
-Ability to view the indicators on a monthly or quarterly basis. Ability to show changes over time for an indicator at a particular aggregation level.
-Ability to print maps for hand-out to the communities.
-Simple leader board system, allowing you to compare project indicators/scores across projects/regions.  Web based view optimized for mobile.
-Dashboard design localized to WKCDD branding requirements.
+
+**Create a custom dashboard for project management and data sharing between partners**
+
+* Ability to view the locations of each project on a map.  Click on it and view the basic details of the project (including potentially some generated indicators).
+* Ability to assign a different type of icon/map marker per project type.  Introduce idea of picking icons and multiple layers per map.
+* Ability to view projects filtered by a property (different colours).
+* Ability to view the indicators aggregated at a District, County and Sub-County * Level in a data table or chloropleth map
+* Hold on data before it is released.  Ability to view and vet data (say for 2 weeks on a monthly report) before it is released to the “live” dashboard.
+* Work with WKCDD to program dynamic indicators, which will be generated from the data collection forms.
+* Ability to view the indicators on a monthly or quarterly basis. Ability to show changes over time for an indicator at a particular aggregation level.
+* Ability to print maps for hand-out to the communities.
+* Simple leader board system, allowing you to compare project indicators/scores across projects/regions.  Web based view optimized for mobile.
+* Dashboard design localized to WKCDD branding requirements.
 General Project Management / Client support
 
-Phase 2
-MIS Integration
-Analysis of MIS Integration needs
-Exporting collected data out for input into MIS.
-Importing data from MIS (in CSV format) into WKCDD dashboard.
-Final Reporting & Recommendations for Scaling
+### Phase 2
+**MIS Integration**
+
+* Analysis of MIS Integration needs
+* Exporting collected data out for input into MIS.
+* Importing data from MIS (in CSV format) into WKCDD dashboard.
+
+**Final Reporting & Recommendations for Scaling**
+
 Create and submit a final report outlining the full range of work done on the project. This should include photos, lessons learned, stumbling blocks, etc. and suggested steps for scaling up.
 
 The selected individuals are expected to spend most of the time on the ground Kenya, working closely with the main stakeholders: WB team, Office of the President - Ministry of State for Special Programs, and relevant community-driven development committees (CDDC’s).
