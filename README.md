@@ -2,11 +2,21 @@
 
 ## Project Background and Objectives
 
-The objective of this assignment is to support the Government of Kenya (GoK) in the development a citizen-driven, ICT-enabled system for enhancing Western Kenya CDD and Flood Mitigation Project monitoring and supervision at the sub-county and community level and governance at the community level.  The process aims to 1) enhance the ability to monitor, compare and disseminate sub-projects/sublocations results-based framework performance, link performance to funding and analyze beneficiary details (male/female, absolute poor, etc.); 2) improve social accountability measures at the community level to ensure that community leaders are held accountable by community members. 3) roll out a strategy to make the existing mapping mechanism a living system that is embedded in project implementation and that can self sustained by project teams. The ICT tools used should be built on a technology platform that takes advantage of the existing online mapping platform employed by the project, and that, to the extent possible, interfaces with (and does not duplicate) the project’s management information system.
+The objective of this assignment is to support the Government of Kenya (GoK) in the development a citizen-driven, ICT-enabled system for enhancing Western Kenya CDD and Flood Mitigation Project monitoring and supervision at the sub-county and community level and governance at the community level. 
+The process aims to:
 
-The intermediate objectives are to i) adapt functionality of existing digital maps to include  results; ii) develop a mobile or tablet based, open source, crowd-sourcing mechanism that allows designated  CDDC representatives to track and report results as well as funding levels received; iii) transfer capacity through training for maintaining and updating map information. 
+1. Enhance the ability to monitor, compare and disseminate sub-projects/sub-locations results-based framework
+performance, link performance to funding and analyze beneficiary details (male/female, absolute poor, etc.); 
+1.  Improve social accountability measures at the community level to ensure that community leaders are held accountable by community members.
+1. Roll out a strategy to make the existing mapping mechanism a living system that is embedded in project implementation and that can self sustained by project teams. The ICT tools used should be built on a technology platform that takes advantage of the existing online mapping platform employed by the project, and that, to the extent possible, interfaces with (and does not duplicate) the project’s management information system.
 
-The system and ICT tools are to be developed in participatory design process working directly with the local project counterparts. While general initial requirements are laid out in this document, it is expected that the design process coupled with an agile software development approach will lead to the specific requirements of the final functioning system and ICT tool. 
+The intermediate objectives are to:
+
+* Adapt functionality of existing digital maps to include results. 
+* Develop a mobile or tablet based, open source, crowd-sourcing mechanism that allows designated CDDC representatives to track and report results as well as funding levels received.
+* Transfer capacity through training for maintaining and updating map information.
+
+The system and ICT tools are to be developed in participatory design process working directly with the local project counterparts. While general initial requirements are laid out in this document, it is expected that the design process coupled with an agile software development approach will lead to the specific requirements of the final functioning system and ICT tool.
 
 
 ## SCOPE OF WORK 
@@ -18,7 +28,7 @@ The Project Development Objective (PDO) is to empower local communities to engag
 The PDO will be achieved through key outcomes namely:
 * Empowered communities that can manage their own development in a sustainable and socially inclusive manner.
 * Reduced vulnerability of the community to adverse outcomes associated with recurrent flooding.
-* Ensured smooth implementation of the project.  
+* Ensured smooth implementation of the project. 
 
 The project has three components through which activities are implemented. 
 
