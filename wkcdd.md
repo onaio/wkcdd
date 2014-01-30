@@ -1,4 +1,11 @@
-### WKCDD Project Subsectors
+### WKCDD Projects
+
+The formhub account credentials:
+
+  **username**: wkcdd
+
+  **password**: community$$1
+
 
 * [WKCDD project subsectors](https://docs.google.com/a/ona.io/document/d/1GjtlN0dVBcLOKB0hQorh8-rk4rHfWKg5ck3U6ObBsFU/edit?usp=sharing).
 
