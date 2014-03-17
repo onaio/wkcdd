@@ -7,13 +7,12 @@ from sqlalchemy import engine_from_config
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
-    )
+)
 
-from ..models import (
+from wkcdd.models.base import (
     DBSession,
-    MyModel,
     Base,
-    )
+)
 
 
 def usage(argv):

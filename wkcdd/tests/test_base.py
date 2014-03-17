@@ -13,7 +13,7 @@ from sqlalchemy import engine_from_config
 from webtest import TestApp
 
 from wkcdd import main
-from wkcdd.models import (
+from wkcdd.models.base import (
     DBSession,
     Base)
 

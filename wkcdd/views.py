@@ -13,9 +13,8 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-from .models import (
+from wkcdd.models.base import (
     DBSession,
-    MyModel,
     )
 
 
