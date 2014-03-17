@@ -110,3 +110,16 @@ The selected individuals are expected to spend most of the time on the ground Ke
 
 As a next step, this map based information system will be also used by project teams as tool to monitor policies implemented to respond citizen demands  in the selected LGs which in turn would provide citizens with tools to monitor and provide feedback on rural upgrading projects and account policy makers.  
 
+WKCDD INSTALLATION
+==================
+
+Getting Started
+---------------
+
+- cd <directory containing this file>
+
+- $venv/bin/python setup.py develop
+
+- $venv/bin/initialize_wkcdd_db development.ini
+
+- $venv/bin/pserve development.ini
