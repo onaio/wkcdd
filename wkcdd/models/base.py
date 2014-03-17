@@ -3,25 +3,15 @@ from pyramid.security import (
     Authenticated,
     ALL_PERMISSIONS
 )
-from sqlalchemy import (
-    Column,
-    Index,
-    Integer,
-    Text,
-    )
-
-from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
-    )
-
+)
+from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
 
-
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
 
 
 class RootFactory(object):
@@ -45,14 +35,21 @@ class BaseModelFactory(object):
         return RootFactory(self.request)
 
 
-class MyModel(Base):
-    __tablename__ = 'models'
-    id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    value = Column(Integer)
+class BaseModel(object):
+    @classmethod
+    def newest(cls):
+        return DBSession.query(cls).order_by(desc(cls.id)).first()
 
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+    @classmethod
+    def get(cls, *criterion):
+        return DBSession.query(cls).filter(*criterion).one()
 
-Index('my_index', MyModel.name, unique=True, mysql_length=255)
+    @classmethod
+    def all(cls, *criterion):
+        return DBSession.query(cls).filter(*criterion).all()
+
+    @classmethod
+    def count(cls, *criterion):
+        return DBSession.query(cls).filter(*criterion).count()
+
+Base = declarative_base(cls=BaseModel)

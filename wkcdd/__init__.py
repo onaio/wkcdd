@@ -6,10 +6,9 @@ from sqlalchemy import engine_from_config
 
 from wkcdd.security import group_finder, pwd_context
 
-from wkcdd.models import (
+from wkcdd.models.base import (
     DBSession,
-    Base,
-    )
+    Base)
 
 
 def main(global_config, **settings):
