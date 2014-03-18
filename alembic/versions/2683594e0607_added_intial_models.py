@@ -28,12 +28,19 @@ def upgrade():
     sa.Column('geolocation', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('projects',
+    sa.Column('project_code', sa.String(), autoincrement=False, nullable=False),
+    sa.Column('name', sa.Text(), nullable=False),
+    sa.Column('community_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['community_id'], ['communities.id'], ),
+    sa.PrimaryKeyConstraint('project_code')
+    )
     op.create_table('reports',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('project_id', sa.String(), nullable=False),
     sa.Column('report_date', sa.DateTime(timezone=True), nullable=False),
     sa.Column('report_data', postgresql.JSON(), nullable=False),
-    sa.ForeignKeyConstraint(['project_id'], ['location_types.id'], ),
+    sa.ForeignKeyConstraint(['project_id'], ['projects.project_code'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('locations',
@@ -43,13 +50,6 @@ def upgrade():
     sa.Column('location_type', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['location_type'], ['location_types.id'], ),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('projects',
-    sa.Column('project_code', sa.String(), autoincrement=False, nullable=False),
-    sa.Column('name', sa.Text(), nullable=False),
-    sa.Column('community_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['community_id'], ['communities.id'], ),
-    sa.PrimaryKeyConstraint('project_code')
     )
     ### end Alembic commands ###
 
