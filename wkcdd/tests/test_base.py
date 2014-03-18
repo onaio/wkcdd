@@ -2,7 +2,6 @@ import os
 import unittest
 import transaction
 
-from webob.multidict import MultiDict
 from pyramid.registry import Registry
 from pyramid import testing
 from pyramid.paster import (
@@ -16,7 +15,10 @@ from wkcdd import main
 from wkcdd.models.base import (
     DBSession,
     Base)
-
+from wkcdd.models.location import (
+    Location,
+    LocationType
+)
 
 SETTINGS_FILE = 'test.ini'
 settings = get_appsettings(SETTINGS_FILE)
@@ -37,6 +39,25 @@ class TestBase(unittest.TestCase):
     def tearDown(self):
         DBSession.remove()
         testing.tearDown()
+
+    def setup_test_data(self):
+        location_type1 = LocationType(name="constituency")
+        location_type2 = LocationType(name="sub-county")
+        location_type3 = LocationType(name="county")
+
+        location1 = Location(name="Kakamega",
+                             parent_id=1,
+                             location_type=location_type1.id)
+        location2 = Location(name="Bungoma",
+                             parent_id=1,
+                             location_type=location_type2.id)
+        location3 = Location(name="Busia",
+                             parent_id=1,
+                             location_type=location_type3.id)
+
+        with transaction.manager:
+            DBSession.add_all([location_type1, location_type2, location_type3,
+                               location1, location2, location3])
 
 
 class IntegrationTestBase(TestBase):

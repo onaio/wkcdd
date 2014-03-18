@@ -1,6 +1,4 @@
 from wkcdd.tests.test_base import (
-    TestBase,
-    IntegrationTestBase,
     FunctionalTestBase)
 
 

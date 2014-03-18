@@ -7,7 +7,7 @@ from sqlalchemy import (
 )
 
 
-class Locations(Base):
+class Location(Base):
     __tablename__ = 'locations'
     id = Column(Integer, primary_key=True)
     name = Column(Text)

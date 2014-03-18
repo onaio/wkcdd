@@ -2,20 +2,12 @@ from pyramid.security import authenticated_userid
 from pyramid.response import Response
 from pyramid.view import (
     view_config,
-    view_defaults,
     forbidden_view_config,
     render_view
 )
 from pyramid.httpexceptions import (
-    HTTPUnauthorized,
     HTTPForbidden,
 )
-
-from sqlalchemy.exc import DBAPIError
-
-from wkcdd.models.base import (
-    DBSession,
-    )
 
 
 @forbidden_view_config()

@@ -1,7 +1,6 @@
 from pyramid import testing
 
 from wkcdd.tests.test_base import (
-    TestBase,
     IntegrationTestBase,
     FunctionalTestBase)
 from wkcdd.views import home

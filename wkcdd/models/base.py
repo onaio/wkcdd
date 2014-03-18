@@ -10,6 +10,7 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
+from sqlalchemy.sql.expression import desc
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
