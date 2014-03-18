@@ -8,9 +8,9 @@ from sqlalchemy import (
 
 class Community(Base):
     __tablename__ = 'communities'
-    id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    constituency_id = Column(Integer)
-    geolocation = Column(Text)
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(Text, nullable=False)
+    constituency_id = Column(Integer, nullable=False)
+    geolocation = Column(Text, nullable=False)
 
     #TODO Possibly use postgis for geolocation
