@@ -3,7 +3,7 @@ from pyramid import testing
 from wkcdd.tests.test_base import (
     IntegrationTestBase,
     FunctionalTestBase)
-from wkcdd.views import private
+from wkcdd.views.default_views import private
 
 
 class TestPrivateView(IntegrationTestBase):

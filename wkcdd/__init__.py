@@ -38,9 +38,11 @@ def main(global_config, **settings):
 
 def includeme(config):
     config.include('pyramid_jinja2')
+    config.add_jinja2_search_path("wkcdd:templates")
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')
+    config.add_route('projects', '/projects')
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
     config.scan()
