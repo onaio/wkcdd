@@ -6,7 +6,6 @@ from pyramid.view import (
 )
 
 from wkcdd.models.project import (
-    Project,
     ProjectType
 )
 from wkcdd.models.form import(
@@ -25,7 +24,9 @@ class ProjectViews(object):
         #TODO fetch all raw data and save to tables to process key indicators
         project_types = ProjectType.all()
         registration_form_id = Form.get_registration_form_id()
-        headers = {'Authorization': 'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'}
+        headers = {'Authorization':
+                   'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'
+                   }
         ona_rest_api = 'https://ona.io/api/v1/data/wkcdd/'
         form_data_url = ona_rest_api + registration_form_id
         response = requests.get(

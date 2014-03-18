@@ -13,7 +13,9 @@ class Form(Base):
     __tablename__ = 'forms'
     form_id = Column(String, primary_key=True, nullable=False)
     form_name = Column(String, nullable=False)
-    project_type_id = Column(Integer, ForeignKey('project_type.id'), nullable=False)
+    project_type_id = Column(Integer,
+                             ForeignKey('project_type.id'),
+                             nullable=False)
     form_type_id = Column(Integer, ForeignKey('form_types.id'), nullable=False)
     form_data = Column(JSON, nullable=False)
 
@@ -33,4 +35,4 @@ class Form(Base):
 class FormTypes(Base):
     __tablename__ = 'form_types'
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String,nullable=False)
+    name = Column(String, nullable=False)

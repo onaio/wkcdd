@@ -152,9 +152,11 @@ class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
             # Prevent browsers from MIME-sniffing the content-type:
             self.response.headers['X-Content-Type-Options'] = 'nosniff'
             # Cache for the expiration time:
-            self.response.headers['Cache-Control'] = 'public,max-age=%d' % EXPIRATION_TIME
+            self.response.headers['Cache-Control'] = \
+                'public,max-age=%d' % EXPIRATION_TIME
             # Send the file forcing a download dialog:
-            self.send_blob(key, save_as=filename, content_type='application/octet-stream')
+            self.send_blob(key, save_as=filename,
+                           content_type='application/octet-stream')
 
 app = webapp2.WSGIApplication(
     [

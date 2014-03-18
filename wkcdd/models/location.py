@@ -12,7 +12,9 @@ class Location(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
     parent_id = Column(Integer, nullable=False)
-    location_type = Column(Integer, ForeignKey('location_types.id'), nullable=False)
+    location_type = Column(Integer,
+                           ForeignKey('location_types.id'),
+                           nullable=False)
 
 
 class LocationType(Base):
