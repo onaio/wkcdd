@@ -7,7 +7,7 @@ from wkcdd import constants
 class TestUtil(TestBase):
     def test_populate_projects_table(self):
         count = Project.count()
-        utils.populate_projects_table(constants.DAIRY_COWS_PROJECT_REGISTRATION)
+        utils.populate_projects_table()
         self.assertGreater(Project.count(), count)
 
     def test_fetch_data(self):
