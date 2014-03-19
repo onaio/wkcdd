@@ -26,3 +26,15 @@ class ProjectType(Base):
     __tablename__ = 'project_type'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
+
+    @classmethod
+    def get_or_create(cls, name):
+         # check if exists
+        try:
+            project_type = ProjectType.get(name=name)
+        except Exception:
+            project_type = ProjectType(name=name)
+            project_type.save()
+        # If not exist, create project_type
+        # return project_type object
+        return project_type
