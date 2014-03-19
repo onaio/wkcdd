@@ -7,9 +7,10 @@ COUNT_SUB_COUNTIES = 'county_sub_counties'
 COUNTY_CONSTITUENCY = 'county_contituency'
 COUNTY = 'county'
 DATE_COMPILED = 'photo_signatures/date_compiled'
+GEOLOCATION = 'project_location'
 
-PROJECT_REGISTRATION = 'dairy_cows_project_registration3'
-PROJECT_REPORT = 'dairy_cows_project_report'
+DAIRY_COWS_PROJECT_REGISTRATION = 'dairy_cows_project_registration3'
+DAIRY_COWS_PROJECT_REPORT = 'dairy_cows_project_report'
 
 
 PERFOANCE_INDICATORS =('Excpect')
