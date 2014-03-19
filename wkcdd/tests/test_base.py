@@ -107,8 +107,13 @@ class TestBase(unittest.TestCase):
                            community_id=2,
                            project_type_id=2
                            )
+        project3 = Project(project_code="TGIF",
+                           name="Dairy Cow Center 2",
+                           community_id=2,
+                           project_type_id=1
+                           )
         with transaction.manager:
-            DBSession.add_all([project1, project2])
+            DBSession.add_all([project1, project2, project3])
 
         form_type1 = FormTypes(id=1,
                                name="registration")

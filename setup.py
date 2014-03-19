@@ -23,7 +23,8 @@ requires = [
     # TODO: add pyramid_exc_logger
     'passlib',
     'Babel',
-    'lingua'
+    'lingua',
+    'requests'
 ]
 
 setup(name='wkcdd',
