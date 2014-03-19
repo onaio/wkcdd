@@ -17,9 +17,9 @@ class Location(Base):
                            nullable=False)
 
     @classmethod
-    def get__or_create(cls, name, location_type):
+    def get_or_create(cls, name, location_type):
 
-        location_type = LocationType.get__or_create(location_type)
+        location_type = LocationType.get_or_create(location_type)
         #check if exists
         try:
             location = Location.get(name=name, location_type=location_type.id)
@@ -35,11 +35,12 @@ class LocationType(Base):
         id = Column(Integer, primary_key=True, nullable=False)
         name = Column(Text, nullable=False)
 
-        def get__or_create(cls, name):
+        @classmethod
+        def get_or_create(cls, name):
             try:
                 location_type = LocationType.get(name=name)
             except Exception:
                 location_type = LocationType(name=name)
-                LocationType.save()
+                location_type.save()
 
             return location_type

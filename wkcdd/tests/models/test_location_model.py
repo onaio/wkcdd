@@ -14,3 +14,9 @@ class TestLocation(TestBase):
 
         self.assertEquals(location1.name, "Kakamega")
         self.assertEquals(location_type1.name, "constituency")
+
+    def test_save_location_type(self):
+        count = LocationType.count()
+        location = LocationType(name='TestLocation')
+        location.save()
+        self.assertEquals(count+1, LocationType.count())

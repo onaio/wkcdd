@@ -1,6 +1,6 @@
 XFORM_ID = '_xform_id_string'
 COMMUNITY_NAME = 'p_name'
-PROJECT_CODE = 'perfomance_summary/dc_projects'
+PROJECT_CODE = 'dc_projects'
 PROJECT_TYPE = 'projecttype'
 COUNTY_COUNTIES = 'county_counties'
 COUNT_SUB_COUNTIES = 'county_sub_counties'

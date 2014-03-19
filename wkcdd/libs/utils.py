@@ -22,7 +22,7 @@ def fetch_data(form_id):
     return raw_data
 
 
-def populate_projects_table(form_id, raw_data):
+def populate_projects_table(raw_data):
     for projects_data in raw_data:
         # register project
         add_project(projects_data)
@@ -31,7 +31,8 @@ def populate_projects_table(form_id, raw_data):
 def add_project(projects_data):
     project_code = projects_data.get(constants.PROJECT_CODE)
     project_name = projects_data.get(constants.COMMUNITY_NAME)
-    constituency = Location.get_or_create(constants.COUNTY_CONSTITUENCY, 'constituency')
+    constituency = Location.get_or_create(
+        projects_data.get(constants.COUNTY_CONSTITUENCY), 'constituency')
     community = Community.get_or_create(
         projects_data.get(constants.COMMUNITY_NAME),
         constituency,
@@ -40,7 +41,7 @@ def add_project(projects_data):
     project_type = ProjectType.get_or_create(constants.PROJECT_TYPE)
 
     project = Project(project_code=project_code,
-                      project_name=project_name,
+                      name=project_name,
                       community_id=community.id,
                       project_type_id=project_type.id)
     project.save()
