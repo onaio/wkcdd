@@ -7,6 +7,7 @@ from pyramid.view import (
 )
 from pyramid.httpexceptions import (
     HTTPForbidden,
+    HTTPFound
 )
 
 
@@ -31,9 +32,9 @@ def login(request):
     return Response('Login to proceed')
 
 
-@view_config(route_name='default', renderer='templates/home.jinja2')
+@view_config(route_name='default', renderer='home.jinja2')
 def home(request):
-    return {}
+    return HTTPFound(request.route_url('projects', traverse=()))
 
 
 @view_config(route_name='private', permission="authenticated")
