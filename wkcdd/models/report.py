@@ -1,4 +1,7 @@
-from wkcdd.models.base import Base
+from wkcdd.models.base import (
+    Base,
+    DBSession
+)
 from sqlalchemy import (
     Column,
     Integer,
@@ -19,5 +22,10 @@ class Report(Base):
     report_data = Column(JSON, nullable=False)
     form_id = Column(String, ForeignKey('forms.form_id'), nullable=False)
 
-    def get_project_reports(self):
+    @classmethod
+    def add_report_submission(cls, report):
+        DBSession.add(report)
+
+    @classmethod
+    def calculate_indicators(cls):
         pass
