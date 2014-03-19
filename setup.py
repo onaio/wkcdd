@@ -24,7 +24,8 @@ requires = [
     'passlib',
     'Babel',
     'lingua',
-    'requests'
+    'requests',
+    'flake8'
 ]
 
 setup(name='wkcdd',
