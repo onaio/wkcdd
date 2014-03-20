@@ -13,4 +13,4 @@ class TestProject(TestBase):
         project1 = Project.get(Project.name == "Dairy Cow Project Center 1")
 
         self.assertEquals(project_type1.name, "Dairy Cow Project")
-        self.assertEquals(project1.project_code, "FR3A")
+        self.assertEquals(project1.code, "FR3A")

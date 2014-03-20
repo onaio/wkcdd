@@ -218,11 +218,11 @@ class TestBase(unittest.TestCase):
             DBSession.add_all([form1, form2])
 
         report = Report(project_code="YH9T",
-                        submission_time=datetime.datetime(2013,3,1),
-                month=3,
-                quarter='q_2',
-                period='2013_14',
-                report_data="{'data':test}"
+                        submission_time=datetime.datetime(2013, 3, 1),
+                        month=3,
+                        quarter='q_2',
+                        period='2013_14',
+                        report_data="{'data':test}"
                         )
         with transaction.manager:
             DBSession.add_all([report])
