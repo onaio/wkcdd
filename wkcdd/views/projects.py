@@ -1,5 +1,3 @@
-import requests
-import json
 from pyramid.view import (
     view_config,
     view_defaults,
@@ -8,10 +6,8 @@ from pyramid.view import (
 from wkcdd.models.project import (
     ProjectType
 )
-from wkcdd.models.form import(
-    Form
-)
-
+from wkcdd import constants
+from wkcdd.libs import utils
 
 @view_defaults(route_name='projects')
 class ProjectViews(object):
@@ -23,18 +19,13 @@ class ProjectViews(object):
     def list_projects(self):
         #TODO fetch all raw data and save to tables to process key indicators
         project_types = ProjectType.all()
-        registration_form_id = Form.get_registration_form_id()
-        headers = {'Authorization':
-                   'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'
-                   }
-        ona_rest_api = 'https://ona.io/api/v1/data/wkcdd/'
-        form_data_url = ona_rest_api + registration_form_id
-        response = requests.get(
-            form_data_url,
-            headers=headers)
 
-        raw_data = json.loads(response.content)
+        #import data to projects table
+        raw_data = utils.fetch_data(constants.DAIRY_COWS_PROJECT_REGISTRATION)
+        utils.populate_projects_table(raw_data)
 
+        #import data to reports table
+        utils.populate_reports_table(constants.DAIRY_COWS_PROJECT_REPORT)
         return {
             'project_types': project_types,
             'response': raw_data

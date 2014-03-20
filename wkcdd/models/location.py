@@ -5,6 +5,7 @@ from sqlalchemy import (
     Text,
     ForeignKey
 )
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class Location(Base):
@@ -21,10 +22,15 @@ class Location(Base):
 
         location_type = LocationType.get_or_create(location_type)
         #check if exists
+
         try:
-            location = Location.get(name=name, location_type=location_type.id)
-        except Exception:
-            location = Location(name=name, location_type=location_type.id)
+            location = Location.get(Location.name == name,
+                                    Location.parent_id == 0,
+                                    Location.location_type == location_type.id)
+        except NoResultFound:
+            location = Location(name=name,
+                                parent_id=0,
+                                location_type=location_type.id)
             location.save()
 
         return location
@@ -38,8 +44,8 @@ class LocationType(Base):
         @classmethod
         def get_or_create(cls, name):
             try:
-                location_type = LocationType.get(name=name)
-            except Exception:
+                location_type = LocationType.get(LocationType.name == name)
+            except NoResultFound:
                 location_type = LocationType(name=name)
                 location_type.save()
 

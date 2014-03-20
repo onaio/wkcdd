@@ -11,6 +11,7 @@ from sqlalchemy.orm import (
 from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.sql.expression import desc
+from sqlalchemy.orm.exc import NoResultFound
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
@@ -55,5 +56,7 @@ class BaseModel(object):
 
     def save(self):
         DBSession.add(self)
+        DBSession.flush()
+
 
 Base = declarative_base(cls=BaseModel)

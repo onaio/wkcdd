@@ -1,5 +1,4 @@
 import requests
-import json
 import datetime
 from wkcdd.models import Community, Location, Report, Project
 from wkcdd.models.project import ProjectType
@@ -18,7 +17,6 @@ def fetch_data(form_id):
         raise Exception("Server responded with %s" % response.status_code)
 
     raw_data = response.json()
-
     return raw_data
 
 
@@ -30,21 +28,21 @@ def populate_projects_table(raw_data):
 
 def add_project(projects_data):
     project_code = projects_data.get(constants.PROJECT_CODE)
-    project_name = projects_data.get(constants.COMMUNITY_NAME)
+    project_name = projects_data.get(constants.PROJECT_NAME)
     constituency = Location.get_or_create(
-        projects_data.get(constants.COUNTY_CONSTITUENCY), 'constituency')
+        projects_data.get(constants.CONSTITUENCY), 'constituency')
     community = Community.get_or_create(
         projects_data.get(constants.COMMUNITY_NAME),
         constituency,
         projects_data.get(constants.GEOLOCATION)
     )
-    project_type = ProjectType.get_or_create(constants.PROJECT_TYPE)
+    projects_data.get(constants.PROJECT_TYPE)
+    project_type = ProjectType.get_or_create(projects_data.get(constants.PROJECT_TYPE))
 
-    project = Project(project_code=project_code,
-                      name=project_name,
-                      community_id=community.id,
-                      project_type_id=project_type.id)
-    project.save()
+    Project.create(project_code=project_code,
+                   name=project_name,
+                   community_id=community.id,
+                   project_type_id=project_type.id)
 
 
 def populate_reports_table(form_id):

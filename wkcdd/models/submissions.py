@@ -84,8 +84,8 @@ class Submission(Base):
 
     # tools to handler mapping
     HANDLER_TO_XFORMS_MAPPING = (
-        (ProjectRegistrationHandler, [constants.PROJECT_REGISTRATION]),
-        (ProjectReportHandler, [constants.PROJECT_REPORT]),
+        (ProjectRegistrationHandler, [constants.DAIRY_COWS_PROJECT_REGISTRATION]),
+        (ProjectReportHandler, [constants.DAIRY_COWS_PROJECT_REPORT]),
     )
 
     @classmethod

@@ -5,6 +5,7 @@ from sqlalchemy import (
     Text,
     ForeignKey
 )
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class Community(Base):
@@ -19,9 +20,13 @@ class Community(Base):
     def get_or_create(cls, name, constituency, geolocation):
         # check if exists
         try:
-            community = Community.get(name=name, constituency_id=constituency.id, geolocation=geolocation)
-        except Exception:
-            community = Community(name=name, constituency_id=constituency.id)
+            community = Community.get(Community.name == name,
+                                      Community.constituency_id == constituency.id,
+                                      Community.geolocation == geolocation)
+        except NoResultFound:
+            community = Community(name=name,
+                                  constituency_id=constituency.id,
+                                  geolocation=geolocation)
             community.save()
         # If not exist, create community
         # return community object
