@@ -15,12 +15,15 @@ from sqlalchemy.dialects.postgresql import JSON
 class Report(Base):
     __tablename__ = 'reports'
     id = Column(Integer, primary_key=True, nullable=False)
-    project_id = Column(String,
-                        ForeignKey('projects.project_code'),
-                        nullable=False)
-    report_date = Column(DateTime(timezone=True), nullable=False)
+    project_code = Column(String,
+                          ForeignKey('projects.code'),
+                          nullable=False)
+    submission_time = Column(DateTime(timezone=True), nullable=False)
+    month = Column(Integer, nullable=False)
+    quarter = Column(String, nullable=False)
+    period = Column(String, nullable=False)
     report_data = Column(JSON, nullable=False)
-    form_id = Column(String, ForeignKey('forms.form_id'), nullable=False)
+
 
     @classmethod
     def add_report_submission(cls, report):

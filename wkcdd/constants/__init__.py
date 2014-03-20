@@ -17,3 +17,10 @@ DAIRY_COWS_PROJECT_REPORT = 'dairy_cows_project_report'
 
 
 PERFOANCE_INDICATORS =('Excpect')
+
+REPORT_PROJECT_CODE = 'perfomance_summary/dc_projects'
+REPORT_SUBMISSION_TIME = '_submission_time'
+REPORT_MONTH = 'perfomance_summary/month'
+REPORT_QUARTER = 'perfomance_summary/quarter_year'
+REPORT_PERIOD = 'perfomance_summary/year'
+

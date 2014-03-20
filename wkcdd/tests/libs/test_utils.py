@@ -1,4 +1,5 @@
 from wkcdd.models.project import Project
+from wkcdd.models.report import Report
 from wkcdd.libs import utils
 from wkcdd.tests.test_base import TestBase
 from wkcdd import constants
@@ -8,8 +9,20 @@ import json
 class TestUtil(TestBase):
     def test_populate_projects_table(self):
         count = Project.count()
-        utils.add_project(json.loads(self.submissions[0]))
+        utils.add_project(json.loads(self.project_submission[0]))
         self.assertEquals(Project.count(), (count + 1))
+
+    def test_populate_report_table_with_valid_project(self):
+        self.setup_test_data()
+        count = Report.count()
+        utils.populate_reports_table([json.loads(self.report_submission[0])])
+        self.assertEquals(Report.count(), (count + 1))
+
+    def test_populate_report_table_with_invalid_project(self):
+        self.setup_test_data()
+        count = Report.count()
+        utils.populate_reports_table([json.loads(self.report_submission[1])])
+        self.assertEquals(Report.count(), count)
 
     def test_fetch_data(self):
         form_id = constants.DAIRY_COWS_PROJECT_REGISTRATION

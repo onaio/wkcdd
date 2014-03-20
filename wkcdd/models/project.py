@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 class Project(Base):
     __tablename__ = 'projects'
-    project_code = Column(String, primary_key=True, autoincrement=False,
+    code = Column(String, primary_key=True, autoincrement=False,
                           nullable=False)
     name = Column(Text, nullable=False)
     community_id = Column(Integer, ForeignKey('communities.id'),
@@ -21,7 +21,7 @@ class Project(Base):
                              nullable=False)
     @classmethod
     def create(self, **kwargs):
-        project = Project(project_code=kwargs['project_code'],
+        project = Project(code=kwargs['project_code'],
                           name=kwargs['name'],
                           community_id=kwargs['community_id'],
                           project_type_id=kwargs['project_type_id']

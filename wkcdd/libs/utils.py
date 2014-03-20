@@ -1,5 +1,6 @@
 import requests
 import datetime
+from sqlalchemy.orm.exc import NoResultFound
 from wkcdd.models import Community, Location, Report, Project
 from wkcdd.models.project import ProjectType
 from wkcdd import constants
@@ -45,14 +46,20 @@ def add_project(projects_data):
                    project_type_id=project_type.id)
 
 
-def populate_reports_table(form_id):
-    raw_data = fetch_data(form_id)
+def populate_reports_table(raw_data):
     for report_data in raw_data:
-            project_code = report_data.get(constants.PROJECT_CODE)
-            report_submission = Report(
-                project_id=project_code,
-                report_date=datetime.datetime(2014, 3, 1),
-                report_data=report_data,
-                form_id=form_id
-            )
-            Report.add_report_submission(report_submission)
+            try:
+                project = Project.get(
+                    Project.code == report_data.get(constants.REPORT_PROJECT_CODE))
+                report_submission = Report(
+                    project_code=project.code,
+                    submission_time=datetime.datetime.strptime(
+                        report_data.get(constants.REPORT_SUBMISSION_TIME), "%Y-%m-%dT%H:%M:%S" ),
+                    month=(report_data.get(constants.REPORT_MONTH)),
+                    quarter=(report_data.get(constants.REPORT_QUARTER)),
+                    period=(report_data.get(constants.REPORT_PERIOD)),
+                    report_data=report_data
+                )
+                Report.add_report_submission(report_submission)
+            except NoResultFound:
+                return None

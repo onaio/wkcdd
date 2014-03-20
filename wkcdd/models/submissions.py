@@ -64,7 +64,7 @@ class ProjectReportHandler(BaseSubmissionHandler):
 
         # check if we have a valid project with submitted project_code
         try:
-            project = Project.get(Project.project_code == project_code)
+            project = Project.get(Project.code == project_code)
         except NoResultFound:
             raise ProjectNotFound
         else:
