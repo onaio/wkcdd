@@ -23,7 +23,7 @@ def fetch_data(form_id):
 
 
 def populate_projects_table(raw_data, project_code):
-    for projects_data in raw_data:
+    for project_data in raw_data:
         # register project
         project = add_project(project_data, project_code)
         transaction.commit()
