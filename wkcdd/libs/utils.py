@@ -22,50 +22,51 @@ def fetch_data(form_id):
     return raw_data
 
 
-def populate_projects_table(raw_data):
+def populate_projects_table(raw_data, project_code):
     for projects_data in raw_data:
         # register project
-        project = add_project(projects_data)
+        project = add_project(project_data, project_code)
         transaction.commit()
 
 
-def add_project(projects_data):
-    return Project.create(project_code=projects_data.get(constants.PROJECT_CODE),
-                   name=projects_data.get(constants.PROJECT_NAME),
-                   constituency=projects_data.get(constants.CONSTITUENCY),
-                   community_name=projects_data.get(constants.COMMUNITY_NAME),
-                   geolocation=projects_data.get(constants.GEOLOCATION),
-                   project_type=projects_data.get(constants.PROJECT_TYPE))
+def add_project(project_data, project_code):
+    return Project.create(
+        project_code=projects_data.get(project_code),
+        name=projects_data.get(constants.PROJECT_NAME),
+        constituency=projects_data.get(constants.CONSTITUENCY),
+        community_name=projects_data.get(constants.COMMUNITY_NAME),
+        geolocation=projects_data.get(constants.GEOLOCATION),
+        project_type=projects_data.get(constants.PROJECT_TYPE)
+    )
 
 
-def populate_reports_table(raw_data):
+def populate_reports_table(raw_data, project_report_code):
     for report_data in raw_data:
-            try:
-                project = Project.get(
-                    Project.code == report_data.get(
-                        constants.REPORT_PROJECT_CODE))
-                report_submission = Report(
-                    project_code=project.code,
-                    submission_time=datetime.datetime.strptime(
-                        report_data.get(constants.REPORT_SUBMISSION_TIME),
-                        "%Y-%m-%dT%H:%M:%S"),
-                    month=(report_data.get(constants.REPORT_MONTH)),
-                    quarter=(report_data.get(constants.REPORT_QUARTER)),
-                    period=(report_data.get(constants.REPORT_PERIOD)),
-                    report_data=report_data
-                )
-                Report.add_report_submission(report_submission)
-            except NoResultFound:
-                return None
+        report_submission = Report(
+            project_code=report_data.get(project_report_code),
+            submission_time=datetime.datetime.strptime(
+                report_data.get(constants.REPORT_SUBMISSION_TIME),
+                "%Y-%m-%dT%H:%M:%S"),
+            month=(report_data.get(constants.REPORT_MONTH)),
+            quarter=(report_data.get(constants.REPORT_QUARTER)),
+            period=(report_data.get(constants.REPORT_PERIOD)),
+            report_data=report_data
+        )
+        Report.add_report_submission(report_submission)
+        transaction.commit()
 
 
 # fetch project registration data and persist it to the DB
 def fetch_project_registration_data():
-    for project_registration_form in constants.PROJECT_REGISTRATION_FORMS:
-        populate_projects_table(fetch_data(project_registration_form))
+    for project_registration_form, project_code\
+    in constants.PROJECT_REGISTRATION_FORMS:
+        populate_projects_table(fetch_data(project_registration_form),
+                                project_code)
 
 
 # fetch project report data and persist it to the DB
 def fetch_report_form_data():
-    for project_report_form in constants.PROJECT_REPORT_FORMS:
-        populate_reports_table(fetch_data(project_report_form))
+    for project_report_form, project_report_code\
+    in constants.PROJECT_REPORT_FORMS:
+        populate_reports_table(fetch_data(project_report_form),
+                               project_report_code)
