@@ -1,7 +1,7 @@
 XFORM_ID = '_xform_id_string'
 
 PROJECT_NAME = 'p_name'
-PROJECT_CODE = 'dc_projects'
+PROJECT_CODE = 'dg_projects'
 PROJECT_TYPE = 'projecttype'
 COMMUNITY_NAME = 'county'
 
