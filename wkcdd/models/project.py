@@ -9,14 +9,14 @@ from sqlalchemy import (
 from sqlalchemy.orm.exc import NoResultFound
 
 from wkcdd.models import (
-    Community, 
+    Community,
     Location)
 
 
 class Project(Base):
     __tablename__ = 'projects'
-    code = Column(String, primary_key=True, autoincrement=False,
-                    nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String, autoincrement=False, nullable=False, index=True)
     name = Column(Text, nullable=False)
     community_id = Column(Integer, ForeignKey('communities.id'),
                           nullable=False)
