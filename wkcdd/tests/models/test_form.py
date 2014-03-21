@@ -1,7 +1,3 @@
-import transaction
-
-from wkcdd.models.base import DBSession
-from wkcdd.models.project import Project
 from wkcdd.models.form import Form
 
 from wkcdd.tests.test_base import TestBase
@@ -10,18 +6,28 @@ from wkcdd.tests.test_base import TestBase
 class TestForm(TestBase):
     def setUp(self):
         super(TestForm, self).setUp()
-        self.setup_test_data()
-        self.project = Project.get(Project.project_code == 'YH9T')
         self.json_data = '[{"_id": "1", "id_string": "xlsform"}]'
 
-    def test_save_form(self):
+    def _create_form(self):
         count = Form.count()
-        form = Form(
-            form_id='xlsform',
-            form_name='xlsform',
-            project_type_id=self.project.project_type_id,
-            form_type_id=1,
-            form_data=self.json_data)
-        with transaction.manager:
-            DBSession.add_all([form])
+        community = self._add_community()
+        project_type = self._add_project_type()
+        self._add_form_types()
+
+        self.project = self._add_project(community_id=community.id,
+                                         project_type_id=project_type.id)
+        self._add_form()
         self.assertEqual(count + 1, Form.count())
+        self.data = {}
+
+    def test_save_form(self):
+        self._create_form()
+
+    def test_get_registration_form_id(self):
+        form = Form.get_registration_form_id()
+        self.assertIsNone(form)
+
+        self._create_form()
+
+        form = Form.get_registration_form_id()
+        self.assertIsNotNone(form)

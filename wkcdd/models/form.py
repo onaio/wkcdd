@@ -23,6 +23,10 @@ class Form(Base):
     def get_registration_form_id(cls):
         registration_form = DBSession.query(Form).join(FormTypes).filter(
             FormTypes.name == 'registration').first()
+
+        if registration_form is None:
+            return None
+
         return registration_form.form_id
 
     @classmethod
