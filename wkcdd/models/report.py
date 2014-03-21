@@ -29,21 +29,20 @@ class Report(Base):
         DBSession.add(report)
 
     def calculate_impact_indicators(cls):
-        impact_indicators = {}
         report_table = Base.metadata.tables['reports']
 
         return DBSession.execute(
-                select(["json_extract_path(report_data,\
-                       'impact_information/b_income') as\
+                select(["report_data->>\
+                       'impact_information/b_income' as\
                        no_of_b_increased_income",
-                       "json_extract_path(report_data,\
-                       'impact_information/b_improved_houses') as\
+                       "report_data->>\
+                       'impact_information/b_improved_houses' as\
                        no_of_b_improved_houses",
-                       "json_extract_path(report_data,\
-                       'impact_information/b_hh_assets') as\
+                       "report_data->>\
+                       'impact_information/b_hh_assets' as\
                        no_of_b_hh_assets",
-                       "json_extract_path(report_data,\
-                       'impact_information/no_children') as\
+                       "report_data->>\
+                       'impact_information/no_children' as\
                         no_of_children"]
                     )
                 .select_from(report_table)
