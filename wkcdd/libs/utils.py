@@ -1,3 +1,4 @@
+import transaction
 import requests
 import datetime
 from sqlalchemy.orm.exc import NoResultFound
@@ -24,11 +25,12 @@ def fetch_data(form_id):
 def populate_projects_table(raw_data):
     for projects_data in raw_data:
         # register project
-        add_project(projects_data)
+        project = add_project(projects_data)
+        transaction.commit()
 
 
 def add_project(projects_data):
-    Project.create(project_code=projects_data.get(constants.PROJECT_CODE),
+    return Project.create(project_code=projects_data.get(constants.PROJECT_CODE),
                    name=projects_data.get(constants.PROJECT_NAME),
                    constituency=projects_data.get(constants.CONSTITUENCY),
                    community_name=projects_data.get(constants.COMMUNITY_NAME),
