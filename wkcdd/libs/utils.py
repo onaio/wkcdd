@@ -31,12 +31,12 @@ def populate_projects_table(raw_data, project_code):
 
 def add_project(project_data, project_code):
     return Project.create(
-        project_code=projects_data.get(project_code),
-        name=projects_data.get(constants.PROJECT_NAME),
-        constituency=projects_data.get(constants.CONSTITUENCY),
-        community_name=projects_data.get(constants.COMMUNITY_NAME),
-        geolocation=projects_data.get(constants.GEOLOCATION),
-        project_type=projects_data.get(constants.PROJECT_TYPE)
+        project_code=project_data.get(project_code),
+        name=project_data.get(constants.PROJECT_NAME),
+        constituency=project_data.get(constants.CONSTITUENCY),
+        community_name=project_data.get(constants.COMMUNITY_NAME),
+        geolocation=project_data.get(constants.GEOLOCATION),
+        project_type=project_data.get(constants.PROJECT_TYPE)
     )
 
 
