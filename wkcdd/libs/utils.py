@@ -28,7 +28,6 @@ def populate_projects_table(raw_data):
 
 
 def add_project(projects_data):
-    import ipdb; ipdb.set_trace();
     Project.create(project_code=projects_data.get(constants.PROJECT_CODE),
                    name=projects_data.get(constants.PROJECT_NAME),
                    constituency=projects_data.get(constants.CONSTITUENCY),
