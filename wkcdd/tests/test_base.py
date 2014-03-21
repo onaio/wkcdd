@@ -142,7 +142,7 @@ class TestBase(unittest.TestCase):
                      community_id=1,
                      project_type_id=1):
         project = Project(
-            project_code=project_code,
+            code=project_code,
             name=name,
             community_id=community_id,
             project_type_id=project_type_id
@@ -175,9 +175,9 @@ class TestBase(unittest.TestCase):
 
         return project_type
 
-    def _add_community(self, name="bukusu", constituency_id=2,
-                       geolocation="lat 0.0, long 0.0"):
-        community = community(name=name, constituency_id=constituency_id,
+    def _add_community(self, name="Bukusu", constituency_id=1,
+                       geolocation="Lat 0.0, Long 0.0"):
+        community = Community(name=name, constituency_id=constituency_id,
                               geolocation=geolocation)
 
         self._save_to_db(community)
@@ -205,12 +205,13 @@ class TestBase(unittest.TestCase):
 
         return form
 
-    def _add_report(self, project_id="FR3A",
-                    report_date=datetime.datetime(2014, 3, 1),
-                    report_data="{'data':test_report}",
-                    form_id="dairy_cow_form_report"):
-        report = Report(project_id=project_id, report_data=report_data,
-                        form_id=form_id, report_date=report_date)
+    def _add_report(self, project_code="FR3A",
+                    submission_time=datetime.datetime(2014, 3, 1),
+                    month=3, quarter='q_2', period='2013_14',
+                    report_data="{'data':test_report}"):
+        report = Report(project_code=project_code, report_data=report_data,
+                        submission_time=submission_time, month=month,
+                        quarter=quarter, period=period)
 
         self._save_to_db(report)
 

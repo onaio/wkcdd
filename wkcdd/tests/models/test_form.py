@@ -10,6 +10,8 @@ class TestForm(TestBase):
 
     def _create_form(self):
         count = Form.count()
+        self._add_location_type()
+        self._add_location()
         community = self._add_community()
         project_type = self._add_project_type()
         self._add_form_types()

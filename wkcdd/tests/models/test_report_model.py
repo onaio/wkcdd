@@ -6,14 +6,16 @@ from wkcdd.models.report import Report
 class TestReport(TestBase):
     def test_setup_test_data(self):
         self.setup_test_data()
-        report = Report.get(Report.project_code == "YH9T")
+        report = Report.get(Report.project_code == "FR3A")
 
-        self.assertEquals(report.report_data, "{'data':test}")
+        self.assertEquals(report.report_data, "{'data':test_report}")
 
     def test_add_report_submission(self):
         self.setup_test_data()
+        project_code = 'TG1F'
+        self._add_project(project_code=project_code)
         report_submission = Report(
-            project_code="TGIF",
+            project_code=project_code,
             submission_time=datetime.datetime(2013, 1, 1),
             month=3,
             quarter='q_2',
@@ -21,7 +23,7 @@ class TestReport(TestBase):
             report_data="{'data':test}"
         )
         Report.add_report_submission(report_submission)
-        report = Report.get(Report.project_code == "TGIF")
+        report = Report.get(Report.project_code == project_code)
 
         self.assertEquals(report, report_submission)
 
