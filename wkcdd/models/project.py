@@ -8,24 +8,34 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm.exc import NoResultFound
 
+from wkcdd.models import (
+    Community, 
+    Location)
+
 
 class Project(Base):
     __tablename__ = 'projects'
     code = Column(String, primary_key=True, autoincrement=False,
-                          nullable=False)
+                    nullable=False)
     name = Column(Text, nullable=False)
     community_id = Column(Integer, ForeignKey('communities.id'),
                           nullable=False)
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
-
                              nullable=False)
+
     @classmethod
     def create(self, **kwargs):
+        constituency = Location.get_or_create(
+            kwargs['constituency'], 'constituency')
+        community = Community.get_or_create(
+            kwargs['community_name'], constituency, kwargs['geolocation']
+        )
+        project_type = ProjectType.get_or_create(kwargs['project_type'])
+
         project = Project(code=kwargs['project_code'],
                           name=kwargs['name'],
-                          community_id=kwargs['community_id'],
-                          project_type_id=kwargs['project_type_id']
-        )
+                          community_id=community.id,
+                          project_type_id=project_type.id)
         project.save()
 
     def get_registered_projects(self):
@@ -45,5 +55,4 @@ class ProjectType(Base):
         except NoResultFound:
             project_type = ProjectType(name=name)
             project_type.save()
-
         return project_type
