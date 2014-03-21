@@ -68,4 +68,4 @@ def fetch_project_registration_data():
 # fetch project report data and persist it to the DB
 def fetch_report_form_data():
     for project_report_form in constants.PROJECT_REPORT_FORMS:
-        populate_report_table(fetch_data(project_report_form))
+        populate_reports_table(fetch_data(project_report_form))
