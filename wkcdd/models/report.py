@@ -1,3 +1,4 @@
+from wkcdd import constants
 from wkcdd.models.base import (
     Base,
     DBSession
@@ -10,6 +11,7 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.sql import select
 
 
 class Report(Base):
@@ -26,6 +28,25 @@ class Report(Base):
     def add_report_submission(cls, report):
         DBSession.add(report)
 
-    @classmethod
-    def calculate_indicators(cls):
-        pass
+    def calculate_impact_indicators(cls):
+        impact_indicators = {}
+        report_table = Base.metadata.tables['reports']
+
+        return DBSession.execute(
+                select(["json_extract_path(report_data,\
+                       'impact_information/b_income') as\
+                       no_of_b_increased_income",
+                       "json_extract_path(report_data,\
+                       'impact_information/b_improved_houses') as\
+                       no_of_b_improved_houses",
+                       "json_extract_path(report_data,\
+                       'impact_information/b_hh_assets') as\
+                       no_of_b_hh_assets",
+                       "json_extract_path(report_data,\
+                       'impact_information/no_children') as\
+                        no_of_children"]
+                    )
+                .select_from(report_table)
+                .where(
+                    report_table.c.id == cls.id
+                )).fetchone()

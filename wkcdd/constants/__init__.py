@@ -57,3 +57,10 @@ PROJECT_REPORT_FORMS = (
     (BODABODA_PROJECT_REPORT, BODABODA_PROJECT_REPORT_CODE),
     (POULTRY_PROJECT_REPORT, POULTRY_PROJECT_REPORT_CODE)
 )
+
+IMPACT_INDICATOR_KEYS = (
+    ('no_of_b_increased_income', 'impact_information/b_income'),
+    ('no_of_b_improved_houses', 'impact_information/b_improved_houses'),
+    ('no_of_b_hh_assets', 'impact_information/b_hh_assets'),
+    ('no_of_children', 'impact_information/no_children')
+)
