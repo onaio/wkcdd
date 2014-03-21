@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.Text(), nullable=False),
     sa.Column('constituency_id', sa.Integer(), nullable=False),
-    sa.Column('geolocation', sa.Text(), nullable=False),
+    sa.Column('geolocation', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('projects',

@@ -13,7 +13,7 @@ class Community(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
     constituency_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    geolocation = Column(Text, nullable=False)
+    geolocation = Column(Text, nullable=True)
     #TODO Possibly use postgis for geolocation
 
     @classmethod
