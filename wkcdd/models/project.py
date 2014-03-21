@@ -16,7 +16,7 @@ from wkcdd.models import (
 class Project(Base):
     __tablename__ = 'projects'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    code = Column(String, autoincrement=False, nullable=False, index=True)
+    code = Column(String, nullable=False, index=True)
     name = Column(Text, nullable=False)
     community_id = Column(Integer, ForeignKey('communities.id'),
                           nullable=False)
