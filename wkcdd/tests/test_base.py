@@ -72,7 +72,7 @@ class TestBase(unittest.TestCase):
             "end": "2014-01-06T20:24:27.581+03","mproject_performance/milk_bnf_sale_target": "9000",\
             "membership/total_members": "158","photo_signatures/admin_change": "no",\
             "mproject_performance/db_percentage": "10","mproject_performance/m_acquired_target": "990",\
-            "perfomance_summary/dc_projects": "FR3A","mproject_performance/mb_achievement": "7",\
+            "perfomance_summary/dg_projects": "FR3A","mproject_performance/mb_achievement": "7",\
             "mproject_performance/cws_proceeds_target": "158","membership/f_pmc_members": "3",\
             "mproject_performance/mb_target": "85","perfomance_summary/project_type": "cap",\
             "mproject_performance/milk_bnf_sale_percentage": "65","photo_signatures/chair_person": "Edward Muliro",\
@@ -108,7 +108,7 @@ class TestBase(unittest.TestCase):
             "end": "2014-01-06T20:24:27.581+03","mproject_performance/milk_bnf_sale_target": "9000",\
             "membership/total_members": "158","photo_signatures/admin_change": "no",\
             "mproject_performance/db_percentage": "10","mproject_performance/m_acquired_target": "990",\
-            "perfomance_summary/dc_projects": "NOtThea","mproject_performance/mb_achievement": "7",\
+            "perfomance_summary/dg_projects": "NOtThea","mproject_performance/mb_achievement": "7",\
             "mproject_performance/cws_proceeds_target": "158","membership/f_pmc_members": "3",\
             "mproject_performance/mb_target": "85","perfomance_summary/project_type": "cap",\
             "mproject_performance/milk_bnf_sale_percentage": "65","photo_signatures/chair_person": "Edward Muliro",\

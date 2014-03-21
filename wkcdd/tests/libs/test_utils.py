@@ -9,20 +9,16 @@ import json
 class TestUtil(TestBase):
     def test_populate_projects_table(self):
         count = Project.count()
-        utils.add_project(json.loads(self.project_submission[0]))
+        form, project_code = constants.PROJECT_REGISTRATION_FORMS[0]
+        utils.add_project(json.loads(self.project_submission[0]), project_code)
         self.assertEquals(Project.count(), (count + 1))
 
     def test_populate_report_table_with_valid_project(self):
         self.setup_test_data()
         count = Report.count()
-        utils.populate_reports_table([json.loads(self.report_submission[0])])
+        form, project_code = constants.PROJECT_REPORT_FORMS[0]
+        utils.populate_reports_table([json.loads(self.report_submission[0])], project_code)
         self.assertEquals(Report.count(), (count + 1))
-
-    def test_populate_report_table_with_invalid_project(self):
-        self.setup_test_data()
-        count = Report.count()
-        utils.populate_reports_table([json.loads(self.report_submission[1])])
-        self.assertEquals(Report.count(), count)
 
     def test_fetch_data(self):
         form_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
