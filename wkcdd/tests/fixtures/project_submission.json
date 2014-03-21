@@ -1,10 +1,10 @@
-{
+[{
   "sector": "dairy",
   "cp_phone": "0725385308",
   "signature_treasurer": "1390477712313.jpg",
   "_bamboo_dataset_id": "",
   "_tags": [
-    
+
   ],
   "county": "eshibuli",
   "_xform_id_string": "dairy_cows_project_registration3",
@@ -33,13 +33,13 @@
   "projecttype": "cap",
   "_submission_time": "2014-01-27T14:19:03",
   "_notes": [
-    
+
   ],
   "_attachments": [
-    
+
   ],
   "_id": 28534,
   "county_counties": "kakamega",
   "signature_sec": "1390477813806.jpg",
   "secretary": "Isaac Aura"
-}
+}]

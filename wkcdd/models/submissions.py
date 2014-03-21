@@ -37,8 +37,8 @@ class ProjectRegistrationHandler(BaseSubmissionHandler):
                 raw_data.get(constants.COMMUNITY_NAME))
 
     def handle_submission(self):
-        project_code, project_community = ProjectRegistrationHandler.parse_data(
-            self.submission.raw_data)
+        project_code, project_community = \
+            ProjectRegistrationHandler.parse_data(self.submission.raw_data)
 
         project = Project(
             project_code=project_code,
@@ -84,7 +84,8 @@ class Submission(Base):
 
     # tools to handler mapping
     HANDLER_TO_XFORMS_MAPPING = (
-        (ProjectRegistrationHandler, [constants.DAIRY_COWS_PROJECT_REGISTRATION]),
+        (ProjectRegistrationHandler,
+         [constants.DAIRY_COWS_PROJECT_REGISTRATION]),
         (ProjectReportHandler, [constants.DAIRY_COWS_PROJECT_REPORT]),
     )
 
