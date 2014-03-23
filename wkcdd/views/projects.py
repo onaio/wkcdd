@@ -9,6 +9,7 @@ from wkcdd.models.project import (
 from wkcdd import constants
 from wkcdd.libs import utils
 
+
 @view_defaults(route_name='projects')
 class ProjectViews(object):
     def __init__(self, request):

@@ -115,7 +115,7 @@ class TestBase(unittest.TestCase):
         return community
 
     def _add_form_types(self, name='registration'):
-        form_type = formtypes(name=name)
+        form_type = FormTypes(name=name)
 
         self._save_to_db(form_type)
 

@@ -15,15 +15,9 @@ class TestUtil(TestBase):
     def test_populate_report_table_with_valid_project(self):
         self.setup_test_data()
         count = Report.count()
-        form, project_code = constants.PROJECT_REPORT_FORMS[0]
+        form, project_code = constants.PROJECT_REPORT_FORMS[1]
         utils.populate_reports_table([self.report_submission[0]], project_code)
         self.assertEquals(Report.count(), (count + 1))
-
-    def test_populate_report_table_with_invalid_project(self):
-        self.setup_test_data()
-        count = Report.count()
-        utils.populate_reports_table([self.report_submission[1]])
-        self.assertEquals(Report.count(), count)
 
     def test_fetch_data(self):
         form_id = constants.DAIRY_COWS_PROJECT_REGISTRATION

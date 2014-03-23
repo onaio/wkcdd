@@ -1,9 +1,7 @@
 import transaction
 import requests
 import datetime
-from sqlalchemy.orm.exc import NoResultFound
-from wkcdd.models import Community, Location, Report, Project
-from wkcdd.models.project import ProjectType
+from wkcdd.models import Report, Project
 from wkcdd import constants
 
 
@@ -25,7 +23,7 @@ def fetch_data(form_id):
 def populate_projects_table(raw_data, project_code):
     for project_data in raw_data:
         # register project
-        project = add_project(project_data, project_code)
+        add_project(project_data, project_code)
         transaction.commit()
 
 
@@ -59,7 +57,7 @@ def populate_reports_table(raw_data, project_report_code):
 # fetch project registration data and persist it to the DB
 def fetch_project_registration_data():
     for project_registration_form, project_code\
-    in constants.PROJECT_REGISTRATION_FORMS:
+            in constants.PROJECT_REGISTRATION_FORMS:
         populate_projects_table(fetch_data(project_registration_form),
                                 project_code)
 
@@ -67,6 +65,6 @@ def fetch_project_registration_data():
 # fetch project report data and persist it to the DB
 def fetch_report_form_data():
     for project_report_form, project_report_code\
-    in constants.PROJECT_REPORT_FORMS:
+            in constants.PROJECT_REPORT_FORMS:
         populate_reports_table(fetch_data(project_report_form),
                                project_report_code)

@@ -1,4 +1,5 @@
 from wkcdd.models.base import Base
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -12,7 +13,8 @@ class Community(Base):
     __tablename__ = 'communities'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
-    constituency_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    constituency_id = Column(Integer, ForeignKey('locations.id'),
+                             nullable=False)
     geolocation = Column(Text, nullable=True)
     #TODO Possibly use postgis for geolocation
 
@@ -20,9 +22,10 @@ class Community(Base):
     def get_or_create(cls, name, constituency, geolocation):
         # check if exists
         try:
-            community = Community.get(Community.name == name,
-                                      Community.constituency_id == constituency.id,
-                                      Community.geolocation == geolocation)
+            community = Community.get(
+                Community.name == name,
+                Community.constituency_id == constituency.id,
+                Community.geolocation == geolocation)
         except NoResultFound:
             community = Community(name=name,
                                   constituency_id=constituency.id,
