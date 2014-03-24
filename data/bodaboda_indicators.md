@@ -8,6 +8,7 @@
 * Number of male beneficiaries
 * Number of vulnerable beneficiaries
 * Monthly average income earned by the group
+* Monthly average income earned per beneficiary
 
 #### Impact Level Indicators
 * Number of beneficiaries with increased income earned from the project
