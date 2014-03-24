@@ -68,3 +68,15 @@ class TestReport(TestBase):
             performance_indicators['vb_achievement'], '4')
         self.assertEquals(
             performance_indicators['milk_grp_sale_percentage'], '30')
+
+    def test_calculate_dairy_goat_performance_indicators(self):
+        pass
+
+    def test_calculate_fic_performance_indicators(self):
+        pass
+
+    def test_calculate_bodaboda_performance_indicators(self):
+        pass
+
+    def test_calculate_poultry_performance_indicators(self):
+        pass
