@@ -80,7 +80,7 @@ class TestBase(unittest.TestCase):
             project_type=project_type
         )
 
-        self._save_to_db(project)
+        project.save()
 
         return project
 
@@ -88,7 +88,7 @@ class TestBase(unittest.TestCase):
 
         location_type = LocationType(name=name)
 
-        self._save_to_db(location_type)
+        location_type.save()
 
         return location_type
 
@@ -97,13 +97,13 @@ class TestBase(unittest.TestCase):
         location = Location(
             name=name, parent_id=parent_id, location_type=location_type)
 
-        self._save_to_db(location)
+        location.save()
 
         return location
 
     def _add_project_type(self, name="Dairy Cow Project"):
         project_type = ProjectType(name=name)
-        self._save_to_db(project_type)
+        project_type.save()
 
         return project_type
 
@@ -112,14 +112,14 @@ class TestBase(unittest.TestCase):
         community = Community(name=name, constituency=constituency,
                               geolocation=geolocation)
 
-        self._save_to_db(community)
+        community.save()
 
         return community
 
     def _add_form_types(self, name='registration'):
         form_type = FormTypes(name=name)
 
-        self._save_to_db(form_type)
+        form_type.save()
 
         return form_type
 
@@ -133,7 +133,7 @@ class TestBase(unittest.TestCase):
                     form_type_id=form_type_id,
                     form_data=form_data)
 
-        self._save_to_db(form)
+        form.save()
 
         return form
 
@@ -144,8 +144,7 @@ class TestBase(unittest.TestCase):
         report = Report(project_code=project_code, report_data=report_data,
                         submission_time=submission_time, month=month,
                         quarter=quarter, period=period)
-
-        self._save_to_db(report)
+        report.save()
 
         return report
 
