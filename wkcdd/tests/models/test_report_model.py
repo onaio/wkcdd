@@ -44,3 +44,46 @@ class TestReport(TestBase):
         self.assertEquals(impact_indicators['no_of_b_improved_houses'], '1')
         self.assertEquals(impact_indicators['no_of_b_hh_assets'], '3')
         self.assertEquals(impact_indicators['no_of_children'], '3')
+
+    # Common Performance indicators
+    # * Expected Total Community Contribution
+    # * Actual Community Contribution to date
+    # * Total number of direct beneficiaries
+    # * Number of male beneficiaries
+    # * Number of female beneficiaries
+    # * Number of vulnerable beneficiaries
+
+    def test_calculate_common_performance_indicators(self):
+        self.setup_test_data()
+        report = Report.get(Report.project_code == 'YH9T')
+        performance_indicators = report.calculate_performance_indicators()
+        self.assertEquals(
+            performance_indicators['exp_contribution'], '56000')
+        self.assertEquals(
+            performance_indicators['actual_contribution'], '96800')
+        self.assertEquals(
+            performance_indicators['db_achievement'], '10')
+        self.assertEquals(
+            performance_indicators['mb_achievement'], '4')
+        self.assertEquals(
+            performance_indicators['fb_achievement'], '6')
+        self.assertEquals(
+            performance_indicators['vb_achievement'], '4')
+
+    # #### Performance indicators
+    # * Expected Total Community Contribution
+    # * Actual Community Contribution to date
+    # * Number of bikes acquired using project funds
+    # * Number of bikes acquired using proceeds & other contributions
+    # * Total number of direct beneficiaries
+    # * Number of female beneficiaries
+    # * Number of male beneficiaries
+    # * Number of vulnerable beneficiaries
+    # * Monthly average income earned by the group
+    # def test_calculate_boda_boda_performance_indicators(self):
+    #     self.setup_test_data()
+    #     report = Report.get(Report.project_code == '')
+    #     report_indicators = report.calculate_performance_indicators()
+    #     self.assertEquals(
+    #         report_indicators['expected_community_contribution'],
+    #         '1')

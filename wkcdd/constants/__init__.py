@@ -58,6 +58,14 @@ PROJECT_REPORT_FORMS = (
     (POULTRY_PROJECT_REPORT, POULTRY_PROJECT_REPORT_CODE)
 )
 
+PERFORMANCE_INDICATORS = {
+    (DAIRY_GOAT_PROJECT_REPORT, ('')),
+    (DAIRY_COWS_PROJECT_REPORT), ('')),
+    (FIC_PROJECT_REPORT, ('')),
+    (BODABODA_PROJECT_REPORT, ('')),
+    (POULTRY_PROJECT_REPORT, (''))
+}
+
 IMPACT_INDICATOR_KEYS = (
     ('no_of_b_increased_income', 'impact_information/b_income'),
     ('no_of_b_improved_houses', 'impact_information/b_improved_houses'),
