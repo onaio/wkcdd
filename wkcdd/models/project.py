@@ -6,6 +6,7 @@ from sqlalchemy import (
     String,
     ForeignKey
 )
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm.exc import NoResultFound
 
 from wkcdd.models import (
@@ -20,8 +21,12 @@ class Project(Base):
     name = Column(Text, nullable=False)
     community_id = Column(Integer, ForeignKey('communities.id'),
                           nullable=False)
+    community = relationship("Community",
+                             backref=backref('communities', order_by=id))
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    project_type = relationship("ProjectType",
+                                backref=backref('project_types', order_by=id))
 
     @classmethod
     def create(self, **kwargs):

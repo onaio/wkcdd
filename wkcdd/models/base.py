@@ -12,8 +12,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.sql.expression import desc
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(),
-                                        expire_on_commit=False))
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 
 class RootFactory(object):

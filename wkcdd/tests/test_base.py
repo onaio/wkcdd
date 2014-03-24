@@ -71,13 +71,13 @@ class TestBase(unittest.TestCase):
     def _add_project(self,
                      project_code='FR3A',
                      name='Dairy Cow Project Center 1',
-                     community_id=1,
-                     project_type_id=1):
+                     community=None,
+                     project_type=None):
         project = Project(
             code=project_code,
             name=name,
-            community_id=community_id,
-            project_type_id=project_type_id
+            community=community,
+            project_type=project_type
         )
 
         self._save_to_db(project)
@@ -107,9 +107,9 @@ class TestBase(unittest.TestCase):
 
         return project_type
 
-    def _add_community(self, name="Bukusu", constituency_id=1,
+    def _add_community(self, name="Bukusu", constituency=None,
                        geolocation="Lat 0.0, Long 0.0"):
-        community = Community(name=name, constituency_id=constituency_id,
+        community = Community(name=name, constituency=constituency,
                               geolocation=geolocation)
 
         self._save_to_db(community)
@@ -159,32 +159,33 @@ class TestBase(unittest.TestCase):
         self._add_location_type(name="sub-county")
         self._add_location_type(name="county")
 
-        self._add_location(name="Kakamega",
-                           parent_id=0,
-                           location_type=1)
-        self._add_location(name="Bungoma",
-                           parent_id=0,
-                           location_type=2)
+        constituency1 = self._add_location(name="Kakamega",
+                                           parent_id=0,
+                                           location_type=1)
+        constituency2 = self._add_location(name="Bungoma",
+                                           parent_id=0,
+                                           location_type=2)
         self._add_location(name="Busia",
                            parent_id=0,
                            location_type=3)
 
-        self._add_project_type(name="Dairy Cow Project")
-        self._add_project_type(name="Dairy Goat Project")
+        project_type_c = self._add_project_type(name="Dairy Cow Project")
+        project_type_g = self._add_project_type(name="Dairy Goat Project")
 
         community1 = self._add_community(name="Maragoli",
-                                         constituency_id=1,
+                                         constituency=constituency1,
                                          geolocation="Lat 0.0, Long 0.0")
 
-        self._add_community(name="Bukusu",
-                            constituency_id=2,
-                            geolocation="Lat 0.0, Long 0.0")
+        community2 = self._add_community(name="Bukusu",
+                                         constituency=constituency2,
+                                         geolocation="Lat 0.0, Long 0.0")
 
-        self._add_project(community_id=community1.id)
+        self._add_project(community=community1,
+                          project_type=project_type_c)
         self._add_project(project_code="YH9T",
                           name="Dairy Goat Project Center 1",
-                          community_id=2,
-                          project_type_id=2
+                          community=community2,
+                          project_type=project_type_g
                           )
 
         self._add_form_types(name="registration")

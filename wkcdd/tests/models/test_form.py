@@ -11,13 +11,13 @@ class TestForm(TestBase):
     def _create_form(self):
         count = Form.count()
         self._add_location_type()
-        self._add_location()
-        community = self._add_community()
+        constituency = self._add_location()
+        community = self._add_community(constituency=constituency)
         project_type = self._add_project_type()
         self._add_form_types()
 
-        self.project = self._add_project(community_id=community.id,
-                                         project_type_id=project_type.id)
+        self.project = self._add_project(community=community,
+                                         project_type=project_type)
         self._add_form()
         self.assertEqual(count + 1, Form.count())
         self.data = {}

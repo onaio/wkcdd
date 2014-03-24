@@ -6,6 +6,7 @@ from sqlalchemy import (
     Text,
     ForeignKey
 )
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -15,6 +16,8 @@ class Community(Base):
     name = Column(Text, nullable=False)
     constituency_id = Column(Integer, ForeignKey('locations.id'),
                              nullable=False)
+    constituency = relationship("Location",
+                                backref=backref('constituencies', order_by=id))
     geolocation = Column(Text, nullable=True)
     #TODO Possibly use postgis for geolocation
 

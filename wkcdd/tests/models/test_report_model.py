@@ -15,9 +15,13 @@ class TestReport(TestBase):
         self.assertEquals(report.report_data, json_data)
 
     def test_add_report_submission(self):
-        self.setup_test_data()
         project_code = 'TG1F'
-        self._add_project(project_code=project_code)
+        self._add_location_type()
+        constituency = self._add_location()
+        community = self._add_community(constituency=constituency)
+        project_type = self._add_project_type()
+        self._add_project(project_code=project_code, community=community,
+                          project_type=project_type)
         report_submission = Report(
             project_code=project_code,
             submission_time=datetime.datetime(2013, 1, 1),
