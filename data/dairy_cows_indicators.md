@@ -6,6 +6,7 @@
 * Total Number of calves realised
 * Number of dead cows+calves 
 * Total number of direct beneficiaries 
+* Number of male beneficiaries
 * Number of female beneficiaries
 * Number of vulnerable beneficiaries
 * Average litres of monthly milk production per beneficiary

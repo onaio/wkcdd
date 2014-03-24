@@ -5,8 +5,8 @@
 * Number of birds acquired using proceeds & other contributions (Target & Actual)
 * Number of poultry units constructed
 * Total number of direct beneficiaries 
-* Number of female beneficiaries
 * Number of male beneficiaries
+* Number of female beneficiaries
 * Number of vulnerable beneficiaries
 * Total number of chicks realized
 * Number of dead birds
