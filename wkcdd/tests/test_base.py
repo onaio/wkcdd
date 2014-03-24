@@ -198,7 +198,9 @@ class TestBase(unittest.TestCase):
             form_type_id=2,
             form_data="{'data':test}")
 
-        self._add_report()
+        report_data = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'YH9T.json'))
+        self._add_report(project_code='YH9T', report_data=report_data)
 
 
 class IntegrationTestBase(TestBase):
