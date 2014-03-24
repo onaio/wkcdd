@@ -59,7 +59,7 @@ PROJECT_REPORT_FORMS = (
 )
 
 PERFORMANCE_INDICATORS = {
-    (DAIRY_GOAT_PROJECT_REPORT,
+    DAIRY_GOAT_PROJECT_REPORT:
         ('perfomance_summary/exp_contribution',
          'perfomance_summary/actual_contribution',
          'perfomance_summary/community_contribution',
@@ -96,9 +96,8 @@ PERFORMANCE_INDICATORS = {
          'impact_information/milk_bnf_sale_target',
          'impact_information/milk_bnf_sale_achievement',
          'impact_information/milk_bnf_sale_percentage'
-         )
-     ),
-    (DAIRY_COWS_PROJECT_REPORT,
+         ),
+    DAIRY_COWS_PROJECT_REPORT:
         ('perfomance_summary/exp_contribution',
          'perfomance_summary/actual_contribution',
          'perfomance_summary/community_contribution',
@@ -138,9 +137,8 @@ PERFORMANCE_INDICATORS = {
          'impact_information/milk_grp_sale_target',
          'impact_information/milk_grp_sale_achievement',
          'impact_information/milk_grp_sale_percentage'
-         )
-     ),
-    (FIC_PROJECT_REPORT,
+         ),
+    FIC_PROJECT_REPORT:
         ('perfomance_summary/exp_contribution',
          'perfomance_summary/actual_contribution',
          'perfomance_summary/community_contribution',
@@ -177,9 +175,8 @@ PERFORMANCE_INDICATORS = {
          'impact_information/bnf_income_target',
          'impact_information/bnf_income_achievement',
          'impact_information/bnf_income_percentage'
-         )
-     ),
-    (BODABODA_PROJECT_REPORT,
+         ),
+    BODABODA_PROJECT_REPORT:
      ('perfomance_summary/exp_contribution',
       'perfomance_summary/actual_contribution'
       'impact_information/db_target',
@@ -207,8 +204,8 @@ PERFORMANCE_INDICATORS = {
       'impact_information/bnf_income_achievement',
       'impact_information/bnf_income_percentage'
       )
-     ),
-    (POULTRY_PROJECT_REPORT,
+    ,
+    POULTRY_PROJECT_REPORT:
      ('perfomance_summary/exp_contribution',
       'perfomance_summary/actual_contribution',
       'mproject_performance/birds_target',
@@ -253,7 +250,6 @@ PERFORMANCE_INDICATORS = {
       'mproject_performance/bnf_income_achievement',
       'mproject_performance/bnf_income_percentage'
       )
-     )
 }
 
 IMPACT_INDICATOR_KEYS = (
