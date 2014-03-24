@@ -26,8 +26,8 @@ class Report(Base):
     report_data = Column(JSON, nullable=False)
 
     __mapper_args__ = {
-      'polymorphic_identity': 'report',
-      'polymorphic_on': report_type
+        'polymorphic_identity': 'report',
+        'polymorphic_on': report_type
     }
 
     @classmethod
@@ -37,14 +37,21 @@ class Report(Base):
     def calculate_impact_indicators(cls):
         impact_indicators = {}
         for key, impact_indicator_key in constants.IMPACT_INDICATOR_KEYS:
-          impact_indicators[key] = cls.report_data[impact_indicator_key]
+            impact_indicators[key] = cls.report_data[impact_indicator_key]
         return impact_indicators
+
+    def calculate_dairy_cow_performance_indicators(cls):
+        performace_indicators = {}
+        for key, performance_indicator_key
+        in constants.PERFORMANCE_INDICATORS[
+            constants.DAIRY_COWS_PROJECT_REPORT]:
+
 
 
 class BodaBodaReport(Report):
 
-  __mapper_args__ = {
-      'polymorphic_identity':'boda_boda_report'
-  }
+    __mapper_args__ = {
+        'polymorphic_identity':'boda_boda_report'
+    }
 
 
