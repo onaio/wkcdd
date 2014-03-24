@@ -4,7 +4,7 @@
 * Number of cows acquired using Project funds
 * Number of cows acquired using Proceeds & other contributions
 * Total Number of calves realised
-* Number of dead cows+calves 
+* Number of dead cows+calves (Not present)
 * Total number of direct beneficiaries 
 * Number of male beneficiaries
 * Number of female beneficiaries
