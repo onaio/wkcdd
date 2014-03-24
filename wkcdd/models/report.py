@@ -42,16 +42,16 @@ class Report(Base):
 
     def calculate_dairy_cow_performance_indicators(cls):
         performace_indicators = {}
-        for key, performance_indicator_key
+        for key, performance_indicator_key\
         in constants.PERFORMANCE_INDICATORS[
-            constants.DAIRY_COWS_PROJECT_REPORT]:
-
+        constants.DAIRY_COWS_PROJECT_REPORT]: 
+            performace_indicators[key] = cls.\
+              report_data[performance_indicator_key]
+        return performace_indicators
 
 
 class BodaBodaReport(Report):
 
     __mapper_args__ = {
-        'polymorphic_identity':'boda_boda_report'
+        'polymorphic_identity': 'boda_boda_report'
     }
-
-
