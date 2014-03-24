@@ -42,10 +42,12 @@ engine = engine_from_config(settings, 'sqlalchemy.')
 
 
 def _load_json_fixture(path):
+
     return json.load(open(path, 'r'))
 
 
 class TestBase(unittest.TestCase):
+    test_dir = os.path.realpath(os.path.dirname(__file__))
     project_submission = _load_json_fixture(os.path.join(
         os.path.dirname(__file__), 'fixtures', 'project_submission.json'))
 

@@ -1,4 +1,7 @@
 import datetime
+import json
+import os
+
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.report import Report
 
@@ -6,9 +9,10 @@ from wkcdd.models.report import Report
 class TestReport(TestBase):
     def test_setup_test_data(self):
         self.setup_test_data()
-        report = Report.get(Report.project_code == "FR3A")
-
-        self.assertEquals(report.report_data, "{'data':test_report}")
+        report = Report.get(Report.project_code == "YH9T")
+        json_data = json.load(open(os.path.join(
+            self.test_dir, 'fixtures', 'submission_x.json')))
+        self.assertEquals(report.report_data, json_data)
 
     def test_add_report_submission(self):
         self.setup_test_data()
@@ -32,7 +36,7 @@ class TestReport(TestBase):
         self.setup_test_data()
         report = Report.get(Report.project_code == 'FR3A')
         impact_indicators = report.calculate_impact_indicators()
-        self.assertEquals(impact_indicators['no_of_b_increased_income'], 2)
-        self.assertEquals(impact_indicators['no_of_b_improved_houses'], 3)
-        self.assertEquals(impact_indicators['no_of_b_hh_assets'], 4)
-        self.assertEquals(impact_indicators['no_of_children'], 5)
+        self.assertEquals(impact_indicators['no_of_b_increased_income'], '1')
+        self.assertEquals(impact_indicators['no_of_b_improved_houses'], '1')
+        self.assertEquals(impact_indicators['no_of_b_hh_assets'], '3')
+        self.assertEquals(impact_indicators['no_of_children'], '3')
