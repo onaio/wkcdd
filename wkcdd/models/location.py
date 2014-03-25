@@ -18,18 +18,20 @@ class Location(Base):
                            nullable=False)
 
     @classmethod
-    def get_or_create(cls, name, location_type):
+    def get_or_create(cls, name, location_type, parent):
 
         location_type = LocationType.get_or_create(location_type)
-        #check if exists
+
+        #get Location parent_id
+        parent_id = parent.id if parent is not None else 0
 
         try:
             location = Location.get(Location.name == name,
-                                    Location.parent_id == 0,
+                                    Location.parent_id == parent_id,
                                     Location.location_type == location_type.id)
         except NoResultFound:
             location = Location(name=name,
-                                parent_id=0,
+                                parent_id=parent_id,
                                 location_type=location_type.id)
             location.save()
 

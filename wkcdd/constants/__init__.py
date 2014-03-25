@@ -298,3 +298,11 @@ IMPACT_INDICATOR_KEYS = (
     ('no_of_b_hh_assets', 'impact_information/b_hh_assets'),
     ('no_of_children', 'impact_information/no_children')
 )
+
+PROJECT_SECTORS = {
+    DAIRY_GOAT_PROJECT_REGISTRATION: "Dairy Goat",
+    DAIRY_COWS_PROJECT_REGISTRATION: "Dairy Cows",
+    FIC_PROJECT_REGISTRATION: "Field Industrial Crops",
+    BODABODA_PROJECT_REGISTRATION: "Motor Cycle",
+    POULTRY_PROJECT_REGISTRATION: "Poultry"
+}
