@@ -51,7 +51,7 @@ def populate_reports_table(raw_data, project_report_code):
             report_data=report_data
         )
         Report.add_report_submission(report_submission)
-        transaction.commit()
+        # transaction.commit()
 
 
 # fetch project registration data and persist it to the DB
