@@ -4,7 +4,8 @@ from pyramid.view import (
 )
 
 from wkcdd.models.project import (
-    ProjectType
+    ProjectType,
+    Project
 )
 from wkcdd import constants
 from wkcdd.libs import utils
@@ -15,19 +16,25 @@ class ProjectViews(object):
     def __init__(self, request):
         self.request = request
 
-    @view_config(route_name='projects',
-                 renderer='projects.jinja2')
-    def list_projects(self):
-        #TODO fetch all raw data and save to tables to process key indicators
+    @view_config(name='',
+                 renderer='projects_list.jinja2',
+                 request_method='GET')
+    def list(self):
         project_types = ProjectType.all()
-
-        #import data to projects table
-        raw_data = utils.fetch_data(constants.DAIRY_COWS_PROJECT_REGISTRATION)
-        utils.populate_projects_table(raw_data)
-
-        #import data to reports table
-        utils.populate_reports_table(constants.DAIRY_COWS_PROJECT_REPORT)
+        projects = Project.all()
         return {
             'project_types': project_types,
-            'response': raw_data
+            'projects': projects
+        }
+
+    @view_config(name='',
+                 context=Project,
+                 renderer='projects_show.jinja2',
+                 request_method='GET')
+    def show(self):
+        project = self.request.context
+        reports = project.reports
+        return {
+            'project': project,
+            'reports': reports
         }

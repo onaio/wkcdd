@@ -15,6 +15,7 @@ class TestProject(TestBase):
         self.assertEquals(project_type1.name, "Dairy Cow Project")
         self.assertEquals(project1.code, "FR3A")
         self.assertEquals(project1.community.name, "Maragoli")
+        self.assertEquals(project1.community.constituency.name, "Kakamega")
 
     def test_project_can_retrieve_associated_reports(self):
         self.setup_test_data()
