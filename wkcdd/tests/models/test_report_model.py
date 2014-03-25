@@ -49,7 +49,7 @@ class TestReport(TestBase):
         self.setup_test_data()
         report = Report.get(Report.project_code == 'YH9T')
         performance_indicators = report.\
-            calculate_dairy_cow_performance_indicators()
+            calculate_performance_indicators()
         self.assertEquals(
             performance_indicators['exp_contribution'], '56000')
         self.assertEquals(

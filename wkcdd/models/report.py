@@ -40,11 +40,11 @@ class Report(Base):
             impact_indicators[key] = cls.report_data[impact_indicator_key]
         return impact_indicators
 
-    def calculate_dairy_cow_performance_indicators(cls):
+    def calculate_performance_indicators(cls):
         performace_indicators = {}
         for key, performance_indicator_key\
-        in constants.PERFORMANCE_INDICATORS[
-        constants.DAIRY_COWS_PROJECT_REPORT]: 
+        in constants.PERFORMANCE_INDICATORS[cls.report_data[
+        constants.XFORM_ID]]: 
             performace_indicators[key] = cls.\
               report_data[performance_indicator_key]
         return performace_indicators
