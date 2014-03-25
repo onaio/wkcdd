@@ -1,0 +1,46 @@
+{% extends 'base.jinja2' %}
+{% block title %}{{ Projects }} {% endblock %}
+{% block page_title %}
+  <h3 class="page-title">
+    Projects
+    <small></small>
+  </h3>
+{% endblock %}
+{% block breadcrumbs %}
+  <li>Projects</li>
+  <li><a href="#"> </a></li>
+{% endblock %}
+{% block content %}
+<div class="col-md-12">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+      </div>
+      <div class="portlet-body">
+         <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+               <thead>
+                  <tr>
+                     <th>{% trans %} Project Type {% endtrans %}</th>
+                     <th>{% trans %} Community {% endtrans %}</th>
+                     <th>{% trans %} Constituency {% endtrans %}</th>
+                  </tr>
+               </thead>
+               <tbody>
+               {% for project in projects %}
+                  <tr>
+                     <td><a href="#">{{ project.name }}</a></td>
+                     <td>{{ project.community.name }}</td>
+                     <td>{{ project.community.constituency.name }}</td>
+                  </tr>
+               {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+</div>
+{{response}}
+{% endblock content %}
