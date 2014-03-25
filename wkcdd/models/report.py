@@ -40,13 +40,13 @@ class Report(Base):
         return impact_indicators
 
     def calculate_performance_indicators(cls):
-        performace_indicators = {}
+        performance_indicators = {}
         for key, performance_indicator_key\
             in constants.PERFORMANCE_INDICATORS[cls.report_data[
                 constants.XFORM_ID]]:
-            performace_indicators[key] = cls.\
+            performance_indicators[key] = cls.\
                 report_data[performance_indicator_key]
-        return performace_indicators
+        return performance_indicators
 
 
 class BodaBodaReport(Report):
