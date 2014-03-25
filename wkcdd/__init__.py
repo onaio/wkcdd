@@ -9,6 +9,7 @@ from wkcdd.security import group_finder, pwd_context
 from wkcdd.models.base import (
     DBSession,
     Base)
+from wkcdd.models.project import ProjectFactory
 
 
 def main(global_config, **settings):
@@ -42,7 +43,8 @@ def includeme(config):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')
-    config.add_route('projects', '/projects')
+    config.add_route('projects', '/projects/*traverse',
+                    factory=ProjectFactory)
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
     config.scan()

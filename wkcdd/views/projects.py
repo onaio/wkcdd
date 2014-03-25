@@ -5,7 +5,8 @@ from pyramid.view import (
 
 from wkcdd.models.project import (
     ProjectType,
-    Project
+    Project,
+    ProjectFactory
 )
 
 
@@ -15,6 +16,7 @@ class ProjectViews(object):
         self.request = request
 
     @view_config(name='',
+                 context=ProjectFactory,
                  renderer='projects_list.jinja2',
                  request_method='GET')
     def list(self):

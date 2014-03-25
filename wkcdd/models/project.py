@@ -1,4 +1,4 @@
-from wkcdd.models.base import Base
+from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
     Integer,
@@ -69,3 +69,19 @@ class ProjectType(Base):
             project_type = ProjectType(name=name)
             project_type.save()
         return project_type
+
+
+class ProjectFactory(BaseModelFactory):
+    __acl__ = []
+
+    def __getitem__(self, item):
+        # try to retrieve the project whose id matches item
+        try:
+            project_id = int(item)
+            project = DBSession.query(Project).filter_by(id=project_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            project.__parent__ = self
+            project.__name__ = item
+            return project
