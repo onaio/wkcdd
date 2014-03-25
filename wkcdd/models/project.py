@@ -38,8 +38,12 @@ class Project(Base):
 
     @classmethod
     def create(self, **kwargs):
+        county = Location.get_or_create(
+            kwargs['county'], 'county', None)
+        sub_county = Location.get_or_create(
+            kwargs['sub_county'], 'sub_county', county)
         constituency = Location.get_or_create(
-            kwargs['constituency'], 'constituency')
+            kwargs['constituency'], 'constituency', sub_county)
         community = Community.get_or_create(
             kwargs['community_name'], constituency, kwargs['geolocation']
         )

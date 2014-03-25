@@ -31,6 +31,8 @@ def add_project(project_data, project_code):
     return Project.create(
         project_code=project_data.get(project_code),
         name=project_data.get(constants.PROJECT_NAME),
+        county=project_data.get(constants.COUNTY),
+        sub_county=project_data.get(constants.SUB_COUNTIES),
         constituency=project_data.get(constants.CONSTITUENCY),
         community_name=project_data.get(constants.COMMUNITY_NAME),
         geolocation=project_data.get(constants.GEOLOCATION),
