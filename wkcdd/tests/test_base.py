@@ -186,6 +186,11 @@ class TestBase(unittest.TestCase):
                           community=community2,
                           project_type=project_type_g
                           )
+        self._add_project(project_code="JDCV",
+                          name="Dairy Goat Project Center 2",
+                          community=community2,
+                          project_type=project_type_g
+                          )
 
         self._add_form_types(name="registration")
         self._add_form_types(name="registration")
@@ -198,9 +203,22 @@ class TestBase(unittest.TestCase):
             form_type_id=2,
             form_data="{'data':test}")
 
-        report_data = _load_json_fixture(os.path.join(
+        report_data_1 = _load_json_fixture(os.path.join(
             self.test_dir, 'fixtures', 'YH9T.json'))
-        self._add_report(project_code='YH9T', report_data=report_data)
+        report_data_2 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'JDCV.json'))
+        report_data_3 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'KYJ7.json'))
+        report_data_4 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'YHCX.json'))
+        report_data_5 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'DRT4.json'))
+
+        self._add_report(project_code='YH9T', report_data=report_data_1)
+        self._add_report(project_code='JDCV', report_data=report_data_2)
+        self._add_report(project_code='KYJ7', report_data=report_data_3)
+        self._add_report(project_code='YHCX', report_data=report_data_4)
+        self._add_report(project_code='DRT4', report_data=report_data_5)
 
 
 class IntegrationTestBase(TestBase):
