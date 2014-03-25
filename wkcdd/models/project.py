@@ -6,7 +6,11 @@ from sqlalchemy import (
     String,
     ForeignKey
 )
-from sqlalchemy.orm import relationship, backref
+
+from sqlalchemy.orm import (
+    relationship,
+    backref
+)
 from sqlalchemy.orm.exc import NoResultFound
 
 from wkcdd.models import (
@@ -27,6 +31,10 @@ class Project(Base):
                              nullable=False)
     project_type = relationship("ProjectType",
                                 backref=backref('project_types', order_by=id))
+    reports = relationship("Report",
+                           backref=backref('project', order_by=id),
+                           primaryjoin="Project.code == \
+                           foreign(Report.project_code)")
 
     @classmethod
     def create(self, **kwargs):

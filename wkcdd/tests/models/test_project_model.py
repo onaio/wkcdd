@@ -14,3 +14,8 @@ class TestProject(TestBase):
 
         self.assertEquals(project_type1.name, "Dairy Cow Project")
         self.assertEquals(project1.code, "FR3A")
+
+    def test_project_can_retrieve_associated_reports(self):
+        self.setup_test_data()
+        project = Project.get(Project.code == "YH9T")
+        self.assertEquals(len(project.reports), 1)
