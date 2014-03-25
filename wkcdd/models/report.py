@@ -31,7 +31,7 @@ class Report(Base):
 
     @classmethod
     def add_report_submission(cls, report):
-        DBSession.add(report)
+        report.save()
 
     def calculate_impact_indicators(cls):
         impact_indicators = {}
