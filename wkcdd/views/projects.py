@@ -7,8 +7,6 @@ from wkcdd.models.project import (
     ProjectType,
     Project
 )
-from wkcdd import constants
-from wkcdd.libs import utils
 
 
 @view_defaults(route_name='projects')

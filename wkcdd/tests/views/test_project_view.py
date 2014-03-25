@@ -36,3 +36,9 @@ class TestProjectViews(IntegrationTestBase):
 
     def test_project_report_trend_over_time(self):
         pass
+
+
+class TestProjectViewsFunctional(FunctionalTestBase):
+
+    def test_project_list_return_all_projects_views(self):
+        pass
