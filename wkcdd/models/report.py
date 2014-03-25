@@ -11,7 +11,6 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.sql import select
 
 
 class Report(Base):
@@ -43,10 +42,10 @@ class Report(Base):
     def calculate_performance_indicators(cls):
         performace_indicators = {}
         for key, performance_indicator_key\
-        in constants.PERFORMANCE_INDICATORS[cls.report_data[
-        constants.XFORM_ID]]: 
+            in constants.PERFORMANCE_INDICATORS[cls.report_data[
+                constants.XFORM_ID]]:
             performace_indicators[key] = cls.\
-              report_data[performance_indicator_key]
+                report_data[performance_indicator_key]
         return performace_indicators
 
 
