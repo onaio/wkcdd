@@ -5,3 +5,4 @@
 *.sqlite
 *.coverage
 build
+.DS_Store
