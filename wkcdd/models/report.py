@@ -24,11 +24,6 @@ class Report(Base):
     period = Column(String, nullable=False)
     report_data = Column(JSON, nullable=False)
 
-    __mapper_args__ = {
-        'polymorphic_identity': 'report',
-        'polymorphic_on': report_type
-    }
-
     @classmethod
     def add_report_submission(cls, report):
         report.save()
@@ -47,10 +42,3 @@ class Report(Base):
             performance_indicators[key] = cls.\
                 report_data[performance_indicator_key]
         return performance_indicators
-
-
-class BodaBodaReport(Report):
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'boda_boda_report'
-    }
