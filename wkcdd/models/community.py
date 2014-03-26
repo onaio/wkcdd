@@ -18,21 +18,17 @@ class Community(Base):
                              nullable=False)
     constituency = relationship("Location",
                                 backref=backref('constituencies', order_by=id))
-    geolocation = Column(Text, nullable=True)
-    #TODO Possibly use postgis for geolocation
 
     @classmethod
-    def get_or_create(cls, name, constituency, geolocation):
+    def get_or_create(cls, name, constituency):
         # check if exists
         try:
             community = Community.get(
                 Community.name == name,
-                Community.constituency_id == constituency.id,
-                Community.geolocation == geolocation)
+                Community.constituency_id == constituency.id)
         except NoResultFound:
             community = Community(name=name,
-                                  constituency_id=constituency.id,
-                                  geolocation=geolocation)
+                                  constituency_id=constituency.id)
             community.save()
         # If not exist, create community
         # return community object
