@@ -159,12 +159,18 @@ class TestBase(unittest.TestCase):
         self._add_location_type(name="sub-county")
         self._add_location_type(name="county")
 
+        county = self._add_location(name="Bungoma",
+                                    parent_id=0,
+                                    location_type=3)
+
+        sub_county = self._add_location(name="Bungoma",
+                                        parent_id=county.id,
+                                        location_type=2)
+
         constituency1 = self._add_location(name="Kakamega",
-                                           parent_id=0,
+                                           parent_id=sub_county.id,
                                            location_type=1)
-        constituency2 = self._add_location(name="Bungoma",
-                                           parent_id=0,
-                                           location_type=2)
+
         self._add_location(name="Busia",
                            parent_id=0,
                            location_type=3)
@@ -177,7 +183,7 @@ class TestBase(unittest.TestCase):
                                          geolocation="Lat 0.0, Long 0.0")
 
         community2 = self._add_community(name="Bukusu",
-                                         constituency=constituency2,
+                                         constituency=constituency1,
                                          geolocation="Lat 0.0, Long 0.0")
 
         self._add_project(community=community1,

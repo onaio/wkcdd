@@ -12,7 +12,7 @@ class TestLocation(TestBase):
         location1 = Location.get(Location.id == 1)
         location_type1 = LocationType.get(LocationType.id == 1)
 
-        self.assertEquals(location1.name, "Kakamega")
+        self.assertEquals(location1.name, "Bungoma")
         self.assertEquals(location_type1.name, "constituency")
 
     def test_save_location_type(self):

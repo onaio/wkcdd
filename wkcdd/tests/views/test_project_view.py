@@ -1,4 +1,3 @@
-from webob.multidict import MultiDict
 from pyramid import testing
 
 from wkcdd.tests.test_base import (
@@ -6,7 +5,6 @@ from wkcdd.tests.test_base import (
     FunctionalTestBase)
 
 from wkcdd.models.project import (
-    ProjectType,
     Project
 )
 
@@ -24,6 +22,7 @@ class TestProjectViews(IntegrationTestBase):
         response = self.project_views.list()
         self.assertEqual(len(response['projects']), 3)
         self.assertEqual(len(response['project_types']), 2)
+        self.assertEquals(response['locations'][1][0].name, 'Bungoma')
 
     def test_project_details_returns_report_list(self):
         self.setup_test_data()
@@ -32,7 +31,6 @@ class TestProjectViews(IntegrationTestBase):
         response = self.project_views.show()
         self.assertIsInstance(response['project'], Project)
         self.assertEqual(response['project'].id, project.id)
-        self.assertEqual(len(response['reports']), len(project.reports))
 
     def test_project_report_trend_over_time(self):
         pass

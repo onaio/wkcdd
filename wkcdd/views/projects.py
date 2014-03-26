@@ -8,6 +8,12 @@ from wkcdd.models.project import (
     Project,
     ProjectFactory
 )
+
+from wkcdd.models.location import (
+    Location,
+    LocationType
+)
+
 from wkcdd import constants
 
 from wkcdd.libs.utils import tuple_to_dict_list
@@ -25,9 +31,24 @@ class ProjectViews(object):
     def list(self):
         project_types = ProjectType.all()
         projects = Project.all()
+
+        #get count and sub-county
+        locations = {}
+        for project in projects:
+            constituency = project.community.constituency
+            sub_county = Location.get(Location.id == constituency.parent_id,
+                                      Location.location_type ==
+                                      LocationType.
+                                      get_or_create('sub-county').id)
+            county = Location.get(Location.id == sub_county.parent_id,
+                                  Location.location_type ==
+                                  LocationType.get_or_create('county').id)
+            locations[project.id] = [county, sub_county]
+
         return {
             'project_types': project_types,
-            'projects': projects
+            'projects': projects,
+            'locations': locations
         }
 
     @view_config(name='show',

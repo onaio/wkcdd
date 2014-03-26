@@ -23,16 +23,25 @@
                <thead>
                   <tr>
                      <th>{% trans %} Name {% endtrans %}</th>
-                     <th>{% trans %} Community {% endtrans %}</th>
+                     <th>{% trans %} Sector {% endtrans %}</th>
+                     <th>{% trans %} County  {% endtrans %}</th>
+                     <th>{% trans %} Sub-county {% endtrans %}</th>
                      <th>{% trans %} Constituency {% endtrans %}</th>
+                     <th>{% trans %} Community {% endtrans %}</th>
+                     <th></th>
+
                   </tr>
                </thead>
                <tbody>
                {% for project in projects %}
                   <tr>
                      <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
-                     <td>{{ project.community.name }}</td>
+                     <td>{{ project.sector }}</td>
+                     <td>{{ locations[project.id][0].name}}</td>
+                     <td>{{ locations[project.id][1].name}}</td>
                      <td>{{ project.community.constituency.name }}</td>
+                     <td>{{ project.community.name }}</td>
+                     <td> Edit</td>
                   </tr>
                {% endfor %}
                </tbody>
