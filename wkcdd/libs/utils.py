@@ -5,6 +5,10 @@ from wkcdd.models import Report, Project
 from wkcdd import constants
 
 
+from pyramid.i18n import TranslationStringFactory, get_localizer
+translation_string_factory = TranslationStringFactory('who-ahqa')
+
+
 def fetch_data(form_id):
     headers = {'Authorization':
                'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'

@@ -1,3 +1,5 @@
+from wkcdd.libs.utils import translation_string_factory as _
+
 XFORM_ID = '_xform_id_string'
 
 PROJECT_NAME = 'p_name'
@@ -289,6 +291,50 @@ PERFORMANCE_INDICATORS = {
         ('bnf_income_achievement',
             'mproject_performance/bnf_income_achievement'),
         ('bnf_income_percentage', 'mproject_performance/bnf_income_percentage')
+    )
+}
+
+PERFORMANCE_INDICATOR_REPORTS = {
+    DAIRY_GOAT_PROJECT_REPORT = (
+        (_('Expected Total Community Contribution'),
+            ('exp_contribution',
+             'actual_contribution',
+             'community_contribution')),
+        (_('Number of local bucks acquired using Project funds'),
+            ('bucks_target', 'bucks_achievement', 'bucks_percentage')),
+        (_('Number of local does acquired using Project funds'),
+            ('does_proceeds_target',
+             'does_proceeds_achievement',
+             'does_proceeds_percentage')),
+        (_('Number of dairy goats acquired using \
+            Proceeds & other contributions'),
+            ('dg_proceeds_target',
+             'dg_proceeds_achievement',
+             'dg_proceeds_percentage')),
+        (_('Number of kids realised'),
+            ('kr_target', 'kr_achievement', 'kr_percentage')),
+        (_('Number of direct beneficiaries'),
+            ('db_target', 'db_achievement', 'db_percentage')),
+        (_('Number of male beneficiaries'),
+            ('mb_target', 'mb_achievement', 'mb_percentage')),
+        (_('No of female beneficiaries'),
+            ('fb_target', 'fb_achievement', 'fb_percentage')),
+        (_('No of vulnerable beneficiaries'),
+            ('vb_target', 'vb_achievement', 'vb_percentage')),
+        (_('Average number of cups of milk production per goat per month'),
+            ('m_production_target',
+             'm_production_achievement',
+             'm_production_percentage')),
+        (_('Average monthly total income earned \
+            from sale of milk by the group'),
+            ('grp_income_target',
+             'grp_income_achievement',
+             'grp_income_percentage')),
+        (_('Average total income earned from monthly sale \
+            of milk per beneficiary'),
+            ('milk_bnf_sale_target',
+             'milk_bnf_sale_achievement',
+             'milk_bnf_sale_percentage'))
     )
 }
 
