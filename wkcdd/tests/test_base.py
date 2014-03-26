@@ -156,7 +156,7 @@ class TestBase(unittest.TestCase):
 
     def setup_test_data(self):
         self._add_location_type()
-        self._add_location_type(name="sub-county")
+        self._add_location_type(name="sub_county")
         self._add_location_type(name="county")
 
         county = self._add_location(name="Bungoma",

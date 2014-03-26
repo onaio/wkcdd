@@ -39,7 +39,7 @@ class ProjectViews(object):
             sub_county = Location.get(Location.id == constituency.parent_id,
                                       Location.location_type ==
                                       LocationType.
-                                      get_or_create('sub-county').id)
+                                      get_or_create('sub_county').id)
             county = Location.get(Location.id == sub_county.parent_id,
                                   Location.location_type ==
                                   LocationType.get_or_create('county').id)
@@ -59,7 +59,7 @@ class ProjectViews(object):
         project = self.request.context
         reports = project.reports
         # TODO filter by periods
-        #periods = [report.period for report in reports]
+        # periods = [report.period for report in reports]
         report = reports[0]
         performance_indicators = report.calculate_performance_indicators()
         #TODO ensure the 1st report belongs to the latest period
