@@ -33,6 +33,8 @@ class Project(Base):
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
     sector = Column(String, nullable=False)
+    #TODO Possibly use postgis for geolocation
+    geolocation = Column(Text, nullable=True)
     project_type = relationship("ProjectType",
                                 backref=backref('project_types', order_by=id))
     reports = relationship("Report",
@@ -49,7 +51,7 @@ class Project(Base):
         constituency = Location.get_or_create(
             kwargs['constituency'], 'constituency', sub_county)
         community = Community.get_or_create(
-            kwargs['community_name'], constituency, kwargs['geolocation']
+            kwargs['community_name'], constituency
         )
         project_type = ProjectType.get_or_create(kwargs['project_type'])
 
@@ -57,7 +59,8 @@ class Project(Base):
                           name=kwargs['name'],
                           community_id=community.id,
                           project_type_id=project_type.id,
-                          sector=kwargs['sector'])
+                          sector=kwargs['sector'],
+                          geolocation=kwargs['geolocation'])
         project.save()
 
     def get_registered_projects(self):

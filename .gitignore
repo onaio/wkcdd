@@ -6,3 +6,5 @@
 *.coverage
 build
 .DS_Store
+.vagrant
+/ansible

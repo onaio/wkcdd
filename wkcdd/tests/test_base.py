@@ -78,7 +78,8 @@ class TestBase(unittest.TestCase):
             name=name,
             community=community,
             project_type=project_type,
-            sector="Dairy CGoat"
+            sector="Dairy Goat",
+            geolocation="0.0 0.0"
         )
 
         project.save()
@@ -108,10 +109,8 @@ class TestBase(unittest.TestCase):
 
         return project_type
 
-    def _add_community(self, name="Bukusu", constituency=None,
-                       geolocation="Lat 0.0, Long 0.0"):
-        community = Community(name=name, constituency=constituency,
-                              geolocation=geolocation)
+    def _add_community(self, name="Bukusu", constituency=None):
+        community = Community(name=name, constituency=constituency)
 
         community.save()
 
@@ -179,12 +178,10 @@ class TestBase(unittest.TestCase):
         project_type_g = self._add_project_type(name="Dairy Goat Project")
 
         community1 = self._add_community(name="Maragoli",
-                                         constituency=constituency1,
-                                         geolocation="Lat 0.0, Long 0.0")
+                                         constituency=constituency1)
 
         community2 = self._add_community(name="Bukusu",
-                                         constituency=constituency1,
-                                         geolocation="Lat 0.0, Long 0.0")
+                                         constituency=constituency1)
 
         self._add_project(community=community1,
                           project_type=project_type_c)
