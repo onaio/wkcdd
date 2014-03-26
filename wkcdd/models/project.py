@@ -9,13 +9,16 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import (
     relationship,
-    backref
+    backref,
+    scoped_session,
+    sessionmaker
 )
 from sqlalchemy.orm.exc import NoResultFound
-
+from zope.sqlalchemy import ZopeTransactionExtension
 from wkcdd.models import (
     Community,
     Location)
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 
 class Project(Base):
