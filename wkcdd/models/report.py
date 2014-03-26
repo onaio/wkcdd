@@ -16,7 +16,6 @@ from sqlalchemy.dialects.postgresql import JSON
 class Report(Base):
     __tablename__ = 'reports'
     id = Column(Integer, primary_key=True, nullable=False)
-    report_type = Column(String, nullable=False)
     project_code = Column(String, nullable=False, index=True)
     submission_time = Column(DateTime(timezone=True), nullable=False)
     month = Column(Integer, nullable=False)
