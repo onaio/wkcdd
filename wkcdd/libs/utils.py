@@ -1,4 +1,4 @@
-from pyramid.i18n import TranslationStringFactory, get_localizer
+from pyramid.i18n import TranslationStringFactory
 
 translation_string_factory = TranslationStringFactory('wkcdd')
 

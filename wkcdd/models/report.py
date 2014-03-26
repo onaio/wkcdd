@@ -1,8 +1,7 @@
 from wkcdd import constants
 
 from wkcdd.models.base import (
-    Base,
-    DBSession
+    Base
 )
 from sqlalchemy import (
     Column,

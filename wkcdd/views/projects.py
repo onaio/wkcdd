@@ -58,7 +58,8 @@ class ProjectViews(object):
     def show(self):
         project = self.request.context
         reports = project.reports
-        periods = [report.period for report in reports]
+        # TODO filter by periods
+        #periods = [report.period for report in reports]
         report = reports[0]
         performance_indicators = report.calculate_performance_indicators()
         #TODO ensure the 1st report belongs to the latest period

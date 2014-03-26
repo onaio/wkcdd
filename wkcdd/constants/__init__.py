@@ -460,7 +460,8 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('birds_target',
              'birds_achievement',
              'birds_percentage')),
-        (_('Number of birds acquired using proceeds & other contributions (Target & Actual)'),
+        (_('Number of birds acquired using proceeds & \
+           other contributions (Target & Actual)'),
             ('birds_proceeds_target',
              'birds_proceeds_achievement',
              'birds_proceeds_percentage')),

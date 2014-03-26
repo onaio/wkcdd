@@ -44,7 +44,7 @@ def includeme(config):
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',
-                    factory=ProjectFactory)
+                     factory=ProjectFactory)
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
     config.scan()
