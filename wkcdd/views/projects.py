@@ -8,6 +8,9 @@ from wkcdd.models.project import (
     Project,
     ProjectFactory
 )
+from wkcdd import constants
+
+from wkcdd.libs.utils import tuple_to_dict_list
 
 
 @view_defaults(route_name='projects')
@@ -27,14 +30,24 @@ class ProjectViews(object):
             'projects': projects
         }
 
-    @view_config(name='',
+    @view_config(name='show',
                  context=Project,
                  renderer='projects_show.jinja2',
                  request_method='GET')
     def show(self):
         project = self.request.context
         reports = project.reports
+        periods = [report.period for report in reports]
+        report = reports[0]
+        performance_indicators = report.calculate_performance_indicators()
+        #TODO ensure the 1st report belongs to the latest period
+        # impact_indicators = report.calculate_impact_indicators()
         return {
             'project': project,
-            'reports': reports
+            'report': report,
+            'performance_indicators': performance_indicators,
+            'performance_indicator_mapping': tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[
+                    report.report_data[constants.XFORM_ID]])
         }

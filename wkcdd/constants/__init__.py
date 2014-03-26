@@ -295,7 +295,7 @@ PERFORMANCE_INDICATORS = {
 }
 
 PERFORMANCE_INDICATOR_REPORTS = {
-    DAIRY_GOAT_PROJECT_REPORT = (
+    DAIRY_GOAT_PROJECT_REPORT: (
         (_('Expected Total Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
@@ -335,7 +335,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('milk_bnf_sale_target',
              'milk_bnf_sale_achievement',
              'milk_bnf_sale_percentage'))
-    )
+    ),
 }
 
 IMPACT_INDICATOR_KEYS = (
