@@ -273,6 +273,7 @@ PERFORMANCE_INDICATORS = {
         ('vb_achievement', 'mproject_performance/vb_achievement'),
         ('vb_percentage', 'mproject_performance/vb_percentage'),
         ('cr_target', 'mproject_performance/cr_target'),
+        ('cr_achievement', 'mproject_performance/cr_achievement'),
         ('cr_percentage', 'mproject_performance/cr_percentage'),
         ('dbirds_number', 'mproject_performance/dbirds_number'),
         ('bsold_target', 'mproject_performance/bsold_target'),
@@ -336,6 +337,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'milk_bnf_sale_achievement',
              'milk_bnf_sale_percentage'))
     ),
+
 }
 
 IMPACT_INDICATOR_KEYS = (
