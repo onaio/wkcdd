@@ -19,12 +19,12 @@
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
-    <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+         <div class="caption"><i class="icon-tasks"></i>Performance Indicators</div>
       </div>
       <div class="portlet-body">
+        {% if performance_indicator_mapping %}
          <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
                <thead>
@@ -49,9 +49,42 @@
                </tbody>
             </table>
          </div>
+        {% else %}
+          <div> {% trans %} No reports found {% endtrans %}</div>
+        {% endif %}
       </div>
     </div>
-    <!-- END SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Impact Indicators</div>
+      </div>
+      <div class="portlet-body">
+        {% if performance_indicator_mapping %}
+         <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+               <thead>
+                  <tr>
+                     <th>{% trans %} Outputs/ Outcomes/Impact Indicators {% endtrans %}</th>
+                     <th>{% trans %} Amount {% endtrans %}</th>
+                  </tr>
+               </thead>
+               <tbody>
+               {% for indicator in impact_indicator_mapping %}
+                <tr>
+                  <td>
+                    {{ indicator.title }}
+                  </td>
+                    <td>{{ impact_indicators[indicator.key] }}</td>
+                </tr>
+                {% endfor %}
+               </tbody>
+            </table>
+         </div>
+        {% else %}
+          <div> {% trans %} No reports found {% endtrans %}</div>
+        {% endif %}
+      </div>
+    </div>
 </div>
 {{response}}
 {% endblock content %}
