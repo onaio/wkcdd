@@ -32,6 +32,7 @@ class Project(Base):
                              backref=backref('communities', order_by=id))
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    sector = Column(String, nullable=False)
     project_type = relationship("ProjectType",
                                 backref=backref('project_types', order_by=id))
     reports = relationship("Report",
@@ -41,8 +42,12 @@ class Project(Base):
 
     @classmethod
     def create(self, **kwargs):
+        county = Location.get_or_create(
+            kwargs['county'], 'county', None)
+        sub_county = Location.get_or_create(
+            kwargs['sub_county'], 'sub_county', county)
         constituency = Location.get_or_create(
-            kwargs['constituency'], 'constituency')
+            kwargs['constituency'], 'constituency', sub_county)
         community = Community.get_or_create(
             kwargs['community_name'], constituency, kwargs['geolocation']
         )
@@ -51,7 +56,8 @@ class Project(Base):
         project = Project(code=kwargs['project_code'],
                           name=kwargs['name'],
                           community_id=community.id,
-                          project_type_id=project_type.id)
+                          project_type_id=project_type.id,
+                          sector=kwargs['sector'])
         project.save()
 
     def get_registered_projects(self):

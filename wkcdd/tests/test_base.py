@@ -77,7 +77,8 @@ class TestBase(unittest.TestCase):
             code=project_code,
             name=name,
             community=community,
-            project_type=project_type
+            project_type=project_type,
+            sector="Dairy CGoat"
         )
 
         project.save()
