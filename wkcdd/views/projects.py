@@ -66,10 +66,14 @@ class ProjectViews(object):
             return {
                 'project': project,
                 'performance_indicators': performance_indicators,
+                'impact_indicators': impact_indicators,
                 'performance_indicator_mapping': tuple_to_dict_list(
                     ('title', 'group'),
                     constants.PERFORMANCE_INDICATOR_REPORTS[
-                        report.report_data[constants.XFORM_ID]])
+                        report.report_data[constants.XFORM_ID]]),
+                'impact_indicator_mapping': tuple_to_dict_list(
+                    ('title', 'key'),
+                    constants.IMPACT_INDICATOR_REPORT)
             }
         else:
             return {

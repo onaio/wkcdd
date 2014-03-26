@@ -297,7 +297,7 @@ PERFORMANCE_INDICATORS = {
 
 PERFORMANCE_INDICATOR_REPORTS = {
     DAIRY_GOAT_PROJECT_REPORT: (
-        (_('Expected Total Community Contribution'),
+        (_('Total number of Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -338,7 +338,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'milk_bnf_sale_percentage'))
     ),
     DAIRY_COWS_PROJECT_REPORT: (
-        (_('Expected Total Community Contribution'),
+        (_('Total number of Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -378,7 +378,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'milk_grp_sale_percentage'))
     ),
     FIC_PROJECT_REPORT: (
-        (_('Expected Total Community Contribution'),
+        (_('Total number of Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -414,7 +414,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'bnf_income_percentage'))
     ),
     BODABODA_PROJECT_REPORT: (
-        (_('Expected Total Community Contribution'),
+        (_('Total number of Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -452,7 +452,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'bnf_income_percentage')),
     ),
     POULTRY_PROJECT_REPORT: (
-        (_('Expected Total Community Contribution'),
+        (_('Total number of Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -521,6 +521,19 @@ IMPACT_INDICATOR_KEYS = (
     ('no_of_b_improved_houses', 'impact_information/b_improved_houses'),
     ('no_of_b_hh_assets', 'impact_information/b_hh_assets'),
     ('no_of_children', 'impact_information/no_children')
+)
+
+IMPACT_INDICATOR_REPORT = (
+    (_('Number of beneficiaries with increased income earned \
+        from the project'), 'no_of_b_increased_income'),
+    (_('Number of beneficiaries with improved houses out of proceeds \
+            from the project'), 'no_of_b_improved_houses'),
+    (_('Number of beneficiaries with increased household \
+        assets acquired through proceeds from the project'),
+     'no_of_b_hh_assets'),
+    (_('Number of children in schools and other learning \
+        institutions supported by proceeds from project earnings'),
+     'no_of_children')
 )
 
 PROJECT_SECTORS = {
