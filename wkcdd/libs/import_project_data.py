@@ -48,9 +48,9 @@ def populate_reports_table(raw_data, project_report_code):
             submission_time=datetime.datetime.strptime(
                 report_data.get(constants.REPORT_SUBMISSION_TIME),
                 "%Y-%m-%dT%H:%M:%S"),
-            month=(report_data.get(constants.REPORT_MONTH)),
-            quarter=(report_data.get(constants.REPORT_QUARTER)),
-            period=(report_data.get(constants.REPORT_PERIOD)),
+            month=report_data.get(constants.REPORT_MONTH),
+            quarter=report_data.get(constants.REPORT_QUARTER),
+            period=report_data.get(constants.REPORT_PERIOD),
             report_data=report_data
         )
         Report.add_report_submission(report_submission)

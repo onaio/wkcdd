@@ -3,9 +3,7 @@ from wkcdd.models.report import Report
 from wkcdd.libs.import_project_data import(
     fetch_data,
     add_project,
-    populate_reports_table
-
-)
+    populate_reports_table)
 from wkcdd.tests.test_base import TestBase
 from wkcdd import constants
 
