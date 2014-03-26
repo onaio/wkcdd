@@ -40,7 +40,8 @@ class Project(Base):
     reports = relationship("Report",
                            backref=backref('project', order_by=id),
                            primaryjoin="Project.code == \
-                           foreign(Report.project_code)")
+                           foreign(Report.project_code)",
+                           order_by='desc(Report.submission_time)')
 
     @classmethod
     def create(self, **kwargs):
@@ -65,6 +66,12 @@ class Project(Base):
 
     def get_registered_projects(self):
         pass
+
+    def get_latest_report(self):
+        if self.reports:
+            return self.reports[0]
+        else:
+            return None
 
 
 class ProjectType(Base):
