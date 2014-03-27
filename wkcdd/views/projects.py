@@ -33,7 +33,7 @@ class ProjectViews(object):
         else:
             projects = Project.all()
 
-        #get locations (count and sub-county)
+        # get locations (count and sub-county)
         locations = Project.get_locations(projects)
 
         return {

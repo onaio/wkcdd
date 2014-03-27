@@ -30,4 +30,4 @@ def deploy(deployment="prod", branch="master"):
                 env.get('alembic_section', 'alembic')))
 
     # Reload uWSGI
-    run("/usr/local/bin/uwsgi --reload /var/run/whoahqa.pid")
+    run("/usr/local/bin/uwsgi --reload /var/run/wkcdd.pid")

@@ -116,23 +116,18 @@ Purchase: http://themeforest.net/item/conquer-responsive-admin-dashboard-templat
                </a>
               <ul class="sub-menu">
                   <li>
+                    <a href="">
+                      {% trans %} Project Indicators {% endtrans %}
+                    </a>
+                  </li>
+                  <li>
                     <a href="{{ request.route_url('projects', traverse=('')) }}">
-                      {{ gettext('Projects') }}
+                      {% trans %} Projects {% endtrans %}
                     </a>
                   </li>
                   <li>
                     <a href="">
-                      {{ gettext('Communities') }}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      {{ gettext('Locations') }}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="">
-                      {{ gettext('Reports') }}
+                      {% trans %} Reporting Status {% endtrans %}
                     </a>
                   </li>
               </ul>
