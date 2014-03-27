@@ -7,6 +7,7 @@
 * Total number of direct beneficiaries
 * Number of male beneficiaries
 * Number of female beneficiaries
+* No of vulnerable beneficiaries
 * Average number of cups of milk production per goat per month
 * Average monthly total income earned from sale of milk by the group
 * Average total income earned from monthly sale of milk per beneficiary

@@ -155,15 +155,21 @@ class TestBase(unittest.TestCase):
 
     def setup_test_data(self):
         self._add_location_type()
-        self._add_location_type(name="sub-county")
+        self._add_location_type(name="sub_county")
         self._add_location_type(name="county")
 
+        county = self._add_location(name="Bungoma",
+                                    parent_id=0,
+                                    location_type=3)
+
+        sub_county = self._add_location(name="Bungoma",
+                                        parent_id=county.id,
+                                        location_type=2)
+
         constituency1 = self._add_location(name="Kakamega",
-                                           parent_id=0,
+                                           parent_id=sub_county.id,
                                            location_type=1)
-        constituency2 = self._add_location(name="Bungoma",
-                                           parent_id=0,
-                                           location_type=2)
+
         self._add_location(name="Busia",
                            parent_id=0,
                            location_type=3)
@@ -175,7 +181,7 @@ class TestBase(unittest.TestCase):
                                          constituency=constituency1)
 
         community2 = self._add_community(name="Bukusu",
-                                         constituency=constituency2)
+                                         constituency=constituency1)
 
         self._add_project(community=community1,
                           project_type=project_type_c)
@@ -189,7 +195,16 @@ class TestBase(unittest.TestCase):
                           community=community2,
                           project_type=project_type_g
                           )
-
+        self._add_project(project_code="WRTD",
+                          name="Dairy Goat Project Center 2",
+                          community=community2,
+                          project_type=project_type_g
+                          )
+        self._add_project(project_code="NOREPORT",
+                          name="Dairy Goat Project Center 2",
+                          community=community2,
+                          project_type=project_type_g
+                          )
         self._add_form_types(name="registration")
         self._add_form_types(name="registration")
 
@@ -217,6 +232,15 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='KYJ7', report_data=report_data_3)
         self._add_report(project_code='YHCX', report_data=report_data_4)
         self._add_report(project_code='DRT4', report_data=report_data_5)
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 21))
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 12))
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 10))
 
 
 class IntegrationTestBase(TestBase):

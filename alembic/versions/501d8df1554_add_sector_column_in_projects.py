@@ -1,14 +1,14 @@
 """add sector column in projects
 
 Revision ID: 501d8df1554
-Revises: 2604c9c4a3e6
+Revises: 2901181e4776
 Create Date: 2014-03-25 22:12:45.510919
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '501d8df1554'
-down_revision = '2604c9c4a3e6'
+down_revision = '2901181e4776'
 
 from alembic import op
 import sqlalchemy as sa

@@ -1,4 +1,4 @@
-from wkcdd.models.base import Base
+from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
     Integer,
@@ -9,13 +9,18 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import (
     relationship,
-    backref
+    backref,
+    scoped_session,
+    sessionmaker
 )
 from sqlalchemy.orm.exc import NoResultFound
-
+from zope.sqlalchemy import ZopeTransactionExtension
 from wkcdd.models import (
     Community,
     Location)
+from wkcdd.models.location import LocationType
+
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 
 class Project(Base):
@@ -37,7 +42,8 @@ class Project(Base):
     reports = relationship("Report",
                            backref=backref('project', order_by=id),
                            primaryjoin="Project.code == \
-                           foreign(Report.project_code)")
+                           foreign(Report.project_code)",
+                           order_by='desc(Report.submission_time)')
 
     @classmethod
     def create(self, **kwargs):
@@ -60,8 +66,34 @@ class Project(Base):
                           geolocation=kwargs['geolocation'])
         project.save()
 
-    def get_registered_projects(self):
-        pass
+    def get_sub_county(self):
+        constituency = self.community.constituency
+        location_type = LocationType.get_or_create('sub_county').id
+
+        return Location.get(Location.id == constituency.parent_id,
+                            Location.location_type == location_type)
+
+    @classmethod
+    def get_county(cls, sub_county):
+        location_type = LocationType.get_or_create('county').id
+
+        return Location.get(Location.id == sub_county.parent_id,
+                            Location.location_type == location_type)
+
+    @classmethod
+    def get_locations(cls, projects):
+        locations = {}
+        for project in projects:
+            sub_county = project.get_sub_county()
+            locations[project.id] = [cls.get_county(sub_county), sub_county]
+
+        return locations
+
+    def get_latest_report(self):
+        if self.reports:
+            return self.reports[0]
+        else:
+            return None
 
 
 class ProjectType(Base):
@@ -78,3 +110,19 @@ class ProjectType(Base):
             project_type = ProjectType(name=name)
             project_type.save()
         return project_type
+
+
+class ProjectFactory(BaseModelFactory):
+    __acl__ = []
+
+    def __getitem__(self, item):
+        # try to retrieve the project whose id matches item
+        try:
+            project_id = int(item)
+            project = DBSession.query(Project).filter_by(id=project_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            project.__parent__ = self
+            project.__name__ = item
+            return project
