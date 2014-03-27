@@ -52,7 +52,8 @@ class TestProjectViews(IntegrationTestBase):
         self.request.GET = params
         response = self.project_views.list()
         self.assertEquals(len(response['projects']), 1)
-        self.assertEquals(response['projects'][0].name, 'Dairy Goat Project Center 1')
+        self.assertEquals(response['projects'][0].name,
+                          'Dairy Goat Project Center 1')
 
     def test_filter_project_list(self):
         pass

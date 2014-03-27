@@ -5,8 +5,16 @@ var Custom = function () {
 
     // private functions & variables
 
-    var myFunc = function(text) {
-        alert(text);
+    var ENTER_KEY_CODE = 13;
+    var filterProjectsTable = function() {
+        $("#search_term").keypress(function(e) {
+            var search_term, filter_url;
+            if (e.which == ENTER_KEY_CODE) {
+                search_term = $("#search_term").val();
+                filter_url = "?search="+search_term
+                window.location = filter_url;
+            }
+        });
     }
 
     // public functions
@@ -16,11 +24,8 @@ var Custom = function () {
         init: function () {
             //initialize here something.            
         },
-
-        //some helper function
-        doSomeStuff: function () {
-            myFunc();
-        }
+        //filterProjectsTable function
+        filterProjectsTable: filterProjectsTable
 
     };
 

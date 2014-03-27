@@ -20,11 +20,9 @@
       <div class="portlet-body">
          <div class="row">
              <div class="col-md-4">
-             <form class="" role="form" action="index.html">
                 <div class="input-icon right">
-                   <input type="text" class="form-control input-medium input-sm" name="search_project" placeholder="Search...">
+                   <input id="search_term" type="text" class="form-control input-medium input-sm" name="search_project" placeholder="Search...">
                 </div>
-             </form>
              </div>
              <div class="col-md-8">
                 <form class="form-inline">
@@ -87,3 +85,10 @@
 </div>
 {{response}}
 {% endblock content %}
+{% block page_scripts %}
+  <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+  {{ super() }}
+  Custom.filterProjectsTable();
+{% endblock %}
