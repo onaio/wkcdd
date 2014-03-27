@@ -195,7 +195,16 @@ class TestBase(unittest.TestCase):
                           community=community2,
                           project_type=project_type_g
                           )
-
+        self._add_project(project_code="WRTD",
+                          name="Dairy Goat Project Center 2",
+                          community=community2,
+                          project_type=project_type_g
+                          )
+        self._add_project(project_code="NOREPORT",
+                          name="Dairy Goat Project Center 2",
+                          community=community2,
+                          project_type=project_type_g
+                          )
         self._add_form_types(name="registration")
         self._add_form_types(name="registration")
 
@@ -223,6 +232,15 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='KYJ7', report_data=report_data_3)
         self._add_report(project_code='YHCX', report_data=report_data_4)
         self._add_report(project_code='DRT4', report_data=report_data_5)
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 21))
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 12))
+        self._add_report(project_code='WRTD',
+                         report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 10))
 
 
 class IntegrationTestBase(TestBase):

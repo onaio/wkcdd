@@ -29,7 +29,7 @@ class Report(Base):
     def calculate_impact_indicators(cls):
         impact_indicators = {}
         for key, impact_indicator_key in constants.IMPACT_INDICATOR_KEYS:
-            impact_indicators[key] = cls.report_data[impact_indicator_key]
+            impact_indicators[key] = cls.report_data.get(impact_indicator_key)
         return impact_indicators
 
     def calculate_performance_indicators(cls):
@@ -38,5 +38,5 @@ class Report(Base):
             in constants.PERFORMANCE_INDICATORS[cls.report_data[
                 constants.XFORM_ID]]:
             performance_indicators[key] = cls.\
-                report_data[performance_indicator_key]
+                report_data.get(performance_indicator_key)
         return performance_indicators

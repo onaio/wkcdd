@@ -43,19 +43,28 @@ class ProjectViews(object):
                  request_method='GET')
     def show(self):
         project = self.request.context
-        reports = project.reports
+        report = project.get_latest_report()
         # TODO filter by periods
         # periods = [report.period for report in reports]
-        report = reports[0]
-        performance_indicators = report.calculate_performance_indicators()
-        #TODO ensure the 1st report belongs to the latest period
-        # impact_indicators = report.calculate_impact_indicators()
-        return {
-            'project': project,
-            'report': report,
-            'performance_indicators': performance_indicators,
-            'performance_indicator_mapping': tuple_to_dict_list(
-                ('title', 'group'),
-                constants.PERFORMANCE_INDICATOR_REPORTS[
-                    report.report_data[constants.XFORM_ID]])
-        }
+        if report:
+            performance_indicators = report.calculate_performance_indicators()
+            impact_indicators = report.calculate_impact_indicators()
+            return {
+                'project': project,
+                'performance_indicators': performance_indicators,
+                'impact_indicators': impact_indicators,
+                'performance_indicator_mapping': tuple_to_dict_list(
+                    ('title', 'group'),
+                    constants.PERFORMANCE_INDICATOR_REPORTS[
+                        report.report_data[constants.XFORM_ID]]),
+                'impact_indicator_mapping': tuple_to_dict_list(
+                    ('title', 'key'),
+                    constants.IMPACT_INDICATOR_REPORT)
+            }
+        else:
+            return {
+                'project': project,
+                'performance_indicators': None,
+                'performance_indicator_mapping': None,
+                'impact_indicators': None
+            }
