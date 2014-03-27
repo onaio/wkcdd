@@ -39,10 +39,10 @@ POULTRY_PROJECT_CODE = 'poultry_projects'
 POULTRY_PROJECT_REPORT = 'poultry_project_report'
 POULTRY_PROJECT_REPORT_CODE = 'perfomance_summary/poultry_projects'
 
-BANANA_PROJECT_REGISTRATION='banana_project_registration2'
-BANANA_PROJECT_CODE='banana_projects'
-BANANA_PROJECT_REPORT='banana_project_report'
-BANANA_PROJECT_REPORT_CODE='performance_summary/banana_projects'
+BANANA_PROJECT_REGISTRATION = 'banana_project_registration2'
+BANANA_PROJECT_CODE = 'banana_projects'
+BANANA_PROJECT_REPORT = 'banana_project_report'
+BANANA_PROJECT_REPORT_CODE = 'performance_summary/banana_projects'
 
 REPORT_SUBMISSION_TIME = '_submission_time'
 REPORT_MONTH = 'perfomance_summary/month'
@@ -307,10 +307,11 @@ PERFORMANCE_INDICATORS = {
         ('community_contribution',
             'perfomance_summary/community_contribution'),
         ('plantlets_target', 'mproject_performance/plantlets_target'),
-        ('plantlets_achievement', 'mproject_performance/plantlets_achievement'),
+        ('plantlets_achievement',
+            'mproject_performance/plantlets_achievement'),
         ('plantlets_percentage', 'mproject_performance/plantlets_percentage'),
         ('plantlets_proceeds_target',
-            'mproject_performance/plantlets_proceeds_target
+            'mproject_performance/plantlets_proceeds_target'),
         ('plantlets_proceeds_achievement',
             'mproject_performance/plantlets_proceeds_achievement'),
         ('plantlets_proceeds_percentage',
@@ -319,8 +320,10 @@ PERFORMANCE_INDICATORS = {
         ('acreage_achievement', 'mproject_performance/acreage_achievement'),
         ('acreage_percentage', 'mproject_performance/acreage_percentage'),
         ('bb_harvested_target', 'mproject_performance/bb_harvested_target'),
-        ('bb_harvested_achievement', 'mproject_performance/bb_harvested_achievement'),
-        ('bb_harvested_percentage', 'mproject_performance/bb_harvested_percentage'),
+        ('bb_harvested_achievement',
+            'mproject_performance/bb_harvested_achievement'),
+        ('bb_harvested_percentage',
+            'mproject_performance/bb_harvested_percentage'),
         ('db_target', 'mproject_performance/db_target'),
         ('db_achievement', 'mproject_performance/db_achievement'),
         ('db_percentage', 'mproject_performance/db_percentage'),
@@ -340,7 +343,7 @@ PERFORMANCE_INDICATORS = {
         ('grp_achievement', 'impact_information/grp_achievement'),
         ('grp_percentage', 'impact_information/grp_percentage'),
         ('bnf_income_target', 'impact_information/bnf_income_target'),
-        ('bnf_income_achievement', 
+        ('bnf_income_achievement',
             'impact_information/bnf_income_achievement'),
         ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
     )
@@ -574,7 +577,8 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('plantlets_target',
              'plantlets_achievement',
              'plantlets_percentage')),
-        (_('Number of plantlets acquired using proceeds & other contributions'),
+        (_('Number of plantlets acquired using \
+            proceeds & other contributions'),
             ('plantlets_proceeds_target',
              'plantlets_proceeds_achievement',
              'plantlets_proceeds_percentage')),
@@ -614,7 +618,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
-    ) 
+    )
 }
 
 IMPACT_INDICATOR_KEYS = (
