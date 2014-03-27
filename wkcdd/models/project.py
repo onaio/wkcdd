@@ -18,6 +18,8 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from wkcdd.models import (
     Community,
     Location)
+from wkcdd.models.location import LocationType
+
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 
@@ -63,8 +65,28 @@ class Project(Base):
                           geolocation=kwargs['geolocation'])
         project.save()
 
-    def get_registered_projects(self):
-        pass
+    def get_sub_county(self):
+        constituency = self.community.constituency
+        location_type = LocationType.get_or_create('sub_county').id
+
+        return Location.get(Location.id == constituency.parent_id,
+                            Location.location_type == location_type)
+
+    @classmethod
+    def get_county(cls, sub_county):
+        location_type = LocationType.get_or_create('county').id
+
+        return Location.get(Location.id == sub_county.parent_id,
+                            Location.location_type == location_type)
+
+    @classmethod
+    def get_locations(cls, projects):
+        locations = {}
+        for project in projects:
+            sub_county = project.get_sub_county()
+            locations[project.id] = [cls.get_county(sub_county), sub_county]
+
+        return locations
 
 
 class ProjectType(Base):

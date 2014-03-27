@@ -9,10 +9,6 @@ from wkcdd.models.project import (
     ProjectFactory
 )
 
-from wkcdd.models.location import (
-    Location,
-    LocationType
-)
 
 from wkcdd import constants
 
@@ -32,18 +28,8 @@ class ProjectViews(object):
         project_types = ProjectType.all()
         projects = Project.all()
 
-        #get count and sub-county
-        locations = {}
-        for project in projects:
-            constituency = project.community.constituency
-            sub_county = Location.get(Location.id == constituency.parent_id,
-                                      Location.location_type ==
-                                      LocationType.
-                                      get_or_create('sub_county').id)
-            county = Location.get(Location.id == sub_county.parent_id,
-                                  Location.location_type ==
-                                  LocationType.get_or_create('county').id)
-            locations[project.id] = [county, sub_county]
+        #get locations (count and sub-county)
+        locations = Project.get_locations(projects)
 
         return {
             'project_types': project_types,
