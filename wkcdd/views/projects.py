@@ -26,7 +26,12 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-        projects = Project.all()
+        # Search for projects
+        search_term = self.request.GET.get('search')
+        if search_term is not None:
+            projects = Project.all(Project.name.ilike("%"+search_term+"%"))
+        else:
+            projects = Project.all()
 
         #get locations (count and sub-county)
         locations = Project.get_locations(projects)
