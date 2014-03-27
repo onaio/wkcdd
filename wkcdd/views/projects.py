@@ -28,7 +28,7 @@ class ProjectViews(object):
         project_types = ProjectType.all()
         projects = Project.all()
 
-        #get locations (count and sub-county)
+        # get locations (count and sub-county)
         locations = Project.get_locations(projects)
 
         return {

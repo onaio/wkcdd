@@ -35,7 +35,7 @@ class Project(Base):
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
     sector = Column(String, nullable=False)
-    #TODO Possibly use postgis for geolocation
+    # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
     project_type = relationship("ProjectType",
                                 backref=backref('project_types', order_by=id))
