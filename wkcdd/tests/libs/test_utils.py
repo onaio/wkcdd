@@ -8,7 +8,7 @@ from wkcdd.tests.test_base import TestBase
 from wkcdd import constants
 
 
-class TestUtil(TestBase):
+class TestProjectImport(TestBase):
     def test_populate_projects_table(self):
         count = Project.count()
         form, project_code = constants.PROJECT_REGISTRATION_FORMS[0]
