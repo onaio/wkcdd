@@ -1,0 +1,111 @@
+body{
+	background:#F0F1F2;
+	font-family:'Open Sans', sans-serif;
+	font-size:12px;
+}
+
+strong{ font-weight:700; }
+
+.cls{ clear:both; }
+.absolutes{
+	position:absolute;
+	top:0;bottom:0;left:0;right:0;
+}
+.bluefont{
+	color:#57B0D6;
+}
+.line-bottom{
+	border-bottom:1px solid #DDD;
+}
+table tr td{
+	padding:1em!important;
+}
+
+#wrapper{
+	top:0;bottom:0;left:0;right:0;
+	position:absolute;
+	overflow:hidden;
+}
+
+.header.navbar{
+	background:#2E4358;
+	color:#FFFFFF;
+	font-size:1.5em;
+	padding-top:.5em;
+}
+.header-inner .glyphicon-calendar{
+	color:#869CB3;
+}
+.head-title{
+	font-size:1.2em;
+	text-transform:uppercase;
+}
+.calendarbox{
+	margin-top:.2em;
+}
+.month-drop{
+	font-size:0.8em;
+	font-weight: bold;
+}
+.navbar-brand img{
+	margin-left:2em;
+}
+
+.page-container{
+	padding-top:2.2em;
+}
+.page-sidebar{
+	background:#414141;
+	min-height:45em;
+	max-width:8em;
+	padding:0;
+	padding-top:4em;
+	position:absolute;
+	top:0;bottom:0;
+}
+.nav-side{
+	margin:0;padding:0;
+}
+.nav-side li{
+	list-style: none;
+}
+.nav-side li a{
+	border-left:2px solid #414141;
+	color:#D1D2D2;
+	cursor:pointer;
+	display:block;
+	font-weight:bold;
+	padding:2em 1.5em 2em 1em;
+	text-decoration: none;
+	text-align:center;
+}
+.nav-side li a:hover, .nav-side li a.selected{
+	background:#262A33;
+	border-left:2px solid #3EB4C6;
+}
+.nav-tabs{
+	border-bottom:0;
+}
+#contentbox{
+	left:8em;
+	padding-top:4em;
+	overflow:auto;
+}
+.infobox{
+	padding-top:2em;
+}
+.indicator-info{
+	width:25%;
+}
+.tab-content{
+	background:#FFFFFF;
+	border:1px solid #DDD;
+	border-top:0!important;
+}
+#map{
+	height:30em;
+	overflow:hidden;
+}
+#map img{
+	width:100%;
+}
