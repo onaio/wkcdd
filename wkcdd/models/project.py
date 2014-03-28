@@ -33,7 +33,7 @@ class Project(Base):
     community_id = Column(Integer, ForeignKey('locations.id'),
                           nullable=False)
     community = relationship("Community",
-                             backref=backref('locations', order_by=id),
+                             backref=backref('projects', order_by=id),
                              primaryjoin="and_(\
                                 Project.community_id == Location.id, \
                                 Location.location_type =='community')")
