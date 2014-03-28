@@ -44,6 +44,11 @@ BANANA_PROJECT_CODE = 'banana_projects'
 BANANA_PROJECT_REPORT = 'banana_project_report'
 BANANA_PROJECT_REPORT_CODE = 'performance_summary/banana_projects'
 
+CATERING_PROJECT_REGISTRATION = 'catering_project_registration'
+CATERING_PROJECT_CODE = 'catering_projects'
+CATERING_PROJECT_REPORT = 'catering_project_report'
+CATERING_PROJECT_REPORT_CODE = 'performance_summary/catering_projects'
+
 REPORT_SUBMISSION_TIME = '_submission_time'
 REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
@@ -346,6 +351,41 @@ PERFORMANCE_INDICATORS = {
         ('bnf_income_achievement',
             'impact_information/bnf_income_achievement'),
         ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
+    ),
+    CATERING_PROJECT_REPORT: (
+        ('exp_contribution', 'perfomance_summary/exp_contribution'),
+        ('actual_contribution',
+            'perfomance_summary/actual_contribution'),
+        ('community_contribution',
+            'perfomance_summary/community_contribution'),
+        ('se_pf_target', 'mproject_performance/se_pf_target'),
+        ('se_pf_achievement', 'mproject_performance/se_pf_achievement')
+        ('se_pf_percentage', 'mproject_performance/se_pf_percentage'),
+        ('se_proceeds_target',
+            'mproject_performance/se_proceeds_target'),
+        ('se_proceeds_achievement',
+            'mproject_performance/se_proceeds_achievement'),
+        ('se_proceeds_percentage',
+            'mproject_performance/se_proceeds_percentage'),
+        ('db_target', 'mproject_performance/db_target'),
+        ('db_achievement', 'mproject_performance/db_achievement'),
+        ('db_percentage', 'mproject_performance/db_percentage'),
+        ('mb_target', 'mproject_performance/mb_target'),
+        ('mb_achievement', 'mproject_performance/mb_achievement'),
+        ('mb_percentage', 'mproject_performance/mb_percentage'),
+        ('fb_target', 'mproject_performance/fb_target'),
+        ('fb_achievement', 'mproject_performance/fb_achievement'),
+        ('fb_percentage', 'mproject_performance/fb_percentage'),
+        ('vb_target', 'mproject_performance/vb_target'),
+        ('vb_achievement', 'mproject_performance/vb_achievement'),
+        ('vb_percentage', 'mproject_performance/vb_percentage'),
+        ('grp_target', 'impact_information/grp_target'),
+        ('grp_achievement', 'impact_information/grp_achievement'),
+        ('grp_percentage', 'impact_information/grp_percentage'),
+        ('bnf_income_target', 'impact_information/bnf_income_target'),
+        ('bnf_income_achievement',
+            'impact_information/bnf_income_achievement'),
+        ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
     )
 }
 
@@ -618,7 +658,45 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
-    )
+    ),
+    CATERING_PROJECT_REPORT: (
+        (_('Total number of Community Contribution'),
+            ('exp_contribution',
+             'actual_contribution',
+             'community_contribution')),
+        (_('Sets of equipments acquired using project funds'),
+            ('se_pf_target',
+             'se_pf_achievement',
+             'se_pf_percentage')),
+        (_('Sets of equipments acquired using project funds'),
+            ('se_proceeds_target',
+             'se_proceeds_achievement',
+             'se_proceeds_percentage')),
+        (_('Total number of direct beneficiaries'),
+            ('db_target',
+             'db_achievement',
+             'db_percentage')),
+        (_('Number of male beneficiaries'),
+            ('mb_target',
+             'mb_achievement',
+             'mb_percentage')),
+        (_('Number of female beneficiaries'),
+            ('fb_target',
+             'fb_achievement',
+             'fb_percentage')),
+        (_('Number of vulnerable beneficiaries'),
+            ('vb_target',
+             'vb_achievement',
+             'vb_percentage')),
+         (_('Monthly average income earned by the group'),
+            ('grp_target',
+             'grp_achievement',
+             'grp_percentage')),
+        (_('Monthly average income earned per beneficiary'),
+            ('bnf_income_target',
+             'bnf_income_achievement',
+             'bnf_income_percentage')),
+        )
 }
 
 IMPACT_INDICATOR_KEYS = (
