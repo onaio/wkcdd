@@ -33,7 +33,10 @@ class Project(Base):
     community_id = Column(Integer, ForeignKey('locations.id'),
                           nullable=False)
     community = relationship("Community",
-                             backref=backref('locations', order_by=id))
+                             backref=backref('locations', order_by=id),
+                             primaryjoin="and_(\
+                                Project.community_id == Location.id, \
+                                Location.location_type =='community')")
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
     sector = Column(String, nullable=False)
