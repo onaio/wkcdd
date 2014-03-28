@@ -1,4 +1,9 @@
-from wkcdd.models.base import Base
+from wkcdd.models.base import (
+    Base,
+    BaseModelFactory,
+    DBSession
+)
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -52,3 +57,20 @@ class LocationType(Base):
                 location_type.save()
 
             return location_type
+
+
+class LocationFactory(BaseModelFactory):
+    __acl__ = []
+
+    def __getitem__(self, item):
+        # try to retrieve the project whose id matches item
+        try:
+            location_id = int(item)
+            location = DBSession.query(Location).\
+                filter_by(id=location_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            location.__parent__ = self
+            location.__name__ = item
+            return location
