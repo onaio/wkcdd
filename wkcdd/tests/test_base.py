@@ -17,16 +17,9 @@ from wkcdd import main
 from wkcdd.models.base import (
     DBSession,
     Base)
-from wkcdd.models.location import (
-    Location,
-    LocationType
-)
 from wkcdd.models.project import(
     Project,
     ProjectType
-)
-from wkcdd.models.community import(
-    Community
 )
 from wkcdd.models.form import (
     Form,
@@ -34,6 +27,14 @@ from wkcdd.models.form import (
 )
 from wkcdd.models.report import (
     Report
+)
+
+from wkcdd.models.constituency import Constituency
+from wkcdd.models.county import County
+
+from wkcdd.models import (
+    Community,
+    SubCounty
 )
 
 SETTINGS_FILE = 'test.ini'
@@ -86,35 +87,38 @@ class TestBase(unittest.TestCase):
 
         return project
 
-    def _add_location_type(self, name="constituency"):
-
-        location_type = LocationType(name=name)
-
-        location_type.save()
-
-        return location_type
-
-    def _add_location(self, name="Kakamega", parent_id=0,
-                      location_type=1):
-        location = Location(
-            name=name, parent_id=parent_id, location_type=location_type)
+    def _add_county(self, name="Kakamega", parent_id=0):
+        location = County(name=name, parent_id=parent_id)
 
         location.save()
+        return location
 
+    def _add_sub_county(self, name="Kakamega", parent_id=0):
+        location = SubCounty(name=name, parent_id=parent_id)
+
+        location.save()
         return location
 
     def _add_project_type(self, name="Dairy Cow Project"):
         project_type = ProjectType(name=name)
+
         project_type.save()
 
         return project_type
 
-    def _add_community(self, name="Bukusu", constituency=None):
-        community = Community(name=name, constituency=constituency)
+    def _add_community(self, name="Community", parent_id=0):
+        community = Community(name=name, parent_id=parent_id)
 
         community.save()
 
         return community
+
+    def _add_constituency(self, name="Constituency", parent_id=0):
+        constituency = Constituency(name=name, parent_id=parent_id)
+
+        constituency.save()
+
+        return constituency
 
     def _add_form_types(self, name='registration'):
         form_type = FormTypes(name=name)
@@ -154,34 +158,23 @@ class TestBase(unittest.TestCase):
             DBSession.flush()
 
     def setup_test_data(self):
-        self._add_location_type()
-        self._add_location_type(name="sub_county")
-        self._add_location_type(name="county")
+        county = self._add_county(name="Bungoma", parent_id=0)
 
-        county = self._add_location(name="Bungoma",
-                                    parent_id=0,
-                                    location_type=3)
+        sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
 
-        sub_county = self._add_location(name="Bungoma",
-                                        parent_id=county.id,
-                                        location_type=2)
+        constituency1 = self._add_constituency(name="Kakamega",
+                                               parent_id=sub_county.id)
 
-        constituency1 = self._add_location(name="Kakamega",
-                                           parent_id=sub_county.id,
-                                           location_type=1)
-
-        self._add_location(name="Busia",
-                           parent_id=0,
-                           location_type=3)
+        self._add_county(name="Busia", parent_id=0)
 
         project_type_c = self._add_project_type(name="Dairy Cow Project")
         project_type_g = self._add_project_type(name="Dairy Goat Project")
 
         community1 = self._add_community(name="Maragoli",
-                                         constituency=constituency1)
+                                         parent_id=constituency1.id)
 
         community2 = self._add_community(name="Bukusu",
-                                         constituency=constituency1)
+                                         parent_id=constituency1.id)
 
         self._add_project(community=community1,
                           project_type=project_type_c)
