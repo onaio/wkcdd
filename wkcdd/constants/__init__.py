@@ -668,7 +668,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('se_pf_target',
              'se_pf_achievement',
              'se_pf_percentage')),
-        (_('Sets of equipments acquired using project funds'),
+        (_('Sets of equipments acquired using proceeds and other contributions'),
             ('se_proceeds_target',
              'se_proceeds_achievement',
              'se_proceeds_percentage')),
@@ -725,5 +725,6 @@ PROJECT_SECTORS = {
     FIC_PROJECT_REGISTRATION: "Field Industrial Crops",
     BODABODA_PROJECT_REGISTRATION: "Motor Cycle",
     POULTRY_PROJECT_REGISTRATION: "Poultry",
-    BANANA_PROJECT_REGISTRATION: "Banana"
+    BANANA_PROJECT_REGISTRATION: "Banana",
+    CATERING_PROJECT_REGISTRATION: "Catering"
 }
