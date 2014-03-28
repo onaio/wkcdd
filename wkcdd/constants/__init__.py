@@ -50,7 +50,7 @@ CATERING_PROJECT_REPORT = 'catering_project_report'
 CATERING_PROJECT_REPORT_CODE = 'performance_summary/catering_projects'
 
 PIGGERY_PROJECT_REGISTRATION = 'piggery_project_registration'
-PIGGERY_PROJECT_CODE = 'piggery_projects
+PIGGERY_PROJECT_CODE = 'piggery_projects'
 PIGGERY_PROJECT_REPORT = 'piggery_project_report'
 PIGGERY_PROJECT_REPORT_CODE = 'perfomance_summary/piggery_projects'
 
@@ -368,7 +368,7 @@ PERFORMANCE_INDICATORS = {
         ('community_contribution',
             'perfomance_summary/community_contribution'),
         ('se_pf_target', 'mproject_performance/se_pf_target'),
-        ('se_pf_achievement', 'mproject_performance/se_pf_achievement')
+        ('se_pf_achievement', 'mproject_performance/se_pf_achievement'),
         ('se_pf_percentage', 'mproject_performance/se_pf_percentage'),
         ('se_proceeds_target',
             'mproject_performance/se_proceeds_target'),
@@ -409,15 +409,17 @@ PERFORMANCE_INDICATORS = {
             'mproject_performance/pigs_proceeds_achievement'),
         ('pigs_proceeds_percentage',
             'mproject_performance/pigs_proceeds_percentage'),
-        ('piglets_realized_target', 'mproject_performance/piglets_realized_target'),
-        ('piglets_realized_achievement', 
+        ('piglets_realized_target',
+            'mproject_performance/piglets_realized_target'),
+        ('piglets_realized_achievement',
             'mproject_performance/piglets_realized_achievement'),
         ('piglets_realized_percentage',
             'mproject_performance/piglets_realized_percentage'),
         ('dpigs_piglets_target', 'mproject_performance/dpigs_piglets_target'),
         ('dpigs_piglets_number', 'mproject_performance/dpigs_piglets_number'),
         ('pigs_sold_target', 'mproject_performance/pigs_sold_target'),
-        ('pigs_sold_achievement', 'mproject_performance/pigs_sold_achievement'),
+        ('pigs_sold_achievement',
+            'mproject_performance/pigs_sold_achievement'),
         ('pigs_sold_percentage', 'mproject_performance/pigs_sold_percentage'),
         ('db_target', 'impact_information/db_target'),
         ('db_achievement', 'impact_information/db_achievement'),
@@ -720,7 +722,8 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('se_pf_target',
              'se_pf_achievement',
              'se_pf_percentage')),
-        (_('Sets of equipments acquired using proceeds and other contributions'),
+        (_('Sets of equipments acquired using proceeds \
+            and other contributions'),
             ('se_proceeds_target',
              'se_proceeds_achievement',
              'se_proceeds_percentage')),
@@ -740,7 +743,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('vb_target',
              'vb_achievement',
              'vb_percentage')),
-         (_('Monthly average income earned by the group'),
+        (_('Monthly average income earned by the group'),
             ('grp_target',
              'grp_achievement',
              'grp_percentage')),
@@ -750,7 +753,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'bnf_income_percentage')),
     ),
     PIGGERY_PROJECT_REPORT: (
-        (_('Total Community Contribution''),
+        (_('Total Community Contribution'),
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
@@ -767,9 +770,9 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'piglets_realized_achievement',
              'piglets_realized_percentage')),
         (_('Total number of pigs+piglets lost through death'),
-            ('dpigs_piglets_target', '', ''),
+            ('dpigs_piglets_target', '', '')),
         (_('Total number of pigs sold'),
-             ('pigs_sold_target',
+            ('pigs_sold_target',
              'pigs_sold_achievement',
              'pigs_sold_percentage')),
         (_('Total number of direct beneficiaries'),
@@ -796,9 +799,8 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
-    ),
+    )
 }
-
 IMPACT_INDICATOR_KEYS = (
     ('no_of_b_increased_income', 'impact_information/b_income'),
     ('no_of_b_improved_houses', 'impact_information/b_improved_houses'),
