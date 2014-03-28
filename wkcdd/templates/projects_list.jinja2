@@ -28,23 +28,27 @@
                 <form class="form-inline">
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Sector--</option>
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
+                    {% for key in filter_criteria["sectors"] %}
+                        <option value="{{ filter_criteria['sectors'][key] }}">{{ filter_criteria["sectors"][key]}}</option>
+                    {% endfor %}
                 </select>
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--County--</option>
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
+                    {% for county in filter_criteria["counties"] %}
+                        <option value="{{ county.id }}">{{ county.name }}</option>
+                    {% endfor %}
                 </select>
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Sub-County--</option>
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
+                    {% for sub_county in filter_criteria["sub_counties"] %}
+                        <option value="{{ sub_county.id }}">{{ sub_county.name }}</option>
+                    {% endfor %}
                 </select>
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Community--</option>
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
+                    {% for community in filter_criteria["communities"] %}
+                        <option value="{{ community.id }}">{{ community.name }}</option>
+                    {% endfor %}
                 </select>
                 <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
                 </form>

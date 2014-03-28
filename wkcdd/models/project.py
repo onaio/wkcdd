@@ -1,3 +1,4 @@
+from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
@@ -66,8 +67,8 @@ class Project(Base):
                           geolocation=kwargs['geolocation'])
         project.save()
 
-    def get_sub_county(self):
-        constituency = self.community.constituency
+    @classmethod
+    def get_sub_county(cls, constituency):
         location_type = LocationType.get_or_create('sub_county').id
 
         return Location.get(Location.id == constituency.parent_id,
@@ -84,8 +85,10 @@ class Project(Base):
     def get_locations(cls, projects):
         locations = {}
         for project in projects:
-            sub_county = project.get_sub_county()
-            locations[project.id] = [cls.get_county(sub_county), sub_county]
+            constituency = project.community.constituency
+            sub_county = project.get_sub_county(constituency)
+            county = project.get_county(sub_county)
+            locations[project.id] = [county, sub_county]
 
         return locations
 
@@ -94,6 +97,21 @@ class Project(Base):
             return self.reports[0]
         else:
             return None
+
+    @classmethod
+    def get_filter_criteria(cls):
+        filter_criteria = {
+            'sectors': constants.PROJECT_SECTORS,
+            'counties': Location.all(Location.location_type ==
+                                     LocationType.
+                                     get_or_create('county').id),
+            'sub_counties': Location.all(Location.location_type ==
+                                         LocationType.
+                                         get_or_create('sub_county').id),
+            'communities': Community.all(),
+        }
+
+        return filter_criteria
 
 
 class ProjectType(Base):

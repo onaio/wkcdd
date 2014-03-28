@@ -35,11 +35,14 @@ class ProjectViews(object):
 
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)
+        # get filter criteria
+        filter_criteria = Project.get_filter_criteria()
 
         return {
             'project_types': project_types,
             'projects': projects,
-            'locations': locations
+            'locations': locations,
+            'filter_criteria': filter_criteria
         }
 
     @view_config(name='show',

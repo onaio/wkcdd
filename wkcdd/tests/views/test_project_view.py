@@ -56,7 +56,7 @@ class TestProjectViews(IntegrationTestBase):
                           'Dairy Goat Project Center 1')
 
     def test_filter_project_list(self):
-        pass
+        self.setup_test_data()
 
 
 class TestProjectViewsFunctional(FunctionalTestBase):
