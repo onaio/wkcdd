@@ -10,6 +10,7 @@ from wkcdd.models.base import (
     DBSession,
     Base)
 from wkcdd.models.project import ProjectFactory
+from wkcdd.models.location import LocationFactory
 
 
 def main(global_config, **settings):
@@ -45,6 +46,14 @@ def includeme(config):
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',
                      factory=ProjectFactory)
+    config.add_route('community', '/community/*traverse',
+                     factory=LocationFactory)
+    config.add_route('constituency', '/constituency/*traverse',
+                     factory=LocationFactory)
+    config.add_route('sub_county', '/sub_county/*traverse',
+                     factory=LocationFactory)
+    config.add_route('county', '/county/*traverse',
+                     factory=LocationFactory)
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
     config.scan()
