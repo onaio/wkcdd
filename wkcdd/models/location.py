@@ -22,7 +22,7 @@ class Location(Base):
 
         location_type = LocationType.get_or_create(location_type)
 
-        #get Location parent_id
+        # get Location parent_id
         parent_id = parent.id if parent is not None else 0
 
         try:
