@@ -194,7 +194,9 @@ class TestReport(TestBase):
         self.setup_test_data()
         project = Project.get(Project.code == 'NOREPORT')
         results = Report.get_aggregated_project_indicators([project])
-        self.assertFalse(results['indicator_list'])
+        project_indicators_map = results['indicator_list'][0]
+        self.assertFalse(project_indicators_map['indicators'])
+        self.assertEqual(project_indicators_map['project_id'], project.id)
         self.assertFalse(results['summary'])
 
     def test_impact_indicator_aggregation_with_one_project(self):
@@ -204,7 +206,7 @@ class TestReport(TestBase):
         results = Report.get_aggregated_project_indicators([project])
         summary = results['summary']
         project_indicators_map = results['indicator_list'][0]
-        self.assertEqual(project_indicators_map['project_code'], project_code)
+        self.assertEqual(project_indicators_map['project_id'], project.id)
         self.assertEqual(
             project_indicators_map['indicators']['no_of_b_hh_assets'], '3')
         self.assertEqual(summary['no_of_b_improved_houses'], 1)
@@ -222,9 +224,9 @@ class TestReport(TestBase):
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
         self.assertEqual(
-            project_indicators_a['project_code'], project_code_list[0])
+            project_indicators_a['project_id'], project_list[0].id)
         self.assertEqual(
-            project_indicators_b['project_code'], project_code_list[1])
+            project_indicators_b['project_id'], project_list[1].id)
         self.assertTrue(
             'no_of_b_hh_assets' in project_indicators_a['indicators'])
         self.assertEqual(summary['no_of_b_improved_houses'], 1)
@@ -261,9 +263,9 @@ class TestReport(TestBase):
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
         self.assertEqual(
-            project_indicators_a['project_code'], project_code_list[0])
+            project_indicators_a['project_id'], project_list[0].id)
         self.assertEqual(
-            project_indicators_b['project_code'], project_code_list[1])
+            project_indicators_b['project_id'], project_list[1].id)
         self.assertTrue(
             'exp_contribution' in project_indicators_a['indicators']
             and 'exp_contribution' in project_indicators_b['indicators'])

@@ -75,11 +75,10 @@ class Report(Base):
                             report.calculate_performance_indicators())
                     project_indicators_map = {
                         'project_name': project.name,
-                        'project_code': project.code,
+                        'project_id': project.id,
                         'indicators': p_impact_indicators
                     }
                     indicator_list.append(project_indicators_map)
-
                     if is_impact:
                         for key, value in p_impact_indicators.items():
                             if summary.get(key):
@@ -88,7 +87,12 @@ class Report(Base):
                             else:
                                 summary[key] = int(value)
                 else:
-                    continue
+                    project_indicators_map = {
+                        'project_name': project.name,
+                        'project_id': project.id,
+                        'indicators': None
+                    }
+                    indicator_list.append(project_indicators_map)
             return {
                 'indicator_list': indicator_list,
                 'summary': summary
