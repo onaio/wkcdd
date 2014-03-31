@@ -190,6 +190,13 @@ class TestReport(TestBase):
         self.assertEqual(results['indicator_list'], None)
         self.assertEqual(results['summary'], None)
 
+    def test_impact_indicator_aggregation_with_no_projects(self):
+        self.setup_test_data()
+        project = Project.get(Project.code == 'NOREPORT')
+        results = Report.get_aggregated_project_indicators([project])
+        self.assertFalse(results['indicator_list'])
+        self.assertFalse(results['summary'])
+
     def test_impact_indicator_aggregation_with_one_project(self):
         self.setup_test_data()
         project_code = 'YH9T'

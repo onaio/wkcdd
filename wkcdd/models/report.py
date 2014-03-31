@@ -49,7 +49,8 @@ class Report(Base):
         returns {
             'indicator_list': [
                 {
-                    'name': project_name_a
+                    'project_name': project_name_a,
+                    'project_code': project_code,
                     'indicators': indicators_for_project_a
                 },
                 {
@@ -65,25 +66,29 @@ class Report(Base):
         if project_list:
             for project in project_list:
                 report = project.get_latest_report()
-                if(is_impact):
-                    p_impact_indicators = report.calculate_impact_indicators()
-                else:
-                    p_impact_indicators = (
-                        report.calculate_performance_indicators())
-                project_indicators_map = {
-                    'project_name': project.name,
-                    'project_code': project.code,
-                    'indicators': p_impact_indicators
-                }
-                indicator_list.append(project_indicators_map)
+                if report:
+                    if is_impact:
+                        p_impact_indicators = (
+                            report.calculate_impact_indicators())
+                    else:
+                        p_impact_indicators = (
+                            report.calculate_performance_indicators())
+                    project_indicators_map = {
+                        'project_name': project.name,
+                        'project_code': project.code,
+                        'indicators': p_impact_indicators
+                    }
+                    indicator_list.append(project_indicators_map)
 
-                if is_impact:
-                    for key, value in p_impact_indicators.items():
-                        if summary.get(key):
-                            value = 0 if value is None else value
-                            summary[key] += int(value)
-                        else:
-                            summary[key] = int(value)
+                    if is_impact:
+                        for key, value in p_impact_indicators.items():
+                            if summary.get(key):
+                                value = 0 if value is None else value
+                                summary[key] += int(value)
+                            else:
+                                summary[key] = int(value)
+                else:
+                    continue
             return {
                 'indicator_list': indicator_list,
                 'summary': summary
