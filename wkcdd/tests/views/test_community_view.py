@@ -4,6 +4,7 @@ from wkcdd.tests.test_base import (
     FunctionalTestBase
 )
 from wkcdd.views.community import CommunityView
+from wkcdd.models.community import Community
 
 
 class TestCommunityView(IntegrationTestBase):
@@ -14,6 +15,10 @@ class TestCommunityView(IntegrationTestBase):
 
     def test_community_list_all_projects(self):
         self.setup_test_data()
+        community = Community.get(Community.name == 'Maragoli')
+        self.request.context = community
+        response = self.community_view.list_all_projects()
+        self.assertIsInstance((response['community']), Community)
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):
