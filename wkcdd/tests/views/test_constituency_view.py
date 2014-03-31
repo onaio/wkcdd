@@ -5,6 +5,7 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.views.constituency import ConstituencyView
 from wkcdd.models.constituency import Constituency
+from wkcdd.models.location import Location
 
 
 class TestConstituencyView(IntegrationTestBase):
@@ -22,4 +23,10 @@ class TestConstituencyView(IntegrationTestBase):
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):
-    pass
+    def test_constituency_list_all_communities_view(self):
+        self.setup_test_data()
+        constituency = Location.get(Location.name == 'Kakamega',
+                                    Location.location_type == 'constituency')
+        url = self.request.route_path('constituency', traverse=constituency.id)
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
