@@ -20,9 +20,11 @@ class TestConstituencyView(IntegrationTestBase):
         self.request.context = constituency
         response = self.constituency_view.list_all_communities()
         self.assertIsInstance(response['constituency'], Constituency)
+        self.assertEquals(response['communities'][0].name, "Maragoli")
+        self.assertEquals(response['locations']['county'].name, "Bungoma")
 
 
-class TestCommunityViewsFunctional(FunctionalTestBase):
+class TestConstituencyViewsFunctional(FunctionalTestBase):
     def test_constituency_list_all_communities_view(self):
         self.setup_test_data()
         constituency = Location.get(Location.name == 'Kakamega',
