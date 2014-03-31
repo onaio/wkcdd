@@ -52,18 +52,28 @@
                   </tr>
                </thead>
                <tbody>
-               {% for project_indicator in aggregated_impact_indicators['indicator_list'] %}
+                <tr>
+                  <td>
+                    {% trans %} Total Summary {% endtrans %}
+                  </td>
+                  {% for indicator in impact_indicator_mapping %}
+                    <td>
+                        {{ aggregated_impact_indicators['summary'][indicator.key]|default('-') }}
+                    </td>
+                  {% endfor %}
+                </tr>
+               {% for project_indicator_map in aggregated_impact_indicators['indicator_list'] %}
                   <tr>
                     <td>
-                        <a href="{{ request.route_url('projects', traverse=(project_indicator['project_id'].id, 'show')) }}">
-                          {{ project_indicator['project_name'] }}
+                        <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
+                          {{ project_indicator_map['project_name'] }}
                         </a>
                     </td>
-                    <td>
-                      {% for indicator in impact_indicator_mapping %}
-                        {{ project_indicator[indicator] }}
-                      {% endfor %}
-                    </td>
+                    {% for indicator in impact_indicator_mapping %}
+                      <td>
+                          {{ project_indicator_map['indicators'][indicator.key]|default('-') }}
+                      </td>
+                    {% endfor %}
                   </tr>
                {% endfor %}
                </tbody>
