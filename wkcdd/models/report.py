@@ -40,3 +40,55 @@ class Report(Base):
             performance_indicators[key] = cls.\
                 report_data.get(performance_indicator_key)
         return performance_indicators
+
+    @classmethod
+    def get_aggregated_project_indicators(cls, project_list, is_impact=True):
+        '''
+        Returns a compiled list of impact indicators from the supplied project
+        list.
+        returns {
+            'indicator_list': [
+                {
+                    'name': project_name_a
+                    'indicators': indicators_for_project_a
+                },
+                {
+                    'name': project_name_b
+                    'indicators': indicators_for_project_b
+                }
+            ],
+            'summary': {sum_of_all_individual_indicators}
+        }
+        '''
+        indicator_list = []
+        summary = {}
+        if project_list:
+            for project in project_list:
+                report = project.get_latest_report()
+                if(is_impact):
+                    p_impact_indicators = report.calculate_impact_indicators()
+                else:
+                    p_impact_indicators = (
+                        report.calculate_performance_indicators())
+                project_indicators_map = {
+                    'project_name': project.name,
+                    'project_code': project.code,
+                    'indicators': p_impact_indicators
+                }
+                indicator_list.append(project_indicators_map)
+
+                for key, value in p_impact_indicators.items():
+                    if summary.get(key):
+                        value = 0 if value is None else value
+                        summary[key] += int(value)
+                    else:
+                        summary[key] = int(value)
+            return {
+                'indicator_list': indicator_list,
+                'summary': summary
+            }
+        else:
+            return {
+                'indicator_list': None,
+                'summary': None
+            }
