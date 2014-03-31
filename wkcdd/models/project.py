@@ -71,9 +71,12 @@ class Project(Base):
         project.save()
 
     @classmethod
-    def get_sub_county(cls, community):
+    def get_constituency(cls, community):
         constituency_id = community.parent_id
-        constituency = Location.get(Location.id == constituency_id)
+        return Location.get(Location.id == constituency_id)
+
+    @classmethod
+    def get_sub_county(cls, constituency):
         sub_county_id = constituency.parent_id
         return Location.get(Location.id == sub_county_id)
 
@@ -86,8 +89,10 @@ class Project(Base):
     def get_locations(cls, projects):
         locations = {}
         for project in projects:
-            sub_county = project.get_sub_county(project.community)
-            locations[project.id] = [cls.get_county(sub_county), sub_county]
+            constituency = project.get_constituency(project.community)
+            sub_county = project.get_sub_county(constituency)
+            county = project.get_county(sub_county)
+            locations[project.id] = [county, sub_county, constituency]
 
         return locations
 
