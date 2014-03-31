@@ -16,9 +16,7 @@ class TestReport(TestBase):
 
     def test_add_report_submission(self):
         project_code = 'TG1F'
-        self._add_location_type()
-        constituency = self._add_location()
-        community = self._add_community(constituency=constituency)
+        community = self._add_community()
         project_type = self._add_project_type()
         self._add_project(project_code=project_code, community=community,
                           project_type=project_type)
