@@ -185,12 +185,12 @@ class TestReport(TestBase):
     # on that project
     # 3. Passing a list of projects should calculate impact and performance
     # aggregator totals
-    def test_get_aggregated_impact_indicators_with_no_projects(self):
+    def test_impact_indicator_aggregation_with_no_projects(self):
         results = Report.get_aggregated_project_indicators(None)
         self.assertEqual(results['indicator_list'], None)
         self.assertEqual(results['summary'], None)
 
-    def test_get_aggregated_impact_indicator_with_one_project(self):
+    def test_impact_indicator_aggregation_with_one_project(self):
         self.setup_test_data()
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
@@ -203,7 +203,7 @@ class TestReport(TestBase):
         self.assertEqual(summary['no_of_b_improved_houses'], 1)
         self.assertEqual(summary['no_of_b_increased_income'], 1)
 
-    def test_get_aggregated_impact_indicator_with_many_projects(self):
+    def test_impact_indicator_aggregation_with_many_projects(self):
         self.setup_test_data()
         project_code_list = ['YH9T', 'JDCV']
         project_list = []
@@ -225,6 +225,41 @@ class TestReport(TestBase):
         self.assertEqual(summary['no_of_children'], 8)
         self.assertEqual(summary['no_of_b_hh_assets'], 3)
 
-    # def test_get_aggregated_performance_indicators_with_one_project(self):
-    #     project = Project.get(Project.code == 'YH9T')
-    #     results = Report.get_aggregated_performance_indicators(project)
+    def test_performance_indicator_aggregation_with_one_project(self):
+        self.setup_test_data()
+        project_code = 'YH9T'
+        project = Project.get(Project.code == project_code)
+        results = Report.get_aggregated_project_indicators([project], False)
+        summary = results['summary']
+        project_indicators_map = results['indicator_list'][0]
+        self.assertEqual(
+            project_indicators_map['indicators']['exp_contribution'], '56000')
+        self.assertEqual(
+            project_indicators_map['indicators']['community_contribution'],
+            '173')
+        self.assertEqual(
+            project_indicators_map['indicators']['vb_achievement'], '4')
+        self.assertNotIn('no_of_children',
+                         project_indicators_map['indicators'])
+
+    def test_performance_indicator_aggregation_with_many_projects(self):
+        self.setup_test_data()
+        project_code_list = ['YH9T', 'JDCV']
+        project_list = []
+        for code in project_code_list:
+            project = Project.get(Project.code == code)
+            project_list.append(project)
+        results = Report.get_aggregated_project_indicators(project_list, False)
+        summary = results['summary']
+        project_indicators_a = results['indicator_list'][0]
+        project_indicators_b = results['indicator_list'][1]
+        self.assertEqual(
+            project_indicators_a['project_code'], project_code_list[0])
+        self.assertEqual(
+            project_indicators_b['project_code'], project_code_list[1])
+        self.assertTrue(
+            'exp_contribution' in project_indicators_a['indicators']
+            and 'exp_contribution' in project_indicators_b['indicators'])
+        self.assertTrue(
+            'community_contribution' in project_indicators_a['indicators']
+            and 'community_contribution' in project_indicators_b['indicators'])
