@@ -2,13 +2,31 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {% trans %} Projects {% endtrans %}
+    {{ community.name }}
     <small></small>
   </h3>
 {% endblock %}
 {% block breadcrumbs %}
-  <li>Projects</li>
-  <li><a href="#"> </a></li>
+  <li>
+      <a href="#">Projects Indicators</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('county',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      {{ community.name }}
+  </li>
+
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -23,12 +41,13 @@
                <thead>
                   <tr>
                      <th>{% trans %} Name {% endtrans %}</th>
-                     <th>{% trans %} Sector {% endtrans %}</th>
-                     <th>{% trans %} County  {% endtrans %}</th>
-                     <th>{% trans %} Sub-county {% endtrans %}</th>
-                     <th>{% trans %} Constituency {% endtrans %}</th>
-                     <th>{% trans %} Community {% endtrans %}</th>
-                     <th></th>
+                     {% for indicator in impact_indicator_mapping %}
+                        <th>
+
+                        {{ indicator.title }}
+
+                        </th>
+                     {% endfor %}
 
                   </tr>
                </thead>
@@ -36,12 +55,11 @@
                {% for project in projects %}
                   <tr>
                      <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
-                     <td>{{ project.sector }}</td>
-                     <td>{{ locations[project.id][0].name}}</td>
-                     <td>{{ locations[project.id][1].name}}</td>
-                     <td>{{ locations[project.id][2].name }}</td>
-                     <td>{{ project.community.name }}</td>
-                     <td> Edit</td>
+                     {% for indicator in impact_indicator_mapping %}
+                        <td>
+                        {{ indicator.title }}
+                        </td>
+                     {% endfor %}
                   </tr>
                {% endfor %}
                </tbody>
