@@ -234,9 +234,6 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
                          submission_time=datetime.datetime(2014, 3, 10))
-        import ipdb; ipdb.set_trace()
-        transaction.begin()
-        transaction.commit()
 
 
 class IntegrationTestBase(TestBase):
