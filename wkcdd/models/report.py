@@ -43,7 +43,7 @@ class Report(Base):
 
     @classmethod
     def get_aggregated_project_indicators(cls, project_list, is_impact=True):
-        '''
+        """
         Returns a compiled list of impact or performance indicators from
         the supplied project list.
         returns {
@@ -60,7 +60,7 @@ class Report(Base):
             ],
             'summary': {sum_of_all_individual_indicators}
         }
-        '''
+        """
         indicator_list = []
         summary = {}
         if project_list:
@@ -81,8 +81,8 @@ class Report(Base):
                     indicator_list.append(project_indicators_map)
                     if is_impact:
                         for key, value in p_impact_indicators.items():
+                            value = 0 if value is None else value
                             if summary.get(key):
-                                value = 0 if value is None else value
                                 summary[key] += int(value)
                             else:
                                 summary[key] = int(value)
