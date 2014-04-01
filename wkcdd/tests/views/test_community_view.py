@@ -48,7 +48,8 @@ class TestCommunityView(IntegrationTestBase):
 class TestCommunityViewsFunctional(FunctionalTestBase):
     def test_community_list_all_projects_view(self):
         self.setup_test_data()
-        community = Location.get(Location.name == 'Maragoli')
+        community = Location.get(Location.name == 'Maragoli',
+                                 Location.location_type == 'community')
         url = self.request.route_path('community', traverse=community.id)
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)

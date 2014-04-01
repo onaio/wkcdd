@@ -52,7 +52,7 @@ def includeme(config):
                      factory=LocationFactory)
     config.add_route('sub_county', '/sub_county/*traverse',
                      factory=LocationFactory)
-    config.add_route('county', '/county/*traverse',
+    config.add_route('counties', '/counties/*traverse',
                      factory=LocationFactory)
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
