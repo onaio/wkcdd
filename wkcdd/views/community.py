@@ -19,6 +19,9 @@ class CommunityView(object):
                  renderer='community_projects_list.jinja2',
                  request_method='GET')
     def list_all_projects(self):
+        # TODO: eager load the constituency, county and sub-county
+        # http://docs.sqlalchemy.org/en/rel_0_9/orm/tutorial.html#eager-loading
+        # http://docs.sqlalchemy.org/en/rel_0_9/orm/relationships.html#self-referential-query-strategies
         community = self.request.context
         projects = community.projects
         constituency = Project.get_constituency(community)
