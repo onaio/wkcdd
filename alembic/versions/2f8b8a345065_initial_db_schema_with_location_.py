@@ -1,14 +1,14 @@
 """Initial DB Schema with Location Subclasses
 
 Revision ID: 2f8b8a345065
-Revises: d372bacdb27
+Revises: None
 Create Date: 2014-03-28 15:56:58.589728
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '2f8b8a345065'
-down_revision = 'd372bacdb27'
+down_revision = None
 
 from alembic import op
 import sqlalchemy as sa

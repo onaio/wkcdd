@@ -1,4 +1,5 @@
 {% extends 'base.jinja2' %}
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -71,7 +72,7 @@
                     </td>
                     {% for indicator in impact_indicator_mapping %}
                       <td>
-                          {{ project_indicator_map['indicators'][indicator.key]|default('-') }}
+                        {{ value_or_default(project_indicator_map['indicators'][indicator.key], '-') }}
                       </td>
                     {% endfor %}
                   </tr>
