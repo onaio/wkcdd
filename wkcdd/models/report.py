@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from wkcdd import constants
 
 from wkcdd.models.base import (
@@ -62,7 +64,7 @@ class Report(Base):
         }
         """
         indicator_list = []
-        summary = {}
+        summary = defaultdict(lambda: 0)
         if project_list:
             for project in project_list:
                 report = project.get_latest_report()
@@ -70,6 +72,9 @@ class Report(Base):
                     if is_impact:
                         p_impact_indicators = (
                             report.calculate_impact_indicators())
+                        for key, value in p_impact_indicators.items():
+                            value = 0 if value is None else value
+                            summary[key] += int(value)
                     else:
                         p_impact_indicators = (
                             report.calculate_performance_indicators())
@@ -78,21 +83,14 @@ class Report(Base):
                         'project_id': project.id,
                         'indicators': p_impact_indicators
                     }
-                    indicator_list.append(project_indicators_map)
-                    if is_impact:
-                        for key, value in p_impact_indicators.items():
-                            value = 0 if value is None else value
-                            if summary.get(key):
-                                summary[key] += int(value)
-                            else:
-                                summary[key] = int(value)
                 else:
                     project_indicators_map = {
                         'project_name': project.name,
                         'project_id': project.id,
                         'indicators': None
                     }
-                    indicator_list.append(project_indicators_map)
+
+                indicator_list.append(project_indicators_map)
             return {
                 'indicator_list': indicator_list,
                 'summary': summary
