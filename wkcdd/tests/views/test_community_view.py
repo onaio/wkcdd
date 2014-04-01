@@ -14,14 +14,35 @@ class TestCommunityView(IntegrationTestBase):
         self.request = testing.DummyRequest()
         self.community_view = CommunityView(self.request)
 
-    def test_community_list_all_projects(self):
+    def test_community_list_all_projects_with_no_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
         self.request.context = community
         response = self.community_view.list_all_projects()
+        project_indicator_list = (
+            response['aggregated_impact_indicators']['indicator_list'])
         self.assertIsInstance(response['community'], Community)
-        self.assertEquals(response['projects'][0].code, "FR3A")
         self.assertEquals(response['locations']['county'].name, "Bungoma")
+        self.assertEquals(project_indicator_list[0]['project_name'],
+                          'Dairy Cow Project Center 1')
+        self.assertIn('summary', response['aggregated_impact_indicators'])
+
+    def test_community_list_all_with_projects_and_reports(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == 'Bukusu')
+        self.request.context = community
+        response = self.community_view.list_all_projects()
+        project_indicator_list = (
+            response['aggregated_impact_indicators']['indicator_list'])
+        self.assertIsInstance(response['community'], Community)
+        self.assertEquals(response['locations']['county'].name, "Bungoma")
+        self.assertEquals(project_indicator_list[0]['project_name'],
+                          'Dairy Goat Project Center 1')
+        self.assertEquals(project_indicator_list[0]['project_id'], 2)
+        self.assertIn('summary', response['aggregated_impact_indicators'])
+        self.assertIn(
+            response['impact_indicator_mapping'][0]['key'],
+            project_indicator_list[0]['indicators'])
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):

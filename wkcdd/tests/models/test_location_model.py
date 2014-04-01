@@ -1,6 +1,6 @@
-from wkcdd.tests.test_base import TestBase
+from wkcdd.models import Location
 
-from wkcdd.models.location import Location
+from wkcdd.tests.test_base import TestBase
 
 
 class TestLocation(TestBase):

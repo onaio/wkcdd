@@ -49,6 +49,16 @@ class Location(Base):
 
         return location
 
+    @classmethod
+    def get_location_ids(cls, klass, parent_ids):
+        """
+        Get a list of location ids whose parent_id is in parent_ids
+        """
+        return DBSession\
+            .query(klass.id)\
+            .filter(cls.parent_id.in_(parent_ids))\
+            .all()
+
 
 class LocationFactory(BaseModelFactory):
     __acl__ = []
