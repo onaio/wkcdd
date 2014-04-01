@@ -7,6 +7,7 @@ from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.models import utils
 
 
 @view_defaults(route_name='community')
@@ -22,7 +23,7 @@ class CommunityView(object):
                  request_method='GET')
     def show(self):
         community = self.request.context
-        projects = community.projects
+        projects = utils.get_project_list([community.id])
         locations = self.get_locations(community)
         indicator_mapping, aggregated_indicators = (
             self.get_impact_indicators(projects))
