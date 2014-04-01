@@ -1,4 +1,5 @@
 {% extends 'base.jinja2' %}
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -52,14 +53,28 @@
                   </tr>
                </thead>
                <tbody>
-               {% for project in projects %}
+                <tr>
+                  <td>
+                    {% trans %} Total Summary {% endtrans %}
+                  </td>
+                  {% for indicator in impact_indicator_mapping %}
+                    <td>
+                        {{ aggregated_impact_indicators['summary'][indicator.key]|default('-') }}
+                    </td>
+                  {% endfor %}
+                </tr>
+               {% for project_indicator_map in aggregated_impact_indicators['indicator_list'] %}
                   <tr>
-                     <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
-                     {% for indicator in impact_indicator_mapping %}
-                        <td>
-                        {{ indicator.title }}
-                        </td>
-                     {% endfor %}
+                    <td>
+                        <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
+                          {{ project_indicator_map['project_name'] }}
+                        </a>
+                    </td>
+                    {% for indicator in impact_indicator_mapping %}
+                      <td>
+                        {{ value_or_default(project_indicator_map['indicators'][indicator.key], '-') }}
+                      </td>
+                    {% endfor %}
                   </tr>
                {% endfor %}
                </tbody>
