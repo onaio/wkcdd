@@ -34,6 +34,10 @@ class CommunityView(object):
             'indicator_mapping': indicator_mapping
         }
 
+    @view_config(name='performance',
+                 context=Community,
+                 renderer='community_projects_performance_table.jinja2',
+                 request_method='GET')
     def performance(self):
         community = self.request.context
         projects = community.projects
@@ -43,6 +47,7 @@ class CommunityView(object):
         return {
             'community': community,
             'locations': locations,
+            'project_types': constants.PROJECT_REPORT_SECTORS.values(),
             'aggregated_indicators': aggregated_indicators,
             'indicator_mapping': indicator_mapping
         }
@@ -67,8 +72,10 @@ class CommunityView(object):
     def get_performance_indicators(self, projects):
         aggregated_indicators = (
             Report.get_aggregated_project_indicators(projects, False))
-        indicator_mapping = tuple_to_dict_list(
+        mapping = tuple_to_dict_list(
             ('title', 'group'),
             constants.PERFORMANCE_INDICATOR_REPORTS[
                 self.DEFAULT_PROJECT_TYPE])
+        indicator_mapping = [(indicator['title'], indicator['group'][1])
+                             for indicator in mapping]
         return (indicator_mapping, aggregated_indicators)

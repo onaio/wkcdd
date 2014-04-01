@@ -50,7 +50,7 @@ class TestCommunityView(IntegrationTestBase):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
         self.request.context = community
-        response = self.community_view.show()
+        response = self.community_view.performance()
         project_indicator_list = (
             response['aggregated_indicators']['indicator_list'])
         self.assertIsInstance(response['community'], Community)
@@ -70,20 +70,11 @@ class TestCommunityViewsFunctional(FunctionalTestBase):
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_community_impact_indicator_view(self):
-        self.setup_test_data()
-        community = Location.get(Location.name == 'Maragoli',
-                                 Location.location_type == 'community')
-        url = self.request.route_path(
-            'community', traverse=(community.id, 'show', 'impact'))
-        response = self.testapp.get(url)
-        self.assertEqual(response.status_code, 200)
-
     def test_community_performance_indicator_view(self):
         self.setup_test_data()
         community = Location.get(Location.name == 'Maragoli',
                                  Location.location_type == 'community')
         url = self.request.route_path(
-            'community', traverse=(community.id, 'show', 'performance'))
+            'community', traverse=(community.id, 'performance'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
