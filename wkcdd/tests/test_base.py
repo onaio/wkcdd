@@ -158,6 +158,7 @@ class TestBase(unittest.TestCase):
             DBSession.flush()
 
     def setup_test_data(self):
+        transaction.begin()
         county = self._add_county(name="Bungoma", parent_id=0)
 
         sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
@@ -234,6 +235,7 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
                          submission_time=datetime.datetime(2014, 3, 10))
+        transaction.commit()
 
 
 class IntegrationTestBase(TestBase):

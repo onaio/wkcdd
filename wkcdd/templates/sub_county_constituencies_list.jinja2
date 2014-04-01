@@ -2,7 +2,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ community.name }}
+    {{ sub_county.name }}
     <small></small>
   </h3>
 {% endblock %}
@@ -16,15 +16,7 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      {{ community.name }}
+      {{ sub_county.name }}
   </li>
 
 {% endblock %}
@@ -52,9 +44,9 @@
                   </tr>
                </thead>
                <tbody>
-               {% for project in projects %}
+               {% for constituency in constituencies %}
                   <tr>
-                     <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
+                     <td><a href="{{ request.route_url('constituency', traverse=constituency.id) }}">{{ constituency.name }}</a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
                         {{ indicator.title }}
