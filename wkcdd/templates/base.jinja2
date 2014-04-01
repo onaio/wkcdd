@@ -182,6 +182,12 @@ Purchase: http://themeforest.net/item/conquer-responsive-admin-dashboard-templat
                <!-- END PAGE TITLE & BREADCRUMB-->
             </div>
          </div>
+         <div class="row">
+            <ul class="list-inline">
+               {% block indicators %}
+               {% endblock %} 
+            </ul>
+         </div>
          <!-- END PAGE HEADER-->
          <!-- BEGIN PAGE CONTENT-->
          {% block content %}{% endblock %}

@@ -831,3 +831,15 @@ PROJECT_SECTORS = {
     CATERING_PROJECT_REGISTRATION: "Catering",
     PIGGERY_PROJECT_REGISTRATION: "Piggery"
 }
+
+# TODO Eliminate duplication
+PROJECT_REPORT_SECTORS = {
+    DAIRY_GOAT_PROJECT_REPORT: _("Dairy Goat"),
+    DAIRY_COWS_PROJECT_REPORT: _("Dairy Cows"),
+    FIC_PROJECT_REPORT: _("Field Industrial Crops"),
+    BODABODA_PROJECT_REPORT: _("Motor Cycle"),
+    POULTRY_PROJECT_REPORT: _("Poultry"),
+    BANANA_PROJECT_REPORT: _("Banana"),
+    CATERING_PROJECT_REPORT: _("Catering"),
+    PIGGERY_PROJECT_REPORT: _("Piggery")
+}
