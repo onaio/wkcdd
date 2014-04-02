@@ -2,6 +2,7 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
+from wkcdd.models import Location
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
 from wkcdd.models.project import Project
@@ -33,22 +34,13 @@ class ConstituencyView(object):
         impact_indicator_mapping = tuple_to_dict_list(
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
-        community_impact_indicators = {}
-        total_indicator_summary = defaultdict(int)
-        for community in communities:
-            projects = get_project_list([community.id])
-            indicators = Report.get_aggregated_project_indicators(projects)
-            community_impact_indicators[community.id] = indicators
-            for indicator in impact_indicator_mapping:
-                total_indicator_summary[indicator['key']] += (
-                    community_impact_indicators[community.id]
-                    ['summary'][indicator['key']])
+        impact_indicators = \
+            Report.get_location_indicator_aggregation(Location.CONSTITUENCY, communities)
 
         return {
             'constituency': constituency,
             'communities': communities,
             'locations': locations,
-            'community_impact_indicators': community_impact_indicators,
-            'total_indicator_summary': total_indicator_summary,
+            'impact_indicators': impact_indicators,
             'impact_indicator_mapping': impact_indicator_mapping
         }

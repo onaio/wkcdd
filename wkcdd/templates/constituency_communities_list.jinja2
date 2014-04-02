@@ -55,7 +55,7 @@
                   </td>
                   {% for indicator in impact_indicator_mapping %}
                     <td>
-                        {{ total_indicator_summary[indicator.key]|default('-') }}
+                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
                     </td>
                   {% endfor %}
                </tr>
@@ -64,7 +64,7 @@
                      <td><a href="{{ request.route_url('community', traverse=community.id) }}">{{ community.name }}</a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
-                         {{  community_impact_indicators[community.id]['summary'][indicator.key]|default('-') }}
+                         {{  impact_indicators['aggregated_impact_indicators'][community.id]['summary'][indicator.key]|default('-') }}
                         </td>
                      {% endfor %}
                   </tr>
