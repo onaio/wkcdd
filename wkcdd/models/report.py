@@ -63,9 +63,11 @@ class Report(Base):
             'summary': {sum_of_all_individual_indicators}
         }
         """
-        indicator_list = []
-        summary = defaultdict(lambda: 0)
+        indicator_list = None
+        summary = None
         if project_list:
+            indicator_list = []
+            summary = defaultdict(int)
             for project in project_list:
                 report = project.get_latest_report()
                 if report:
@@ -91,12 +93,7 @@ class Report(Base):
                     }
 
                 indicator_list.append(project_indicators_map)
-            return {
-                'indicator_list': indicator_list,
-                'summary': summary
-            }
-        else:
-            return {
-                'indicator_list': None,
-                'summary': None
-            }
+        return {
+            'indicator_list': indicator_list,
+            'summary': summary
+        }
