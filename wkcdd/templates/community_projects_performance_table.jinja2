@@ -53,6 +53,23 @@
           <i class="icon-tasks"></i>
           {% trans %}Projects {% endtrans %}
         </div>
+        <div class="actions">
+              <div class="btn-group">
+                 <a class="btn btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+                 {{ selected_project_name }}
+                 <i class="icon-angle-down "></i>
+                 </a>
+                 <ul class="dropdown-menu pull-right">
+                  {% for project_sector in project_report_sectors.items() %}
+                    <li>
+                      <a href="{{ request.route_url('community',traverse=(community.id, 'performance'), _query={'type': project_sector[0]}) }}">
+                        {{ project_sector[1] }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                 </ul>
+              </div>
+           </div>
       </div>
       <div class="portlet-body">
          <div class="table-responsive">

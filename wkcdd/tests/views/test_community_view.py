@@ -1,3 +1,4 @@
+from copy import deepcopy
 from webob.multidict import MultiDict
 from pyramid import testing
 from wkcdd.tests.test_base import (
@@ -50,14 +51,30 @@ class TestCommunityView(IntegrationTestBase):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
         self.request.context = community
+        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
+        del(project_report_sectors[self.community_view.DEFAULT_PROJECT_TYPE])
         response = self.community_view.performance()
         project_indicator_list = (
             response['aggregated_indicators']['indicator_list'])
         self.assertIsInstance(response['community'], Community)
-        self.assertEqual(response['project_types'],
-                         constants.PROJECT_REPORT_SECTORS.values())
+        self.assertEqual(response['project_report_sectors'],
+                         (project_report_sectors))
         self.assertEquals(project_indicator_list[0]['project_name'],
                           'Dairy Cow Project Center 1')
+
+    def test_performance_indicator_project_type_selection(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == 'Maragoli')
+        params = MultiDict({'type': constants.FIC_PROJECT_REPORT})
+        self.request.GET = params
+        self.request.context = community
+        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
+        response = self.community_view.performance()
+        self.assertEqual(response['selected_project_name'],
+                         project_report_sectors[constants.FIC_PROJECT_REPORT])
+        del(project_report_sectors[constants.FIC_PROJECT_REPORT])
+        self.assertEqual(response['project_report_sectors'],
+                         (project_report_sectors))
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):
