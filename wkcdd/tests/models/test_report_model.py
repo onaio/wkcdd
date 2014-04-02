@@ -5,6 +5,7 @@ import os
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
+from wkcdd.models import County
 
 
 class TestReport(TestBase):
@@ -270,3 +271,11 @@ class TestReport(TestBase):
         self.assertTrue(
             'community_contribution' in project_indicators_a['indicators']
             and 'community_contribution' in project_indicators_b['indicators'])
+
+    def test_get_location_indicator_aggregation(self):
+        self.setup_test_data()
+        counties = County.all()
+        results = Report.get_location_indicator_aggregation(counties)
+        self.assertIsNotNone(results['aggregated_impact_indicators']
+                             [counties[0].id])
+        self.assertEquals(len(results['total_indicator_summary']), 4)
