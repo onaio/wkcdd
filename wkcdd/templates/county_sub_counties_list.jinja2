@@ -9,7 +9,7 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="#">Projects Indicators</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -22,7 +22,7 @@
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+         <div class="caption"><i class="icon-tasks"></i>{% trans %}Sub-Counties{% endtrans %}</div>
       </div>
       <div class="portlet-body">
          <div class="table-responsive">
