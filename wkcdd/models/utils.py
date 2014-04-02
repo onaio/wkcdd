@@ -1,6 +1,9 @@
 from wkcdd.models.base import DBSession
 from wkcdd.models import (
-    Location, SubCounty, Constituency, Community, Project)
+    Location, Project)
+from wkcdd.models.sub_county import SubCounty
+from wkcdd.models.constituency import Constituency
+from wkcdd.models.community import Community
 
 
 def get_sub_county_ids(county_ids):
