@@ -1,6 +1,8 @@
 from collections import defaultdict
 
 from wkcdd import constants
+from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.models import Location
 
 from wkcdd.models.base import (
     Base
@@ -12,6 +14,12 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.dialects.postgresql import JSON
+from wkcdd.models.utils import (
+    get_project_list,
+    get_community_ids,
+    get_constituency_ids,
+    get_sub_county_ids
+)
 
 
 class Report(Base):
@@ -98,4 +106,45 @@ class Report(Base):
         return {
             'indicator_list': indicator_list,
             'summary': summary
+        }
+
+    @classmethod
+    def get_location_indicator_aggregation(cls,
+                                           child_locations,
+                                           location_type="All"):
+        impact_indicator_mapping = tuple_to_dict_list(
+            ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
+
+        impact_indicators = {}
+        total_indicator_summary = defaultdict(int)
+        for child_location in child_locations:
+            if location_type == Location.CONSTITUENCY:
+                # Child location is community
+                projects = get_project_list([child_location.id])
+            elif location_type == Location.SUB_COUNTY:
+                # Child location is constituency
+                projects = get_project_list(
+                    get_community_ids([child_location.id]))
+            elif location_type == Location.COUNTY:
+                # Child location is sub_county
+                projects = get_project_list(get_community_ids
+                                            (get_constituency_ids
+                                             ([child_location.id])))
+            elif location_type == "All":
+                # child location == county
+                projects = get_project_list(get_community_ids
+                                            (get_constituency_ids
+                                             (get_sub_county_ids
+                                              ([child_location.id]))))
+
+            indicators = Report.get_aggregated_project_indicators(projects)
+            impact_indicators[child_location.id] = indicators
+            for indicator in impact_indicator_mapping:
+                total_indicator_summary[indicator['key']] += (
+                    impact_indicators[child_location.id]
+                    ['summary'][indicator['key']])
+
+        return {
+            'aggregated_impact_indicators': impact_indicators,
+            'total_indicator_summary': total_indicator_summary
         }

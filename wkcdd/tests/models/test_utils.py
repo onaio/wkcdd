@@ -23,7 +23,7 @@ class TestUtils(TestBase):
         sub_county_ids = [sub_county.id for sub_county in SubCounty.all()]
         # get the constituency ids
         constituency_ids = utils.get_constituency_ids(sub_county_ids)
-        self.assertEqual(len(constituency_ids), 1)
+        self.assertEqual(len(constituency_ids), 2)
         # get the constituency(s)
         constituency = Constituency.get(Constituency.id == constituency_ids[0])
         self.assertEqual(constituency.name, "Kakamega")
@@ -33,11 +33,12 @@ class TestUtils(TestBase):
         # get the constituency ids
         constituency_ids = [c.id for c in Constituency.all()]
         community_ids = utils.get_community_ids(constituency_ids)
-        self.assertEqual(len(community_ids), 2)
+        self.assertEqual(len(community_ids), 3)
         community_names = DBSession.query(
             Community.name).filter(Community.id.in_(community_ids)).all()
         self.assertListEqual(
-            [c.name for c in community_names], ['Maragoli', 'Bukusu'])
+            [c.name for c in community_names],
+            ['Rwatama', 'Maragoli', 'Bukusu'])
 
     def test_get_project_list_from_community_ids(self):
         self.setup_test_data()

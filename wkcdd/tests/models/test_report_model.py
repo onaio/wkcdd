@@ -5,6 +5,7 @@ import os
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
+from wkcdd.models import County
 
 
 class TestReport(TestBase):
@@ -190,7 +191,7 @@ class TestReport(TestBase):
         self.assertEqual(results['indicator_list'], None)
         self.assertEqual(results['summary'], None)
 
-    def test_impact_indicator_aggregation_with_no_projects(self):
+    def test_impact_indicator_aggregation_with_no_reports(self):
         self.setup_test_data()
         project = Project.get(Project.code == 'NOREPORT')
         results = Report.get_aggregated_project_indicators([project])
@@ -239,7 +240,6 @@ class TestReport(TestBase):
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
         results = Report.get_aggregated_project_indicators([project], False)
-        summary = results['summary']
         project_indicators_map = results['indicator_list'][0]
         self.assertEqual(
             project_indicators_map['indicators']['exp_contribution'], '56000')
@@ -259,7 +259,6 @@ class TestReport(TestBase):
             project = Project.get(Project.code == code)
             project_list.append(project)
         results = Report.get_aggregated_project_indicators(project_list, False)
-        summary = results['summary']
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
         self.assertEqual(
@@ -272,3 +271,11 @@ class TestReport(TestBase):
         self.assertTrue(
             'community_contribution' in project_indicators_a['indicators']
             and 'community_contribution' in project_indicators_b['indicators'])
+
+    def test_get_location_indicator_aggregation(self):
+        self.setup_test_data()
+        counties = County.all()
+        results = Report.get_location_indicator_aggregation(counties)
+        self.assertIsNotNone(results['aggregated_impact_indicators']
+                             [counties[0].id])
+        self.assertEquals(len(results['total_indicator_summary']), 4)

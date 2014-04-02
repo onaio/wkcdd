@@ -167,7 +167,12 @@ class TestBase(unittest.TestCase):
         constituency1 = self._add_constituency(name="Kakamega",
                                                parent_id=sub_county.id)
 
-        self._add_county(name="Busia", parent_id=0)
+        county2 = self._add_county(name="Busia", parent_id=0)
+        sub_county2 = self._add_sub_county(name="Teso", parent_id=county2.id)
+        constituency3 = self._add_constituency(name="Amagoro",
+                                               parent_id=sub_county2.id)
+        community3 = self._add_community(name="Rwatama",
+                                         parent_id=constituency3.id)
 
         project_type_c = self._add_project_type(name="Dairy Cow Project")
         project_type_g = self._add_project_type(name="Dairy Goat Project")
@@ -198,6 +203,11 @@ class TestBase(unittest.TestCase):
         self._add_project(project_code="NOREPORT",
                           name="Dairy Goat Project Center 2",
                           community=community2,
+                          project_type=project_type_g
+                          )
+        self._add_project(project_code="WRXT",
+                          name="Dairy Goat Project Center 3",
+                          community=community3,
                           project_type=project_type_g
                           )
         self._add_form_types(name="registration")
@@ -235,6 +245,9 @@ class TestBase(unittest.TestCase):
                          submission_time=datetime.datetime(2014, 3, 12))
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
+                         submission_time=datetime.datetime(2014, 3, 10))
+        self._add_report(project_code='WRXT',
+                         report_data=report_data_4,
                          submission_time=datetime.datetime(2014, 3, 10))
         transaction.commit()
 

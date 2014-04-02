@@ -18,11 +18,14 @@ class CommunityView(object):
     def __init__(self, request):
         self.request = request
 
-    @view_config(name='show',
+    @view_config(name='impact',
                  context=Community,
                  renderer='community_projects_list.jinja2',
                  request_method='GET')
     def show(self):
+        # TODO: eager load the constituency, county and sub-county
+        # http://docs.sqlalchemy.org/en/rel_0_9/orm/tutorial.html#eager-loading
+        # http://docs.sqlalchemy.org/en/rel_0_9/orm/relationships.html#self-referential-query-strategies # noqa
         community = self.request.context
         projects = utils.get_project_list([community.id])
         locations = self.get_locations(community)
