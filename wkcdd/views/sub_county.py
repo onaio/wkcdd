@@ -27,7 +27,8 @@ class SubCountyView(object):
         county = Project.get_county(sub_county)
         locations = {'county': county}
         impact_indicators = \
-            Report.get_location_indicator_aggregation(Location.SUB_COUNTY, constituencies)
+            Report.get_location_indicator_aggregation(constituencies,
+                                                      Location.SUB_COUNTY)
 
         return {
             'sub_county': sub_county,

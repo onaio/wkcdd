@@ -8,10 +8,6 @@ from wkcdd.models.community import Community
 from wkcdd.models.project import Project
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
-from wkcdd.models.utils import (
-    get_project_list
-)
-from collections import defaultdict
 from wkcdd.models.report import Report
 
 
@@ -35,7 +31,8 @@ class ConstituencyView(object):
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
         impact_indicators = \
-            Report.get_location_indicator_aggregation(Location.CONSTITUENCY, communities)
+            Report.get_location_indicator_aggregation(communities,
+                                                      Location.CONSTITUENCY)
 
         return {
             'constituency': constituency,

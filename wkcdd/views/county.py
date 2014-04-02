@@ -23,8 +23,12 @@ class CountyView(object):
     def show_all_counties(self):
         counties = County.all()
 
+        impact_indicators = \
+            Report.get_location_indicator_aggregation(counties)
+
         return{
             'counties': counties,
+            'impact_indicators': impact_indicators,
             'impact_indicator_mapping': tuple_to_dict_list(
                 ('title', 'key'),
                 constants.IMPACT_INDICATOR_REPORT)
@@ -39,7 +43,8 @@ class CountyView(object):
         sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
 
         impact_indicators = \
-            Report.get_location_indicator_aggregation(Location.COUNTY, sub_counties)
+            Report.get_location_indicator_aggregation(sub_counties,
+                                                      Location.COUNTY)
 
         return {
             'county': county,

@@ -18,6 +18,7 @@ from wkcdd.models.utils import (
     get_project_list,
     get_community_ids,
     get_constituency_ids,
+    get_sub_county_ids
 )
 
 
@@ -109,7 +110,9 @@ class Report(Base):
             }
 
     @classmethod
-    def get_location_indicator_aggregation(cls, location_type, child_locations):
+    def get_location_indicator_aggregation(cls,
+                                           child_locations,
+                                           location_type="All"):
         impact_indicator_mapping = tuple_to_dict_list(
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
@@ -128,6 +131,12 @@ class Report(Base):
                 projects = get_project_list(get_community_ids
                                             (get_constituency_ids
                                              ([child_location.id])))
+            elif location_type == "All":
+                # child location == county
+                projects = get_project_list(get_community_ids
+                                            (get_constituency_ids
+                                             (get_sub_county_ids
+                                              ([child_location.id]))))
 
             indicators = Report.get_aggregated_project_indicators(projects)
             impact_indicators[child_location.id] = indicators
