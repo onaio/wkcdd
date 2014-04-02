@@ -50,17 +50,14 @@ class TestCommunityView(IntegrationTestBase):
     def test_performance_indicator_aggregates_display_without_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
+        project = community.projects[0]
         self.request.context = community
-        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
-        del(project_report_sectors[self.community_view.DEFAULT_PROJECT_TYPE])
         response = self.community_view.performance()
         project_indicator_list = (
             response['aggregated_indicators']['indicator_list'])
         self.assertIsInstance(response['community'], Community)
-        self.assertEqual(response['project_report_sectors'],
-                         (project_report_sectors))
         self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Cow Project Center 1')
+                          project.name)
 
     def test_performance_indicator_project_type_selection(self):
         self.setup_test_data()
@@ -68,30 +65,47 @@ class TestCommunityView(IntegrationTestBase):
         params = MultiDict({'type': constants.FIC_PROJECT_REPORT})
         self.request.GET = params
         self.request.context = community
-        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
+        project_report_sectors = constants.PROJECT_REPORT_SECTORS
         response = self.community_view.performance()
-        self.assertEqual(response['selected_project_name'],
-                         project_report_sectors[constants.FIC_PROJECT_REPORT])
-        del(project_report_sectors[constants.FIC_PROJECT_REPORT])
-        self.assertEqual(response['project_report_sectors'],
-                         (project_report_sectors))
+        self.assertEqual(
+            response['selected_project_name'],
+            project_report_sectors[constants.FIC_PROJECT_REPORT])
+
+    def test_project_type_selection_with_invalid_type(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == 'Maragoli')
+        params = MultiDict({'type': 'INVALID'})
+        self.request.GET = params
+        self.request.context = community
+        project_report_sectors = constants.PROJECT_REPORT_SECTORS
+        response = self.community_view.performance()
+        self.assertEqual(
+            response['selected_project_name'],
+            project_report_sectors[self.community_view.DEFAULT_PROJECT_TYPE])
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):
     def test_community_show_view(self):
-        self.setup_test_data()
-        community = Location.get(Location.name == 'Maragoli',
-                                 Location.location_type == 'community')
+        self.setup_community_test_data()
+        community = Community.get(Community.name == 'lutacho')
         url = self.request.route_path(
             'community', traverse=(community.id, 'show'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_community_performance_indicator_view(self):
+    def test_community_performance_view(self):
         self.setup_test_data()
-        community = Location.get(Location.name == 'Maragoli',
-                                 Location.location_type == 'community')
+        community = Community.get(Community.name == 'Maragoli')
         url = self.request.route_path(
             'community', traverse=(community.id, 'performance'))
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_community_performance_view_with_project_type(self):
+        self.setup_community_test_data()
+        community = Community.get(Community.name == 'lutacho')
+        url = self.request.route_path(
+            'community', traverse=(community.id, 'performance'),
+            _query={'type': constants.FIC_PROJECT_REPORT})
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)

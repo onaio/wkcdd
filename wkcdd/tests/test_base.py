@@ -71,7 +71,7 @@ class TestBase(unittest.TestCase):
 
     def _add_project(self,
                      project_code='FR3A',
-                     name='Dairy Cow Project Center 1',
+                     name='Dairy Goat Project Center 1',
                      community=None,
                      sector="Dairy Goat",
                      project_type=None):
@@ -240,7 +240,14 @@ class TestBase(unittest.TestCase):
 
     def setup_community_test_data(self):
         transaction.begin()
-        community = self._add_community(name="lutacho")
+        county = self._add_county(name="Bungoma", parent_id=0)
+
+        sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
+
+        constituency = self._add_constituency(name="Kakamega",
+                                              parent_id=sub_county.id)
+        community = self._add_community(name="lutacho",
+                                        parent_id=constituency.id)
         project_type = self._add_project_type(name="CAP")
         self._add_project(project_code="COW1",
                           name="Cow project 1",

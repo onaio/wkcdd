@@ -43,14 +43,18 @@ class CommunityView(object):
         community = self.request.context
         selected_project_type = (
             self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
-        selected_project_name = (
-            constants.PROJECT_REPORT_SECTORS[selected_project_type])
-        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
-        del(project_report_sectors[selected_project_type])
-        projects = utils.get_project_list([community.id])
+        project_report_sectors = constants.PROJECT_REPORT_SECTORS
+        if selected_project_type not in project_report_sectors.keys():
+            selected_project_type = self.DEFAULT_PROJECT_TYPE
+        projects = utils.get_project_list_by_sector(
+            [community.id],
+            project_report_sectors[selected_project_type])
         locations = self.get_locations(community)
         indicator_mapping, aggregated_indicators = (
-            self.get_performance_indicators(projects))
+            self.get_performance_indicators(
+                projects,
+                selected_project_type))
+        selected_project_name = project_report_sectors[selected_project_type]
         return {
             'community': community,
             'locations': locations,
