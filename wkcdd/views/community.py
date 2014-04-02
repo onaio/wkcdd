@@ -1,3 +1,4 @@
+from copy import deepcopy
 from pyramid.view import (
     view_defaults,
     view_config
@@ -44,7 +45,7 @@ class CommunityView(object):
             self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
         selected_project_name = (
             constants.PROJECT_REPORT_SECTORS[selected_project_type])
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
+        project_report_sectors = deepcopy(constants.PROJECT_REPORT_SECTORS)
         del(project_report_sectors[selected_project_type])
         projects = utils.get_project_list([community.id])
         locations = self.get_locations(community)

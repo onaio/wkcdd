@@ -31,7 +31,7 @@ from wkcdd.models.report import (
 
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.county import County
-
+from wkcdd import constants
 from wkcdd.models import (
     Community,
     SubCounty
@@ -73,13 +73,14 @@ class TestBase(unittest.TestCase):
                      project_code='FR3A',
                      name='Dairy Cow Project Center 1',
                      community=None,
+                     sector="Dairy Goat",
                      project_type=None):
         project = Project(
             code=project_code,
             name=name,
             community=community,
             project_type=project_type,
-            sector="Dairy Goat",
+            sector=sector,
             geolocation="0.0 0.0"
         )
 
@@ -235,6 +236,40 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
                          submission_time=datetime.datetime(2014, 3, 10))
+        transaction.commit()
+
+    def setup_community_test_data(self):
+        transaction.begin()
+        community = self._add_community(name="lutacho")
+        project_type = self._add_project_type(name="CAP")
+        self._add_project(project_code="COW1",
+                          name="Cow project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="COW2",
+                          name="Cow project 2",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="GOAT1",
+                          name="Goat project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_GOAT_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="BODA1",
+                          name="Bodaboda project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.BODABODA_PROJECT_REPORT])
+                          )
         transaction.commit()
 
 

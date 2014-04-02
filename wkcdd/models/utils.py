@@ -1,4 +1,5 @@
 from wkcdd.models.base import DBSession
+from sqlalchemy.sql.expression import and_
 from wkcdd.models import (
     Location, SubCounty, Constituency, Community, Project)
 
@@ -22,4 +23,12 @@ def get_project_list(community_ids):
     return DBSession\
         .query(Project)\
         .filter(Project.community_id.in_(community_ids))\
+        .all()
+
+
+def get_project_list_by_sector(community_ids, sector):
+    return DBSession\
+        .query(Project)\
+        .filter(and_(Project.community_id.in_(community_ids),
+                Project.sector == sector))\
         .all()
