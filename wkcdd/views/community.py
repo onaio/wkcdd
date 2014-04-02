@@ -1,4 +1,3 @@
-from copy import deepcopy
 from pyramid.view import (
     view_defaults,
     view_config
@@ -49,9 +48,9 @@ class CommunityView(object):
         project_report_sectors = constants.PROJECT_REPORT_SECTORS
         if selected_project_type not in project_report_sectors.keys():
             selected_project_type = self.DEFAULT_PROJECT_TYPE
-        projects = utils.get_project_list_by_sector(
+        projects = utils.get_project_list(
             [community.id],
-            project_report_sectors[selected_project_type])
+            Project.sector == project_report_sectors[selected_project_type])
         locations = self.get_locations(community)
         indicator_mapping, aggregated_indicators = (
             self.get_performance_indicators(

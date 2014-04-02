@@ -196,17 +196,17 @@ class TestBase(unittest.TestCase):
                           project_type=project_type_g
                           )
         self._add_project(project_code="WRTD",
-                          name="Dairy Goat Project Center 2",
+                          name="Dairy Goat Project Center 3",
                           community=community2,
                           project_type=project_type_g
                           )
         self._add_project(project_code="NOREPORT",
-                          name="Dairy Goat Project Center 2",
+                          name="Dairy Goat Project Center 4",
                           community=community2,
                           project_type=project_type_g
                           )
         self._add_project(project_code="WRXT",
-                          name="Dairy Goat Project Center 3",
+                          name="Dairy Goat Project Center 5",
                           community=community3,
                           project_type=project_type_g
                           )

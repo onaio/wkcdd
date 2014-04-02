@@ -36,14 +36,14 @@ class Report(Base):
     def add_report_submission(cls, report):
         report.save()
 
-    #TODO rename to get_impact_indicators
+    # TODO rename to get_impact_indicators
     def calculate_impact_indicators(cls):
         impact_indicators = {}
         for key, impact_indicator_key in constants.IMPACT_INDICATOR_KEYS:
             impact_indicators[key] = cls.report_data.get(impact_indicator_key)
         return impact_indicators
 
-    #TODO rename to get_performance_indicators
+    # TODO rename to get_performance_indicators
     def calculate_performance_indicators(cls):
         performance_indicators = {}
         for key, performance_indicator_key\

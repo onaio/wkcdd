@@ -22,16 +22,9 @@ def get_community_ids(constituency_ids):
             Location.get_location_ids(Community, constituency_ids)]
 
 
-def get_project_list(community_ids):
-    return DBSession\
-        .query(Project)\
-        .filter(Project.community_id.in_(community_ids))\
-        .all()
-
-
-def get_project_list_by_sector(community_ids, sector):
+def get_project_list(community_ids, *criterion):
     return DBSession\
         .query(Project)\
         .filter(and_(Project.community_id.in_(community_ids),
-                Project.sector == sector))\
+                *criterion))\
         .all()

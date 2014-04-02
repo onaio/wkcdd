@@ -1,4 +1,3 @@
-from copy import deepcopy
 from webob.multidict import MultiDict
 from pyramid import testing
 from wkcdd.tests.test_base import (
@@ -7,7 +6,6 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.views.community import CommunityView
 from wkcdd.models.community import Community
-from wkcdd.models.location import Location
 from wkcdd import constants
 
 
@@ -27,7 +25,7 @@ class TestCommunityView(IntegrationTestBase):
         self.assertIsInstance(response['community'], Community)
         self.assertEquals(response['locations']['county'].name, "Bungoma")
         self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Cow Project Center 1')
+                          'Dairy Goat Project Center 1')
         self.assertIn('summary', response['aggregated_indicators'])
 
     def test_show_with_projects_with_reports(self):
@@ -68,7 +66,7 @@ class TestCommunityView(IntegrationTestBase):
         project_report_sectors = constants.PROJECT_REPORT_SECTORS
         response = self.community_view.performance()
         self.assertEqual(
-            response['selected_project_name'],
+            response['selected_project_type'],
             project_report_sectors[constants.FIC_PROJECT_REPORT])
 
     def test_project_type_selection_with_invalid_type(self):
@@ -80,7 +78,7 @@ class TestCommunityView(IntegrationTestBase):
         project_report_sectors = constants.PROJECT_REPORT_SECTORS
         response = self.community_view.performance()
         self.assertEqual(
-            response['selected_project_name'],
+            response['selected_project_type'],
             project_report_sectors[self.community_view.DEFAULT_PROJECT_TYPE])
 
 
