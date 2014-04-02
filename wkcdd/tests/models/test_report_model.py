@@ -190,7 +190,7 @@ class TestReport(TestBase):
         self.assertEqual(results['indicator_list'], None)
         self.assertEqual(results['summary'], None)
 
-    def test_impact_indicator_aggregation_with_no_projects(self):
+    def test_impact_indicator_aggregation_with_no_reports(self):
         self.setup_test_data()
         project = Project.get(Project.code == 'NOREPORT')
         results = Report.get_aggregated_project_indicators([project])
@@ -239,7 +239,6 @@ class TestReport(TestBase):
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
         results = Report.get_aggregated_project_indicators([project], False)
-        summary = results['summary']
         project_indicators_map = results['indicator_list'][0]
         self.assertEqual(
             project_indicators_map['indicators']['exp_contribution'], '56000')
@@ -259,7 +258,6 @@ class TestReport(TestBase):
             project = Project.get(Project.code == code)
             project_list.append(project)
         results = Report.get_aggregated_project_indicators(project_list, False)
-        summary = results['summary']
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
         self.assertEqual(
