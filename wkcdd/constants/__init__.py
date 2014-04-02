@@ -59,6 +59,11 @@ FISH_FARMING_PROJECT_CODE = 'ff_projects'
 FISH_FARMING_PROJECT_REPORT = 'fish_farming_project_report'
 FISH_FARMING_PROJECT_REPORT_CODE = 'perfomance_summary/ff_projects
 
+OXEN_PLOUGH_PROJECT_REGISTRATION = 'oxen_plough_project_registration'
+OXEN_PLOUGH_PROJECT_CODE = 'op_projects'
+OXEN_PLOUGH_PROJECT_REPORT = 'oxen_plough_project_report'
+OXEN_PLOUGH_PROJECT_REPORT_CODE = 'perfomance_summary/op_projects'
+
 REPORT_SUBMISSION_TIME = '_submission_time'
 REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
@@ -73,7 +78,8 @@ PROJECT_REGISTRATION_FORMS = (
     (BANANA_PROJECT_REGISTRATION, BANANA_PROJECT_CODE),
     (CATERING_PROJECT_REGISTRATION, CATERING_PROJECT_CODE),
     (PIGGERY_PROJECT_REGISTRATION, PIGGERY_PROJECT_CODE),
-    (FISH_FARMING_PROJECT_REGISTRATION, FISH_FARMING_PROJECT_CODE)
+    (FISH_FARMING_PROJECT_REGISTRATION, FISH_FARMING_PROJECT_CODE),
+    (OXEN_PLOUGH_PROJECT_REGISTRATION, OXEN_PLOUGH_PROJECT_CODE)
     
     )
 
@@ -85,7 +91,8 @@ PROJECT_REPORT_FORMS = (
     (POULTRY_PROJECT_REPORT, POULTRY_PROJECT_REPORT_CODE),
     (BANANA_PROJECT_REPORT, BANANA_PROJECT_REPORT_CODE),
     (CATERING_PROJECT_REPORT, CATERING_PROJECT_REPORT_CODE),
-    (FISH_FARMING_PROJECT_REPORT, FISH_FARMING_PROJECT_REPORT_CODE)
+    (FISH_FARMING_PROJECT_REPORT, FISH_FARMING_PROJECT_REPORT_CODE),
+    (OXEN_PLOUGH_PROJECT_REPORT, OXEN_PLOUGH_PROJECT_REPORT_CODE)
 )
 
 PERFORMANCE_INDICATORS = {
@@ -473,6 +480,49 @@ PERFORMANCE_INDICATORS = {
         ('fs_target', 'mproject_performance/fs_target'),
         ('fs_achievement', 'mproject_performance/fs_achievement'),
         ('fs_percentage', 'mproject_performance/fs_percentage'),
+        contributions('db_target', 'impact_information/db_target'),
+        ('db_achievement', 'impact_information/db_achievement'),
+        ('db_percentage', 'impact_information/db_percentage'),
+        ('mb_target', 'impact_information/mb_target'),
+        ('mb_achievement', 'impact_information/mb_achievement'),
+        ('mb_percentage', 'impact_information/mb_percentage'),
+        ('fb_target', 'impact_information/fb_target'),
+        ('fb_achievement', 'impact_information/fb_achievement'),
+        ('fb_percentage', 'impact_information/fb_percentage'),
+        ('vb_target', 'impact_information/vb_target'),
+        ('vb_achievement', 'impact_information/vb_achievement'),
+        ('vb_percentage', 'impact_information/vb_percentage'),
+        ('grp_target', 'impact_information/grp_target'),
+        ('grp_achievement', 'impact_information/grp_achievement'),
+        ('grp_percentage', 'impact_information/grp_percentage'),
+        ('bnf_income_target', 'impact_information/bnf_income_target'),
+        ('bnf_income_achievement',
+            'impact_information/bnf_income_achievement'),
+        ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
+    ),
+    OXEN_PLOUGH_PROJECT_REPORT: (
+        ('exp_contribution',
+            'perfomance_summary/exp_contribution'),
+        ('actual_contribution',
+            'perfomance_summary/actual_contribution'),
+        ('community_contribution',
+            'perfomance_summary/community_contribution'),
+        ('op_target', 'mproject_performance/op_target'),
+        ('op_achievement', 'mproject_performance/op_achievement'),
+        ('op_percentage', 'mproject_performance/op_percentage'),
+        ('op_proceeds_target', 'mproject_performance/op_proceeds_target'),
+        ('op_proceeds_achievement', 
+         'mproject_performance/op_proceeds_achievement'),
+        ('op_proceeds_percentage', 'mproject_performance/op_proceeds_percentage'),
+        ('oxen_pf_target', 'mproject_performance/oxen_pf_target'),
+        ('oxen_pf_achievement', 'mproject_performance/oxen_pf_achievement'),
+        ('oxen_pf_percentage', 'mproject_performance/oxen_pf_percentage'),
+        ('oxen_proceeds_target', 'mproject_performance/oxen_proceeds_target'),
+        ('oxen_proceeds_achievement', 'mproject_performance/oxen_proceeds_achievement'),
+        ('oxen_proceeds_percentage', 'mproject_performance/oxen_proceeds_percentage'),
+        ('acres_ploughed_target', 'mproject_performance/acres_ploughed_target'),
+        ('acres_ploughed_achievement', 'mproject_performance/acres_ploughed_achievement'),
+        ('acres_ploughed_percentage', 'mproject_performance/acres_ploughed_percentage'),
         ('db_target', 'impact_information/db_target'),
         ('db_achievement', 'impact_information/db_achievement'),
         ('db_percentage', 'impact_information/db_percentage'),
@@ -906,6 +956,56 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
+    ),
+    OXEN_PLOUGH_PROJECT_REPORT: (
+        (_('Total Community Contribution'),
+            ('exp_contribution',
+             'actual_contribution',
+             'community_contribution')),
+        (_('Number of oxen ploughs acquired using project funds'),
+            ('op_target',
+             'op_achievement',
+             'op_percentage')),
+        (_('Number of oxen ploughs acquired using proceeds and other contributions'),
+            ('op_proceeds_target',
+             'op_proceeds_achievement',
+             'op_proceeds_percentage')),
+        (_('Number of oxen acquired using project funds'),
+            ('oxen_pf_target',
+             'oxen_pf_achievement',
+             'oxen_pf_percentage')),
+        (_('Number of oxen ploughs acquired using proceeds and other contributions'),
+            ('oxen_proceeds_target',
+             'oxen_proceeds_achievement',
+             'oxen_proceeds_percentage')),
+        (_('Number of acres ploughed per season'),
+            ('acres_ploughed_target',
+             'acres_ploughed_achievement',
+             'acres_ploughed_percentage')),
+        (_('Total number of direct beneficiaries'),
+            ('db_target',
+             'db_achievement',
+             'db_percentage')),
+        (_('Number of female beneficiaries'),
+            ('fb_target',
+             'fb_achievement',
+             'fb_percentage')),
+        (_('Number of male beneficiaries'),
+            ('mb_target',
+             'mb_achievement',
+             'mb_percentage')),
+        (_('Number of vulnerable beneficiaries'),
+            ('vb_target',
+             'vb_achievement',
+             'vb_percentage')),
+        (_('Monthly average income earned by the group'),
+            ('grp_target',
+             'grp_achievement',
+             'grp_percentage')),
+        (_('Monthly average income earned per beneficiary'),
+            ('bnf_income_target',
+             'bnf_income_achievement',
+             'bnf_income_percentage')),
     )
 }
 IMPACT_INDICATOR_KEYS = (
@@ -938,4 +1038,5 @@ PROJECT_SECTORS = {
     CATERING_PROJECT_REGISTRATION: "Catering",
     PIGGERY_PROJECT_REGISTRATION: "Piggery"
     FISH_FARMING_PROJECT_REGISTRATION: "Fish Farming"
+    OXEN_PLOUGH_PROJECT_REGISTRATION: "Oxen Plough"
 }
