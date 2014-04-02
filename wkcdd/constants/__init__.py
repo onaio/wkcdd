@@ -54,6 +54,11 @@ PIGGERY_PROJECT_CODE = 'piggery_projects'
 PIGGERY_PROJECT_REPORT = 'piggery_project_report'
 PIGGERY_PROJECT_REPORT_CODE = 'perfomance_summary/piggery_projects'
 
+FISH_FARMING_PROJECT_REGISTRATION = 'fish_farming_project_registration'
+FISH_FARMING_PROJECT_CODE = 'ff_projects'
+FISH_FARMING_PROJECT_REPORT = 'fish_farming_project_report'
+FISH_FARMING_PROJECT_REPORT_CODE = 'perfomance_summary/ff_projects
+
 REPORT_SUBMISSION_TIME = '_submission_time'
 REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
@@ -67,8 +72,10 @@ PROJECT_REGISTRATION_FORMS = (
     (POULTRY_PROJECT_REGISTRATION, POULTRY_PROJECT_CODE),
     (BANANA_PROJECT_REGISTRATION, BANANA_PROJECT_CODE),
     (CATERING_PROJECT_REGISTRATION, CATERING_PROJECT_CODE),
-    (PIGGERY_PROJECT_REGISTRATION, PIGGERY_PROJECT_CODE)
-)
+    (PIGGERY_PROJECT_REGISTRATION, PIGGERY_PROJECT_CODE),
+    (FISH_FARMING_PROJECT_REGISTRATION, FISH_FARMING_PROJECT_CODE)
+    
+    )
 
 PROJECT_REPORT_FORMS = (
     (DAIRY_GOAT_PROJECT_REPORT, DAIRY_GOAT_PROJECT_REPORT_CODE),
@@ -78,7 +85,7 @@ PROJECT_REPORT_FORMS = (
     (POULTRY_PROJECT_REPORT, POULTRY_PROJECT_REPORT_CODE),
     (BANANA_PROJECT_REPORT, BANANA_PROJECT_REPORT_CODE),
     (CATERING_PROJECT_REPORT, CATERING_PROJECT_REPORT_CODE),
-    (PIGGERY_PROJECT_REPORT, PIGGERY_PROJECT_REPORT_CODE)
+    (FISH_FARMING_PROJECT_REPORT, FISH_FARMING_PROJECT_REPORT_CODE)
 )
 
 PERFORMANCE_INDICATORS = {
@@ -440,7 +447,53 @@ PERFORMANCE_INDICATORS = {
         ('bnf_income_achievement',
             'impact_information/bnf_income_achievement'),
         ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
+    ),
+    FISH_FARMING_PROJECT_REPORT: (
+        ('exp_contribution', 'perfomance_summary/exp_contribution'),
+        ('actual_contribution', 'perfomance_summary/actual_contribution'),
+        ('community_contribution',
+            'perfomance_summary/community_contribution'),
+        ('ponds_pf_target', 'mproject_performance/ponds_pf_target'),
+        ('ponds_pf_achievement', 'mproject_performance/ponds_pf_achievement'),
+        ('ponds_pf_percentage', 'mproject_performance/ponds_pf_percentage'),
+        ('ponds_proceeds_target',
+            'mproject_performance/ponds_proceeds_target'),
+        ('ponds_proceeds_achievement',
+            'mproject_performance/ponds_proceeds_achievement'),
+        ('ponds_proceeds_percentage', 'mproject_performance/ponds_proceeds_percentage'),
+        ('fingerlings_target', 'mproject_performance/fingerlings_target'),
+        ('fingerlings_achievement', 'mproject_performance/fingerlings_achievement'),
+        ('fingerlings_percentage', 'mproject_performance/fingerlings_percentage'),
+        ('fl_proceeds_target', 'mproject_performance/fl_proceeds_target'),
+        ('fl_proceeds_achievement', 'mproject_performance/fl_proceeds_achievement'),
+        ('fl_proceeds_percentage', 'mproject_performance/fl_proceeds_percentage'),
+        ('fh_target', 'mproject_performance/fh_target'),
+        ('fh_achievement', 'mproject_performance/fh_achievement'),
+        ('fh_percentage', 'mproject_performance/fh_percentage'),
+        ('fs_target', 'mproject_performance/fs_target'),
+        ('fs_achievement', 'mproject_performance/fs_achievement'),
+        ('fs_percentage', 'mproject_performance/fs_percentage'),
+        ('db_target', 'impact_information/db_target'),
+        ('db_achievement', 'impact_information/db_achievement'),
+        ('db_percentage', 'impact_information/db_percentage'),
+        ('mb_target', 'impact_information/mb_target'),
+        ('mb_achievement', 'impact_information/mb_achievement'),
+        ('mb_percentage', 'impact_information/mb_percentage'),
+        ('fb_target', 'impact_information/fb_target'),
+        ('fb_achievement', 'impact_information/fb_achievement'),
+        ('fb_percentage', 'impact_information/fb_percentage'),
+        ('vb_target', 'impact_information/vb_target'),
+        ('vb_achievement', 'impact_information/vb_achievement'),
+        ('vb_percentage', 'impact_information/vb_percentage'),
+        ('grp_target', 'impact_information/grp_target'),
+        ('grp_achievement', 'impact_information/grp_achievement'),
+        ('grp_percentage', 'impact_information/grp_percentage'),
+        ('bnf_income_target', 'impact_information/bnf_income_target'),
+        ('bnf_income_achievement',
+            'impact_information/bnf_income_achievement'),
+        ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
     )
+        
 }
 
 PERFORMANCE_INDICATOR_REPORTS = {
@@ -799,6 +852,60 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
+    ),
+    FISH_FARMING_PROJECT_REPORT: (
+        (_('Total Community Contribution'),
+            ('exp_contribution',
+             'actual_contribution',
+             'community_contribution')),
+        (_('Number of ponds acquired using project funds'),
+            ('ponds_pf_target', 
+             'ponds_pf_achievement', 
+             'ponds_pf_percentage')),
+        (_('Number of ponds acquired constructed using proceeds and other contributions'),
+            ('ponds_proceeds_target',
+             'ponds_proceeds_achievement',
+             'ponds_proceeds_percentage')),
+        (_('Number of fingerlings acquired using project funds'),
+            ('fingerlings_target',
+             'fingerlings_achievement', 
+             'fingerlings_percentage')),
+        (_('Number of fingerlings acquired using proceeds and other contributions'),
+            ('fl_proceeds_target',
+             'fl_proceeds_achievement',
+             'fl_proceeds_percentage')),
+        (_('Total number of fish harvested'),
+            ('fh_target',
+             'fh_achievement',
+             'fh_percentage')),
+        (_('Total number of fish sold'),
+            ('fs_target',
+             'fs_achievement', 
+             'fs_percentage')),
+        (_('Total number of direct beneficiaries'),
+            ('db_target',
+             'db_achievement', 
+             'db_percentage')),
+        (_('Number of male beneficiaries'),
+            ('mb_target',
+             'mb_achievement', 
+             'mb_percentage')),
+        (_('Number of female beneficiaries'),
+            ('fb_target', 
+             'fb_achievement', 
+             'fb_percentage')),
+        (_('Number of vulnerable beneficiaries'),
+            ('vb_target', 
+             'vb_achievement', 
+             'vb_percentage')),
+        (_('Monthly average income earned by the group'),
+            ('grp_target',
+             'grp_achievement',
+             'grp_percentage')),
+        (_('Monthly average income earned per beneficiary'),
+            ('bnf_income_target',
+             'bnf_income_achievement',
+             'bnf_income_percentage')),
     )
 }
 IMPACT_INDICATOR_KEYS = (
@@ -830,4 +937,5 @@ PROJECT_SECTORS = {
     BANANA_PROJECT_REGISTRATION: "Banana",
     CATERING_PROJECT_REGISTRATION: "Catering",
     PIGGERY_PROJECT_REGISTRATION: "Piggery"
+    FISH_FARMING_PROJECT_REGISTRATION: "Fish Farming"
 }
