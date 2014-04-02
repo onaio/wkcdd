@@ -1,4 +1,5 @@
 {% extends 'base.jinja2' %}
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -8,7 +9,7 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="#">Projects Indicators</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -25,7 +26,7 @@
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+         <div class="caption"><i class="icon-tasks"></i>{% trans %}Constituencies{% endtrans %}</div>
       </div>
       <div class="portlet-body">
          <div class="table-responsive">
@@ -44,12 +45,22 @@
                   </tr>
                </thead>
                <tbody>
+               <tr>
+                  <td>
+                    {% trans %} Total Summary {% endtrans %}
+                  </td>
+                  {% for indicator in impact_indicator_mapping %}
+                    <td>
+                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
+                    </td>
+                  {% endfor %}
+               </tr>
                {% for constituency in constituencies %}
                   <tr>
                      <td><a href="{{ request.route_url('constituency', traverse=constituency.id) }}">{{ constituency.name }}</a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
-                        {{ indicator.title }}
+                         {{  impact_indicators['aggregated_impact_indicators'][constituency.id]['summary'][indicator.key]|default('-') }}
                         </td>
                      {% endfor %}
                   </tr>

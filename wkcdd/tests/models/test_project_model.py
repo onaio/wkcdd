@@ -63,4 +63,4 @@ class TestProject(TestBase):
         projects = Project.all()
         locations = Project.get_locations(projects)
         self.assertIsInstance(locations[1][0], Location)
-        self.assertEquals(len(locations), 5)
+        self.assertEquals(len(locations), 6)
