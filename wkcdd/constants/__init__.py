@@ -64,6 +64,11 @@ OXEN_PLOUGH_PROJECT_CODE = 'op_projects'
 OXEN_PLOUGH_PROJECT_REPORT = 'oxen_plough_project_report'
 OXEN_PLOUGH_PROJECT_REPORT_CODE = 'perfomance_summary/op_projects'
 
+TAILORING_PROJECT_REGISTRATION = 'tailoring_project_registration'
+TAILORING_PROJECT_CODE = 'bm_projects'
+TAILORING_PROJECT_REPORT = 'tailoring_project_report'
+TAILORING_PROJECT_REPORT_CODE = 'perfomance_summary/bm_projects'
+
 REPORT_SUBMISSION_TIME = '_submission_time'
 REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
@@ -79,7 +84,8 @@ PROJECT_REGISTRATION_FORMS = (
     (CATERING_PROJECT_REGISTRATION, CATERING_PROJECT_CODE),
     (PIGGERY_PROJECT_REGISTRATION, PIGGERY_PROJECT_CODE),
     (FISH_FARMING_PROJECT_REGISTRATION, FISH_FARMING_PROJECT_CODE),
-    (OXEN_PLOUGH_PROJECT_REGISTRATION, OXEN_PLOUGH_PROJECT_CODE)
+    (OXEN_PLOUGH_PROJECT_REGISTRATION, OXEN_PLOUGH_PROJECT_CODE),
+    (TAILORING_PROJECT_REGISTRATION, TAILORING_PROJECT_CODE)
     
     )
 
@@ -92,7 +98,8 @@ PROJECT_REPORT_FORMS = (
     (BANANA_PROJECT_REPORT, BANANA_PROJECT_REPORT_CODE),
     (CATERING_PROJECT_REPORT, CATERING_PROJECT_REPORT_CODE),
     (FISH_FARMING_PROJECT_REPORT, FISH_FARMING_PROJECT_REPORT_CODE),
-    (OXEN_PLOUGH_PROJECT_REPORT, OXEN_PLOUGH_PROJECT_REPORT_CODE)
+    (OXEN_PLOUGH_PROJECT_REPORT, OXEN_PLOUGH_PROJECT_REPORT_CODE),
+    (TAILORING_PROJECT_REPORT, TAILORING_PROJECT_REPORT_CODE)
 )
 
 PERFORMANCE_INDICATORS = {
@@ -542,8 +549,45 @@ PERFORMANCE_INDICATORS = {
         ('bnf_income_achievement',
             'impact_information/bnf_income_achievement'),
         ('bnf_income_percentage', 'impact_information/bnf_income_percentage')
+    ),
+    TAILORING_PROJECT_REPORT: (
+        ('exp_contribution', 'perfomance_summary/exp_contribution'),
+        ('actual_contribution',
+            'perfomance_summary/actual_contribution'),
+        ('community_contribution',
+            'perfomance_summary/community_contribution'),
+        ('tm_pf_target', 'mproject_performance/tm_pf_target'),
+        ('tm_pf_achievement', 'mproject_performance/tm_pf_achievement'),
+        ('tm_pf_percentage', 'mproject_performance/tm_pf_percentage'),
+        ('tm_proceeds_target', 'mproject_performance/tm_proceeds_target'),
+        ('tm_proceeds_achievement', 'mproject_performance/tm_proceeds_achievement'),
+        ('tm_proceeds_percentage', 'mproject_performance/tm_proceeds_percentage'),
+        ('ts_graduated_target', 'mproject_performance/ts_graduated_target'),
+        ('ts_graduated_achievement', 'mproject_performance/ts_graduated_achievement'),
+        ('ts_graduated_percentage', 'mproject_performance/ts_graduated_percentage'),
+        ('ts_iprogress_target', 'mproject_performance/ts_iprogress_target'),
+        ('ts_iprogress_achievement', 'mproject_performance/ts_iprogress_achievement'),
+        ('ts_iprogress_percentage', 'mproject_performance/ts_iprogress_percentage'),
+        ('db_target', 'impact_information/db_target'),
+        ('db_achievement', 'impact_information/db_achievement'),
+        ('db_percentage', 'impact_information/db_percentage'),
+        ('mb_target', 'impact_information/mb_target'),
+        ('mb_achievement', 'impact_information/mb_achievement'),
+        ('mb_percentage', 'impact_information/mb_percentage'),
+        ('fb_target', 'impact_information/fb_target'),
+        ('fb_achievement', 'impact_information/fb_achievement'),
+        ('fb_percentage', 'impact_information/fb_percentage'),
+        ('vb_target', 'impact_information/vb_target'),
+        ('vb_achievement', 'impact_information/vb_achievement'),
+        ('vb_percentage', 'impact_information/vb_percentage'),
+        ('grp_income_target', 'impact_information/grp_income_target'),
+        ('grp_income_achievement', 'impact_information/grp_income_achievement'),
+        ('grp_income_percentage', 'impact_information/grp_income_percentage'),
+        ('si_sale_target', 'impact_information/si_sale_target'),
+        ('si_sale_achievement',
+            'impact_information/si_sale_achievement'),
+        ('si_sale_percentage', 'impact_information/si_sale_percentage'),
     )
-        
 }
 
 PERFORMANCE_INDICATOR_REPORTS = {
@@ -552,9 +596,9 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
-        (_('Number of local bucks acquired using Project funds'),
+        (_('Number of local bucks acquired using project funds'),
             ('bucks_target', 'bucks_achievement', 'bucks_percentage')),
-        (_('Number of local does acquired using Project funds'),
+        (_('Number of local does acquired using project funds'),
             ('does_proceeds_target',
              'does_proceeds_achievement',
              'does_proceeds_percentage')),
@@ -593,9 +637,9 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
-        (_('Number of cows acquired using Project funds'),
+        (_('Number of cows acquired using project funds'),
             ('cows_target', 'cows_achievement', 'cows_percentage')),
-        (_('Number of cows acquired using Proceeds & other contributions'),
+        (_('Number of cows acquired using proceeds and other contributions'),
             ('cws_proceeds_target',
              'cws_proceeds_achievement',
              'cws_proceeds_percentage')),
@@ -673,7 +717,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('mbs_target',
              'mbs_achievement',
              'mbs_percentage')),
-        (_('Number of bikes acquired using proceeds & other contributions'),
+        (_('Number of bikes acquired using proceeds and other contributions'),
             ('mbs_proceeds_target',
              'mbs_proceeds_achievement',
              'mbs_proceeds_percentage')),
@@ -707,12 +751,11 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('exp_contribution',
              'actual_contribution',
              'community_contribution')),
-        (_('Number of birds acquired using project funds (Target & Actual)'),
+        (_('Number of birds acquired using project funds'),
             ('birds_target',
              'birds_achievement',
              'birds_percentage')),
-        (_('Number of birds acquired using proceeds & \
-           other contributions (Target & Actual)'),
+        (_('Number of birds acquired using proceeds and other contributions'),
             ('birds_proceeds_target',
              'birds_proceeds_achievement',
              'birds_proceeds_percentage')),
@@ -775,7 +818,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'plantlets_achievement',
              'plantlets_percentage')),
         (_('Number of plantlets acquired using \
-            proceeds & other contributions'),
+            proceeds and other contributions'),
             ('plantlets_proceeds_target',
              'plantlets_proceeds_achievement',
              'plantlets_proceeds_percentage')),
@@ -864,7 +907,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('pigs_pf_target',
              'pigs_pf_achievement',
              'pigs_pf_percentage')),
-        (_('Number of pigs acquired using proceeds & other contributions'),
+        (_('Number of pigs acquired using proceeds and other contributions'),
             ('pigs_proceeds_target',
              'pigs_proceeds_achievement',
              'pigs_proceeds_percentage')),
@@ -974,7 +1017,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('oxen_pf_target',
              'oxen_pf_achievement',
              'oxen_pf_percentage')),
-        (_('Number of oxen ploughs acquired using proceeds and other contributions'),
+        (_('Number of oxen acquired using proceeds and other contributions'),
             ('oxen_proceeds_target',
              'oxen_proceeds_achievement',
              'oxen_proceeds_percentage')),
@@ -1006,6 +1049,52 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('bnf_income_target',
              'bnf_income_achievement',
              'bnf_income_percentage')),
+    ),
+    TAILORING_PROJECT_REPORT: (
+        (_('Total Community Contribution'),
+            ('exp_contribution',
+             'actual_contribution',
+             'community_contribution')),
+        (_('Number of tailoring machines acquired using project funds'),
+            ('tm_pf_target',
+             'tm_pf_achievement',
+             'tm_pf_percentage')),
+        (_('Number of tailoring machines acquired using proceeds and other contributions'),
+            ('tm_proceeds_target',
+             'tm_proceeds_achievement',
+             'tm_proceeds_percentage')),
+        (_('Number of tailoring students graduated'),
+            ('ts_graduated_target',
+             'ts_graduated_achievement',
+             'ts_graduated_percentage')),
+         (_('Number of tailoring students in progress'),
+            ('ts_iprogress_target',
+             'ts_iprogress_achievement',
+             'ts_iprogress_percentage')),
+        (_('Total number of direct beneficiaries'),
+            ('db_target',
+             'db_achievement',
+             'db_percentage')),
+        (_('Number of female beneficiaries'),
+            ('fb_target',
+             'fb_achievement',
+             'fb_percentage')),
+        (_('Number of male beneficiaries'),
+            ('mb_target',
+             'mb_achievement',
+             'mb_percentage')),
+        (_('Number of vulnerable beneficiaries'),
+            ('vb_target',
+             'vb_achievement',
+             'vb_percentage')),
+        (_('Monthly average income earned from sale of sewed items by the group'),
+            ('grp_income_target',
+             'grp_income_achievement',
+             'grp_income_percentage')),
+        (_('Monthly average income earned from sale of sewed items per beneficiary'),
+            ('si_sale_target',
+             'si_sale_achievement',
+             'si_sale_percentage')),
     )
 }
 IMPACT_INDICATOR_KEYS = (
@@ -1036,7 +1125,10 @@ PROJECT_SECTORS = {
     POULTRY_PROJECT_REGISTRATION: "Poultry",
     BANANA_PROJECT_REGISTRATION: "Banana",
     CATERING_PROJECT_REGISTRATION: "Catering",
-    PIGGERY_PROJECT_REGISTRATION: "Piggery"
-    FISH_FARMING_PROJECT_REGISTRATION: "Fish Farming"
-    OXEN_PLOUGH_PROJECT_REGISTRATION: "Oxen Plough"
+    PIGGERY_PROJECT_REGISTRATION: "Piggery",
+    FISH_FARMING_PROJECT_REGISTRATION: "Fish Farming",
+    OXEN_PLOUGH_PROJECT_REGISTRATION: "Oxen Plough",
+    TAILORING_PROJECT_REGISTRATION: "Tailoring",
+    
+    
 }
