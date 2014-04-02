@@ -3,8 +3,10 @@ from pyramid.view import (
     view_config
 )
 from wkcdd.models.location import LocationFactory
+from wkcdd.models.location import Location
 from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
+from wkcdd.models.report import Report
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 
@@ -35,9 +37,14 @@ class CountyView(object):
     def list_all_sub_counties(self):
         county = self.request.context
         sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
+
+        impact_indicators = \
+            Report.get_location_indicator_aggregation(Location.COUNTY, sub_counties)
+
         return {
             'county': county,
             'sub_counties': sub_counties,
+            'impact_indicators': impact_indicators,
             'impact_indicator_mapping': tuple_to_dict_list(
                 ('title', 'key'),
                 constants.IMPACT_INDICATOR_REPORT)
