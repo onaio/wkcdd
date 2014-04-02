@@ -17,15 +17,19 @@ strong{ font-weight:700; }
 .line-bottom{
 	border-bottom:1px solid #DFDFDF;
 }
+.nav-holder{
+	border-top:1px solid #DFDFDF;
+	border-bottom:1px solid #DFDFDF;
+}
 table tr td{
 	padding:1em!important;
 }
 
-#wrapper{
+/*#wrapper{
 	top:0;bottom:0;left:0;right:0;
 	position:absolute;
 	overflow:hidden;
-}
+}*/
 
 .header.navbar{
 	background:#2E4358;
@@ -60,7 +64,7 @@ table tr td{
 	max-width:8em;
 	padding:0;
 	padding-top:4em;
-	position:absolute;
+	position:fixed;
 	top:0;bottom:0;
 }
 .nav-side{
@@ -87,9 +91,8 @@ table tr td{
 	border-bottom:0;
 }
 #contentbox{
-	left:8em;
+	left:1em;
 	padding-top:4em;
-	overflow:auto;
 }
 .infobox{
 	padding-top:2em;
@@ -104,6 +107,8 @@ table tr td{
 }
 #map{
 	height:30em;
+	margin-left:-1em;
+	padding:0;
 	overflow:hidden;
 }
 #map img{
