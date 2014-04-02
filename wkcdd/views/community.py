@@ -58,8 +58,8 @@ class CommunityView(object):
         return {
             'community': community,
             'locations': locations,
-            'selected_project_name': selected_project_name,
-            'project_report_sectors': project_report_sectors,
+            'selected_project_type': selected_project_name,
+            'project_report_sectors': project_report_sectors.items(),
             'aggregated_indicators': aggregated_indicators,
             'indicator_mapping': indicator_mapping
         }
