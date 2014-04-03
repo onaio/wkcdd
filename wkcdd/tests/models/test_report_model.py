@@ -240,8 +240,11 @@ class TestReport(TestBase):
         self.setup_test_data()
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
-        results = Report.get_aggregated_project_indicators([project], False)
+        results = Report.get_aggregated_performance_indicators(
+            [project],
+            constants.DAIRY_COWS_PROJECT_REPORT)
         project_indicators_map = results['indicator_list'][0]
+        summary = results['summary']
         self.assertEqual(
             project_indicators_map['indicators']['exp_contribution'], '56000')
         self.assertEqual(
@@ -251,17 +254,22 @@ class TestReport(TestBase):
             project_indicators_map['indicators']['vb_achievement'], '4')
         self.assertNotIn('no_of_children',
                          project_indicators_map['indicators'])
+        self.assertEqual(summary['community_contribution'], 173)
+        self.assertEqual(summary['vb_percentage'], 80)
 
     def test_performance_indicator_aggregation_with_many_projects(self):
         self.setup_test_data()
-        project_code_list = ['YH9T', 'JDCV']
+        project_code_list = ['YH9T', '7CWA']
         project_list = []
         for code in project_code_list:
             project = Project.get(Project.code == code)
             project_list.append(project)
-        results = Report.get_aggregated_project_indicators(project_list, False)
+        results = Report.get_aggregated_performance_indicators(
+            project_list,
+            constants.DAIRY_COWS_PROJECT_REPORT)
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
+        summary = results['summary']
         self.assertEqual(
             project_indicators_a['project_id'], project_list[0].id)
         self.assertEqual(
@@ -272,6 +280,8 @@ class TestReport(TestBase):
         self.assertTrue(
             'community_contribution' in project_indicators_a['indicators']
             and 'community_contribution' in project_indicators_b['indicators'])
+        self.assertEqual(summary['community_contribution'], 136.5)
+        self.assertEqual(summary['vb_percentage'], 46)
 
     def test_get_location_indicator_aggregation(self):
         self.setup_test_data()

@@ -25,7 +25,7 @@ class TestCommunityView(IntegrationTestBase):
         self.assertIsInstance(response['community'], Community)
         self.assertEquals(response['locations']['county'].name, "Bungoma")
         self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Cow Project Center 1')
+                          'Dairy Goat Project Center 1')
         self.assertIn('summary', response['aggregated_indicators'])
 
     def test_show_with_projects_with_reports(self):
@@ -38,8 +38,8 @@ class TestCommunityView(IntegrationTestBase):
         self.assertIsInstance(response['community'], Community)
         self.assertEquals(response['locations']['county'].name, "Bungoma")
         self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Goat Project Center 1')
-        self.assertEquals(project_indicator_list[0]['project_id'], 2)
+                          'Dairy Cow Project Center 1')
+        self.assertEquals(project_indicator_list[0]['project_id'], 3)
         self.assertIn('summary', response['aggregated_indicators'])
         self.assertIn(
             response['indicator_mapping'][0]['key'],

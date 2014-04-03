@@ -42,9 +42,10 @@ class TestUtils(TestBase):
 
     def test_get_project_list_from_community_ids(self):
         self.setup_test_data()
-        community_ids = [Community.get(Community.name == "Maragoli").id]
+        community = Community.get(Community.name == "Maragoli")
+        community_ids = [community.id]
         projects = utils.get_project_list(community_ids)
-        self.assertEqual(len(projects), 1)
+        self.assertEqual(len(projects), len(community.projects))
         self.assertEqual(projects[0].name, "Dairy Goat Project Center 1")
 
     def test_get_project_list_by_type_from_community_ids(self):

@@ -103,8 +103,52 @@ class Report(Base):
                         'project_id': project.id,
                         'indicators': None
                     }
-
                 indicator_list.append(project_indicators_map)
+        return {
+            'indicator_list': indicator_list,
+            'summary': summary
+        }
+
+    @classmethod
+    def get_aggregated_performance_indicators(cls, project_list, project_type):
+        pass
+        indicator_list = None
+        summary = None
+        summary_report_count = 0
+        if project_list:
+            indicator_list = []
+            summary = defaultdict(int)
+            for project in project_list:
+                report = project.get_latest_report()
+                if report:
+                    p_impact_indicators = (
+                        report.calculate_performance_indicators())
+                    for key, value in p_impact_indicators.items():
+                        value = 0 if value is None else value
+                        summary[key] += int(value)
+                    project_indicators_map = {
+                        'project_name': project.name,
+                        'project_id': project.id,
+                        'indicators': p_impact_indicators
+                    }
+                    summary_report_count += 1
+                else:
+                    project_indicators_map = {
+                        'project_name': project.name,
+                        'project_id': project.id,
+                        'indicators': None
+                    }
+                indicator_list.append(project_indicators_map)
+        if summary:
+            mapping = tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[project_type])
+            percentage_mapping = [indicator['group'][2]
+                                  for indicator in mapping
+                                  if indicator['group'][2]]
+            for field in percentage_mapping:
+                summary[field] = (float(summary[field]) /
+                                  float(summary_report_count))
         return {
             'indicator_list': indicator_list,
             'summary': summary

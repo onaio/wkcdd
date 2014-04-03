@@ -86,7 +86,10 @@ class CommunityView(object):
     def get_performance_indicators(self, projects,
                                    project_type=DEFAULT_PROJECT_TYPE):
         aggregated_indicators = (
-            Report.get_aggregated_project_indicators(projects, False))
+            Report.get_aggregated_performance_indicators(
+                projects,
+                project_type
+            ))
         mapping = tuple_to_dict_list(
             ('title', 'group'),
             constants.PERFORMANCE_INDICATOR_REPORTS[
