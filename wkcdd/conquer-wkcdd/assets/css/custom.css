@@ -1,0 +1,21 @@
+/* here you can put your own css to customize and override the theme */
+.nav-holder{
+	border-top:1px solid #DFDFDF;
+	border-bottom:1px solid #DFDFDF;
+	margin-bottom:1em;
+}
+.page-content{
+	background:#F0F1F2;
+}
+.nav-tabs{
+	margin-bottom:0;
+}
+.tab-content{
+	background:#FFFFFF;
+	border:1px solid #DFDFDF;
+	border-top:0;
+	padding-top:1em;
+}
+.table tbody>tr>th{
+	border-top:0!important;
+}
