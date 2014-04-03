@@ -2,6 +2,7 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
+
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.location import Location
 from wkcdd.models.county import County
@@ -26,12 +27,36 @@ class CountyView(object):
         impact_indicators = \
             Report.get_location_indicator_aggregation(counties)
 
-        return{
-            'counties': counties,
-            'impact_indicators': impact_indicators,
-            'impact_indicator_mapping': tuple_to_dict_list(
-                ('title', 'key'),
-                constants.IMPACT_INDICATOR_REPORT)
+        """
+        impact_indicators
+        ----------------
+	impact_indicators['total_indicator_summary'][indicator.key]
+       impact_indicators['aggregated_impact_indicators'][county.id]['summary'][indicator.key] 
+
+        xls
+	----
+	headers = ['County', *loop over impact indicator titles]
+        row = [(counties[0], loop over aggregated impact indicators), (...)]
+        """
+
+        headers = ["County"]
+        headers.extend([t for t, k in constants.IMPACT_INDICATOR_REPORT])
+        indicator_keys = [k for t, k in constants.IMPACT_INDICATOR_REPORT]
+        rows = []
+
+        for county in counties:
+           row = [county.name] 
+           row.extend([impact_indicators['aggregated_impact_indicators'][county.id]['summary'][key] for key in indicator_keys])
+           rows.append(row)
+
+	summary_row = []
+	summary_row.extend([impact_indicators['total_indicator_summary'][key] for key in indicator_keys])	
+
+        return {
+            'title': "County Impact Indicators Report",
+            'headers': headers,
+            'rows': rows,
+            'summary_row': summary_row,
         }
 
     @view_config(name='',
@@ -54,3 +79,4 @@ class CountyView(object):
                 ('title', 'key'),
                 constants.IMPACT_INDICATOR_REPORT)
         }
+

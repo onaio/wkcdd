@@ -809,10 +809,10 @@ IMPACT_INDICATOR_KEYS = (
 )
 
 IMPACT_INDICATOR_REPORT = (
-    (_('Number of beneficiaries with increased income earned \
-        from the project'), 'no_of_b_increased_income'),
-    (_('Number of beneficiaries with improved houses out of proceeds \
-            from the project'), 'no_of_b_improved_houses'),
+    (_('Number of beneficiaries with increased income earned '\
+        'from the project'), 'no_of_b_increased_income'),
+    (_('Number of beneficiaries with improved houses out of proceeds '\
+            'from the project'), 'no_of_b_improved_houses'),
     (_('Number of beneficiaries with increased household \
         assets acquired through proceeds from the project'),
      'no_of_b_hh_assets'),
