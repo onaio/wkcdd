@@ -110,23 +110,23 @@ Purchase: http://themeforest.net/item/conquer-responsive-admin-dashboard-templat
             <li class="active last">
                <a href="javascript:;">
                <i class="icon-tasks"></i>
-               <span class="title">{{ gettext('Projects') }}</span>
+               <span class="title">{% trans %}Reports{% endtrans %}</span>
                <span class="selected"></span>
                <span class="arrow open"></span>
                </a>
               <ul class="sub-menu">
                   <li>
-                    <a href="">
+                    <a href="{{ request.route_url('counties', traverse=('')) }}">
                       {% trans %} Project Indicators {% endtrans %}
                     </a>
                   </li>
                   <li>
-                    <a href="{{ request.route_url('projects', traverse=('')) }}">
+                    <a href="#">
                       {% trans %} Projects {% endtrans %}
                     </a>
                   </li>
                   <li>
-                    <a href="">
+                    <a href="#">
                       {% trans %} Reporting Status {% endtrans %}
                     </a>
                   </li>
@@ -174,7 +174,7 @@ Purchase: http://themeforest.net/item/conquer-responsive-admin-dashboard-templat
                <ul class="page-breadcrumb breadcrumb">
                   <li>
                      <i class="icon-home"></i>
-                     <a href="{{ request.route_url('default')}}">{{ gettext('Home') }}</a>
+                     <a href="{{ request.route_url('default') }}">{% trans %}Home{% endtrans %}</a>
                      <i class="icon-angle-right"></i>
                   </li>
                   {% block breadcrumbs %}{% endblock %}

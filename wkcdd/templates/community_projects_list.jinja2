@@ -1,0 +1,88 @@
+{% extends 'base.jinja2' %}
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% block title %}{{ Projects }} {% endblock %}
+{% block page_title %}
+  <h3 class="page-title">
+    {{ community.name }}
+    <small></small>
+  </h3>
+{% endblock %}
+{% block breadcrumbs %}
+  <li>
+      <a href="#">Projects Indicators</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      {{ community.name }}
+  </li>
+
+{% endblock %}
+{% block content %}
+<div class="col-md-12">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+      </div>
+      <div class="portlet-body">
+         <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+               <thead>
+                  <tr>
+                     <th>{% trans %} Name {% endtrans %}</th>
+                     {% for indicator in impact_indicator_mapping %}
+                        <th>
+
+                        {{ indicator.title }}
+
+                        </th>
+                     {% endfor %}
+
+                  </tr>
+               </thead>
+               <tbody>
+                <tr>
+                  <td>
+                    {% trans %} Total Summary {% endtrans %}
+                  </td>
+                  {% for indicator in impact_indicator_mapping %}
+                    <td>
+                        {{ aggregated_impact_indicators['summary'][indicator.key]|default('-') }}
+                    </td>
+                  {% endfor %}
+                </tr>
+               {% for project_indicator_map in aggregated_impact_indicators['indicator_list'] %}
+                  <tr>
+                    <td>
+                        <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
+                          {{ project_indicator_map['project_name'] }}
+                        </a>
+                    </td>
+                    {% for indicator in impact_indicator_mapping %}
+                      <td>
+                        {{ value_or_default(project_indicator_map['indicators'][indicator.key], '-') }}
+                      </td>
+                    {% endfor %}
+                  </tr>
+               {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+</div>
+{{response}}
+{% endblock content %}
