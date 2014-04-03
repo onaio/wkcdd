@@ -9,15 +9,6 @@ from wkcdd.models.report import Report
 
 
 class TestProject(TestBase):
-    def test_setup_test_data(self):
-        self.setup_test_data()
-        project_type2 = ProjectType.get(ProjectType.id == 2)
-        project1 = Project.get(Project.name == "Dairy Goat Project Center 2")
-
-        self.assertEqual(project_type2.name, "Dairy Goat Project")
-        self.assertEqual(project1.code, "JDCV")
-        self.assertEqual(project1.community.name, "Bukusu")
-
     def test_project_can_retrieve_associated_reports(self):
         self.setup_test_data()
         project = Project.get(Project.code == "YH9T")

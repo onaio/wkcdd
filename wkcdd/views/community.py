@@ -77,7 +77,7 @@ class CommunityView(object):
 
     def get_impact_indicators(self, projects):
         aggregated_indicators = (
-            Report.get_aggregated_project_indicators(projects))
+            Report.get_aggregated_impact_indicators(projects))
         indicator_mapping = tuple_to_dict_list(
             ('title', 'key'),
             constants.IMPACT_INDICATOR_REPORT)

@@ -185,10 +185,17 @@ class TestBase(unittest.TestCase):
 
         self._add_project(community=community1,
                           project_type=project_type_c)
+        self._add_project(project_code='7CWA',
+                          name="Dairy Cow Project Center 1",
+                          community=community1,
+                          sector="Dairy Cows",
+                          project_type=project_type_c
+                          )
         self._add_project(project_code="YH9T",
-                          name="Dairy Goat Project Center 1",
+                          name="Dairy Cow Project Center 1",
                           community=community2,
-                          project_type=project_type_g
+                          sector="Dairy Cows",
+                          project_type=project_type_c
                           )
         self._add_project(project_code="JDCV",
                           name="Dairy Goat Project Center 2",
@@ -231,12 +238,15 @@ class TestBase(unittest.TestCase):
             self.test_dir, 'fixtures', 'YHCX.json'))
         report_data_5 = _load_json_fixture(os.path.join(
             self.test_dir, 'fixtures', 'DRT4.json'))
+        report_data_6 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', '7CWA.json'))
 
         self._add_report(project_code='YH9T', report_data=report_data_1)
         self._add_report(project_code='JDCV', report_data=report_data_2)
         self._add_report(project_code='KYJ7', report_data=report_data_3)
         self._add_report(project_code='YHCX', report_data=report_data_4)
         self._add_report(project_code='DRT4', report_data=report_data_5)
+        self._add_report(project_code='7CWA', report_data=report_data_6)
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
                          submission_time=datetime.datetime(2014, 3, 21))

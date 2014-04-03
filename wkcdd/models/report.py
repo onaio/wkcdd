@@ -45,16 +45,22 @@ class Report(Base):
 
     # TODO rename to get_performance_indicators
     def calculate_performance_indicators(cls):
-        performance_indicators = {}
+        performance_indicators = defaultdict(int)
         for key, performance_indicator_key\
             in constants.PERFORMANCE_INDICATORS[cls.report_data[
                 constants.XFORM_ID]]:
-            performance_indicators[key] = cls.\
-                report_data.get(performance_indicator_key)
+            if type(performance_indicator_key) == list:
+                for key_instance in performance_indicator_key:
+                    if not performance_indicators[key]:
+                        performance_indicators[key] = (
+                            cls.report_data.get(key_instance))
+            else:
+                performance_indicators[key] = (
+                    cls.report_data.get(performance_indicator_key))
         return performance_indicators
 
     @classmethod
-    def get_aggregated_project_indicators(cls, project_list, is_impact=True):
+    def get_aggregated_impact_indicators(cls, project_list):
         """
         Returns a compiled list of impact or performance indicators from
         the supplied project list.
@@ -81,15 +87,11 @@ class Report(Base):
             for project in project_list:
                 report = project.get_latest_report()
                 if report:
-                    if is_impact:
-                        p_impact_indicators = (
-                            report.calculate_impact_indicators())
-                        for key, value in p_impact_indicators.items():
-                            value = 0 if value is None else value
-                            summary[key] += int(value)
-                    else:
-                        p_impact_indicators = (
-                            report.calculate_performance_indicators())
+                    p_impact_indicators = (
+                        report.calculate_impact_indicators())
+                    for key, value in p_impact_indicators.items():
+                        value = 0 if value is None else value
+                        summary[key] += int(value)
                     project_indicators_map = {
                         'project_name': project.name,
                         'project_id': project.id,
@@ -137,7 +139,7 @@ class Report(Base):
                                              (get_sub_county_ids
                                               ([child_location.id]))))
 
-            indicators = Report.get_aggregated_project_indicators(projects)
+            indicators = Report.get_aggregated_impact_indicators(projects)
             impact_indicators[child_location.id] = indicators
             for indicator in impact_indicator_mapping:
                 total_indicator_summary[indicator['key']] += (
