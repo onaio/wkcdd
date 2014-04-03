@@ -21,6 +21,7 @@ def deploy(deployment="prod", branch="master"):
     with cd(env.project_dir):
         run("git checkout {branch}".format(branch=branch))
         run("git pull origin {branch}".format(branch=branch))
+        run('find . -name "*.pyc" -exec rm -rf {} \;')
 
         with prefix(virtual_env_command):
             run("python setup.py test -q")
