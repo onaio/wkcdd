@@ -19,14 +19,16 @@ class TestCountyViews(IntegrationTestBase):
         response = self.county_view.show_all_counties()
         self.assertEquals(response['rows'][0][0].name, "Bungoma")
         self.assertEquals(len(response['rows']), 2)
+        self.assertEquals(response['summary_row'], [20, 1, 3, 8])
 
     def test_county_list_all_sub_counties(self):
         self.setup_test_data()
         county = County.get(County.name == "Bungoma")
         self.request.context = county
         response = self.county_view.list_all_sub_counties()
-        self.assertIsInstance(response['county'], County)
-        self.assertEquals(response['sub_counties'][0].name, "Bungoma")
+        self.assertEquals(response['rows'][0][0].name, "Bungoma")
+        self.assertEquals(len(response['rows']), 1)
+        self.assertEquals(response['summary_row'], [16, 1, 3, 8])
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):

@@ -9,7 +9,6 @@ from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.report import Report
 from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.views.helpers import build_dataset
 
 
@@ -48,12 +47,14 @@ class CountyView(object):
         impact_indicators = \
             Report.get_location_indicator_aggregation(sub_counties,
                                                       Location.COUNTY)
+        dataset = build_dataset(Location.SUB_COUNTY,
+                                sub_counties,
+                                constants,
+                                impact_indicators)
 
         return {
-            'county': county,
-            'sub_counties': sub_counties,
-            'impact_indicators': impact_indicators,
-            'impact_indicator_mapping': tuple_to_dict_list(
-                ('title', 'key'),
-                constants.IMPACT_INDICATOR_REPORT)
+            'title': county.name,
+            'headers': dataset['headers'],
+            'rows': dataset['rows'],
+            'summary_row': dataset['summary_row'],
         }

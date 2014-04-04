@@ -38,4 +38,4 @@ class TestBuildDatasetHelpers(TestBase):
                                 impact_indicators)
         self.assertEquals(dataset['headers'][0], Location.COUNTY)
         self.assertEquals(dataset['rows'][0][0].name, "Bungoma")
-        self.assertEquals(dataset['summary_row'][0], 20)
+        self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
