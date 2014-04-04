@@ -7,8 +7,7 @@ from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset
 )
-from wkcdd.models import Location, County, Report
-from wkcdd import constants
+from wkcdd.models import Location, County, Report, Project
 
 
 class TestHelpers(unittest.TestCase):
@@ -27,15 +26,29 @@ class TestHelpers(unittest.TestCase):
 
 
 class TestBuildDatasetHelpers(TestBase):
-    def test_build_impact_indicator_dataset(self):
+    def test_build_dataset(self):
         self.setup_test_data()
         counties = County.all()
         impact_indicators = \
             Report.get_location_indicator_aggregation(counties)
         dataset = build_dataset(Location.COUNTY,
                                 counties,
-                                constants,
                                 impact_indicators)
         self.assertEquals(dataset['headers'][0], Location.COUNTY)
         self.assertEquals(dataset['rows'][0][0].name, "Bungoma")
+        self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
+
+    def test_build_dataset_with_projects_list(self):
+        self.setup_test_data()
+        projects = Project.all()
+        impact_indicators = (
+            Report.get_aggregated_project_indicators(projects))
+        dataset = build_dataset(Location.COMMUNITY,
+                                None,
+                                impact_indicators,
+                                projects
+                                )
+        self.assertEquals(dataset['headers'][0], Location.COMMUNITY)
+        self.assertEquals(dataset['rows'][0][0].name,
+                          "Dairy Cow Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])

@@ -19,30 +19,27 @@ class TestCommunityView(IntegrationTestBase):
         community = Community.get(Community.name == 'Maragoli')
         self.request.context = community
         response = self.community_view.list_all_projects()
-        project_indicator_list = (
-            response['aggregated_impact_indicators']['indicator_list'])
-        self.assertIsInstance(response['community'], Community)
-        self.assertEquals(response['locations']['county'].name, "Bungoma")
-        self.assertEquals(project_indicator_list[0]['project_name'],
+
+        self.assertEquals(response['title'], community.name)
+        self.assertEquals(len(response['rows']), len(community.projects))
+        self.assertEquals(response['rows'][0][0].name,
                           'Dairy Cow Project Center 1')
-        self.assertIn('summary', response['aggregated_impact_indicators'])
+        self.assertEquals(response['summary_row'], [0, 0, 0, 0])
 
     def test_community_list_all_with_projects_and_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Bukusu')
         self.request.context = community
         response = self.community_view.list_all_projects()
-        project_indicator_list = (
-            response['aggregated_impact_indicators']['indicator_list'])
-        self.assertIsInstance(response['community'], Community)
-        self.assertEquals(response['locations']['county'].name, "Bungoma")
-        self.assertEquals(project_indicator_list[0]['project_name'],
+        self.assertEquals(response['title'], community.name)
+        self.assertEquals(len(response['rows']), len(community.projects))
+        self.assertEquals(response['rows'][0][0].name,
                           'Dairy Goat Project Center 1')
-        self.assertEquals(project_indicator_list[0]['project_id'], 2)
-        self.assertIn('summary', response['aggregated_impact_indicators'])
-        self.assertIn(
-            response['impact_indicator_mapping'][0]['key'],
-            project_indicator_list[0]['indicators'])
+        self.assertEquals(response['rows'][1][0].name,
+                          'Dairy Goat Project Center 2')
+        self.assertEquals(response['rows'][0][1:], ['1', '1', '3', '3'])
+        self.assertEquals(response['rows'][1][1:], ['15', None, None, '5'])
+        self.assertEquals(response['summary_row'], [16, 1, 3, 8])
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):

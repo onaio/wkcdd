@@ -5,8 +5,8 @@ from pyramid.view import (
 from wkcdd.models.community import Community
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
-from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.models.location import Location
+from wkcdd.views.helpers import build_dataset
 
 
 @view_defaults(route_name='community')
@@ -30,13 +30,18 @@ class CommunityView(object):
         locations = {'constituency': constituency,
                      'sub_county': sub_county,
                      'county': county}
-        aggregated_impact_indicators = (
+        impact_indicators = (
             Report.get_aggregated_project_indicators(projects))
+        dataset = build_dataset(Location.COMMUNITY,
+                                None,
+                                impact_indicators,
+                                projects
+                                )
+
         return{
-            'community': community,
-            'locations': locations,
-            'aggregated_impact_indicators': aggregated_impact_indicators,
-            'impact_indicator_mapping': tuple_to_dict_list(
-                ('title', 'key'),
-                constants.IMPACT_INDICATOR_REPORT)
+            'title': community.name,
+            'headers': dataset['headers'],
+            'rows': dataset['rows'],
+            'summary_row': dataset['summary_row'],
+            'locations': locations
         }

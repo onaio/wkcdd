@@ -6,7 +6,6 @@ from wkcdd.models import Location
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
 from wkcdd.models.project import Project
-from wkcdd import constants
 from wkcdd.models.report import Report
 from wkcdd.views.helpers import build_dataset
 
@@ -32,7 +31,6 @@ class ConstituencyView(object):
                                                       Location.CONSTITUENCY)
         dataset = build_dataset(Location.CONSTITUENCY,
                                 communities,
-                                constants,
                                 impact_indicators)
 
         return {

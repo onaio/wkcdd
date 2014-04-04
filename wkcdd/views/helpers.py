@@ -1,4 +1,5 @@
 from pyramid.events import subscriber, NewRequest
+from wkcdd import constants
 
 
 @subscriber(NewRequest)
@@ -9,21 +10,36 @@ def requested_xlsx_format(event):
         return True
 
 
-def build_dataset(location_type, locations, constants, impact_indicators):
+def build_dataset(location_type, locations, impact_indicators, projects=None):
     headers = [location_type]
     headers.extend([t for t, k in constants.IMPACT_INDICATOR_REPORT])
     indicator_keys = [k for t, k in constants.IMPACT_INDICATOR_REPORT]
     rows = []
-
-    for location in locations:
-        row = [location]
-        row.extend([impact_indicators['aggregated_impact_indicators']
-                    [location.id]['summary'][key] for key in indicator_keys])
-        rows.append(row)
-
     summary_row = []
-    summary_row.extend([impact_indicators['total_indicator_summary']
-                        [key] for key in indicator_keys])
+
+    if projects:
+        for project_indicator in impact_indicators['indicator_list']:
+            for project in projects:
+                if project.id == project_indicator['project_id']:
+                    row = [project]
+            for key in indicator_keys:
+                value = 0 if project_indicator['indicators'] is \
+                    None else project_indicator['indicators'][key]
+                row.extend([value])
+            rows.append(row)
+        summary_row.extend([impact_indicators['summary']
+                            [key] for key in indicator_keys])
+    else:
+        for location in locations:
+            row = [location]
+            row.extend([impact_indicators
+                        ['aggregated_impact_indicators']
+                        [location.id]['summary'][key]
+                        for key in indicator_keys])
+            rows.append(row)
+
+        summary_row.extend([impact_indicators['total_indicator_summary']
+                            [key] for key in indicator_keys])
 
     return{
         'headers': headers,

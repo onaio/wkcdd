@@ -7,7 +7,6 @@ from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
-from wkcdd import constants
 from wkcdd.views.helpers import build_dataset
 
 
@@ -31,7 +30,6 @@ class SubCountyView(object):
                                                       Location.SUB_COUNTY)
         dataset = build_dataset(Location.SUB_COUNTY,
                                 constituencies,
-                                constants,
                                 impact_indicators)
 
         return {

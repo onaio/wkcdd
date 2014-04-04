@@ -8,7 +8,6 @@ from wkcdd.models.location import Location
 from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.report import Report
-from wkcdd import constants
 from wkcdd.views.helpers import build_dataset
 
 
@@ -27,7 +26,6 @@ class CountyView(object):
             Report.get_location_indicator_aggregation(counties)
         dataset = build_dataset(Location.COUNTY,
                                 counties,
-                                constants,
                                 impact_indicators)
         return {
             'title': "County Impact Indicators Report",
@@ -49,7 +47,6 @@ class CountyView(object):
                                                       Location.COUNTY)
         dataset = build_dataset(Location.SUB_COUNTY,
                                 sub_counties,
-                                constants,
                                 impact_indicators)
 
         return {
