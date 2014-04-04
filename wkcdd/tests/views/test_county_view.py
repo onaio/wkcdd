@@ -17,8 +17,8 @@ class TestCountyViews(IntegrationTestBase):
     def test_show_all_counties(self):
         self.setup_test_data()
         response = self.county_view.show_all_counties()
-        self.assertEquals(response['counties'][0].name, "Bungoma")
-        self.assertEquals(len(response['counties']), 2)
+        self.assertEquals(response['rows'][0][0].name, "Bungoma")
+        self.assertEquals(len(response['rows']), 2)
 
     def test_county_list_all_sub_counties(self):
         self.setup_test_data()

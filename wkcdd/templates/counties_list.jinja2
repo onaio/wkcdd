@@ -48,7 +48,7 @@
                </tr>
                {% for row in rows %}
                   <tr>
-                     <td>{{ row[0] }}</td>
+                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0]}}</a></td>
                      {% for col in row[1:] %}
                         <td>{{ col|default('-') }}</td>
                      {% endfor %}
