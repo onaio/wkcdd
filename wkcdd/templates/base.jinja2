@@ -38,7 +38,7 @@
       <div class="header-inner">
          <!-- BEGIN LOGO -->  
          <a class="navbar-brand" href="index.html">
-         <img src="img/wkcdd-logo.png" alt="logo" class="img-responsive"/>
+         <img src="{{ request.static_url('wkcdd:static/img/wkcdd-logo.png') }}" alt="logo" class="img-responsive"/>
          </a>
          
          <!-- END LOGO -->
@@ -137,43 +137,27 @@
    <!-- BEGIN CONTAINER -->      
    <div class="page-container">
       <!-- BEGIN SIDEBAR -->
-      <div class="page-sidebar navbar-collapse collapse" style="position: fixed !important;">
-         <!-- BEGIN SIDEBAR MENU -->        
-         <ul class="page-sidebar-menu">
-            <li>
-               <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-               <div class="sidebar-toggler"> </div>
-               <div class="clearfix"> </div>
-               <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-            </li>
-            <li class="start ">
-               <a href="{{ request.route_url('counties', traverse=('')) }}">
-               <i class="icon-table"> </i> 
-               <span class="title"> {% trans %}Reports{% endtrans %}</span>
-               <span class="arrow "> </span>
-               </a>
-            </li>
-            <li class="start ">
-               <a href="{{ request.route_url('counties', traverse=('')) }}">
-               <i class="icon-table"> </i> 
-               <span class="title"> {% trans %} Project Indicators {% endtrans %}</span>
-               <span class="arrow "> </span>
-               </a>
-            </li>
-            <li class="active">
-               <a href="#">
-               <i class="icon-sitemap"> </i> 
-               <span class="title">{% trans %} Projects {% endtrans %}</span>
-               <span class="arrow "> </span>
-               </a>
-            </li>
-            <li class="last ">
-               <a href="#">
-               <i class="icon-bar-chart"> </i> 
-               <span class="title">{% trans %} Reporting Status {% endtrans %}</span>
-               </a>
-            </li>
-         </ul>
+      <div class="page-sidebar navbar-collapse collapse">
+         <!-- BEGIN SIDEBAR MENU -->
+	  <ul class="nav-side">
+		<li class="start">
+			<a class="selected" href="{{ request.route_url('counties', traverse=('')) }}">
+			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
+			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
+			</a>
+		</li>
+		<li><a href="#">
+			<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
+			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
+			</a>
+		</li>
+		<li class="last">
+			<a href="#">
+			<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
+			<span class="title">{% trans %} REPORTING <br/>STATUS {% endtrans %}</span>
+			</a>
+		</li>
+	  </ul>
          <!-- END SIDEBAR MENU -->
       </div>
       <!-- END SIDEBAR -->
