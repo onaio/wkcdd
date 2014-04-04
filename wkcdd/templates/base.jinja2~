@@ -218,7 +218,8 @@
          
          <!-- BEGIN PAGE CONTENT--> 
 	{% block content %}{% endblock %}
-         <!-- END PAGE CONTENT-->     
+         <!-- END PAGE CONTENT-->   
+     
       </div>
       <!-- END PAGE -->
    </div>
