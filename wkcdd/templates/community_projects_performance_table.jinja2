@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -36,7 +37,7 @@
     </a>
   </li>
   <li>
-    <a href="{{ request.route_url('community',traverse=(community.id, 'impact')) }}">
+    <a href="{{ request.route_url('community',traverse=(community.id)) }}">
       {% trans %} Impact {% endtrans %}
     </a>
   </li>
@@ -53,23 +54,7 @@
           <i class="icon-tasks"></i>
           {{ community.name }}{% trans %} Projects {% endtrans %}
         </div>
-        <div class="actions">
-              <div class="btn-group">
-                 <a class="btn btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
-                 {{ selected_project_type }}
-                 <i class="icon-angle-down "></i>
-                 </a>
-                 <ul class="dropdown-menu pull-right">
-                  {% for project_sector in project_report_sectors %}
-                    <li>
-                      <a href="{{ request.route_url('community',traverse=(community.id, 'performance'), _query={'type': project_sector[0]}) }}">
-                        {{ project_sector[1] }}
-                      </a>
-                    </li>
-                  {% endfor %}
-                 </ul>
-              </div>
-           </div>
+        {{ generate_project_type_dropdown(request, selected_project_type, 'community', community, project_report_sectors)}}
       </div>
       <div class="portlet-body">
         {% if aggregated_indicators['indicator_list'] %}

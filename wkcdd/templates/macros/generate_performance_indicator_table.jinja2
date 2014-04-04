@@ -1,0 +1,62 @@
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% macro generate_performance_indicator_table(request, location, location_type, selected_project_type, entity_list, aggregated_indicators, indicator_mapping) %}
+  <div class="portlet-body">
+  {% if aggregated_indicators['aggregated_performance_indicators'] %}
+   <div class="table-responsive table-scrollable">
+      <table class="table table-striped table-bordered table-hover">
+         <thead>
+            <tr>
+              <th>{% trans %} Project Name {% endtrans %}</th>
+              {% for indicator in indicator_mapping%}
+                <th colspan="3">
+                  {{ indicator['title'] }}
+                </th>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>{% trans %} {% endtrans %}</th>
+              {% for indicator in indicator_mapping%}
+                <th>{% trans %} Target {% endtrans %}</th>
+                <th>{% trans %} Actual {% endtrans %}</th>
+                <th>{% trans %} Percentage {% endtrans %}</th>
+              {% endfor %}
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+              <td>
+                {% trans %} Total Summary {% endtrans %}
+              </td>
+              {% for indicator in indicator_mapping %}
+                {% for item in indicator['group'] %}
+                  <td>
+                      {{ value_or_default(aggregated_indicators['total_indicator_summary'][item], '-') }}
+                  </td>
+                {% endfor %}
+              {% endfor %}
+            </tr>
+            {% for entity in entity_list %}
+              <tr>
+                <td>
+                    <a href="{{ request.route_url(location_type, traverse=(entity.id)) }}">
+                      {{ entity.name }}
+                    </a>
+                </td>
+                <div>
+                </div>
+                {% for indicator in indicator_mapping %}
+                  {% for item in indicator['group'] %}
+                    <td>
+                      {{ value_or_default(aggregated_indicators['aggregated_performance_indicators'][entity.id]['summary'][item], '-') }}
+                    </td>
+                  {% endfor %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+  {% else %}
+    <div> {% trans %} No {{selected_project_type}} Projects found within {% endtrans %}{{ location.name }}</div>
+  {% endif %}
+{% endmacro %}

@@ -17,7 +17,7 @@ class CommunityView(object):
     def __init__(self, request):
         self.request = request
 
-    @view_config(name='impact',
+    @view_config(name='',
                  context=Community,
                  renderer='community_projects_list.jinja2',
                  request_method='GET')

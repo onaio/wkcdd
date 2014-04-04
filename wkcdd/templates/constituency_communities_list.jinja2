@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -24,6 +25,9 @@
       {{ constituency.name }}
   </li>
 
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'constituency', constituency) }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -61,7 +65,7 @@
                </tr>
                {% for community in communities %}
                   <tr>
-                     <td><a href="{{ request.route_url('community', traverse=(community.id, 'impact')) }}">{{ community.name }}</a></td>
+                     <td><a href="{{ request.route_url('community', traverse=(community.id)) }}">{{ community.name }}</a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
                          {{  impact_indicators['aggregated_impact_indicators'][community.id]['summary'][indicator.key]|default('-') }}

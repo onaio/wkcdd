@@ -87,7 +87,7 @@ class TestCommunityViewsFunctional(FunctionalTestBase):
         self.setup_community_test_data()
         community = Community.get(Community.name == 'lutacho')
         url = self.request.route_path(
-            'community', traverse=(community.id, 'impact'))
+            'community', traverse=(community.id))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 

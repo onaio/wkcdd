@@ -32,3 +32,12 @@ class TestConstituencyViewsFunctional(FunctionalTestBase):
         url = self.request.route_path('constituency', traverse=constituency.id)
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_constituency_performance_view(self):
+        self.setup_test_data()
+        constituency = Location.get(Location.name == 'Kakamega',
+                                    Location.location_type == 'constituency')
+        url = self.request.route_path('constituency', traverse=(
+            constituency.id, 'performance'))
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
