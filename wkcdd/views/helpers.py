@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from pyramid.events import subscriber, NewRequest
 from wkcdd import constants
 
@@ -12,8 +13,10 @@ def requested_xlsx_format(event):
 
 def build_dataset(location_type, locations, impact_indicators, projects=None):
     headers = [location_type]
-    headers.extend([t for t, k in constants.IMPACT_INDICATOR_REPORT])
-    indicator_keys = [k for t, k in constants.IMPACT_INDICATOR_REPORT]
+    impact_indicator_report = OrderedDict(constants.IMPACT_INDICATOR_REPORT)
+    headers.extend(impact_indicator_report.keys())
+    indicator_keys = impact_indicator_report.values()
+
     rows = []
     summary_row = []
 
@@ -23,7 +26,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                 if project.id == project_indicator['project_id']:
                     row = [project]
             for key in indicator_keys:
-                value = 0 if project_indicator['indicators'] is \
+                value = [0, 0, 0, 0] if project_indicator['indicators'] is \
                     None else project_indicator['indicators'][key]
                 row.extend([value])
             rows.append(row)
