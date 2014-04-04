@@ -291,6 +291,24 @@ class TestReport(TestBase):
                              [counties[0].id])
         self.assertEquals(len(results['total_indicator_summary']), 4)
 
+    def test_get_performance_indicator_aggregation_for_counties(self):
+        self.setup_test_data()
+        counties = County.all()
+        selected_project_type = constants.DAIRY_COWS_PROJECT_REPORT
+        results = Report.get_performance_indicator_aggregation_for(
+            counties, selected_project_type)
+        self.assertIsNotNone(results['aggregated_performance_indicators']
+                             [counties[0].id])
+        county_1_indicator_list = (results['aggregated_performance_indicators']
+                                   [counties[0].id]['indicator_list'])
+        county_1_summary_values = (results['aggregated_performance_indicators']
+                                   [counties[0].id]['summary'])
+        county_2_summary_values = (results['aggregated_performance_indicators']
+                                   [counties[1].id]['summary'])
+        self.assertIsNotNone(county_1_summary_values)
+        self.assertIsNone(county_2_summary_values)
+        # TODO Add checks for total indicator
+
     def test_performance_indicator_calculation_on_legacy_data(self):
         self.setup_test_data()
         report = Report.get(Report.project_code == '7CWA')

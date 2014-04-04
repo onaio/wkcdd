@@ -3,6 +3,7 @@ from collections import defaultdict
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models import Location
+from wkcdd.models import Project
 
 from wkcdd.models.base import (
     Base
@@ -164,25 +165,8 @@ class Report(Base):
         impact_indicators = {}
         total_indicator_summary = defaultdict(int)
         for child_location in child_locations:
-            if location_type == Location.CONSTITUENCY:
-                # Child location is community
-                projects = get_project_list([child_location.id])
-            elif location_type == Location.SUB_COUNTY:
-                # Child location is constituency
-                projects = get_project_list(
-                    get_community_ids([child_location.id]))
-            elif location_type == Location.COUNTY:
-                # Child location is sub_county
-                projects = get_project_list(get_community_ids
-                                            (get_constituency_ids
-                                             ([child_location.id])))
-            elif location_type == "All":
-                # child location == county
-                projects = get_project_list(get_community_ids
-                                            (get_constituency_ids
-                                             (get_sub_county_ids
-                                              ([child_location.id]))))
-
+            projects = Report.get_projects_from_location(child_location,
+                                                         location_type)
             indicators = Report.get_aggregated_impact_indicators(projects)
             impact_indicators[child_location.id] = indicators
             for indicator in impact_indicator_mapping:
@@ -192,5 +176,63 @@ class Report(Base):
 
         return {
             'aggregated_impact_indicators': impact_indicators,
+            'total_indicator_summary': total_indicator_summary
+        }
+
+    @classmethod
+    def get_projects_from_location(cls,
+                                   location,
+                                   location_type,
+                                   *criteria):
+        if location_type == Location.CONSTITUENCY:
+            # Child location is community
+            projects = get_project_list([location.id], *criteria)
+        elif location_type == Location.SUB_COUNTY:
+            # Child location is constituency
+            projects = get_project_list(
+                get_community_ids([location.id]), *criteria)
+        elif location_type == Location.COUNTY:
+            # Child location is sub_county
+            projects = get_project_list(get_community_ids
+                                        (get_constituency_ids
+                                         ([location.id])), *criteria)
+        elif location_type == "All":
+            # child location is county
+            projects = get_project_list(get_community_ids
+                                        (get_constituency_ids
+                                         (get_sub_county_ids
+                                          ([location.id]))), *criteria)
+        return projects
+
+    @classmethod
+    def get_performance_indicator_aggregation_for(cls,
+                                                  child_locations,
+                                                  project_type,
+                                                  location_type="All"):
+        mapping = tuple_to_dict_list(
+            ('title', 'group'),
+            constants.PERFORMANCE_INDICATOR_REPORTS[project_type])
+        project_report_sectors = constants.PROJECT_REPORT_SECTORS
+        performance_indicators = {}
+        total_indicator_summary = defaultdict(int)
+        child_location_count = 0
+        for child_location in child_locations:
+            projects = Report.get_projects_from_location(
+                child_location,
+                location_type,
+                (Project.sector ==
+                    project_report_sectors[project_type]))
+            indicators = Report.get_aggregated_performance_indicators(
+                projects, project_type)
+            performance_indicators[child_location.id] = indicators
+            # for indicator in mapping:
+            #     for field in indicator['group']:
+            #         value = (performance_indicators[child_location.id]
+            #                  ['summary'].get(field))
+            #         if value:
+            #             total_indicator_summary[field] += value
+            #             child_location_count += 1
+        return {
+            'aggregated_performance_indicators': performance_indicators,
             'total_indicator_summary': total_indicator_summary
         }
