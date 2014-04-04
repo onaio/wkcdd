@@ -90,10 +90,8 @@ class CommunityView(object):
                 projects,
                 project_type
             ))
-        mapping = tuple_to_dict_list(
+        indicator_mapping = tuple_to_dict_list(
             ('title', 'group'),
             constants.PERFORMANCE_INDICATOR_REPORTS[
                 project_type])
-        indicator_mapping = [(indicator['title'], indicator['group'][1])
-                             for indicator in mapping]
         return (indicator_mapping, aggregated_indicators)

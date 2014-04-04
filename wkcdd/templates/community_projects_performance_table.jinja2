@@ -78,30 +78,52 @@
                <thead>
                   <tr>
                     <th>{% trans %} Project Name {% endtrans %}</th>
-                    {% for title, key in indicator_mapping%}
-                      <th>
-                        {{ title }}
+                    {% for indicator in indicator_mapping%}
+                      <th colspan="3">
+                        {{ indicator['title'] }}
                       </th>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th>{% trans %} {% endtrans %}</th>
+                    {% for indicator in indicator_mapping%}
+                      <th>{% trans %} Target {% endtrans %}</th>
+                      <th>{% trans %} Actual {% endtrans %}</th>
+                      <th>{% trans %} Percentage {% endtrans %}</th>
                     {% endfor %}
                   </tr>
                </thead>
                <tbody>
-               {% for project_indicator_map in aggregated_indicators['indicator_list'] %}
                   <tr>
                     <td>
-                        <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
-                          {{ project_indicator_map['project_name'] }}
-                        </a>
+                      {% trans %} Total Summary {% endtrans %}
                     </td>
-                    <div>
-                    </div>
-                    {% for title, key in indicator_mapping %}
-                      <td>
-                        {{ value_or_default(project_indicator_map['indicators'][key], '-') }}
-                      </td>
+                    {% for indicator in indicator_mapping %}
+                      {% for item in indicator['group'] %}
+                        <td>
+                            {{ value_or_default(aggregated_indicators['summary'][item], '-') }}
+                        </td>
+                      {% endfor %}
                     {% endfor %}
                   </tr>
-               {% endfor %}
+                  {% for project_indicator_map in aggregated_indicators['indicator_list'] %}
+                    <tr>
+                      <td>
+                          <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
+                            {{ project_indicator_map['project_name'] }}
+                          </a>
+                      </td>
+                      <div>
+                      </div>
+                      {% for indicator in indicator_mapping %}
+                        {% for item in indicator['group'] %}
+                          <td>
+                            {{ value_or_default(project_indicator_map['indicators'][item], '-') }}
+                          </td>
+                        {% endfor %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
                </tbody>
             </table>
          </div>
