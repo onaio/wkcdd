@@ -56,5 +56,5 @@ class CountyView(object):
             'title': county.name,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
-            'summary_row': dataset['summary_row'],
+            'summary_row': dataset['summary_row']
         }
