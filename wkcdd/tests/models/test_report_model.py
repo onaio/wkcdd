@@ -283,10 +283,10 @@ class TestReport(TestBase):
         self.assertEqual(summary['community_contribution'], 136.5)
         self.assertEqual(summary['vb_percentage'], 46)
 
-    def test_get_location_indicator_aggregation(self):
+    def test_get_impact_indicator_aggregation_for_counties(self):
         self.setup_test_data()
         counties = County.all()
-        results = Report.get_location_indicator_aggregation(counties)
+        results = Report.get_impact_indicator_aggregation_for(counties)
         self.assertIsNotNone(results['aggregated_impact_indicators']
                              [counties[0].id])
         self.assertEquals(len(results['total_indicator_summary']), 4)

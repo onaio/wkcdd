@@ -24,7 +24,7 @@ class CountyView(object):
         counties = County.all()
 
         impact_indicators = \
-            Report.get_location_indicator_aggregation(counties)
+            Report.get_impact_indicator_aggregation_for(counties)
 
         return{
             'counties': counties,
@@ -43,8 +43,8 @@ class CountyView(object):
         sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
 
         impact_indicators = \
-            Report.get_location_indicator_aggregation(sub_counties,
-                                                      Location.COUNTY)
+            Report.get_impact_indicator_aggregation_for(sub_counties,
+                                                        Location.COUNTY)
 
         return {
             'county': county,

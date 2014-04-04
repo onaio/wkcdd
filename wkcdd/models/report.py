@@ -155,9 +155,9 @@ class Report(Base):
         }
 
     @classmethod
-    def get_location_indicator_aggregation(cls,
-                                           child_locations,
-                                           location_type="All"):
+    def get_impact_indicator_aggregation_for(cls,
+                                             child_locations,
+                                             location_type="All"):
         impact_indicator_mapping = tuple_to_dict_list(
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 

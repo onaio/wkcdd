@@ -31,8 +31,8 @@ class ConstituencyView(object):
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
         impact_indicators = \
-            Report.get_location_indicator_aggregation(communities,
-                                                      Location.CONSTITUENCY)
+            Report.get_impact_indicator_aggregation_for(communities,
+                                                        Location.CONSTITUENCY)
 
         return {
             'constituency': constituency,
