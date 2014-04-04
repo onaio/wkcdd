@@ -39,5 +39,5 @@ class SubCountyView(object):
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
-            'locations': locations,
+            'locations': locations
         }
