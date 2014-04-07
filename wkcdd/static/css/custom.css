@@ -7,6 +7,8 @@
 	border-top:1px solid #DFDFDF;
 	border-bottom:1px solid #DFDFDF;
 	margin-bottom:1em;
+        margin-left: -20px;
+        margin-right: -20px;
 }
 .page-content{
 	background:#F0F1F2;
