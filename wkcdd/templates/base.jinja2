@@ -5,7 +5,7 @@
 <!-- BEGIN HEAD -->
 <head>
    <meta charset="utf-8" />
-   <title>{% block title %}{% endblock %} | WB Western Kenya CDD</title>
+   <title>{% block title %}{% endblock %}WB Western Kenya CDD</title>
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
    <meta content="" name="description" />
@@ -208,11 +208,13 @@
          </div>
          <!-- END PAGE HEADER-->
          
-         <div class="container row nav-holder">
+         <div class="row nav-holder">
 			<ul class="nav navbar-nav">
-				<li><a href="#">Performance</a></li>
-				<li><a href="#">Impact</a></li>
-				<li><a href="#">Results Framework</a></li>
+				{% block indicators %}
+            <li><a href="#">Performance</a></li>
+             <li><a href="#">Impact</a></li>
+             <li><a href="#">Results Framework</a></li>
+            {% endblock %} 
 			</ul>
 		</div>
          

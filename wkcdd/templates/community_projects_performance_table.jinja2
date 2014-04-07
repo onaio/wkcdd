@@ -1,0 +1,112 @@
+{% extends 'base.jinja2' %}
+{% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
+{% block title %}{{ Projects }} {% endblock %}
+{% block page_title %}
+  <h3 class="page-title">
+    {{ community.name }}
+    <small></small>
+  </h3>
+{% endblock %}
+{% block breadcrumbs %}
+  <li>
+      <a href="#">Projects Indicators</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      {{ community.name }}
+  </li>
+
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'community', community) }}
+{% endblock %}
+{% block content %}
+<div class="col-md-12">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="icon-tasks"></i>
+          {{ community.name }}{% trans %} Projects {% endtrans %}
+        </div>
+        {{ generate_project_type_dropdown(request, selected_project_type, 'community', community, project_report_sectors)}}
+      </div>
+      <div class="portlet-body">
+        {% if aggregated_indicators['indicator_list'] %}
+         <div class="table-responsive table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+               <thead>
+                  <tr>
+                    <th>{% trans %} Project Name {% endtrans %}</th>
+                    {% for indicator in indicator_mapping%}
+                      <th colspan="3">
+                        {{ indicator['title'] }}
+                      </th>
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <th>{% trans %} {% endtrans %}</th>
+                    {% for indicator in indicator_mapping%}
+                      <th>{% trans %} Target {% endtrans %}</th>
+                      <th>{% trans %} Actual {% endtrans %}</th>
+                      <th>{% trans %} Percentage {% endtrans %}</th>
+                    {% endfor %}
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                    <td>
+                      {% trans %} Total Summary {% endtrans %}
+                    </td>
+                    {% for indicator in indicator_mapping %}
+                      {% for item in indicator['group'] %}
+                        <td>
+                            {{ value_or_default(aggregated_indicators['summary'][item], '-') }}
+                        </td>
+                      {% endfor %}
+                    {% endfor %}
+                  </tr>
+                  {% for project_indicator_map in aggregated_indicators['indicator_list'] %}
+                    <tr>
+                      <td>
+                          <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
+                            {{ project_indicator_map['project_name'] }}
+                          </a>
+                      </td>
+                      <div>
+                      </div>
+                      {% for indicator in indicator_mapping %}
+                        {% for item in indicator['group'] %}
+                          <td>
+                            {{ value_or_default(project_indicator_map['indicators'][item], '-') }}
+                          </td>
+                        {% endfor %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         </div>
+        {% else %}
+          <div> {% trans %} No {{selected_project_type}} Projects found within {% endtrans %}{{ community.name }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+</div>
+{{response}}
+{% endblock content %}
