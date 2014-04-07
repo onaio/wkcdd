@@ -54,31 +54,38 @@ class TestHelpers(TestBase):
         # test retrieval of dairy cow projects
         projects = helpers.get_project_list(
             community_ids,
-            Project.sector == constants.PROJECT_REPORT_SECTORS[
-                constants.DAIRY_COWS_PROJECT_REPORT])
+            Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION)
         self.assertEqual(len(projects), 2)
         self.assertEqual(projects[0].name, "Cow project 1")
 
         # test retrieval of dairy goat projects
         projects = helpers.get_project_list(
             community_ids,
-            Project.sector == constants.PROJECT_REPORT_SECTORS[
-                constants.DAIRY_GOAT_PROJECT_REPORT])
+            Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0].name, "Goat project 1")
 
         # test retrieval of Motocycle projects
         projects = helpers.get_project_list(
             community_ids,
-            Project.sector == constants.PROJECT_REPORT_SECTORS[
-                constants.BODABODA_PROJECT_REPORT])
+            Project.sector == constants.BODABODA_PROJECT_REGISTRATION)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0].name, "Bodaboda project 1")
 
     def test_get_project_types(self):
         self.setup_community_test_data()
         community_ids = [c.id for c in Community.all()]
-        project_types =  sorted(helpers.get_project_types(community_ids), key=lambda x: x[0])
+        project_types = sorted(helpers.get_project_types(
+            community_ids),
+            key=lambda x: x[0])
         # Diary Cow, Dairy Goat and Boda Boda
-        expected_list = sorted([(reg, report, label) for reg, report, label in constants.PROJECT_TYPE_MAPPING if reg in [constants.DAIRY_GOAT_PROJECT_REGISTRATION, constants.DAIRY_COWS_PROJECT_REGISTRATION, constants.BODABODA_PROJECT_REGISTRATION]], key=lambda x: x[0])
-        self.assertListEqual(expected_list, project_types) 
+        expected_list = sorted([(reg, report, label)
+                               for (reg,
+                                    report,
+                                    label) in constants.PROJECT_TYPE_MAPPING
+                               if reg in
+                               [constants.DAIRY_GOAT_PROJECT_REGISTRATION,
+                                constants.DAIRY_COWS_PROJECT_REGISTRATION,
+                                constants.BODABODA_PROJECT_REGISTRATION]],
+                               key=lambda x: x[0])
+        self.assertListEqual(expected_list, project_types)
