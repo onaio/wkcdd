@@ -3,7 +3,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ sub_county.name }}
+    {{ sub_county.name | capitalize }} Sub-County
     <small></small>
   </h3>
 {% endblock %}
@@ -13,11 +13,11 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County </a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ sub_county.name }}
+      {{ sub_county.name | capitalize }} Sub-County
   </li>
 
 {% endblock %}
@@ -57,7 +57,7 @@
                </tr>
                {% for constituency in constituencies %}
                   <tr>
-                     <td><a href="{{ request.route_url('constituency', traverse=constituency.id) }}">{{ constituency.name }}</a></td>
+                     <td><a href="{{ request.route_url('constituency', traverse=constituency.id) }}">{{ constituency.name | capitalize }} </a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
                          {{  impact_indicators['aggregated_impact_indicators'][constituency.id]['summary'][indicator.key]|default('-') }}

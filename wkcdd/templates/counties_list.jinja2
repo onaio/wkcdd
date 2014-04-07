@@ -51,7 +51,7 @@
                </tr>
                {% for county in counties %}
                   <tr>
-                     <td><a href="{{ request.route_url('counties', traverse=county.id) }}">{{ county.name }}</a></td>
+                     <td><a href="{{ request.route_url('counties', traverse=county.id) }}">{{ county.name | capitalize }}</a></td>
                      {% for indicator in impact_indicator_mapping %}
                         <td>
                          {{  impact_indicators['aggregated_impact_indicators'][county.id]['summary'][indicator.key]|default('-') }}

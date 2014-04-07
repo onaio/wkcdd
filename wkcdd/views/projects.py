@@ -44,6 +44,11 @@ class ProjectViews(object):
     def show(self):
         project = self.request.context
         report = project.get_latest_report()
+        p_locations = Project.get_locations([project])
+        locations = {'community': project.community,
+                     'constituency': p_locations[project.id][2],
+                     'sub_county': p_locations[project.id][1],
+                     'county': p_locations[project.id][0]}
         # TODO filter by periods
         # periods = [report.period for report in reports]
         if report:
@@ -59,12 +64,14 @@ class ProjectViews(object):
                         report.report_data[constants.XFORM_ID]]),
                 'impact_indicator_mapping': tuple_to_dict_list(
                     ('title', 'key'),
-                    constants.IMPACT_INDICATOR_REPORT)
+                    constants.IMPACT_INDICATOR_REPORT),
+                'locations': locations
             }
         else:
             return {
                 'project': project,
                 'performance_indicators': None,
                 'performance_indicator_mapping': None,
-                'impact_indicators': None
+                'impact_indicators': None,
+                'locations': locations
             }
