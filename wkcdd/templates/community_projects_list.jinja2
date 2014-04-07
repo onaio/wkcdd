@@ -29,8 +29,9 @@
       {{ community.name | capitalize }} Community
   </li>
 {% endblock %}
+
 {% block indicators %}
-  {{ add_indicator_links(request, 'community', community, 'impact') }}
+        {{ add_indicator_links(request, 'community', community, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
