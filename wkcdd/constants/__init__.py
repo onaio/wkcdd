@@ -42,7 +42,7 @@ POULTRY_PROJECT_REPORT_CODE = 'perfomance_summary/poultry_projects'
 BANANA_PROJECT_REGISTRATION = 'banana_project_registration2'
 BANANA_PROJECT_CODE = 'banana_projects'
 BANANA_PROJECT_REPORT = 'banana_project_report'
-BANANA_PROJECT_REPORT_CODE = 'performance_summary/banana_projects'
+BANANA_PROJECT_REPORT_CODE = 'perfomance_summary/banana_projects'
 
 CATERING_PROJECT_REGISTRATION = 'catering_project_registration'
 CATERING_PROJECT_CODE = 'catering_projects'
@@ -943,3 +943,22 @@ PROJECT_REPORT_SECTORS = {
     CATERING_PROJECT_REPORT: _("Catering"),
     PIGGERY_PROJECT_REPORT: _("Piggery")
 }
+
+PROJECT_TYPE_MAPPING = [
+    (DAIRY_GOAT_PROJECT_REGISTRATION, DAIRY_GOAT_PROJECT_REPORT,
+     _("Dairy Goat")),
+    (DAIRY_COWS_PROJECT_REGISTRATION, DAIRY_COWS_PROJECT_REPORT,
+     _("Dairy Cows")),
+    (FIC_PROJECT_REGISTRATION, FIC_PROJECT_REPORT,
+     _("Field Industrial Crops")),
+    (BODABODA_PROJECT_REGISTRATION, BODABODA_PROJECT_REPORT,
+     _("Motor Cycle")),
+    (POULTRY_PROJECT_REGISTRATION, POULTRY_PROJECT_REPORT,
+     _("Poultry")),
+    (BANANA_PROJECT_REGISTRATION, BANANA_PROJECT_REPORT,
+     _("Banana")),
+    (CATERING_PROJECT_REGISTRATION, CATERING_PROJECT_REPORT,
+     _("Catering")),
+    (PIGGERY_PROJECT_REGISTRATION, PIGGERY_PROJECT_REPORT,
+     _("Piggery"))
+]

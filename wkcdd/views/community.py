@@ -12,7 +12,6 @@ from wkcdd.models import helpers
 
 @view_defaults(route_name='community')
 class CommunityView(object):
-    DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REPORT
 
     def __init__(self, request):
         self.request = request
@@ -43,27 +42,26 @@ class CommunityView(object):
                  request_method='GET')
     def performance(self):
         community = self.request.context
-        selected_project_type = (
-            self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
-        if selected_project_type not in project_report_sectors.keys():
-            selected_project_type = self.DEFAULT_PROJECT_TYPE
-        projects = helpers.get_project_list(
-            [community.id],
-            Project.sector == project_report_sectors[selected_project_type])
-        locations = self.get_locations(community)
-        indicator_mapping, aggregated_indicators = (
-            self.get_performance_indicators(
-                projects,
-                selected_project_type))
-        selected_project_name = project_report_sectors[selected_project_type]
+        project_types_mappings = helpers.get_project_types([community.id])
+        sector_indicator_mapping = {}
+        sector_aggregated_indicators = {}
+        sector_projects = {}
+        for reg_id, report_id, title in project_types_mappings:
+            projects = helpers.get_project_list(
+                [community.id],
+                Project.sector == reg_id)
+            indicator_mapping, aggregated_indicators = (
+                self.get_performance_indicators(
+                    projects,
+                    report_id))
+            sector_projects[reg_id] = projects
+            sector_indicator_mapping[reg_id] = indicator_mapping
+            sector_aggregated_indicators[reg_id] = aggregated_indicators
         return {
             'community': community,
-            'locations': locations,
-            'selected_project_type': selected_project_name,
-            'project_report_sectors': project_report_sectors.items(),
-            'aggregated_indicators': aggregated_indicators,
-            'indicator_mapping': indicator_mapping
+            'project_types': project_types_mappings,
+            'sector_aggregated_indicators': sector_aggregated_indicators,
+            'sector_indicator_mapping': sector_indicator_mapping
         }
 
     def get_locations(self, community):
@@ -84,7 +82,7 @@ class CommunityView(object):
         return (indicator_mapping, aggregated_indicators)
 
     def get_performance_indicators(self, projects,
-                                   project_type=DEFAULT_PROJECT_TYPE):
+                                   project_type):
         aggregated_indicators = (
             Report.get_aggregated_performance_indicators(
                 projects,

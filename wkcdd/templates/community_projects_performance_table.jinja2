@@ -15,15 +15,15 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="#">County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <a href="#">Sub County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
+      <a href="#">Constituency</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -35,35 +35,28 @@
   {{ add_indicator_links(request, 'community', community) }}
 {% endblock %}
 {% block content %}
-<div class="col-md-12">
+{% for sector, report, label in project_types %}
+<div class="row">
+  <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
         <div class="caption">
           <i class="icon-tasks"></i>
-          {{ community.name }}{% trans %} Projects {% endtrans %}
+          {{ community.name }} {{ gettext(label) }} {% trans %}Projects{% endtrans %}
         </div>
-        {{ generate_project_type_dropdown(request, selected_project_type, 'community', community, project_report_sectors)}}
       </div>
       <div class="portlet-body">
-        {% if aggregated_indicators['indicator_list'] %}
+        {% if sector_aggregated_indicators[sector]['indicator_list'] %}
          <div class="table-responsive table-scrollable">
             <table class="table table-striped table-bordered table-hover">
                <thead>
                   <tr>
-                    <th>{% trans %} Project Name {% endtrans %}</th>
-                    {% for indicator in indicator_mapping%}
-                      <th colspan="3">
+                    <th>{% trans %}Project Name{% endtrans %}</th>
+                    {% for indicator in sector_indicator_mapping[sector] %}
+                      <th>
                         {{ indicator['title'] }}
                       </th>
-                    {% endfor %}
-                  </tr>
-                  <tr>
-                    <th>{% trans %} {% endtrans %}</th>
-                    {% for indicator in indicator_mapping%}
-                      <th>{% trans %} Target {% endtrans %}</th>
-                      <th>{% trans %} Actual {% endtrans %}</th>
-                      <th>{% trans %} Percentage {% endtrans %}</th>
                     {% endfor %}
                   </tr>
                </thead>
@@ -72,15 +65,15 @@
                     <td>
                       {% trans %} Total Summary {% endtrans %}
                     </td>
-                    {% for indicator in indicator_mapping %}
-                      {% for item in indicator['group'] %}
+                    {% for indicator in sector_indicator_mapping[sector] %}
                         <td>
-                            {{ value_or_default(aggregated_indicators['summary'][item], '-') }}
+                          {% set target, actual, percentage = indicator['group']%}
+                          {% set indicators = sector_aggregated_indicators[sector]['summary']%}
+                               {{ value_or_default(indicators[percentage]) }}({{ value_or_default(indicators[actual]) }}/{{ value_or_default(indicators[target]) }})
                         </td>
-                      {% endfor %}
                     {% endfor %}
                   </tr>
-                  {% for project_indicator_map in aggregated_indicators['indicator_list'] %}
+                  {% for project_indicator_map in sector_aggregated_indicators[sector]['indicator_list'] %}
                     <tr>
                       <td>
                           <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
@@ -89,12 +82,12 @@
                       </td>
                       <div>
                       </div>
-                      {% for indicator in indicator_mapping %}
-                        {% for item in indicator['group'] %}
+                      {% for indicator in sector_indicator_mapping[sector] %}
+                            {% set target, actual, percentage = indicator['group']%}
+                            {% set indicators = project_indicator_map['indicators'] %}
                           <td>
-                            {{ value_or_default(project_indicator_map['indicators'][item], '-') }}
+                            {{ value_or_default(indicators[percentage])}}({{ value_or_default(indicators(actual)) }}/{{ value_or_default(indicators[target])}} )
                           </td>
-                        {% endfor %}
                       {% endfor %}
                     </tr>
                   {% endfor %}
@@ -102,11 +95,13 @@
             </table>
          </div>
         {% else %}
-          <div> {% trans %} No {{selected_project_type}} Projects found within {% endtrans %}{{ community.name }}</div>
+          <div> {% trans %} No Projects found within {% endtrans %}{{ community.name }}</div>
         {% endif %}
       </div>
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
+  </div>
 </div>
+{% endfor %}
 {{response}}
 {% endblock content %}

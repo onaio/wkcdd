@@ -1,5 +1,7 @@
 from wkcdd.models.base import DBSession
 from sqlalchemy.sql.expression import and_
+
+from wkcdd import constants
 from wkcdd.models import (
     Location, Project)
 from wkcdd.models.sub_county import SubCounty
@@ -28,3 +30,7 @@ def get_project_list(community_ids, *criterion):
         .filter(and_(Project.community_id.in_(community_ids),
                 *criterion))\
         .all()
+
+def get_project_types(community_ids, *criterion):
+    registration_ids = [p.sector for p in DBSession.query(Project.sector).filter(and_(Project.community_id.in_(community_ids), *criterion)).group_by(Project.sector).all()]
+    return [(reg_id, report_id, label) for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING if reg_id in registration_ids]

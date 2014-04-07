@@ -276,29 +276,25 @@ class TestBase(unittest.TestCase):
                           name="Cow project 1",
                           community=community,
                           project_type=project_type,
-                          sector=(constants.PROJECT_REPORT_SECTORS
-                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION
                           )
         self._add_project(project_code="COW2",
                           name="Cow project 2",
                           community=community,
                           project_type=project_type,
-                          sector=(constants.PROJECT_REPORT_SECTORS
-                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION
                           )
         self._add_project(project_code="GOAT1",
                           name="Goat project 1",
                           community=community,
                           project_type=project_type,
-                          sector=(constants.PROJECT_REPORT_SECTORS
-                                  [constants.DAIRY_GOAT_PROJECT_REPORT])
+                          sector=constants.DAIRY_GOAT_PROJECT_REGISTRATION
                           )
         self._add_project(project_code="BODA1",
                           name="Bodaboda project 1",
                           community=community,
                           project_type=project_type,
-                          sector=(constants.PROJECT_REPORT_SECTORS
-                                  [constants.BODABODA_PROJECT_REPORT])
+                          sector=constants.BODABODA_PROJECT_REGISTRATION
                           )
         transaction.commit()
 
