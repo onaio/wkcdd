@@ -47,7 +47,7 @@ BANANA_PROJECT_REPORT_CODE = 'perfomance_summary/banana_projects'
 CATERING_PROJECT_REGISTRATION = 'catering_project_registration'
 CATERING_PROJECT_CODE = 'catering_projects'
 CATERING_PROJECT_REPORT = 'catering_project_report'
-CATERING_PROJECT_REPORT_CODE = 'performance_summary/catering_projects'
+CATERING_PROJECT_REPORT_CODE = 'perfomance_summary/catering_projects'
 
 PIGGERY_PROJECT_REGISTRATION = 'piggery_project_registration'
 PIGGERY_PROJECT_CODE = 'piggery_projects'
