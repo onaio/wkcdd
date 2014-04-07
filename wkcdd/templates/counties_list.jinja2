@@ -1,3 +1,4 @@
+
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
@@ -15,6 +16,7 @@
 
 {% endblock %}
 {% block content %}
+<div class="row">
 <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
@@ -22,8 +24,8 @@
          <div class="caption"><i class="icon-tasks"></i>{% trans %}Counties{% endtrans %}</div>
       </div>
       <div class="portlet-body">
-         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
+         <div class="">
+            <table class="table table-hover table-responsive">
                <thead>
                   <tr>
                      <th>{% trans %} Name {% endtrans %}</th>
@@ -66,4 +68,5 @@
     <!-- END SAMPLE TABLE PORTLET-->
 </div>
 {{response}}
+</div>
 {% endblock content %}

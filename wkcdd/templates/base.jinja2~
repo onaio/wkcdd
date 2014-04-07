@@ -206,12 +206,6 @@
                <!-- END PAGE TITLE & BREADCRUMB-->
             </div>
          </div>
-         <div class="row">
-            <ul class="list-inline">
-               {% block indicators %}
-               {% endblock %} 
-            </ul>
-         </div>
          <!-- END PAGE HEADER-->
          
          <div class="container row nav-holder">
@@ -224,7 +218,8 @@
          
          <!-- BEGIN PAGE CONTENT--> 
 	{% block content %}{% endblock %}
-         <!-- END PAGE CONTENT-->     
+         <!-- END PAGE CONTENT-->   
+     
       </div>
       <!-- END PAGE -->
    </div>
