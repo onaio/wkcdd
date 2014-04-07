@@ -1,15 +1,64 @@
 /* here you can put your own css to customize and override the theme */
-.page-container{
-	padding-top:3em!important;
+.header.navbar{
+	background:#2E4358;
 }
 
+.nav-holder{
+	border-top:1px solid #DFDFDF;
+	border-bottom:1px solid #DFDFDF;
+	margin-bottom:1em;
+        margin-left: -20px;
+        margin-right: -20px;
+}
+.page-content{
+	background:#F0F1F2;
+}
+.nav-tabs{
+	margin-bottom:0;
+}
+.tab-content{
+	background:#FFFFFF;
+	border:1px solid #DFDFDF;
+	border-top:0;
+	padding-top:1em;
+}
+.table tbody>tr>th{
+	border-top:0!important;
+}
+
+/*sidebar*/
+.page-content{
+	margin-left:8em;
+}
 .page-sidebar{
-	padding-top:4.85em!important;
+	background:#414141;
+	min-height:45em;
+	max-width:8em;
+	padding:0;
+	position:fixed;
+}
+.nav-side{
+	margin:0;padding:0;
+}
+.nav-side li{
+	list-style: none;
+}
+.nav-side li a{
+	border-left:4px solid #414141;
+	color:#D1D2D2;
+	cursor:pointer;
+	display:block;
+	font-weight:bold;
+	padding:2em 1.5em 2em 1em;
+	text-decoration: none;
+	text-align:center;
+	transition:all .2s ease-in;
+}
+.nav-side li a:hover, .nav-side li a.selected{
+	background:#262A33;
+	border-left:4px solid #3EB4C6;
+}
+.nav-tabs{
+	border-bottom:0;
 }
 
-.header .navbar-brand{
-	color:#ffffff;
-	font-size:1.12em;
-	padding:.6em 0 0 1.7em;
-	width:60%;
-}

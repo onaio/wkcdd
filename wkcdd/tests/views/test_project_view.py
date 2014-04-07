@@ -20,7 +20,8 @@ class TestProjectViews(IntegrationTestBase):
     def test_project_list_return_all_projects(self):
         self.setup_test_data()
         response = self.project_views.list()
-        self.assertEqual(len(response['projects']), 5)
+        count = Project.count()
+        self.assertEqual(len(response['projects']), count)
         self.assertEqual(len(response['project_types']), 2)
         self.assertEquals(response['locations'][1][0].name, 'Bungoma')
 
