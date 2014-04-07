@@ -27,11 +27,10 @@
             <table class="table table-hover table-responsive">
                <thead>
                   <tr>
-                     <th>{% trans %} Name {% endtrans %}</th>
-                     {% for indicator in impact_indicator_mapping %}
+                     {% for header in headers %}
                         <th>
 
-                        {{ indicator.title }}
+                        {{ header }}
 
                         </th>
                      {% endfor %}
@@ -43,19 +42,17 @@
                   <td>
                     {% trans %} Total Summary {% endtrans %}
                   </td>
-                  {% for indicator in impact_indicator_mapping %}
+                  {% for value in summary_row%}
                     <td>
-                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
+                        {{ value|default('-') }}
                     </td>
                   {% endfor %}
                </tr>
-               {% for county in counties %}
+               {% for row in rows %}
                   <tr>
-                     <td><a href="{{ request.route_url('counties', traverse=county.id) }}">{{ county.name }}</a></td>
-                     {% for indicator in impact_indicator_mapping %}
-                        <td>
-                         {{  impact_indicators['aggregated_impact_indicators'][county.id]['summary'][indicator.key]|default('-') }}
-                        </td>
+                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0]}}</a></td>
+                     {% for col in row[1:] %}
+                        <td>{{ col|default('-') }}</td>
                      {% endfor %}
                   </tr>
                {% endfor %}

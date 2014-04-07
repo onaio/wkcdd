@@ -25,7 +25,8 @@ requires = [
     'Babel',
     'lingua',
     'requests',
-    'flake8'
+    'flake8',
+    'tablib'
 ]
 
 setup(name='wkcdd',
