@@ -68,7 +68,6 @@
 }
 .indicator_list > a:link {color:#000000;}
 .indicator_list > a:hover {
-    font-weight:bold;
     color: #2a6496;
 }  /* mouse over link */
 .indicator_list > .selected{
@@ -77,5 +76,9 @@
 }
 .indicator_list > a:active {
    color: #2a6496;
+}
+
+.indicator_links{
+    padding-left: 30px;
 }
 
