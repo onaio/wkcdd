@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -16,6 +17,9 @@
       {{ county.name | capitalize }} County
   </li>
 
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'counties', county) }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">

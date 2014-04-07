@@ -31,7 +31,7 @@ from wkcdd.models.report import (
 
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.county import County
-
+from wkcdd import constants
 from wkcdd.models import (
     Community,
     SubCounty
@@ -71,15 +71,16 @@ class TestBase(unittest.TestCase):
 
     def _add_project(self,
                      project_code='FR3A',
-                     name='Dairy Cow Project Center 1',
+                     name='Dairy Goat Project Center 1',
                      community=None,
+                     sector="Dairy Goat",
                      project_type=None):
         project = Project(
             code=project_code,
             name=name,
             community=community,
             project_type=project_type,
-            sector="Dairy Goat",
+            sector=sector,
             geolocation="0.0 0.0"
         )
 
@@ -184,10 +185,17 @@ class TestBase(unittest.TestCase):
 
         self._add_project(community=community1,
                           project_type=project_type_c)
+        self._add_project(project_code='7CWA',
+                          name="Dairy Cow Project Center 1",
+                          community=community1,
+                          sector="Dairy Cows",
+                          project_type=project_type_c
+                          )
         self._add_project(project_code="YH9T",
-                          name="Dairy Goat Project Center 1",
+                          name="Dairy Cow Project Center 1",
                           community=community2,
-                          project_type=project_type_g
+                          sector="Dairy Cows",
+                          project_type=project_type_c
                           )
         self._add_project(project_code="JDCV",
                           name="Dairy Goat Project Center 2",
@@ -195,17 +203,17 @@ class TestBase(unittest.TestCase):
                           project_type=project_type_g
                           )
         self._add_project(project_code="WRTD",
-                          name="Dairy Goat Project Center 2",
+                          name="Dairy Goat Project Center 3",
                           community=community2,
                           project_type=project_type_g
                           )
         self._add_project(project_code="NOREPORT",
-                          name="Dairy Goat Project Center 2",
+                          name="Dairy Goat Project Center 4",
                           community=community2,
                           project_type=project_type_g
                           )
         self._add_project(project_code="WRXT",
-                          name="Dairy Goat Project Center 3",
+                          name="Dairy Goat Project Center 5",
                           community=community3,
                           project_type=project_type_g
                           )
@@ -230,12 +238,15 @@ class TestBase(unittest.TestCase):
             self.test_dir, 'fixtures', 'YHCX.json'))
         report_data_5 = _load_json_fixture(os.path.join(
             self.test_dir, 'fixtures', 'DRT4.json'))
+        report_data_6 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', '7CWA.json'))
 
         self._add_report(project_code='YH9T', report_data=report_data_1)
         self._add_report(project_code='JDCV', report_data=report_data_2)
         self._add_report(project_code='KYJ7', report_data=report_data_3)
         self._add_report(project_code='YHCX', report_data=report_data_4)
         self._add_report(project_code='DRT4', report_data=report_data_5)
+        self._add_report(project_code='7CWA', report_data=report_data_6)
         self._add_report(project_code='WRTD',
                          report_data=report_data_3,
                          submission_time=datetime.datetime(2014, 3, 21))
@@ -248,6 +259,47 @@ class TestBase(unittest.TestCase):
         self._add_report(project_code='WRXT',
                          report_data=report_data_4,
                          submission_time=datetime.datetime(2014, 3, 10))
+        transaction.commit()
+
+    def setup_community_test_data(self):
+        transaction.begin()
+        county = self._add_county(name="Bungoma", parent_id=0)
+
+        sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
+
+        constituency = self._add_constituency(name="Kakamega",
+                                              parent_id=sub_county.id)
+        community = self._add_community(name="lutacho",
+                                        parent_id=constituency.id)
+        project_type = self._add_project_type(name="CAP")
+        self._add_project(project_code="COW1",
+                          name="Cow project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="COW2",
+                          name="Cow project 2",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_COWS_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="GOAT1",
+                          name="Goat project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.DAIRY_GOAT_PROJECT_REPORT])
+                          )
+        self._add_project(project_code="BODA1",
+                          name="Bodaboda project 1",
+                          community=community,
+                          project_type=project_type,
+                          sector=(constants.PROJECT_REPORT_SECTORS
+                                  [constants.BODABODA_PROJECT_REPORT])
+                          )
         transaction.commit()
 
 

@@ -32,3 +32,12 @@ class TestSubCountyViewsFunctional(FunctionalTestBase):
             url = self.request.route_path('sub_county', traverse=sub_county.id)
             response = self.testapp.get(url)
             self.assertEqual(response.status_code, 200)
+
+        def test_sub_county_performance_view(self):
+            self.setup_test_data()
+            sub_county = Location.get(Location.name == 'Bungoma',
+                                      Location.location_type == 'sub_county')
+            url = self.request.route_path('sub_county', traverse=(
+                sub_county.id, 'performance'))
+            response = self.testapp.get(url)
+            self.assertEqual(response.status_code, 200)

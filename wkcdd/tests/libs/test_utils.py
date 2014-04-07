@@ -22,6 +22,7 @@ class TestProjectImport(TestBase):
         populate_reports_table([self.report_submission[0]], project_code)
         self.assertEquals(Report.count(), (count + 1))
 
+    # FIXME should not make actual HTTP Call
     def test_fetch_data(self):
         form_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
         raw_data = fetch_data(form_id)

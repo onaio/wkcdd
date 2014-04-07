@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -28,12 +29,18 @@
       {{ community.name | capitalize }} Community
   </li>
 {% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'community', community) }}
+{% endblock %}
 {% block content %}
 <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Projects</div>
+        <div class="caption">
+          <i class="icon-tasks"></i>
+          {{ community.name }}{% trans %} Projects {% endtrans %}
+        </div>
       </div>
       <div class="portlet-body">
          <div class="table-responsive">
@@ -46,17 +53,19 @@
                   </td>
                   {% for indicator in impact_indicator_mapping %}
                     <td>
-                        {{ aggregated_impact_indicators['summary'][indicator.key]|default('-') }}
+                        {{ value_or_default(aggregated_indicators['summary'][indicator.key], '-') }}
                     </td>
                   {% endfor %}
                 </tr>
-               {% for project_indicator_map in aggregated_impact_indicators['indicator_list'] %}
+               {% for project_indicator_map in aggregated_indicators['indicator_list'] %}
                   <tr>
                     <td>
                         <a href="{{ request.route_url('projects', traverse=(project_indicator_map['project_id'], 'show')) }}">
                           {{ project_indicator_map['project_name'] }}
                         </a>
                     </td>
+                    <div>
+                    </div>
                     {% for indicator in impact_indicator_mapping %}
                       <td>
                         {{ value_or_default(project_indicator_map['indicators'][indicator.key], '-') }}

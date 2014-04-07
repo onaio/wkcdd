@@ -1,23 +1,11 @@
 import datetime
 from wkcdd.models import Location
 from wkcdd.tests.test_base import TestBase
-from wkcdd.models.project import(
-    Project,
-    ProjectType
-)
+from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 
 
 class TestProject(TestBase):
-    def test_setup_test_data(self):
-        self.setup_test_data()
-        project_type1 = ProjectType.get(ProjectType.id == 1)
-        project1 = Project.get(Project.name == "Dairy Cow Project Center 1")
-
-        self.assertEqual(project_type1.name, "Dairy Cow Project")
-        self.assertEqual(project1.code, "FR3A")
-        self.assertEqual(project1.community.name, "Maragoli")
-
     def test_project_can_retrieve_associated_reports(self):
         self.setup_test_data()
         project = Project.get(Project.code == "YH9T")
@@ -51,7 +39,7 @@ class TestProject(TestBase):
     def test_get_county(self):
         self.setup_test_data()
         project = Project.get(Project.code == "YH9T",
-                              Project.name == "Dairy Goat Project Center 1")
+                              Project.name == "Dairy Cow Project Center 1")
         constituency = project.get_constituency(project.community)
         sub_county = project.get_sub_county(constituency)
         county = Project.get_county(sub_county)
@@ -63,4 +51,4 @@ class TestProject(TestBase):
         projects = Project.all()
         locations = Project.get_locations(projects)
         self.assertIsInstance(locations[1][0], Location)
-        self.assertEquals(len(locations), 6)
+        self.assertEquals(len(locations), 7)
