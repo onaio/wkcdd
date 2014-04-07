@@ -30,7 +30,7 @@
   </li>
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'community', community) }}
+  {{ add_indicator_links(request, 'community', community, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -39,7 +39,7 @@
       <div class="portlet-title">
         <div class="caption">
           <i class="icon-tasks"></i>
-          {{ community.name }}{% trans %} Projects {% endtrans %}
+          {% trans %} Projects {% endtrans %}
         </div>
       </div>
       <div class="portlet-body">
