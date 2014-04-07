@@ -25,19 +25,7 @@
       <div class="portlet-body">
          <div class="">
             <table class="table table-hover table-responsive">
-               <thead>
-                  <tr>
-                     <th>{% trans %} Name {% endtrans %}</th>
-                     {% for indicator in impact_indicator_mapping %}
-                        <th>
-
-                        {{ indicator.title }}
-
-                        </th>
-                     {% endfor %}
-
-                  </tr>
-               </thead>
+               {% include 'impact_indicator_table_head.jinja2' %}
                <tbody>
                <tr>
                   <td>
