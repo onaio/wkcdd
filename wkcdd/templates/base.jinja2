@@ -222,18 +222,9 @@
             </div>
          </div>
          <!-- END PAGE HEADER-->
-         
-         <div class="row nav-holder indicator_links">
-			<ul class="nav navbar-nav">
-				{% block indicators %}
-            <li><a href="#">Performance</a></li>
-             <li><a href="#">Impact</a></li>
-             <li><a href="#">Results Framework</a></li>
-            {% endblock %} 
-			</ul>
-		</div>
-         
-         <!-- BEGIN PAGE CONTENT--> 
+
+		 {% block indicators %}{% endblock %}
+         <!-- BEGIN PAGE CONTENT-->
 	{% block content %}{% endblock %}
          <!-- END PAGE CONTENT-->     
       </div>
