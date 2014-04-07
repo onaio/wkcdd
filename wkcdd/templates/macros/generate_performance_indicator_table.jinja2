@@ -38,8 +38,8 @@
             {% for entity in entity_list %}
               <tr>
                 <td>
-                    <a href="{{ request.route_url(location_type, traverse=(entity.id)) }}">
-                      {{ entity.name }}
+                    <a href="{{ request.route_url(location_type, traverse=(entity.id, 'performance')) }}">
+                      {{ entity.name  | capitalize }}
                     </a>
                 </td>
                 <div>
