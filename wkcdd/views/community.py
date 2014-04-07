@@ -7,7 +7,7 @@ from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
-from wkcdd.models import utils
+from wkcdd.models import helpers
 
 
 @view_defaults(route_name='community')
@@ -26,7 +26,7 @@ class CommunityView(object):
         # http://docs.sqlalchemy.org/en/rel_0_9/orm/tutorial.html#eager-loading
         # http://docs.sqlalchemy.org/en/rel_0_9/orm/relationships.html#self-referential-query-strategies # noqa
         community = self.request.context
-        projects = utils.get_project_list([community.id])
+        projects = helpers.get_project_list([community.id])
         locations = self.get_locations(community)
         indicator_mapping, aggregated_indicators = (
             self.get_impact_indicators(projects))
@@ -48,7 +48,7 @@ class CommunityView(object):
         project_report_sectors = constants.PROJECT_REPORT_SECTORS
         if selected_project_type not in project_report_sectors.keys():
             selected_project_type = self.DEFAULT_PROJECT_TYPE
-        projects = utils.get_project_list(
+        projects = helpers.get_project_list(
             [community.id],
             Project.sector == project_report_sectors[selected_project_type])
         locations = self.get_locations(community)

@@ -110,7 +110,7 @@ class ProjectType(Base):
 
     @classmethod
     def get_or_create(cls, name):
-         # check if exists
+        # check if exists
         try:
             project_type = ProjectType.get(ProjectType.name == name)
         except NoResultFound:
