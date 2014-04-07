@@ -141,12 +141,27 @@
          <!-- BEGIN SIDEBAR MENU -->
 	  <ul class="nav-side">
 		<li class="start">
-			<a class="selected" href="{{ request.route_url('counties', traverse=('')) }}">
+			<a class="
+			    {%if request.path_info_peek() == 'counties' %}
+                    selected
+                {%elif request.path_info_peek() == 'sub_county' %}
+                    selected
+                {%elif request.path_info_peek() == 'constituency' %}
+                    selected
+                {%elif request.path_info_peek() == 'community' %}
+                    selected
+                {%endif%}"
+                href="{{ request.route_url('counties', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
-			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
+			<span class="title">{% trans %} COUNTY <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
-		<li><a href="#">
+		<li>
+            <a class="
+                {%if request.path_info_peek() == 'projects' %}
+                    selected
+                {%endif%}"
+               href="{{ request.route_url('projects', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
 			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
 			</a>
@@ -208,7 +223,7 @@
          </div>
          <!-- END PAGE HEADER-->
          
-         <div class="row nav-holder">
+         <div class="row nav-holder indicator_links">
 			<ul class="nav navbar-nav">
 				{% block indicators %}
             <li><a href="#">Performance</a></li>

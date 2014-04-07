@@ -4,7 +4,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ constituency.name }}
+    {{ constituency.name | capitalize }} Constituency
     <small></small>
   </h3>
 {% endblock %}
@@ -14,15 +14,15 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ constituency.name }}
+      {{ constituency.name | capitalize }} Constituency
   </li>
 
 {% endblock %}
@@ -39,19 +39,7 @@
       <div class="portlet-body">
          <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
-               <thead>
-                  <tr>
-                     <th>{% trans %} Name {% endtrans %}</th>
-                     {% for indicator in impact_indicator_mapping %}
-                        <th>
-
-                        {{ indicator.title }}
-
-                        </th>
-                     {% endfor %}
-
-                  </tr>
-               </thead>
+               {% include 'impact_indicator_table_head.jinja2' %}
                <tbody>
                <tr>
                   <td>
@@ -65,7 +53,8 @@
                </tr>
                {% for community in communities %}
                   <tr>
-                     <td><a href="{{ request.route_url('community', traverse=(community.id)) }}">{{ community.name }}</a></td>
+                     <td><a href="{{ request.route_url('community', traverse=(community.id)) }}">{{ community.name | capitalize }}</a></td>
+
                      {% for indicator in impact_indicator_mapping %}
                         <td>
                          {{  impact_indicators['aggregated_impact_indicators'][community.id]['summary'][indicator.key]|default('-') }}

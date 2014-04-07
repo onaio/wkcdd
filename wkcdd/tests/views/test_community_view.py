@@ -42,7 +42,7 @@ class TestCommunityView(IntegrationTestBase):
         self.assertEquals(project_indicator_list[0]['project_id'], 3)
         self.assertIn('summary', response['aggregated_indicators'])
         self.assertIn(
-            response['indicator_mapping'][0]['key'],
+            response['impact_indicator_mapping'][0]['key'],
             project_indicator_list[0]['indicators'])
 
     def test_performance_indicator_aggregates_display_without_reports(self):
