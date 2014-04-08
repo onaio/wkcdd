@@ -1,18 +1,18 @@
 from wkcdd.models.base import DBSession
 from wkcdd.models import (
-    County, SubCounty, Constituency, Community, utils, Project)
+    County, SubCounty, Constituency, Community, helpers, Project)
 
 from wkcdd import constants
 from wkcdd.tests.test_base import TestBase
 
 
-class TestUtils(TestBase):
+class TestHelpers(TestBase):
     def test_sub_county_ids_from_county_ids(self):
         self.setup_test_data()
         # get the county's id
         county_id = County.get(County.name == "Bungoma").id
         # get the sub-county ids
-        sub_county_ids = utils.get_sub_county_ids([county_id])
+        sub_county_ids = helpers.get_sub_county_ids([county_id])
         self.assertEqual(len(sub_county_ids), 1)
         sub_county = SubCounty.get(SubCounty.id == sub_county_ids[0])
         self.assertEqual(sub_county.name, "Bungoma")
@@ -22,7 +22,7 @@ class TestUtils(TestBase):
         # get the sub county ids
         sub_county_ids = [sub_county.id for sub_county in SubCounty.all()]
         # get the constituency ids
-        constituency_ids = utils.get_constituency_ids(sub_county_ids)
+        constituency_ids = helpers.get_constituency_ids(sub_county_ids)
         self.assertEqual(len(constituency_ids), 2)
         # get the constituency(s)
         constituency = Constituency.get(Constituency.id == constituency_ids[0])
@@ -32,7 +32,7 @@ class TestUtils(TestBase):
         self.setup_test_data()
         # get the constituency ids
         constituency_ids = [c.id for c in Constituency.all()]
-        community_ids = utils.get_community_ids(constituency_ids)
+        community_ids = helpers.get_community_ids(constituency_ids)
         self.assertEqual(len(community_ids), 3)
         community_names = DBSession.query(
             Community.name).filter(Community.id.in_(community_ids)).all()
@@ -44,7 +44,7 @@ class TestUtils(TestBase):
         self.setup_test_data()
         community = Community.get(Community.name == "Maragoli")
         community_ids = [community.id]
-        projects = utils.get_project_list(community_ids)
+        projects = helpers.get_project_list(community_ids)
         self.assertEqual(len(projects), len(community.projects))
         self.assertEqual(projects[0].name, "Dairy Goat Project Center 1")
 
@@ -52,7 +52,7 @@ class TestUtils(TestBase):
         self.setup_community_test_data()
         community_ids = [Community.get(Community.name == "lutacho").id]
         # test retrieval of dairy cow projects
-        projects = utils.get_project_list(
+        projects = helpers.get_project_list(
             community_ids,
             Project.sector == constants.PROJECT_REPORT_SECTORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
@@ -60,7 +60,7 @@ class TestUtils(TestBase):
         self.assertEqual(projects[0].name, "Cow project 1")
 
         # test retrieval of dairy goat projects
-        projects = utils.get_project_list(
+        projects = helpers.get_project_list(
             community_ids,
             Project.sector == constants.PROJECT_REPORT_SECTORS[
                 constants.DAIRY_GOAT_PROJECT_REPORT])
@@ -68,7 +68,7 @@ class TestUtils(TestBase):
         self.assertEqual(projects[0].name, "Goat project 1")
 
         # test retrieval of Motocycle projects
-        projects = utils.get_project_list(
+        projects = helpers.get_project_list(
             community_ids,
             Project.sector == constants.PROJECT_REPORT_SECTORS[
                 constants.BODABODA_PROJECT_REPORT])

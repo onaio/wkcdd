@@ -15,7 +15,7 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.dialects.postgresql import JSON
-from wkcdd.models.utils import (
+from wkcdd.models.helpers import (
     get_project_list,
     get_community_ids,
     get_constituency_ids,

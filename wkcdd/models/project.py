@@ -40,6 +40,7 @@ class Project(Base):
                                 Location.location_type =='community')")
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    # TODO index sector field
     sector = Column(String, nullable=False)
     # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
@@ -122,7 +123,7 @@ class ProjectType(Base):
 
     @classmethod
     def get_or_create(cls, name):
-         # check if exists
+        # check if exists
         try:
             project_type = ProjectType.get(ProjectType.name == name)
         except NoResultFound:
