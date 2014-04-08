@@ -45,3 +45,8 @@ def private(request):
 @view_config(route_name='supervisors_only', permission="supervise")
 def very_private(request):
     return Response("Very Private view")
+
+
+@view_config(route_name='reporting_status', renderer='reporting_status.jinja2')
+def under_construction(request):
+    return {}

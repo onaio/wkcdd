@@ -167,7 +167,11 @@
 			</a>
 		</li>
 		<li class="last">
-			<a href="#">
+			<a class="
+			    {%if request.path_info_peek() == 'reporting_status' %}
+                    selected
+                {%endif%}"
+                    href="{{ request.route_url('reporting_status', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
 			<span class="title">{% trans %} REPORTING <br/>STATUS {% endtrans %}</span>
 			</a>
