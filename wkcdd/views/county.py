@@ -45,8 +45,7 @@ class CountyView(object):
         sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
 
         impact_indicators = \
-            Report.get_impact_indicator_aggregation_for(sub_counties,
-                                                        Location.COUNTY)
+            Report.get_impact_indicator_aggregation_for(sub_counties)
 
         return {
             'county': county,
@@ -71,7 +70,7 @@ class CountyView(object):
             selected_project_type = self.DEFAULT_PROJECT_TYPE
         aggregated_indicators = (
             Report.get_performance_indicator_aggregation_for(
-                sub_counties, selected_project_type, Location.COUNTY))
+                sub_counties, selected_project_type))
         selected_project_name = project_report_sectors[selected_project_type]
         indicator_mapping = tuple_to_dict_list(
             ('title', 'group'),

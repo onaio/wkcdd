@@ -2,8 +2,11 @@ from collections import defaultdict
 
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
-from wkcdd.models import Location
-from wkcdd.models import Project
+from wkcdd.models.project import Project
+from wkcdd.models.community import Community
+from wkcdd.models.county import County
+from wkcdd.models.sub_county import SubCounty
+from wkcdd.models.constituency import Constituency
 
 from wkcdd.models.base import (
     Base
@@ -156,17 +159,14 @@ class Report(Base):
         }
 
     @classmethod
-    def get_impact_indicator_aggregation_for(cls,
-                                             child_locations,
-                                             location_type="All"):
+    def get_impact_indicator_aggregation_for(cls, child_locations):
         impact_indicator_mapping = tuple_to_dict_list(
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
         impact_indicators = {}
         total_indicator_summary = defaultdict(int)
         for child_location in child_locations:
-            projects = Report.get_projects_from_location(child_location,
-                                                         location_type)
+            projects = Report.get_projects_from_location(child_location)
             indicators = Report.get_aggregated_impact_indicators(projects)
             impact_indicators[child_location.id] = indicators
             for indicator in impact_indicator_mapping:
@@ -182,22 +182,21 @@ class Report(Base):
     @classmethod
     def get_projects_from_location(cls,
                                    location,
-                                   location_type,
                                    *criteria):
-        if location_type == Location.CONSTITUENCY:
-            # Child location is community
+        if type(location) == Community:
+            # no child location
             projects = get_project_list([location.id], *criteria)
-        elif location_type == Location.SUB_COUNTY:
-            # Child location is constituency
+        elif type(location) == Constituency:
+            # Child location is community
             projects = get_project_list(
                 get_community_ids([location.id]), *criteria)
-        elif location_type == Location.COUNTY:
-            # Child location is sub_county
+        elif type(location) == SubCounty:
+            # Child location is constituency
             projects = get_project_list(get_community_ids
                                         (get_constituency_ids
                                          ([location.id])), *criteria)
-        elif location_type == "All":
-            # child location is county
+        elif type(location) == County:
+            # Child location is sub_county
             projects = get_project_list(get_community_ids
                                         (get_constituency_ids
                                          (get_sub_county_ids
@@ -219,7 +218,6 @@ class Report(Base):
         for child_location in child_locations:
             projects = Report.get_projects_from_location(
                 child_location,
-                location_type,
                 (Project.sector ==
                     project_report_sectors[project_type]))
             indicators = Report.get_aggregated_performance_indicators(

@@ -33,8 +33,7 @@ class ConstituencyView(object):
             ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
 
         impact_indicators = \
-            Report.get_impact_indicator_aggregation_for(communities,
-                                                        Location.CONSTITUENCY)
+            Report.get_impact_indicator_aggregation_for(communities)
 
         return {
             'constituency': constituency,
@@ -63,7 +62,7 @@ class ConstituencyView(object):
             selected_project_type = self.DEFAULT_PROJECT_TYPE
         aggregated_indicators = (
             Report.get_performance_indicator_aggregation_for(
-                communities, selected_project_type, Location.CONSTITUENCY))
+                communities, selected_project_type))
         selected_project_name = project_report_sectors[selected_project_type]
         indicator_mapping = tuple_to_dict_list(
             ('title', 'group'),
