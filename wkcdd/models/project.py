@@ -39,6 +39,7 @@ class Project(Base):
                                 Location.location_type =='community')")
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    # TODO index sector field
     sector = Column(String, nullable=False)
     # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
