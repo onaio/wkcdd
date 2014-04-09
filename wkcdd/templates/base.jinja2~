@@ -210,16 +210,24 @@
          
          <div class="container row nav-holder">
 			<ul class="nav navbar-nav">
-				<li><a href="#">Performance</a></li>
-				<li><a href="#">Impact</a></li>
-				<li><a href="#">Results Framework</a></li>
+				<li>
+					<a href="#">Performance</a>
+					<span class="tri-bottom"></span>
+				</li>
+				<li class="active-nav">
+					<a href="#">Impact</a>
+					<span class="tri-bottom"></span>
+				</li>
+				<li>
+					<a href="#">Results Framework</a>
+					<span class="tri-bottom"></span>
+				</li>
 			</ul>
 		</div>
          
          <!-- BEGIN PAGE CONTENT--> 
 	{% block content %}{% endblock %}
-         <!-- END PAGE CONTENT-->   
-     
+         <!-- END PAGE CONTENT-->     
       </div>
       <!-- END PAGE -->
    </div>
