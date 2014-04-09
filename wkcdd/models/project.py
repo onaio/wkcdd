@@ -50,6 +50,9 @@ class Project(Base):
                            foreign(Report.project_code)",
                            order_by='desc(Report.submission_time)')
 
+    def __str__(self):
+        return self.name
+
     @classmethod
     def create(self, **kwargs):
         county = County.get_or_create(

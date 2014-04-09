@@ -15,7 +15,7 @@ class TestTablibRenderer(unittest.TestCase):
                 ['Lugari', '120', '210', '120', '350']],
             'summary_row': ['320', '510', '470', '450']
         }
-        result = renderer(data, {'request': request})
-        self.assertEqual(request.response.content_type,
-                         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-
+        renderer(data, {'request': request})
+        self.assertEqual(
+            request.response.content_type,
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  # noqa

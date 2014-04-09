@@ -1,12 +1,11 @@
 import tablib
-from StringIO import StringIO
 
 
 class TablibRenderer(object):
-    def __init__(self, info):
+    def __init__(self, info):  # noqa
         pass
 
-    def initialize_dataset(self, value, system):
+    def initialize_dataset(self, value, system):  # noqa
         dataset = tablib.Dataset(headers=value['headers'])
         dataset.title = value.get('title', "report")
         for row in value['rows']:

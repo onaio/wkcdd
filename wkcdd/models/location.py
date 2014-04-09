@@ -31,6 +31,9 @@ class Location(Base):
         'polymorphic_identity': 'location'
     }
 
+    def __str__(self):
+        return self.name
+
     @classmethod
     def get_or_create(cls, name, parent, location_type):
 
