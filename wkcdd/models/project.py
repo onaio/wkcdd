@@ -52,7 +52,7 @@ class Project(Base):
                            order_by='desc(Report.submission_time)')
 
     @classmethod
-    def create(self, **kwargs):
+    def create(cls, **kwargs):
         county = County.get_or_create(
             kwargs['county'], None, Location.COUNTY)
         sub_county = SubCounty.get_or_create(
