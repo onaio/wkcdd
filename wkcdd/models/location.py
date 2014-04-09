@@ -38,7 +38,7 @@ class Location(Base):
     def get_or_create(cls, name, parent, location_type):
 
         # get Location parent_id
-        parent_id = parent.id if parent is not None else 0
+        parent_id = parent.id if parent is not None else None
 
         try:
             location = Location.get(Location.name == name,

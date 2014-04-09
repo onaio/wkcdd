@@ -5,7 +5,7 @@ import os
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
-from wkcdd.models import County
+from wkcdd.models import County, Constituency
 from wkcdd import constants
 
 
@@ -18,8 +18,10 @@ class TestReport(TestBase):
         self.assertEquals(report.report_data, json_data)
 
     def test_add_report_submission(self):
+        self.setup_test_data()
         project_code = 'TG1F'
-        community = self._add_community()
+        constituency = Constituency.get(Constituency.name == "Kakamega")
+        community = self._add_community(constituency=constituency)
         project_type = self._add_project_type()
         self._add_project(project_code=project_code, community=community,
                           project_type=project_type)
