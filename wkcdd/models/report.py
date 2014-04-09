@@ -211,15 +211,13 @@ class Report(Base):
         mapping = tuple_to_dict_list(
             ('title', 'group'),
             constants.PERFORMANCE_INDICATOR_REPORTS[project_type])
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
         performance_indicators = {}
         total_indicator_summary = defaultdict(int)
         child_location_count = 0
         for child_location in child_locations:
             projects = Report.get_projects_from_location(
                 child_location,
-                (Project.sector ==
-                    project_report_sectors[project_type]))
+                (Project.sector == project_type))
             indicators = Report.get_aggregated_performance_indicators(
                 projects, project_type)
             performance_indicators[child_location.id] = indicators

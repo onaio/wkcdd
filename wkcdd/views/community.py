@@ -45,16 +45,18 @@ class CommunityView(object):
         project_types_mappings = helpers.get_project_types([community.id])
         sector_indicator_mapping = {}
         sector_aggregated_indicators = {}
-        sector_projects = {}
         for reg_id, report_id, title in project_types_mappings:
-            projects = helpers.get_project_list(
-                [community.id],
-                Project.sector == reg_id)
-            indicator_mapping, aggregated_indicators = (
-                self.get_performance_indicators(
-                    projects,
-                    report_id))
-            sector_projects[reg_id] = projects
+            total_aggregated_indicators = (
+                Report.get_performance_indicator_aggregation_for(
+                    [community], report_id))
+            aggregated_indicators = (
+                total_aggregated_indicators
+                ['aggregated_performance_indicators']
+                [community.id])
+            indicator_mapping = tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[
+                    report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
         return {
@@ -81,15 +83,3 @@ class CommunityView(object):
             constants.IMPACT_INDICATOR_REPORT)
         return (indicator_mapping, aggregated_indicators)
 
-    def get_performance_indicators(self, projects,
-                                   project_type):
-        aggregated_indicators = (
-            Report.get_aggregated_performance_indicators(
-                projects,
-                project_type
-            ))
-        indicator_mapping = tuple_to_dict_list(
-            ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[
-                project_type])
-        return (indicator_mapping, aggregated_indicators)

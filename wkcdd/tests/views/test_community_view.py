@@ -1,4 +1,3 @@
-from webob.multidict import MultiDict
 from pyramid import testing
 from wkcdd.tests.test_base import (
     IntegrationTestBase,
@@ -6,7 +5,6 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.views.community import CommunityView
 from wkcdd.models.community import Community
-from wkcdd import constants
 
 
 class TestCommunityView(IntegrationTestBase):
@@ -48,7 +46,6 @@ class TestCommunityView(IntegrationTestBase):
     def test_performance_indicator_aggregates_display_without_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
-        project = community.projects[0]
         self.request.context = community
         response = self.community_view.performance()
         self.assertIsInstance(response['community'], Community)
@@ -77,7 +74,6 @@ class TestCommunityViewsFunctional(FunctionalTestBase):
         self.setup_community_test_data()
         community = Community.get(Community.name == 'lutacho')
         url = self.request.route_path(
-            'community', traverse=(community.id, 'performance'),
-            _query={'type': constants.FIC_PROJECT_REPORT})
+            'community', traverse=(community.id, 'performance'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)

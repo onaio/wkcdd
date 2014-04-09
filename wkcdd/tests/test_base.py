@@ -73,7 +73,7 @@ class TestBase(unittest.TestCase):
                      project_code='FR3A',
                      name='Dairy Goat Project Center 1',
                      community=None,
-                     sector="Dairy Goat",
+                     sector=constants.DAIRY_GOAT_PROJECT_REPORT_CODE,
                      project_type=None):
         project = Project(
             code=project_code,
@@ -188,13 +188,13 @@ class TestBase(unittest.TestCase):
         self._add_project(project_code='7CWA',
                           name="Dairy Cow Project Center 1",
                           community=community1,
-                          sector="Dairy Cows",
+                          sector=constants.DAIRY_COWS_PROJECT_REPORT,
                           project_type=project_type_c
                           )
         self._add_project(project_code="YH9T",
                           name="Dairy Cow Project Center 1",
                           community=community2,
-                          sector="Dairy Cows",
+                          sector=constants.DAIRY_COWS_PROJECT_REPORT,
                           project_type=project_type_c
                           )
         self._add_project(project_code="JDCV",
