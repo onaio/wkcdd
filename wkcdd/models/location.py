@@ -23,12 +23,11 @@ class Location(Base):
     COMMUNITY = 'community'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
-    parent_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    parent_id = Column(Integer, ForeignKey('locations.id'), nullable=True)
     location_type = Column(Enum(COUNTY, SUB_COUNTY, CONSTITUENCY, COMMUNITY,
                            name='LOCATION_TYPES'),
                            nullable=False)
-    children = relationship(
-        "Location", backref=backref('parent', remote_side=[id]))
+    parent = relationship("Location", remote_side=[id])
 
     __mapper_args__ = {
         'polymorphic_on': location_type,
