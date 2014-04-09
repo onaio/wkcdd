@@ -5,7 +5,7 @@
 <!-- BEGIN HEAD -->
 <head>
    <meta charset="utf-8" />
-   <title>{% block title %}{% endblock %} | WB Western Kenya CDD</title>
+   <title>{% block title %}{% endblock %}WB Western Kenya CDD</title>
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
    <meta content="" name="description" />
@@ -141,18 +141,37 @@
          <!-- BEGIN SIDEBAR MENU -->
 	  <ul class="nav-side">
 		<li class="start">
-			<a class="selected" href="{{ request.route_url('counties', traverse=('')) }}">
+			<a class="
+			    {%if request.path_info_peek() == 'counties' %}
+                    selected
+                {%elif request.path_info_peek() == 'sub_county' %}
+                    selected
+                {%elif request.path_info_peek() == 'constituency' %}
+                    selected
+                {%elif request.path_info_peek() == 'community' %}
+                    selected
+                {%endif%}"
+                href="{{ request.route_url('counties', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
-			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
+			<span class="title">{% trans %} COUNTY <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
-		<li><a href="#">
+		<li>
+            <a class="
+                {%if request.path_info_peek() == 'projects' %}
+                    selected
+                {%endif%}"
+               href="{{ request.route_url('projects', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
 			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
 			</a>
 		</li>
 		<li class="last">
-			<a href="#">
+			<a class="
+			    {%if request.path_info_peek() == 'reporting_status' %}
+                    selected
+                {%endif%}"
+                    href="{{ request.route_url('reporting_status', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
 			<span class="title">{% trans %} REPORTING <br/>STATUS {% endtrans %}</span>
 			</a>
@@ -207,16 +226,9 @@
             </div>
          </div>
          <!-- END PAGE HEADER-->
-         
-         <div class="container row nav-holder">
-			<ul class="nav navbar-nav">
-				<li><a href="#">Performance</a></li>
-				<li><a href="#">Impact</a></li>
-				<li><a href="#">Results Framework</a></li>
-			</ul>
-		</div>
-         
-         <!-- BEGIN PAGE CONTENT--> 
+
+		 {% block indicators %}{% endblock %}
+         <!-- BEGIN PAGE CONTENT-->
 	{% block content %}{% endblock %}
          <!-- END PAGE CONTENT-->     
       </div>

@@ -30,7 +30,7 @@ class TestBuildDatasetHelpers(TestBase):
         self.setup_test_data()
         counties = County.all()
         impact_indicators = \
-            Report.get_location_indicator_aggregation(counties)
+            Report.get_impact_indicator_aggregation_for(counties)
         dataset = build_dataset(Location.COUNTY,
                                 counties,
                                 impact_indicators)
@@ -42,7 +42,7 @@ class TestBuildDatasetHelpers(TestBase):
         self.setup_test_data()
         projects = Project.all()
         impact_indicators = (
-            Report.get_aggregated_project_indicators(projects))
+            Report.get_aggregated_impact_indicators(projects))
         dataset = build_dataset(Location.COMMUNITY,
                                 None,
                                 impact_indicators,
@@ -50,5 +50,5 @@ class TestBuildDatasetHelpers(TestBase):
                                 )
         self.assertEquals(dataset['headers'][0], Location.COMMUNITY)
         self.assertEquals(dataset['rows'][0][0].name,
-                          "Dairy Cow Project Center 1")
+                          "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])

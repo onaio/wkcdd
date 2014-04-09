@@ -8,9 +8,11 @@ from sqlalchemy import (
     Column,
     Integer,
     Text,
-    Enum
+    Enum,
+    ForeignKey
 )
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import relationship, backref
 
 
 class Location(Base):
@@ -21,10 +23,11 @@ class Location(Base):
     COMMUNITY = 'community'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
-    parent_id = Column(Integer, nullable=False)
+    parent_id = Column(Integer, ForeignKey('locations.id'), nullable=True)
     location_type = Column(Enum(COUNTY, SUB_COUNTY, CONSTITUENCY, COMMUNITY,
                            name='LOCATION_TYPES'),
                            nullable=False)
+    parent = relationship("Location", remote_side=[id])
 
     __mapper_args__ = {
         'polymorphic_on': location_type,
@@ -38,7 +41,7 @@ class Location(Base):
     def get_or_create(cls, name, parent, location_type):
 
         # get Location parent_id
-        parent_id = parent.id if parent is not None else 0
+        parent_id = parent.id if parent is not None else None
 
         try:
             location = Location.get(Location.name == name,

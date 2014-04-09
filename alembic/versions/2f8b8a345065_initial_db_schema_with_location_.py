@@ -19,8 +19,9 @@ def upgrade():
     op.create_table('locations',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.Text(), nullable=False),
-    sa.Column('parent_id', sa.Integer(), nullable=False),
+    sa.Column('parent_id', sa.Integer(), nullable=True),
     sa.Column('location_type', sa.Enum('county', 'sub_county', 'constituency', 'community', name='LOCATION_TYPES'), nullable=False),
+    sa.ForeignKeyConstraint(['parent_id'], ['locations.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('reports',

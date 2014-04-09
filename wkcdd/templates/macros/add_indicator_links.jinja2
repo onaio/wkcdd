@@ -1,0 +1,29 @@
+{% macro add_indicator_links(request, location_type, location, page) %}
+<div class="row nav-holder indicator_links">
+ <ul class="nav navbar-nav">
+    <li class="indicator_list">
+        <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
+          {% if page == 'performance'%}
+               class="selected" >
+          {% else %}
+                >
+          {% endif %}
+          {% trans %} Performance {% endtrans %}
+        </a>
+    </li>
+    <li class="indicator_list">
+        <a href="{{ request.route_url(location_type,traverse=(location.id)) }}"
+          {% if page == 'impact' %}
+               class="selected" >
+          {% else %}
+                >
+          {% endif %}
+          {% trans %} Impact {% endtrans %}
+        </a>
+    </li>
+    <li class="indicator_list">
+        <a href="#">{% trans %} Result Framework {% endtrans %}</a>
+    </li>
+ </ul>
+</div>
+{% endmacro %}

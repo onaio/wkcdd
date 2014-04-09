@@ -1,3 +1,6 @@
+import warnings
+
+from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
@@ -39,6 +42,7 @@ class Project(Base):
                                 Location.location_type =='community')")
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    # TODO index sector field
     sector = Column(String, nullable=False)
     # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
@@ -54,7 +58,7 @@ class Project(Base):
         return self.name
 
     @classmethod
-    def create(self, **kwargs):
+    def create(cls, **kwargs):
         county = County.get_or_create(
             kwargs['county'], None, Location.COUNTY)
         sub_county = SubCounty.get_or_create(
@@ -75,21 +79,37 @@ class Project(Base):
 
     @classmethod
     def get_constituency(cls, community):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         constituency_id = community.parent_id
         return Location.get(Location.id == constituency_id)
 
     @classmethod
     def get_sub_county(cls, constituency):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         sub_county_id = constituency.parent_id
         return Location.get(Location.id == sub_county_id)
 
     @classmethod
     def get_county(cls, sub_county):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         county_id = sub_county.parent_id
         return Location.get(Location.id == county_id)
 
     @classmethod
     def get_locations(cls, projects):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         locations = {}
         for project in projects:
             constituency = project.get_constituency(project.community)
@@ -105,6 +125,17 @@ class Project(Base):
         else:
             return None
 
+    @classmethod
+    def get_filter_criteria(cls):
+        filter_criteria = {
+            'sectors': constants.PROJECT_SECTORS,
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'communities': Community.all(),
+        }
+
+        return filter_criteria
+
 
 class ProjectType(Base):
     __tablename__ = 'project_type'
@@ -113,7 +144,7 @@ class ProjectType(Base):
 
     @classmethod
     def get_or_create(cls, name):
-         # check if exists
+        # check if exists
         try:
             project_type = ProjectType.get(ProjectType.name == name)
         except NoResultFound:

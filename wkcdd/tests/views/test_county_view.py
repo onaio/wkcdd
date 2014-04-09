@@ -32,7 +32,6 @@ class TestCountyViews(IntegrationTestBase):
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):
-
     def test_show_all_counties_view(self):
         self.setup_test_data()
         url = self.request.route_path('counties',  traverse='')
@@ -46,3 +45,12 @@ class TestCountyViewsFunctional(FunctionalTestBase):
             url = self.request.route_path('counties', traverse=county.id)
             response = self.testapp.get(url)
             self.assertEqual(response.status_code, 200)
+
+    def test_county_performance_view(self):
+        self.setup_test_data()
+        county = Location.get(Location.name == 'Bungoma',
+                              Location.location_type == 'county')
+        url = self.request.route_path('counties', traverse=(
+            county.id, 'performance'))
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)

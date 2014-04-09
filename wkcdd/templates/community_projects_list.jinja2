@@ -13,15 +13,15 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(community.constituency.sub_county.county.id)) }}">{{ community.constituency.sub_county.county.name }}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <a href="{{ request.route_url('sub_county',traverse=(community.constituency.sub_county.id)) }}">{{ community.constituency.sub_county.name }}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name }}</a>
+      <a href="{{ request.route_url('constituency',traverse=(community.constituency.id)) }}">{{ community.constituency.name }}</a>
       <i class="icon-angle-right"></i>
   </li>
 

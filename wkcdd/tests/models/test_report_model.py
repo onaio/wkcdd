@@ -5,7 +5,8 @@ import os
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
-from wkcdd.models import County
+from wkcdd.models import County, Constituency
+from wkcdd import constants
 
 
 class TestReport(TestBase):
@@ -17,8 +18,10 @@ class TestReport(TestBase):
         self.assertEquals(report.report_data, json_data)
 
     def test_add_report_submission(self):
+        self.setup_test_data()
         project_code = 'TG1F'
-        community = self._add_community()
+        constituency = Constituency.get(Constituency.name == "Kakamega")
+        community = self._add_community(constituency=constituency)
         project_type = self._add_project_type()
         self._add_project(project_code=project_code, community=community,
                           project_type=project_type)
@@ -187,14 +190,14 @@ class TestReport(TestBase):
     # 3. Passing a list of projects should calculate impact and performance
     # aggregator totals
     def test_impact_indicator_aggregation_with_no_projects(self):
-        results = Report.get_aggregated_project_indicators(None)
-        self.assertEqual(results['indicator_list'], None)
-        self.assertEqual(results['summary'], None)
+        results = Report.get_aggregated_impact_indicators([])
+        self.assertEqual(results['indicator_list'], [])
+        self.assertEqual(results['summary'].keys(), [])
 
     def test_impact_indicator_aggregation_with_no_reports(self):
         self.setup_test_data()
         project = Project.get(Project.code == 'NOREPORT')
-        results = Report.get_aggregated_project_indicators([project])
+        results = Report.get_aggregated_impact_indicators([project])
         project_indicators_map = results['indicator_list'][0]
         self.assertFalse(project_indicators_map['indicators'])
         self.assertEqual(project_indicators_map['project_id'], project.id)
@@ -204,7 +207,7 @@ class TestReport(TestBase):
         self.setup_test_data()
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
-        results = Report.get_aggregated_project_indicators([project])
+        results = Report.get_aggregated_impact_indicators([project])
         summary = results['summary']
         project_indicators_map = results['indicator_list'][0]
         self.assertEqual(project_indicators_map['project_id'], project.id)
@@ -220,7 +223,7 @@ class TestReport(TestBase):
         for code in project_code_list:
             project = Project.get(Project.code == code)
             project_list.append(project)
-        results = Report.get_aggregated_project_indicators(project_list)
+        results = Report.get_aggregated_impact_indicators(project_list)
         summary = results['summary']
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
@@ -239,8 +242,11 @@ class TestReport(TestBase):
         self.setup_test_data()
         project_code = 'YH9T'
         project = Project.get(Project.code == project_code)
-        results = Report.get_aggregated_project_indicators([project], False)
+        results = Report.get_aggregated_performance_indicators(
+            [project],
+            constants.DAIRY_COWS_PROJECT_REPORT)
         project_indicators_map = results['indicator_list'][0]
+        summary = results['summary']
         self.assertEqual(
             project_indicators_map['indicators']['exp_contribution'], '56000')
         self.assertEqual(
@@ -250,17 +256,22 @@ class TestReport(TestBase):
             project_indicators_map['indicators']['vb_achievement'], '4')
         self.assertNotIn('no_of_children',
                          project_indicators_map['indicators'])
+        self.assertEqual(summary['community_contribution'], 173)
+        self.assertEqual(summary['vb_percentage'], 80)
 
     def test_performance_indicator_aggregation_with_many_projects(self):
         self.setup_test_data()
-        project_code_list = ['YH9T', 'JDCV']
+        project_code_list = ['YH9T', '7CWA']
         project_list = []
         for code in project_code_list:
             project = Project.get(Project.code == code)
             project_list.append(project)
-        results = Report.get_aggregated_project_indicators(project_list, False)
+        results = Report.get_aggregated_performance_indicators(
+            project_list,
+            constants.DAIRY_COWS_PROJECT_REPORT)
         project_indicators_a = results['indicator_list'][0]
         project_indicators_b = results['indicator_list'][1]
+        summary = results['summary']
         self.assertEqual(
             project_indicators_a['project_id'], project_list[0].id)
         self.assertEqual(
@@ -271,11 +282,55 @@ class TestReport(TestBase):
         self.assertTrue(
             'community_contribution' in project_indicators_a['indicators']
             and 'community_contribution' in project_indicators_b['indicators'])
+        self.assertEqual(summary['community_contribution'], 136.5)
+        self.assertEqual(summary['vb_percentage'], 46)
 
-    def test_get_location_indicator_aggregation(self):
+    def test_get_impact_indicator_aggregation_for_counties(self):
         self.setup_test_data()
         counties = County.all()
-        results = Report.get_location_indicator_aggregation(counties)
+        results = Report.get_impact_indicator_aggregation_for(counties)
         self.assertIsNotNone(results['aggregated_impact_indicators']
                              [counties[0].id])
         self.assertEquals(len(results['total_indicator_summary']), 4)
+
+    def test_get_performance_indicator_aggregation_for_counties(self):
+        self.setup_test_data()
+        counties = County.all()
+        selected_project_type = constants.DAIRY_COWS_PROJECT_REPORT
+        results = Report.get_performance_indicator_aggregation_for(
+            counties, selected_project_type)
+        self.assertIsNotNone(results['aggregated_performance_indicators']
+                             [counties[0].id])
+        county_1_indicator_list = (results['aggregated_performance_indicators']
+                                   [counties[0].id]['indicator_list'])
+        county_1_summary_values = (results['aggregated_performance_indicators']
+                                   [counties[0].id]['summary'])
+        county_2_summary_values = (results['aggregated_performance_indicators']
+                                   [counties[1].id]['summary'])
+        self.assertIsNotNone(county_1_summary_values)
+        self.assertIsNone(county_2_summary_values)
+        # TODO Add checks for total indicator
+
+    def test_performance_indicator_calculation_on_legacy_data(self):
+        self.setup_test_data()
+        report = Report.get(Report.project_code == '7CWA')
+        performance_indicators = report.\
+            calculate_performance_indicators()
+        self.assertEquals(
+            performance_indicators['exp_contribution'], '624800')
+        self.assertEquals(
+            performance_indicators['actual_contribution'], '624800')
+        self.assertEquals(
+            performance_indicators['community_contribution'], '100')
+        self.assertEquals(
+            performance_indicators['cws_proceeds_percentage'], '22')
+        self.assertEquals(
+            performance_indicators['db_achievement'], '13')
+        self.assertEquals(
+            performance_indicators['mb_achievement'], '7')
+        self.assertEquals(
+            performance_indicators['fb_achievement'], '6')
+        self.assertEquals(
+            performance_indicators['vb_achievement'], '3')
+        self.assertEquals(
+            performance_indicators['milk_grp_sale_percentage'], '32')
