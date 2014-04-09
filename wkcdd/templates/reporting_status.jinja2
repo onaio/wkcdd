@@ -1,0 +1,28 @@
+{% extends 'base.jinja2' %}
+{% block title %}{{ Projects }} {% endblock %}
+{% block page_title %}
+  <h3 class="page-title">
+    {% trans %} Reporting-Status {% endtrans %}
+    <small></small>
+  </h3>
+{% endblock %}
+{% block breadcrumbs %}
+  <li>Reporting Status</li>
+  <li><a href="#"> </a></li>
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-12">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Reportin Status</div>
+      </div>
+      <div class="portlet-body">
+        <div>This feature is still under construction and is not yet available.</div>
+      </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+</div>
+</div>
+{% endblock content %}

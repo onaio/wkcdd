@@ -1,3 +1,4 @@
+from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
@@ -102,6 +103,17 @@ class Project(Base):
             return self.reports[0]
         else:
             return None
+
+    @classmethod
+    def get_filter_criteria(cls):
+        filter_criteria = {
+            'sectors': constants.PROJECT_SECTORS,
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'communities': Community.all(),
+        }
+
+        return filter_criteria
 
 
 class ProjectType(Base):

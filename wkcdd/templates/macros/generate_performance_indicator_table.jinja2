@@ -6,7 +6,7 @@
       <table class="table table-striped table-bordered table-hover">
          <thead>
             <tr>
-              <th>{% trans %} Project Name {% endtrans %}</th>
+              <th>{% trans %} Name {% endtrans %}</th>
               {% for indicator in indicator_mapping%}
                 <th colspan="3">
                   {{ indicator['title'] }}
@@ -38,8 +38,8 @@
             {% for entity in entity_list %}
               <tr>
                 <td>
-                    <a href="{{ request.route_url(location_type, traverse=(entity.id)) }}">
-                      {{ entity.name }}
+                    <a href="{{ request.route_url(location_type, traverse=(entity.id, 'performance')) }}">
+                      {{ entity.name  | capitalize | replace("_", " ") }}
                     </a>
                 </td>
                 <div>

@@ -6,7 +6,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ constituency.name }}
+    {{ constituency.name | capitalize }} Constituency
     <small></small>
   </h3>
 {% endblock %}
@@ -16,20 +16,20 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name }}</a>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ constituency.name }}
+      {{ constituency.name | capitalize }} Constituency
   </li>
 
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'constituency', constituency) }}
+  {{ add_indicator_links(request, 'constituency', constituency, 'performance') }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
