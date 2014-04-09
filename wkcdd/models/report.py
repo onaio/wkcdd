@@ -73,41 +73,35 @@ class Report(Base):
         """
         indicator_list = []
         summary = defaultdict(lambda: 0)
-        if project_list:
-            for project in project_list:
-                report = project.get_latest_report()
-                if report:
-                    if is_impact:
-                        p_impact_indicators = (
-                            report.calculate_impact_indicators())
-                        for key, value in p_impact_indicators.items():
-                            value = 0 if value is None else value
-                            summary[key] += int(value)
-                    else:
-                        p_impact_indicators = (
-                            report.calculate_performance_indicators())
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': p_impact_indicators
-                    }
+        for project in project_list:
+            report = project.get_latest_report()
+            if report:
+                if is_impact:
+                    p_impact_indicators = (
+                        report.calculate_impact_indicators())
+                    for key, value in p_impact_indicators.items():
+                        value = 0 if value is None else value
+                        summary[key] += int(value)
                 else:
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': None
-                    }
+                    p_impact_indicators = (
+                        report.calculate_performance_indicators())
+                project_indicators_map = {
+                    'project_name': project.name,
+                    'project_id': project.id,
+                    'indicators': p_impact_indicators
+                }
+            else:
+                project_indicators_map = {
+                    'project_name': project.name,
+                    'project_id': project.id,
+                    'indicators': None
+                }
 
-                indicator_list.append(project_indicators_map)
-            return {
-                'indicator_list': indicator_list,
-                'summary': summary
-            }
-        else:
-            return {
-                'indicator_list': None,
-                'summary': None
-            }
+            indicator_list.append(project_indicators_map)
+        return {
+            'indicator_list': indicator_list,
+            'summary': summary
+        }
 
     @classmethod
     def get_location_indicator_aggregation(cls,
