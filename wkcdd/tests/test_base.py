@@ -188,13 +188,13 @@ class TestBase(unittest.TestCase):
         self._add_project(project_code='7CWA',
                           name="Dairy Cow Project Center 1",
                           community=community1,
-                          sector=constants.DAIRY_COWS_PROJECT_REPORT,
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION,
                           project_type=project_type_c
                           )
         self._add_project(project_code="YH9T",
                           name="Dairy Cow Project Center 1",
                           community=community2,
-                          sector=constants.DAIRY_COWS_PROJECT_REPORT,
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION,
                           project_type=project_type_c
                           )
         self._add_project(project_code="JDCV",
