@@ -1,10 +1,11 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
+{% from 'macros/generate_impact_indicator_table.jinja2' import generate_impact_indicator_table %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ constituency.name | capitalize }} Constituency
+    {{ constituency.name | capitalize  | replace("_", " ") }} Constituency
     <small></small>
   </h3>
 {% endblock %}
@@ -14,15 +15,15 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize | replace("_", " ") }} }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize | replace("_", " ") }} Sub-County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ constituency.name | capitalize }} Constituency
+      {{ constituency.name | capitalize | replace("_", " ") }} Constituency
   </li>
 
 {% endblock %}
@@ -36,36 +37,7 @@
       <div class="portlet-title">
          <div class="caption"><i class="icon-tasks"></i>{% trans %}Communities{% endtrans %}</div>
       </div>
-      <div class="portlet-body">
-         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-               {% include 'impact_indicator_table_head.jinja2' %}
-               <tbody>
-               <tr>
-                  <td>
-                    {% trans %} Total Summary {% endtrans %}
-                  </td>
-                  {% for indicator in impact_indicator_mapping %}
-                    <td>
-                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
-                    </td>
-                  {% endfor %}
-               </tr>
-               {% for community in communities %}
-                  <tr>
-                     <td><a href="{{ request.route_url('community', traverse=(community.id)) }}">{{ community.name | capitalize }}</a></td>
-
-                     {% for indicator in impact_indicator_mapping %}
-                        <td>
-                         {{  impact_indicators['aggregated_impact_indicators'][community.id]['summary'][indicator.key]|default('-') }}
-                        </td>
-                     {% endfor %}
-                  </tr>
-               {% endfor %}
-               </tbody>
-            </table>
-         </div>
-      </div>
+      {{ generate_impact_indicator_table(request, constituency, 'community',  communities, impact_indicators, impact_indicator_mapping)}}
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
 </div>

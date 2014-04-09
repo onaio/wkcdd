@@ -4,7 +4,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ community.name| capitalize }} Community
+    {{ community.name| capitalize | replace("_", " ") }} Community
     <small></small>
   </h3>
 {% endblock %}
@@ -14,19 +14,19 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize | replace("_", " ") }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize | replace("_", " ") }} Sub-County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name | capitalize }} Constituency</a>
+      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name | capitalize | replace("_", " ") }} Constituency</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ community.name | capitalize }} Community
+      {{ community.name | capitalize | replace("_", " ") }} Community
   </li>
 {% endblock %}
 

@@ -39,7 +39,7 @@
               <tr>
                 <td>
                     <a href="{{ request.route_url(location_type, traverse=(entity.id, 'performance')) }}">
-                      {{ entity.name  | capitalize }}
+                      {{ entity.name  | capitalize | replace("_", " ") }}
                     </a>
                 </td>
                 <div>
