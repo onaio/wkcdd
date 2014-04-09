@@ -137,9 +137,13 @@ class Report(Base):
                                             (get_constituency_ids
                                              (get_sub_county_ids
                                               ([child_location.id]))))
+            else:
+                raise ValueError(
+                    "cant determine location type '{}'".format(location_type))
 
             indicators = Report.get_aggregated_project_indicators(projects)
             impact_indicators[child_location.id] = indicators
+            # TODO: this raises an exception if projects is empty
             for indicator in impact_indicator_mapping:
                 total_indicator_summary[indicator['key']] += (
                     impact_indicators[child_location.id]
