@@ -31,6 +31,13 @@ def get_project_list(community_ids, *criterion):
                 *criterion))\
         .all()
 
+
 def get_project_types(community_ids, *criterion):
-    registration_ids = [p.sector for p in DBSession.query(Project.sector).filter(and_(Project.community_id.in_(community_ids), *criterion)).group_by(Project.sector).all()]
-    return [(reg_id, report_id, label) for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING if reg_id in registration_ids]
+    registration_ids = [p.sector for p in
+                        DBSession.query(Project.sector).filter(
+                            and_(
+                                Project.community_id.in_(community_ids),
+                                *criterion)).group_by(Project.sector).all()]
+    return [(reg_id, report_id, label)
+            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING
+            if reg_id in registration_ids]

@@ -2,13 +2,13 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models.location import Location
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.models import helpers
 
 
 @view_defaults(route_name='sub_county')
@@ -47,30 +47,30 @@ class SubCountyView(object):
                  request_method='GET')
     def performance(self):
         sub_county = self.request.context
+        sector_indicator_mapping = {}
+        sector_aggregated_indicators = {}
         constituencies = Constituency.all(
             Constituency.parent_id == sub_county.id)
         county = Project.get_county(sub_county)
         locations = {'county': county}
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
-        selected_project_type = (
-            self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
+        constituency_ids = [constituency.id for constituency in constituencies]
+        project_types_mappings = helpers.get_project_types(
+            helpers.get_community_ids(constituency_ids))
+        for reg_id, report_id, title in project_types_mappings:
+            aggregated_indicators = (
+                Report.get_performance_indicator_aggregation_for(
+                    constituencies, report_id))
+            indicator_mapping = tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
+            sector_indicator_mapping[reg_id] = indicator_mapping
+            sector_aggregated_indicators[reg_id] = aggregated_indicators
 
-        if selected_project_type not in project_report_sectors.keys():
-            selected_project_type = self.DEFAULT_PROJECT_TYPE
-        aggregated_indicators = (
-            Report.get_performance_indicator_aggregation_for(
-                constituencies, selected_project_type, Location.SUB_COUNTY))
-        selected_project_name = project_report_sectors[selected_project_type]
-        indicator_mapping = tuple_to_dict_list(
-            ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[
-                selected_project_type])
         return {
             'sub_county': sub_county,
             'constituencies': constituencies,
             'locations': locations,
-            'selected_project_type': selected_project_name,
-            'project_report_sectors': project_report_sectors.items(),
-            'aggregated_indicators': aggregated_indicators,
-            'indicator_mapping': indicator_mapping
+            'project_types': project_types_mappings,
+            'sector_aggregated_indicators': sector_aggregated_indicators,
+            'sector_indicator_mapping': sector_indicator_mapping
         }

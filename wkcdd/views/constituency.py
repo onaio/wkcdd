@@ -2,18 +2,17 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models import Location
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
 from wkcdd.models.project import Project
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.report import Report
+from wkcdd.models import helpers
 
 
 @view_defaults(route_name='constituency')
 class ConstituencyView(object):
-    DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REPORT
 
     def __init__(self, request):
         self.request = request
@@ -52,28 +51,27 @@ class ConstituencyView(object):
         communities = Community.all(Community.parent_id == constituency.id)
         sub_county = Project.get_county(constituency)
         county = Project.get_county(sub_county)
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
+        community_ids = [community.id for community in communities]
+        project_types_mappings = helpers.get_project_types(community_ids)
+        sector_indicator_mapping = {}
+        sector_aggregated_indicators = {}
+        for reg_id, report_id, title in project_types_mappings:
+            aggregated_indicators = (
+                Report.get_performance_indicator_aggregation_for(
+                    communities, report_id))
+            indicator_mapping = tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
+            sector_indicator_mapping[reg_id] = indicator_mapping
+            sector_aggregated_indicators[reg_id] = aggregated_indicators
+
         locations = {'sub_county': sub_county,
                      'county': county}
-        selected_project_type = (
-            self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
-
-        if selected_project_type not in project_report_sectors.keys():
-            selected_project_type = self.DEFAULT_PROJECT_TYPE
-        aggregated_indicators = (
-            Report.get_performance_indicator_aggregation_for(
-                communities, selected_project_type))
-        selected_project_name = project_report_sectors[selected_project_type]
-        indicator_mapping = tuple_to_dict_list(
-            ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[
-                selected_project_type])
         return {
             'constituency': constituency,
             'communities': communities,
             'locations': locations,
-            'selected_project_type': selected_project_name,
-            'project_report_sectors': project_report_sectors.items(),
-            'aggregated_indicators': aggregated_indicators,
-            'indicator_mapping': indicator_mapping
+            'project_types': project_types_mappings,
+            'sector_aggregated_indicators': sector_aggregated_indicators,
+            'sector_indicator_mapping': sector_indicator_mapping
         }

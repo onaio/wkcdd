@@ -128,7 +128,7 @@ class Report(Base):
                     p_impact_indicators = (
                         report.calculate_performance_indicators())
                     for key, value in p_impact_indicators.items():
-                        value = 0 if value is None else value
+                        value = 0 if value is None or value == 'Infinity' else value
                         summary[key] += int(value)
                     project_indicators_map = {
                         'project_name': project.name,
@@ -206,11 +206,14 @@ class Report(Base):
     @classmethod
     def get_performance_indicator_aggregation_for(cls,
                                                   child_locations,
-                                                  project_type,
+                                                  report_type,
                                                   location_type="All"):
         mapping = tuple_to_dict_list(
             ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[project_type])
+            constants.PERFORMANCE_INDICATOR_REPORTS[report_type])
+        project_type = [project_type for project_type, report_id, label in
+                        constants.PROJECT_TYPE_MAPPING
+                        if report_id == report_type][0]
         performance_indicators = {}
         total_indicator_summary = defaultdict(int)
         child_location_count = 0
@@ -219,7 +222,7 @@ class Report(Base):
                 child_location,
                 (Project.sector == project_type))
             indicators = Report.get_aggregated_performance_indicators(
-                projects, project_type)
+                projects, report_type)
             performance_indicators[child_location.id] = indicators
             # for indicator in mapping:
             #     for field in indicator['group']:
