@@ -145,15 +145,9 @@ class Report(Base):
                     }
                 indicator_list.append(project_indicators_map)
         if summary:
-            mapping = tuple_to_dict_list(
-                ('title', 'group'),
-                constants.PERFORMANCE_INDICATOR_REPORTS[project_type])
-            percentage_mapping = [indicator['group'][2]
-                                  for indicator in mapping
-                                  if indicator['group'][2]]
-            for field in percentage_mapping:
-                summary[field] = (float(summary[field]) /
-                                  float(summary_report_count))
+            Report.average_performance_ratios(project_type,
+                                              summary,
+                                              summary_report_count)
         return {
             'indicator_list': indicator_list,
             'summary': summary
@@ -205,6 +199,22 @@ class Report(Base):
         return projects
 
     @classmethod
+    def average_performance_ratios(cls,
+                                   report_type,
+                                   summary,
+                                   summary_report_count):
+        mapping = tuple_to_dict_list(
+            ('title', 'group'),
+            constants.PERFORMANCE_INDICATOR_REPORTS[report_type])
+        percentage_mapping = [indicator['group'][2]
+                              for indicator in mapping
+                              if indicator['group'][2]]
+        for field in percentage_mapping:
+            percent = (float(summary[field]) /
+                       float(summary_report_count))
+            summary[field] = percent
+
+    @classmethod
     def get_performance_indicator_aggregation_for(cls,
                                                   child_locations,
                                                   report_type,
@@ -217,7 +227,7 @@ class Report(Base):
                         if report_id == report_type][0]
         performance_indicators = {}
         total_indicator_summary = defaultdict(int)
-        child_location_count = 0
+        location_count = len(child_locations)
         for child_location in child_locations:
             projects = Report.get_projects_from_location(
                 child_location,
@@ -225,13 +235,18 @@ class Report(Base):
             indicators = Report.get_aggregated_performance_indicators(
                 projects, report_type)
             performance_indicators[child_location.id] = indicators
-            # for indicator in mapping:
-            #     for field in indicator['group']:
-            #         value = (performance_indicators[child_location.id]
-            #                  ['summary'].get(field))
-            #         if value:
-            #             total_indicator_summary[field] += value
-            #             child_location_count += 1
+            for indicator in mapping:
+                for field in indicator['group']:
+                    summary = (performance_indicators[child_location.id]
+                               ['summary'])
+                    if summary:
+                        value = summary.get(field) or 0
+                        total_indicator_summary[field] += value
+
+        if total_indicator_summary:
+            Report.average_performance_ratios(report_type,
+                                              total_indicator_summary,
+                                              location_count)
         return {
             'aggregated_performance_indicators': performance_indicators,
             'total_indicator_summary': total_indicator_summary
