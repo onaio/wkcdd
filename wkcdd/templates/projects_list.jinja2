@@ -12,7 +12,7 @@
 {% endblock %}
 {% block content %}
 <div class="row">
-<div class="col-md-12">
+  <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
@@ -87,12 +87,8 @@
       </div>
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
+  </div>
 </div>
-{{response}}
-<<<<<<< HEAD
-</div>
-{% endblock content %}
-=======
 {% endblock content %}
 {% block page_scripts %}
   <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
@@ -101,4 +97,3 @@
   {{ super() }}
   Custom.filterProjectsTable();
 {% endblock %}
->>>>>>> master

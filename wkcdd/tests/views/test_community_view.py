@@ -15,56 +15,34 @@ class TestCommunityView(IntegrationTestBase):
         self.request = testing.DummyRequest()
         self.community_view = CommunityView(self.request)
 
-    def test_show_with_projects_with_no_reports(self):
+    def test_show_projects_with_no_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
         self.request.context = community
 
-        response = self.community_view.list_all_projects()
+        response = self.community_view.show()
 
         self.assertEquals(response['title'], community.name)
         self.assertEquals(len(response['rows']), len(community.projects))
         self.assertEquals(response['rows'][0][0].name,
-                          'Dairy Cow Project Center 1')
+                          'Dairy Goat Project Center 1')
         self.assertEquals(response['summary_row'], [0, 0, 0, 0])
 
-        response = self.community_view.show()
-        project_indicator_list = (
-            response['aggregated_indicators']['indicator_list'])
-        self.assertIsInstance(response['community'], Community)
-        self.assertEquals(response['locations']['county'].name, "Bungoma")
-        self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Goat Project Center 1')
-        self.assertIn('summary', response['aggregated_indicators'])
-
-    def test_show_with_projects_with_reports(self):
+    def test_show_projects_with_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Bukusu')
         self.request.context = community
 
-        response = self.community_view.list_all_projects()
+        response = self.community_view.show()
         self.assertEquals(response['title'], community.name)
         self.assertEquals(len(response['rows']), len(community.projects))
         self.assertEquals(response['rows'][0][0].name,
-                          'Dairy Goat Project Center 1')
+                          'Dairy Cow Project Center 1')
         self.assertEquals(response['rows'][1][0].name,
                           'Dairy Goat Project Center 2')
         self.assertEquals(response['rows'][0][1:], ['1', '1', '3', '3'])
         self.assertEquals(response['rows'][1][1:], ['15', None, None, '5'])
         self.assertEquals(response['summary_row'], [16, 1, 3, 8])
-
-        response = self.community_view.show()
-        project_indicator_list = (
-            response['aggregated_indicators']['indicator_list'])
-        self.assertIsInstance(response['community'], Community)
-        self.assertEquals(response['locations']['county'].name, "Bungoma")
-        self.assertEquals(project_indicator_list[0]['project_name'],
-                          'Dairy Cow Project Center 1')
-        self.assertEquals(project_indicator_list[0]['project_id'], 3)
-        self.assertIn('summary', response['aggregated_indicators'])
-        self.assertIn(
-            response['impact_indicator_mapping'][0]['key'],
-            project_indicator_list[0]['indicators'])
 
     def test_performance_indicator_aggregates_display_without_reports(self):
         self.setup_test_data()
@@ -108,7 +86,7 @@ class TestCommunityViewsFunctional(FunctionalTestBase):
         self.setup_community_test_data()
         community = Community.get(Community.name == 'lutacho')
         url = self.request.route_path(
-            'community', traverse=(community.id))
+            'community', traverse=(community.id,))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 
