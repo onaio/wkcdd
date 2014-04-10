@@ -82,3 +82,8 @@
     padding-left: 30px;
 }
 
+span.ratio {
+    margin-left: 2px;
+    color: #ccc;
+    font-size: 11px;
+}

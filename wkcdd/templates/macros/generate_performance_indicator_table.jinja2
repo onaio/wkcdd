@@ -1,7 +1,7 @@
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% macro generate_performance_indicator_table(request, location, location_type, entity_list, aggregated_indicators, indicator_mapping) %}
   <div class="portlet-body">
-  {% if aggregated_indicators['aggregated_performance_indicators'] %}
+  {% if aggregated_indicators['total_indicator_summary'] %}
     <div class="table-responsive table-scrollable">
         <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -11,7 +11,7 @@
                         {% trans %} Name {% endtrans %}</th>
                         {% for indicator in indicator_mapping%}
                             <th>
-                                {{ indicator['title'] }}
+                                {{ indicator['title']|number_to_symbol() }}
                             </th>
                         {% endfor %}
                  </tr>
@@ -19,14 +19,23 @@
             <tbody>
                 <tr>
                   <td>
-                    {% trans %} Total Summary {% endtrans %}
+                    {% trans %}Total Average Summary{% endtrans %}
                   </td>
                   {% for indicator in indicator_mapping %}
                         <td>
                             {% set target, actual, percentage = indicator['group']%}
                             {% set indicators = aggregated_indicators['total_indicator_summary'] %}
-                                 {{ value_or_default(indicators[percentage])}}({{value_or_default(indicators[actual])}}/{{value_or_default(indicators[target])}})
-                        </td>
+                            {% if indicators[target] and indicators[percentage] %}
+                                {{
+                                value_or_default(indicators[percentage]|format_percent(request))}}
+                                <span class="ratio">
+                                    {{value_or_default(indicators[actual]|format_value(request),'-')}}
+                                    /{{value_or_default(indicators[target]|format_value(request),'-')}}
+                                </span>
+                            {% else %}
+                                {{ value_or_default(indicators[actual])}}
+                            {% endif %}
+                             </td>
                     {% endfor %}
                 </tr>
                 {% for entity in entity_list %}
@@ -42,7 +51,17 @@
                             <td>
                             {% set target, actual, percentage = indicator['group']%}
                             {% set indicators = aggregated_indicators['aggregated_performance_indicators'][entity.id]['summary'] %}
-                             {{ value_or_default(indicators[percentage])}}({{value_or_default(indicators[actual])}}/{{value_or_default(indicators[target])}})
+                            {% if indicators[target] and indicators[percentage] %}
+                                 {{
+                                 value_or_default(indicators[percentage]|format_percent(request),
+                                 '-')}}
+                            <span class="ratio">
+                                {{value_or_default(indicators[actual]|format_value(request),'-')}}
+                                /{{value_or_default(indicators[target]|format_value(request),'-')}}
+                            </span>
+                            {% else %}
+                                {{ value_or_default(indicators[actual], '-')}}
+                            {% endif %}
                             </td>
                         {% endfor %}
                     </tr>

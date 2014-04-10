@@ -55,7 +55,7 @@
                       <th>{% trans %}Project Name{% endtrans %}</th>
                       {% for indicator in sector_indicator_mapping[sector] %}
                         <th>
-                          {{ indicator['title'] }}
+                          {{ indicator['title']|number_to_symbol() }}
                         </th>
                       {% endfor %}
                     </tr>
@@ -69,8 +69,16 @@
                           <td>
                             {% set target, actual, percentage = indicator['group']%}
                             {% set indicators = sector_aggregated_indicators[sector]['summary']%}
-                                 {{ value_or_default(indicators[percentage])}}({{value_or_default(indicators[actual])}}/{{value_or_default(indicators[target])}})
-                          </td>
+                                {% if indicators[target] and indicators[percentage] %}
+                                    {{value_or_default(indicators[percentage]|format_percent(request))}}
+                                        <span class="ratio">
+                                            {{value_or_default(indicators[actual]|format_value(request),'-')}}
+                                            /{{value_or_default(indicators[target]|format_value(request),'-')}}
+                                        </span>
+                                {% else %}
+                                    {{ value_or_default(indicators[actual])}}
+                                {% endif %}
+                            </td>
                       {% endfor %}
                     </tr>
                     {% for project_indicator_map in sector_aggregated_indicators[sector]['indicator_list'] %}
@@ -86,7 +94,15 @@
                               {% set target, actual, percentage = indicator['group']%}
                               {% set indicators = project_indicator_map['indicators'] %}
                             <td>
-                              {{ value_or_default(indicators[percentage])}}({{value_or_default(indicators[actual])}}/{{value_or_default(indicators[target])}})
+                              {% if indicators[target] and indicators[percentage] %}
+                                    {{value_or_default(indicators[percentage]|format_percent(request))}}
+                                        <span class="ratio">
+                                            {{value_or_default(indicators[actual]|format_value(request),'-')}}
+                                            /{{value_or_default(indicators[target]|format_value(request),'-')}}
+                                        </span>
+                                {% else %}
+                                    {{ value_or_default(indicators[actual])}}
+                                {% endif %}
                             </td>
                         {% endfor %}
                       </tr>
