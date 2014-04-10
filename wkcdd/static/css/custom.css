@@ -28,12 +28,12 @@
 
 /*sidebar*/
 .page-content{
-	margin-left:8em;
+	margin-left:9em;
 }
 .page-sidebar{
 	background:#414141;
 	min-height:45em;
-	max-width:8em;
+	max-width:9em;
 	padding:0;
 	position:fixed;
 }
@@ -41,21 +41,50 @@
 	margin:0;padding:0;
 }
 .nav-side li{
-	line-height:1.1em;
+	font-size:0.9em;
+	line-height:1.2em;
 	list-style: none;
 }
+
 .nav-side li a{
 	border-left:4px solid #414141;
 	color:#D1D2D2;
 	cursor:pointer;
 	display:block;
 	font-weight:bold;
-	padding:2em 1.5em 2em 1em;
+	letter-spacing:.4px;
+	padding:1.4em 1.5em 2em 1em;
 	text-decoration: none;
 	text-align:center;
 	transition:all .2s ease-in;
 }
 
+span.big-icon{
+	display:block;
+	height:3em;
+	width:3em;
+	margin:0 auto .3em;
+}
+#county_lnk{
+	background:url(../img/icon-project-indicators-off.png) center bottom no-repeat;
+}
+#project_lnk{
+	background:url(../img/icon-projects-off.png) center bottom no-repeat;
+}
+#report_lnk{
+	background:url(../img/icon-status-off.png) center bottom no-repeat;
+}
+
+
+a:hover > #county_lnk, a.selected > #county_lnk{
+	background:url(../img/icon-project-indicators-on.png) center bottom no-repeat;
+}
+a:hover > #project_lnk, a.selected > #project_lnk{
+	background:url(../img/icon-projects-on.png) center bottom no-repeat;
+}
+a:hover > #report_lnk, a.selected > #report_lnk{
+	background:url(../img/icon-status-on.png) center bottom no-repeat;
+}
 
 .nav-side li a:hover, .nav-side li a.selected{
 	background:#262A33;

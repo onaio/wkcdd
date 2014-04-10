@@ -152,7 +152,8 @@
                     selected
                 {%endif%}"
                 href="{{ request.route_url('counties', traverse=('')) }}">
-			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
+			<!--<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/>-->
+			<span id="county_lnk" class="big-icon"></span>
 			<span class="title">{% trans %} COUNTY <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
@@ -162,7 +163,8 @@
                     selected
                 {%endif%}"
                href="{{ request.route_url('projects', traverse=('')) }}">
-			<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
+			<!--<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/>-->
+			<span id="project_lnk" class="big-icon"></span>
 			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
 			</a>
 		</li>
@@ -172,7 +174,8 @@
                     selected
                 {%endif%}"
                     href="{{ request.route_url('reporting_status', traverse=('')) }}">
-			<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
+			<!--<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/>-->
+			<span id="report_lnk" class="big-icon"></span><br/>
 			<span class="title">{% trans %} REPORTING <br/>STATUS {% endtrans %}</span>
 			</a>
 		</li>
@@ -226,7 +229,6 @@
             </div>
          </div>
          <!-- END PAGE HEADER-->
-<<<<<<< HEAD
          
          <div class="container row nav-holder">
 			<ul class="nav navbar-nav">
