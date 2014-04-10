@@ -3,8 +3,8 @@ from pyramid.view import (
     view_config
 )
 from wkcdd.models.community import Community
-from wkcdd.models.project import Project
 from wkcdd.models.report import Report
+from wkcdd.views.helpers import build_dataset
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models import helpers
@@ -25,15 +25,20 @@ class CommunityView(object):
         # http://docs.sqlalchemy.org/en/rel_0_9/orm/tutorial.html#eager-loading
         # http://docs.sqlalchemy.org/en/rel_0_9/orm/relationships.html#self-referential-query-strategies # noqa
         community = self.request.context
-        projects = helpers.get_project_list([community.id])
-        locations = self.get_locations(community)
-        indicator_mapping, aggregated_indicators = (
-            self.get_impact_indicators(projects))
-        return {
-            'community': community,
-            'locations': locations,
-            'aggregated_indicators': aggregated_indicators,
-            'impact_indicator_mapping': indicator_mapping
+        projects = community.projects
+        impact_indicators = Report.get_aggregated_impact_indicators(projects)
+        dataset = build_dataset("Project",
+                                None,
+                                impact_indicators,
+                                projects
+                                )
+
+        return{
+            'title': community.pretty,
+            'headers': dataset['headers'],
+            'rows': dataset['rows'],
+            'summary_row': dataset['summary_row'],
+            'community': community
         }
 
     @view_config(name='performance',
@@ -66,20 +71,11 @@ class CommunityView(object):
             'sector_indicator_mapping': sector_indicator_mapping
         }
 
-    def get_locations(self, community):
-        constituency = Project.get_constituency(community)
-        sub_county = Project.get_county(constituency)
-        county = Project.get_county(sub_county)
-        locations = {'constituency': constituency,
-                     'sub_county': sub_county,
-                     'county': county}
-        return locations
-
     def get_impact_indicators(self, projects):
         aggregated_indicators = (
-            Report.get_aggregated_impact_indicators(projects))
+            Report.get_impact_indicator_aggregation_for(projects))
         indicator_mapping = tuple_to_dict_list(
             ('title', 'key'),
             constants.IMPACT_INDICATOR_REPORT)
-        return (indicator_mapping, aggregated_indicators)
+        return indicator_mapping, aggregated_indicators
 

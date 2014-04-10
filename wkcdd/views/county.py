@@ -2,13 +2,18 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models.location import LocationFactory
+
+from wkcdd import constants
+from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.models.location import (
+    LocationFactory,
+    Location
+)
 from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.report import Report
-from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models import helpers
+from wkcdd.views.helpers import build_dataset
 
 
 @view_defaults(route_name='counties')
@@ -24,16 +29,16 @@ class CountyView(object):
                  request_method='GET')
     def show_all_counties(self):
         counties = County.all()
-
         impact_indicators = \
             Report.get_impact_indicator_aggregation_for(counties)
-
-        return{
-            'counties': counties,
-            'impact_indicators': impact_indicators,
-            'impact_indicator_mapping': tuple_to_dict_list(
-                ('title', 'key'),
-                constants.IMPACT_INDICATOR_REPORT)
+        dataset = build_dataset(Location.COUNTY,
+                                counties,
+                                impact_indicators)
+        return {
+            'title': "County Impact Indicators Report",
+            'headers': dataset['headers'],
+            'rows': dataset['rows'],
+            'summary_row': dataset['summary_row'],
         }
 
     @view_config(name='',
@@ -46,14 +51,15 @@ class CountyView(object):
 
         impact_indicators = \
             Report.get_impact_indicator_aggregation_for(sub_counties)
-
+        dataset = build_dataset(Location.SUB_COUNTY,
+                                sub_counties,
+                                impact_indicators)
         return {
-            'county': county,
-            'sub_counties': sub_counties,
-            'impact_indicators': impact_indicators,
-            'impact_indicator_mapping': tuple_to_dict_list(
-                ('title', 'key'),
-                constants.IMPACT_INDICATOR_REPORT)
+            'title': county.pretty,
+            'headers': dataset['headers'],
+            'rows': dataset['rows'],
+            'summary_row': dataset['summary_row'],
+            'county': county
         }
 
     @view_config(name='performance',
@@ -80,6 +86,7 @@ class CountyView(object):
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
         return {
+            'title': county.pretty,
             'county': county,
             'sub_counties': sub_counties,
             'project_types': project_types_mappings,

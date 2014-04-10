@@ -48,7 +48,9 @@ def includeme(config):
     config.add_jinja2_search_path("wkcdd:templates")
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value
-    config.get_jinja2_environment().filters['number_to_symbol'] = number_to_symbol
+    config.get_jinja2_environment().filters['number_to_symbol'] = \
+        number_to_symbol
+    config.add_renderer('xlsx', 'wkcdd.renderers.TablibXLSXRenderer')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')

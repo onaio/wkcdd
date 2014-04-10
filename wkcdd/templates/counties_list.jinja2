@@ -1,9 +1,7 @@
 
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
-{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
-{% from 'macros/generate_impact_indicator_table.jinja2' import generate_impact_indicator_table %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
     All Counties
@@ -16,9 +14,6 @@
   </li>
 
 {% endblock %}
-{% block indicators %}
-  {{ add_indicator_links(request, 'counties', '', 'impact') }}
-{% endblock %}
 {% block content %}
 <div class="row">
 <div class="col-md-12">
@@ -27,7 +22,44 @@
       <div class="portlet-title">
          <div class="caption"><i class="icon-tasks"></i>{% trans %}Counties{% endtrans %}</div>
       </div>
-      {{ generate_impact_indicator_table(request, '', 'counties',  counties, impact_indicators, impact_indicator_mapping)}}
+      <div class="portlet-body">
+         <div class="">
+            <table class="table table-hover table-responsive">
+               <thead>
+                  <tr>
+                     {% for header in headers %}
+                        <th>
+
+                        {{ header }}
+
+                        </th>
+                     {% endfor %}
+
+                  </tr>
+               </thead>
+               <tbody>
+               <tr>
+                  <td>
+                    {% trans %} Total Summary {% endtrans %}
+                  </td>
+                  {% for value in summary_row%}
+                    <td>
+                        {{ value|default('-') }}
+                    </td>
+                  {% endfor %}
+               </tr>
+               {% for row in rows %}
+                  <tr>
+                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
+                     {% for col in row[1:] %}
+                        <td>{{ col|default('-') }}</td>
+                     {% endfor %}
+                  </tr>
+               {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      </div>
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
 </div>

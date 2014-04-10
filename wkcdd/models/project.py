@@ -1,3 +1,5 @@
+import warnings
+
 from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
@@ -16,6 +18,8 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.orm.exc import NoResultFound
 from zope.sqlalchemy import ZopeTransactionExtension
+
+from wkcdd.libs.utils import humanize
 from wkcdd.models import (
     Community,
     Location)
@@ -52,6 +56,13 @@ class Project(Base):
                            foreign(Report.project_code)",
                            order_by='desc(Report.submission_time)')
 
+    def __str__(self):
+        return self.name
+
+    @property
+    def pretty(self):
+        return humanize(self.name).title()
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(
@@ -74,21 +85,37 @@ class Project(Base):
 
     @classmethod
     def get_constituency(cls, community):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         constituency_id = community.parent_id
         return Location.get(Location.id == constituency_id)
 
     @classmethod
     def get_sub_county(cls, constituency):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         sub_county_id = constituency.parent_id
         return Location.get(Location.id == sub_county_id)
 
     @classmethod
     def get_county(cls, sub_county):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         county_id = sub_county.parent_id
         return Location.get(Location.id == county_id)
 
     @classmethod
     def get_locations(cls, projects):
+        warnings.warn(
+            "Use the specific county, sub_county and constituency properties"
+            " within each location type e.g. sub_county.county",
+            DeprecationWarning)
         locations = {}
         for project in projects:
             constituency = project.get_constituency(project.community)

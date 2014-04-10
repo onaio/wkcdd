@@ -65,7 +65,7 @@ OXEN_PLOUGH_PROJECT_REPORT = 'oxen_plough_project_report'
 OXEN_PLOUGH_PROJECT_REPORT_CODE = 'perfomance_summary/op_projects'
 
 TAILORING_PROJECT_REGISTRATION = 'tailoring_project_registration'
-TAILORING_PROJECT_CODE = 'bm_projects'
+TAILORING_PROJECT_CODE = 'tailoring_projects'
 TAILORING_PROJECT_REPORT = 'tailoring_project_report'
 TAILORING_PROJECT_REPORT_CODE = 'perfomance_summary/bm_projects'
 
@@ -1228,15 +1228,15 @@ IMPACT_INDICATOR_KEYS = (
 )
 
 IMPACT_INDICATOR_REPORT = (
-    (_('Number of beneficiaries with increased income earned \
-        from the project'), 'no_of_b_increased_income'),
-    (_('Number of beneficiaries with improved houses out of proceeds \
-            from the project'), 'no_of_b_improved_houses'),
-    (_('Number of beneficiaries with increased household \
-        assets acquired through proceeds from the project'),
+    (_('Number of beneficiaries with increased income earned '
+        'from the project'), 'no_of_b_increased_income'),
+    (_('Number of beneficiaries with improved houses out of proceeds '
+       'from the project'), 'no_of_b_improved_houses'),
+    (_('Number of beneficiaries with increased household '
+        'assets acquired through proceeds from the project'),
      'no_of_b_hh_assets'),
-    (_('Number of children in schools and other learning \
-        institutions supported by proceeds from project earnings'),
+    (_('Number of children in schools and other learning '
+       'institutions supported by proceeds from project earnings'),
      'no_of_children')
 )
 

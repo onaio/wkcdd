@@ -19,9 +19,8 @@ class TestConstituencyView(IntegrationTestBase):
         constituency = Constituency.get(Constituency.name == "Kakamega")
         self.request.context = constituency
         response = self.constituency_view.list_all_communities()
-        self.assertIsInstance(response['constituency'], Constituency)
-        self.assertEquals(response['communities'][0].name, "Maragoli")
-        self.assertEquals(response['locations']['county'].name, "Bungoma")
+        self.assertEquals(len(response['rows']), 2)
+        self.assertEquals(response['summary_row'], [16, 1, 3, 8])
 
 
 class TestConstituencyViewsFunctional(FunctionalTestBase):

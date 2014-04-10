@@ -2,10 +2,10 @@
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }} {% trans %}Constituency{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ constituency.name | capitalize }} Constituency
+      {{ self.title() }}
     <small></small>
   </h3>
 {% endblock %}
@@ -15,17 +15,16 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
+      <a href="{{ request.route_url('counties',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
+      <a href="{{ request.route_url('sub_county',traverse=(constituency.sub_county.id)) }}">{{ constituency.sub_county.pretty }} {% trans %}Sub County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ constituency.name | capitalize }} Constituency
+      {{ self.title() }}
   </li>
-
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'constituency', constituency, 'performance') }}
