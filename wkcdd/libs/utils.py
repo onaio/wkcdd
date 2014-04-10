@@ -4,7 +4,7 @@ from pyramid.i18n import TranslationStringFactory
 
 
 translation_string_factory = TranslationStringFactory('wkcdd')
-humanize_re = re.compile(r"[\W_]+", re.DEBUG)
+humanize_re = re.compile(r"[\W_]+")
 
 
 def tuple_to_dict_list(key_tuple, value_tuples):
