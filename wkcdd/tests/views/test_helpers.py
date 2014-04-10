@@ -1,8 +1,9 @@
 import unittest
 from pyramid.events import NewRequest
 from pyramid import testing
-from wkcdd.tests.test_base import TestBase
 
+from wkcdd.libs.utils import humanize
+from wkcdd.tests.test_base import TestBase
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset
@@ -34,7 +35,8 @@ class TestBuildDatasetHelpers(TestBase):
         dataset = build_dataset(Location.COUNTY,
                                 counties,
                                 impact_indicators)
-        self.assertEquals(dataset['headers'][0], Location.COUNTY)
+        self.assertEquals(dataset['headers'][0],
+                          humanize(Location.COUNTY).title())
         self.assertEquals(dataset['rows'][0][0].name, "Bungoma")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
 
@@ -48,7 +50,8 @@ class TestBuildDatasetHelpers(TestBase):
                                 impact_indicators,
                                 projects
                                 )
-        self.assertEquals(dataset['headers'][0], Location.COMMUNITY)
+        self.assertEquals(dataset['headers'][0],
+                          humanize(Location.COMMUNITY).title())
         self.assertEquals(dataset['rows'][0][0].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
