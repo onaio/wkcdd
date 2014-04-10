@@ -1,11 +1,12 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
-{% from 'macros/generate_impact_indicator_table.jinja2' import generate_impact_indicator_table %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
+{% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ constituency.name | capitalize  | replace("_", " ") }} Constituency
+    {{ constituency.name | capitalize }} Constituency
     <small></small>
   </h3>
 {% endblock %}
@@ -15,20 +16,20 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize | replace("_", " ") }} }} County</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize | replace("_", " ") }} Sub-County</a>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ constituency.name | capitalize | replace("_", " ") }} Constituency
+      {{ constituency.name | capitalize }} Constituency
   </li>
 
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'constituency', constituency, 'impact') }}
+  {{ add_indicator_links(request, 'constituency', constituency, 'performance') }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -36,8 +37,9 @@
     <div class="portlet">
       <div class="portlet-title">
          <div class="caption"><i class="icon-tasks"></i>{% trans %}Communities{% endtrans %}</div>
+         {{ generate_project_type_dropdown(request, selected_project_type, 'constituency', constituency, project_report_sectors)}}
       </div>
-      {{ generate_impact_indicator_table(request, constituency, 'community',  communities, impact_indicators, impact_indicator_mapping)}}
+      {{ generate_performance_indicator_table(request, constituency, 'community', selected_project_type, communities, aggregated_indicators, indicator_mapping) }}
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
 </div>

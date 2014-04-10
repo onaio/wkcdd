@@ -7,6 +7,8 @@
 	border-top:1px solid #DFDFDF;
 	border-bottom:1px solid #DFDFDF;
 	margin-bottom:1em;
+        margin-left: -20px;
+        margin-right: -20px;
 }
 .page-content{
 	background:#F0F1F2;
@@ -60,12 +62,13 @@
 	border-bottom:0;
 }
 
+<<<<<<< HEAD
 /*Triangles*/
 .tri-bottom{
 	display:none;
 	width: 0px;
 	height: 0px;
-
+	border-style: solid;
 	border-width: 12px 10px 0 10px;
 	border-color: #DFDFDF transparent transparent transparent;
 	position:absolute;
@@ -93,3 +96,25 @@
 .navbar-nav li:hover > .tri-bottom, .navbar-nav li.active-nav > .tri-bottom{
 	display:block;
 }
+
+.indicator_list > a {
+    text-decoration:none;
+    color:#000000;
+}
+.indicator_list > a:link {color:#000000;}
+.indicator_list > a:hover {
+    color: #2a6496;
+}  /* mouse over link */
+.indicator_list > .selected{
+    font-weight:bold;
+    color: #2a6496;
+}
+.indicator_list > a:active {
+   color: #2a6496;
+}
+
+.indicator_links{
+    padding-left: 30px;
+}
+
+>>>>>>> master
