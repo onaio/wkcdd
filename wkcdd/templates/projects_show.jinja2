@@ -1,9 +1,9 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ project.pretty }}{% trans %}Project{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ project.name }} {% trans %} Project Indicators {% endtrans %}
+    {{ project.pretty }} {% trans %}Project Indicators{% endtrans %}
     <small></small>
   </h3>
 {% endblock %}
@@ -13,26 +13,27 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
+      <a href="{{ request.route_url('counties',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
+      <a href="{{ request.route_url('sub_county',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name | capitalize }} Constituency</a>
+      <a href="{{ request.route_url('constituency',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('community',traverse=(locations.community.id)) }}">{{ locations.community.name | capitalize }} Community</a>
+      <a href="{{ request.route_url('community',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ project.name }}
+      {{ project.pretty }}
   </li>
 {% endblock %}
 {% block content %}
+<div class="row">
 <div class="col-md-12">
     <div class="portlet">
       <div class="portlet-title">
@@ -104,4 +105,5 @@
     </div>
 </div>
 {{response}}
+</div>
 {% endblock content %}

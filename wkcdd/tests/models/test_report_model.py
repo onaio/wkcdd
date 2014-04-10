@@ -190,9 +190,9 @@ class TestReport(TestBase):
     # 3. Passing a list of projects should calculate impact and performance
     # aggregator totals
     def test_impact_indicator_aggregation_with_no_projects(self):
-        results = Report.get_aggregated_impact_indicators(None)
-        self.assertEqual(results['indicator_list'], None)
-        self.assertEqual(results['summary'], None)
+        results = Report.get_aggregated_impact_indicators([])
+        self.assertEqual(results['indicator_list'], [])
+        self.assertEqual(results['summary'].keys(), [])
 
     def test_impact_indicator_aggregation_with_no_reports(self):
         self.setup_test_data()

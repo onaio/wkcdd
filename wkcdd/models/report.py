@@ -80,31 +80,29 @@ class Report(Base):
             'summary': {sum_of_all_individual_indicators}
         }
         """
-        indicator_list = None
-        summary = None
-        if project_list:
-            indicator_list = []
-            summary = defaultdict(int)
-            for project in project_list:
-                report = project.get_latest_report()
-                if report:
-                    p_impact_indicators = (
-                        report.calculate_impact_indicators())
-                    for key, value in p_impact_indicators.items():
-                        value = 0 if value is None else value
-                        summary[key] += int(value)
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': p_impact_indicators
-                    }
-                else:
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': None
-                    }
-                indicator_list.append(project_indicators_map)
+
+        indicator_list = []
+        summary = defaultdict(lambda: 0)
+        for project in project_list:
+            report = project.get_latest_report()
+            if report:
+                p_impact_indicators = (
+                    report.calculate_impact_indicators())
+                for key, value in p_impact_indicators.items():
+                    value = 0 if value is None else value
+                    summary[key] += int(value)
+                project_indicators_map = {
+                    'project_name': project.name,
+                    'project_id': project.id,
+                    'indicators': p_impact_indicators
+                }
+            else:
+                project_indicators_map = {
+                    'project_name': project.name,
+                    'project_id': project.id,
+                    'indicators': None
+                }
+            indicator_list.append(project_indicators_map)
         return {
             'indicator_list': indicator_list,
             'summary': summary
@@ -113,6 +111,7 @@ class Report(Base):
     @classmethod
     def get_aggregated_performance_indicators(cls, project_list, project_type):
         pass
+
         indicator_list = None
         summary = None
         summary_report_count = 0

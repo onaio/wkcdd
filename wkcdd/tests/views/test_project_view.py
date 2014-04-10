@@ -61,7 +61,6 @@ class TestProjectViews(IntegrationTestBase):
 
 
 class TestProjectViewsFunctional(FunctionalTestBase):
-
     def test_project_list_return_all_projects_views(self):
         self.setup_test_data()
         url = self.request.route_path('projects', traverse=())

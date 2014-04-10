@@ -14,6 +14,8 @@ from sqlalchemy import (
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import relationship, backref
 
+from wkcdd.libs.utils import humanize
+
 
 class Location(Base):
     __tablename__ = 'locations'
@@ -33,6 +35,9 @@ class Location(Base):
         'polymorphic_on': location_type,
         'polymorphic_identity': 'location'
     }
+
+    def __str__(self):
+        return self.name
 
     @classmethod
     def get_or_create(cls, name, parent, location_type):
@@ -61,6 +66,13 @@ class Location(Base):
             .query(klass.id)\
             .filter(cls.parent_id.in_(parent_ids))\
             .all()
+
+    @property
+    def pretty(self):
+        """
+        Return the humanized name of the location.
+        """
+        return humanize(self.name).title()
 
 
 class LocationFactory(BaseModelFactory):
