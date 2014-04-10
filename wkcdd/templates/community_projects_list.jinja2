@@ -1,9 +1,9 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }} {% trans %}Community{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ title }}
+    {{ self.title() }}
     <small></small>
   </h3>
 {% endblock %}
@@ -13,16 +13,19 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(community.constituency.sub_county.county.id)) }}">{{ community.constituency.sub_county.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(community.constituency.sub_county.county.id)) }}">{{ community.constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(community.constituency.sub_county.id)) }}">{{ community.constituency.sub_county.name }}</a>
+      <a href="{{ request.route_url('sub_county',traverse=(community.constituency.sub_county.id)) }}">{{ community.constituency.sub_county.pretty }} {% trans %}Sub County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(community.constituency.id)) }}">{{ community.constituency.name }}</a>
+      <a href="{{ request.route_url('constituency',traverse=(community.constituency.id)) }}">{{ community.constituency.pretty }} {% trans %}Constituency{% endtrans %}</a>
       <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      {{ self.title() }}
   </li>
 
 {% endblock %}
@@ -62,7 +65,7 @@
                </tr>
                {% for row in rows %}
                   <tr>
-                     <td><a href="{{ request.route_url('projects', traverse=(row[0].id,'show' )) }}">{{ row[0] }}</a></td>
+                     <td><a href="{{ request.route_url('projects', traverse=(row[0].id,'show' )) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
                         <td>{{ col|default('-') }}</td>
                      {% endfor %}

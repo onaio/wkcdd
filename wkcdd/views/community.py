@@ -30,14 +30,14 @@ class CommunityView(object):
         community = self.request.context
         projects = community.projects
         impact_indicators = Report.get_aggregated_impact_indicators(projects)
-        dataset = build_dataset(Location.COMMUNITY,
+        dataset = build_dataset("Project",
                                 None,
                                 impact_indicators,
                                 projects
                                 )
 
         return{
-            'title': community.name,
+            'title': community.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],

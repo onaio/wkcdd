@@ -18,6 +18,8 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.orm.exc import NoResultFound
 from zope.sqlalchemy import ZopeTransactionExtension
+
+from wkcdd.libs.utils import humanize
 from wkcdd.models import (
     Community,
     Location)
@@ -56,6 +58,10 @@ class Project(Base):
 
     def __str__(self):
         return self.name
+
+    @property
+    def pretty(self):
+        return humanize(self.name).title()
 
     @classmethod
     def create(cls, **kwargs):

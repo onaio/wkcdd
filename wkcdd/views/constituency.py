@@ -30,11 +30,11 @@ class ConstituencyView(object):
         impact_indicators = \
             Report.get_impact_indicator_aggregation_for(
                 communities, Location.CONSTITUENCY)
-        dataset = build_dataset(Location.CONSTITUENCY,
+        dataset = build_dataset(Location.COMMUNITY,
                                 communities,
                                 impact_indicators)
         return {
-            'title': constituency.name,
+            'title': constituency.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],

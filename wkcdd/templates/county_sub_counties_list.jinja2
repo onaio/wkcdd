@@ -1,9 +1,9 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }} {% trans %} County{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ title }}
+    {{ self.title() }}
     <small></small>
   </h3>
 {% endblock %}
@@ -13,7 +13,7 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ title }}
+      {{ self.title() }}
   </li>
 
 {% endblock %}
@@ -53,7 +53,7 @@
                </tr>
                {% for row in rows %}
                   <tr>
-                     <td><a href="{{ request.route_url('sub_county', traverse=(row[0].id)) }}">{{ row[0]}}</a></td>
+                     <td><a href="{{ request.route_url('sub_county', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
                         <td>{{ col|default('-') }}</td>
                      {% endfor %}

@@ -1,9 +1,9 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }} {% trans %}Constituency{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ title }}
+    {{ self.title() }}
     <small></small>
   </h3>
 {% endblock %}
@@ -13,15 +13,15 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(constituency.sub_county.id)) }}">{{ constituency.sub_county.name }}</a>
+      <a href="{{ request.route_url('sub_county',traverse=(constituency.sub_county.id)) }}">{{ constituency.sub_county.pretty }} {% trans %}Sub County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ title }}
+      {{ self.title() }}
   </li>
 
 {% endblock %}
@@ -61,7 +61,7 @@
                </tr>
                {% for row in rows %}
                   <tr>
-                     <td><a href="{{ request.route_url('community', traverse=(row[0].id)) }}">{{ row[0]}}</a></td>
+                     <td><a href="{{ request.route_url('community', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
                         <td>{{ col|default('-') }}</td>
                      {% endfor %}

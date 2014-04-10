@@ -1,5 +1,7 @@
 from pyramid.events import subscriber, NewRequest
+
 from wkcdd import constants
+from wkcdd.libs.utils import humanize
 
 
 @subscriber(NewRequest)
@@ -11,7 +13,7 @@ def requested_xlsx_format(event):
 
 
 def build_dataset(location_type, locations, impact_indicators, projects=None):
-    headers = [location_type]
+    headers = [humanize(location_type).title()]
     indicator_headers, indicator_keys = zip(*constants.IMPACT_INDICATOR_REPORT)
     headers.extend(indicator_headers)
     rows = []

@@ -47,14 +47,14 @@ class CountyView(object):
         sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
 
         impact_indicators = \
-            Report.get_impact_indicator_aggregation_for(sub_counties,
-                                                      Location.COUNTY)
+            Report.get_impact_indicator_aggregation_for(
+                sub_counties, Location.COUNTY)
         dataset = build_dataset(Location.SUB_COUNTY,
                                 sub_counties,
                                 impact_indicators)
 
         return {
-            'title': county.name,
+            'title': county.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],

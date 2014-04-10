@@ -31,11 +31,11 @@ class SubCountyView(object):
         impact_indicators = \
             Report.get_impact_indicator_aggregation_for(
                 constituencies, Location.SUB_COUNTY)
-        dataset = build_dataset(Location.SUB_COUNTY,
+        dataset = build_dataset(Location.CONSTITUENCY,
                                 constituencies,
                                 impact_indicators)
         return {
-            'title': sub_county.name,
+            'title': sub_county.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
