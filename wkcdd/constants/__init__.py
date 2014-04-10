@@ -65,7 +65,7 @@ OXEN_PLOUGH_PROJECT_REPORT = 'oxen_plough_project_report'
 OXEN_PLOUGH_PROJECT_REPORT_CODE = 'perfomance_summary/op_projects'
 
 TAILORING_PROJECT_REGISTRATION = 'tailoring_project_registration'
-TAILORING_PROJECT_CODE = 'bm_projects'
+TAILORING_PROJECT_CODE = 'tailoring_projects'
 TAILORING_PROJECT_REPORT = 'tailoring_project_report'
 TAILORING_PROJECT_REPORT_CODE = 'perfomance_summary/bm_projects'
 
