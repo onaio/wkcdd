@@ -11,7 +11,8 @@
                   </td>
                   {% for indicator in impact_indicator_mapping %}
                     <td>
-                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
+                        {{
+                        impact_indicators['total_indicator_summary'][indicator.key]|format_value(request)|default('-') }}
                     </td>
                   {% endfor %}
                </tr>
@@ -25,7 +26,8 @@
 
                      {% for indicator in impact_indicator_mapping %}
                         <td>
-                         {{  impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|default('-') }}
+                         {{
+                         impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|format_value(request)|default('-') }}
                         </td>
                      {% endfor %}
                   </tr>
