@@ -4,13 +4,13 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ community.name }}
+    {{ community.name| capitalize | replace("_", " ") }} Community
     <small></small>
   </h3>
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="#">Projects Indicators</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -26,12 +26,12 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ community.name }}
+      {{ community.name | capitalize | replace("_", " ") }} Community
   </li>
-
 {% endblock %}
+
 {% block indicators %}
-  {{ add_indicator_links(request, 'community', community) }}
+        {{ add_indicator_links(request, 'community', community, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -40,28 +40,19 @@
       <div class="portlet-title">
         <div class="caption">
           <i class="icon-tasks"></i>
-          {{ community.name }}{% trans %} Projects {% endtrans %}
+          {% trans %} Projects {% endtrans %}
         </div>
       </div>
       <div class="portlet-body">
          <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
-               <thead>
-                  <tr>
-                     <th>{% trans %} Project Name {% endtrans %}</th>
-                     <th>{% trans %} # Beneficiaries with increased income earned {% endtrans %}</th>
-                     <th>{% trans %} # Beneficiaries with improved houses {% endtrans %}</th>
-                     <th>{% trans %} # Beneficiaries with increased household assets {% endtrans %}</th>
-                     <th>{% trans %} # Children in schools and other learning institutions {% endtrans %}</th>
-
-                  </tr>
-               </thead>
+               {% include 'impact_indicator_table_head.jinja2' %}
                <tbody>
                 <tr>
                   <td>
                     {% trans %} Total Summary {% endtrans %}
                   </td>
-                  {% for indicator in indicator_mapping %}
+                  {% for indicator in impact_indicator_mapping %}
                     <td>
                         {{ value_or_default(aggregated_indicators['summary'][indicator.key], '-') }}
                     </td>
@@ -76,7 +67,7 @@
                     </td>
                     <div>
                     </div>
-                    {% for indicator in indicator_mapping %}
+                    {% for indicator in impact_indicator_mapping %}
                       <td>
                         {{ value_or_default(project_indicator_map['indicators'][indicator.key], '-') }}
                       </td>
@@ -90,5 +81,4 @@
     </div>
     <!-- END SAMPLE TABLE PORTLET-->
 </div>
-{{response}}
 {% endblock content %}

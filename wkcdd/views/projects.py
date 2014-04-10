@@ -26,15 +26,23 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-        projects = Project.all()
+        # Search for projects
+        search_term = self.request.GET.get('search')
+        if search_term is not None:
+            projects = Project.all(Project.name.ilike("%"+search_term+"%"))
+        else:
+            projects = Project.all()
 
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)
+        # get filter criteria
+        filter_criteria = Project.get_filter_criteria()
 
         return {
             'project_types': project_types,
             'projects': projects,
-            'locations': locations
+            'locations': locations,
+            'filter_criteria': filter_criteria
         }
 
     @view_config(name='show',
@@ -44,6 +52,11 @@ class ProjectViews(object):
     def show(self):
         project = self.request.context
         report = project.get_latest_report()
+        p_locations = Project.get_locations([project])
+        locations = {'community': project.community,
+                     'constituency': p_locations[project.id][2],
+                     'sub_county': p_locations[project.id][1],
+                     'county': p_locations[project.id][0]}
         # TODO filter by periods
         # periods = [report.period for report in reports]
         if report:
@@ -59,12 +72,14 @@ class ProjectViews(object):
                         report.report_data[constants.XFORM_ID]]),
                 'impact_indicator_mapping': tuple_to_dict_list(
                     ('title', 'key'),
-                    constants.IMPACT_INDICATOR_REPORT)
+                    constants.IMPACT_INDICATOR_REPORT),
+                'locations': locations
             }
         else:
             return {
                 'project': project,
                 'performance_indicators': None,
                 'performance_indicator_mapping': None,
-                'impact_indicators': None
+                'impact_indicators': None,
+                'locations': locations
             }

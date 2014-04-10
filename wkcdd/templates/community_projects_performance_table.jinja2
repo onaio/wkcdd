@@ -5,13 +5,14 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ community.name }}
+    {{ community.name| capitalize }} Community
+    <small></small>
     <small></small>
   </h3>
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="#">Projects Indicators</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -27,12 +28,11 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ community.name }}
+      {{ community.name | capitalize }} Community
   </li>
-
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'community', community) }}
+  {{ add_indicator_links(request, 'community', community, 'performance') }}
 {% endblock %}
 {% block content %}
 {% for sector, report, label in project_types %}
@@ -103,5 +103,4 @@
     </div>
   </div>
 {% endfor %}
-{{response}}
 {% endblock content %}

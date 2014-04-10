@@ -1,3 +1,4 @@
+from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
 from sqlalchemy import (
     Column,
@@ -39,6 +40,7 @@ class Project(Base):
                                 Location.location_type =='community')")
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
+    # TODO index sector field
     sector = Column(String, nullable=False)
     # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
@@ -51,7 +53,7 @@ class Project(Base):
                            order_by='desc(Report.submission_time)')
 
     @classmethod
-    def create(self, **kwargs):
+    def create(cls, **kwargs):
         county = County.get_or_create(
             kwargs['county'], None, Location.COUNTY)
         sub_county = SubCounty.get_or_create(
@@ -101,6 +103,17 @@ class Project(Base):
             return self.reports[0]
         else:
             return None
+
+    @classmethod
+    def get_filter_criteria(cls):
+        filter_criteria = {
+            'sectors': constants.PROJECT_SECTORS,
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'communities': Community.all(),
+        }
+
+        return filter_criteria
 
 
 class ProjectType(Base):

@@ -18,6 +18,42 @@
          <div class="caption"><i class="icon-tasks"></i>Projects</div>
       </div>
       <div class="portlet-body">
+         <div class="row">
+             <div class="col-md-4">
+                <div class="input-icon right">
+                   <input id="search_term" type="text" class="form-control input-medium input-sm" name="search_project" placeholder="Search...">
+                </div>
+             </div>
+             <div class="col-md-8">
+                <form class="form-inline">
+                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                    <option value="">--Sector--</option>
+                    {% for key in filter_criteria["sectors"] %}
+                        <option value="{{ filter_criteria['sectors'][key] }}">{{ filter_criteria["sectors"][key]}}</option>
+                    {% endfor %}
+                </select>
+                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                    <option value="">--County--</option>
+                    {% for county in filter_criteria["counties"] %}
+                        <option value="{{ county.id }}">{{ county.name }}</option>
+                    {% endfor %}
+                </select>
+                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                    <option value="">--Sub-County--</option>
+                    {% for sub_county in filter_criteria["sub_counties"] %}
+                        <option value="{{ sub_county.id }}">{{ sub_county.name }}</option>
+                    {% endfor %}
+                </select>
+                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                    <option value="">--Community--</option>
+                    {% for community in filter_criteria["communities"] %}
+                        <option value="{{ community.id }}">{{ community.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
+                </form>
+             </div>
+         </div>
          <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
                <thead>
@@ -53,3 +89,10 @@
 </div>
 {{response}}
 {% endblock content %}
+{% block page_scripts %}
+  <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+  {{ super() }}
+  Custom.filterProjectsTable();
+{% endblock %}

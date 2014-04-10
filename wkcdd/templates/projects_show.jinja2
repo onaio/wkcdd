@@ -9,10 +9,24 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-    <a href="{{ request.route_url('projects', traverse=('')) }}">
-      {% trans %} Projects {% endtrans %}
-    </a>
-    <i class="icon-angle-right"></i>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('sub_county',traverse=(locations.sub_county.id)) }}">{{ locations.sub_county.name | capitalize }} Sub-County</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('constituency',traverse=(locations.constituency.id)) }}">{{ locations.constituency.name | capitalize }} Constituency</a>
+      <i class="icon-angle-right"></i>
+  </li>
+  <li>
+      <a href="{{ request.route_url('community',traverse=(locations.community.id)) }}">{{ locations.community.name | capitalize }} Community</a>
+      <i class="icon-angle-right"></i>
   </li>
   <li>
       {{ project.name }}

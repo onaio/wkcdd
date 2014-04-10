@@ -5,7 +5,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ county.name }}
+    {{ county.name | capitalize }} County
     <small></small>
   </h3>
 {% endblock %}
@@ -15,12 +15,12 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ county.name }}
+      {{ county.name | capitalize }} County
   </li>
 
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'counties', county) }}
+  {{ add_indicator_links(request, 'counties', county, 'performance') }}
 {% endblock %}
 {% block content %}
 {% for sector, report, label in project_types %}
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 {{ generate_performance_indicator_table(request, county, 'sub_county',
-                selected_project_type, sub_counties,
+                sub_counties,
                 sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->

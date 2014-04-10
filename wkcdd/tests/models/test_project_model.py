@@ -44,7 +44,7 @@ class TestProject(TestBase):
         sub_county = project.get_sub_county(constituency)
         county = Project.get_county(sub_county)
         self.assertEquals(county.name, "Bungoma")
-        self.assertEquals(county.parent_id, 0)
+        self.assertIsNone(county.parent_id)
 
     def test_get_locations(self):
         self.setup_test_data()

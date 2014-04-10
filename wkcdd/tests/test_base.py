@@ -88,17 +88,31 @@ class TestBase(unittest.TestCase):
 
         return project
 
-    def _add_county(self, name="Kakamega", parent_id=0):
-        location = County(name=name, parent_id=parent_id)
+    def _add_county(self, name="Kakamega"):
+        location = County(name=name)
 
         location.save()
         return location
 
-    def _add_sub_county(self, name="Kakamega", parent_id=0):
-        location = SubCounty(name=name, parent_id=parent_id)
+    def _add_sub_county(self, county, name="Kakamega"):
+        location = SubCounty(name=name, county=county)
 
         location.save()
         return location
+
+    def _add_constituency(self, sub_county, name="Constituency"):
+        constituency = Constituency(name=name, sub_county=sub_county)
+
+        constituency.save()
+
+        return constituency
+
+    def _add_community(self, constituency, name="Community"):
+        community = Community(name=name, constituency=constituency)
+
+        community.save()
+
+        return community
 
     def _add_project_type(self, name="Dairy Cow Project"):
         project_type = ProjectType(name=name)
@@ -106,20 +120,6 @@ class TestBase(unittest.TestCase):
         project_type.save()
 
         return project_type
-
-    def _add_community(self, name="Community", parent_id=0):
-        community = Community(name=name, parent_id=parent_id)
-
-        community.save()
-
-        return community
-
-    def _add_constituency(self, name="Constituency", parent_id=0):
-        constituency = Constituency(name=name, parent_id=parent_id)
-
-        constituency.save()
-
-        return constituency
 
     def _add_form_types(self, name='registration'):
         form_type = FormTypes(name=name)
@@ -160,28 +160,28 @@ class TestBase(unittest.TestCase):
 
     def setup_test_data(self):
         transaction.begin()
-        county = self._add_county(name="Bungoma", parent_id=0)
+        county = self._add_county(name="Bungoma")
 
-        sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
+        sub_county = self._add_sub_county(county=county, name="Bungoma")
 
-        constituency1 = self._add_constituency(name="Kakamega",
-                                               parent_id=sub_county.id)
+        constituency1 = self._add_constituency(
+            sub_county=sub_county, name="Kakamega")
 
-        county2 = self._add_county(name="Busia", parent_id=0)
-        sub_county2 = self._add_sub_county(name="Teso", parent_id=county2.id)
-        constituency3 = self._add_constituency(name="Amagoro",
-                                               parent_id=sub_county2.id)
-        community3 = self._add_community(name="Rwatama",
-                                         parent_id=constituency3.id)
+        county2 = self._add_county(name="Busia")
+        sub_county2 = self._add_sub_county(county=county2, name="Teso")
+        constituency3 = self._add_constituency(
+            sub_county=sub_county2, name="Amagoro")
+        community3 = self._add_community(
+            constituency=constituency3, name="Rwatama")
 
         project_type_c = self._add_project_type(name="Dairy Cow Project")
         project_type_g = self._add_project_type(name="Dairy Goat Project")
 
-        community1 = self._add_community(name="Maragoli",
-                                         parent_id=constituency1.id)
+        community1 = self._add_community(
+            constituency=constituency1, name="Maragoli")
 
-        community2 = self._add_community(name="Bukusu",
-                                         parent_id=constituency1.id)
+        community2 = self._add_community(
+            constituency=constituency1, name="Bukusu")
 
         self._add_project(community=community1,
                           project_type=project_type_c)
@@ -263,14 +263,14 @@ class TestBase(unittest.TestCase):
 
     def setup_community_test_data(self):
         transaction.begin()
-        county = self._add_county(name="Bungoma", parent_id=0)
+        county = self._add_county(name="Bungoma")
 
-        sub_county = self._add_sub_county(name="Bungoma", parent_id=county.id)
+        sub_county = self._add_sub_county(county=county, name="Bungoma")
 
-        constituency = self._add_constituency(name="Kakamega",
-                                              parent_id=sub_county.id)
-        community = self._add_community(name="lutacho",
-                                        parent_id=constituency.id)
+        constituency = self._add_constituency(
+            sub_county=sub_county, name="Kakamega")
+        community = self._add_community(
+            constituency=constituency, name="lutacho")
         project_type = self._add_project_type(name="CAP")
         self._add_project(project_code="COW1",
                           name="Cow project 1",

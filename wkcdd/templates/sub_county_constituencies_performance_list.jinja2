@@ -5,7 +5,7 @@
 {% block title %}{{ Projects }} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ sub_county.name }}
+    {{ sub_county.name | capitalize }} Sub-County
     <small></small>
   </h3>
 {% endblock %}
@@ -15,16 +15,16 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name }}</a>
+      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County </a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ sub_county.name }}
+      {{ sub_county.name | capitalize }} Sub-County
   </li>
 
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'sub_county', sub_county) }}
+  {{ add_indicator_links(request, 'sub_county', sub_county, 'performance') }}
 {% endblock %}
 {% block content %}
 {% for sector, report, label in project_types %}
@@ -40,7 +40,7 @@
                 </div>
             </div>
             {{ generate_performance_indicator_table(request, sub_county,
-            'constituency', selected_project_type, constituencies,
+            'constituency', constituencies,
             sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->

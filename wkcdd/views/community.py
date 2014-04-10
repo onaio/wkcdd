@@ -33,7 +33,7 @@ class CommunityView(object):
             'community': community,
             'locations': locations,
             'aggregated_indicators': aggregated_indicators,
-            'indicator_mapping': indicator_mapping
+            'impact_indicator_mapping': indicator_mapping
         }
 
     @view_config(name='performance',

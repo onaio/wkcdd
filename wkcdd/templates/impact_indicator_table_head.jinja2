@@ -1,0 +1,10 @@
+<thead>
+  <tr>
+     <th>{% trans %} Name {% endtrans %}</th>
+     {% for indicator in impact_indicator_mapping %}
+        <th>
+         {{ indicator.title | replace ('Number of', '#') }}
+        </th>
+     {% endfor %}
+  </tr>
+</thead>

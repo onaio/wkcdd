@@ -128,7 +128,8 @@ class Report(Base):
                     p_impact_indicators = (
                         report.calculate_performance_indicators())
                     for key, value in p_impact_indicators.items():
-                        value = 0 if value is None or value == 'Infinity' else value
+                        value = (0 if value is None or value == 'Infinity'
+                                 else value)
                         summary[key] += int(value)
                     project_indicators_map = {
                         'project_name': project.name,
