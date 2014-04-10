@@ -24,3 +24,7 @@ class TestLocation(TestBase):
         self.setup_test_data()
         sub_county = SubCounty.get(SubCounty.name == "Bungoma")
         self.assertEqual(sub_county.county.name, "Bungoma")
+
+    def test_pretty_replaces_special_characters_and_makes_title(self):
+        location = Location(name="Bungoma_west#constituency")
+        self.assertEqual(location.pretty, "Bungoma West Constituency")
