@@ -22,10 +22,24 @@
 	border-top:0;
 	padding-top:1em;
 }
+
+.breadcrumb>li, 
+.breadcrumb>li>a
+{
+    font-size: 13px!important;
+}
+.data-table{
+    font-size: 12px;
+}
 .table tbody>tr>th{
 	border-top:0!important;
 }
 
+.data-header {
+    font-size: 12px!important;
+    width 100px;
+    white-space: normal!important;
+}
 /*sidebar*/
 .page-content{
 	margin-left:8em;
