@@ -1218,15 +1218,11 @@ IMPACT_INDICATOR_KEYS = (
 )
 
 IMPACT_INDICATOR_REPORT = (
-    (_('Beneficiaries with increased income earned '
-        'from the project'), 'no_of_b_increased_income'),
-    (_('Beneficiaries with improved houses out of proceeds '
-       'from the project'), 'no_of_b_improved_houses'),
-    (_('Beneficiaries with increased household '
-        'assets acquired through proceeds from the project'),
+    (_('Beneficiaries with increased income'), 'no_of_b_increased_income'),
+    (_('Beneficiaries with improved houses'), 'no_of_b_improved_houses'),
+    (_('Beneficiaries with increased household assets'),
      'no_of_b_hh_assets'),
-    (_('Children in schools and other learning '
-       'institutions supported by proceeds from project earnings'),
+    (_('Children in schools and other learning institutions'),
      'no_of_children')
 )
 
