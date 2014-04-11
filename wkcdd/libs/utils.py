@@ -18,7 +18,7 @@ def format_percent(value, request):
     """
     if value is None:
         return 0
-    value = value if type(value) == float else float(value)
+    value = float(value)
     localizer = get_localizer(request)
     return format_number(round(value, 1), locale=localizer.locale_name) + '%'
 
@@ -30,7 +30,7 @@ def format_value(value, request):
     """
     if value is None:
         return 0
-    value = value if type(value) == float else float(value)
+    value = float(value)
     localizer = get_localizer(request)
     return format_number(value, locale=localizer.locale_name)
 
