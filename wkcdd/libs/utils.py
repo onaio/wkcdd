@@ -16,6 +16,8 @@ def format_percent(value, request):
     """
     Format 123.54 to a pretty percentage value i.e. 123.5%
     """
+    if value is None:
+        return 0
     value = value if type(value) == float else float(value)
     localizer = get_localizer(request)
     return format_number(round(value, 1), locale=localizer.locale_name) + '%'
@@ -26,6 +28,8 @@ def format_value(value, request):
     Format large values by adding a comma
     e.g. 1000 => 1,000
     """
+    if value is None:
+        return 0
     value = value if type(value) == float else float(value)
     localizer = get_localizer(request)
     return format_number(value, locale=localizer.locale_name)

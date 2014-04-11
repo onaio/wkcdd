@@ -25,7 +25,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                 if project.id == project_indicator['project_id']:
                     row = [project]
             for key in indicator_keys:
-                value = [0, 0, 0, 0] if project_indicator['indicators'] is \
+                value = 0 if project_indicator['indicators'] is \
                     None else project_indicator['indicators'][key]
                 row.extend([value])
             rows.append(row)
