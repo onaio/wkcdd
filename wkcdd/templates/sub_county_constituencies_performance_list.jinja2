@@ -1,12 +1,11 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
-{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
 {% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
-{% block title %}{{ Projects }} {% endblock %}
+{% block title %}{{ title }} {% trans %}Sub County {% endtrans %} {% endblock %}
 {% block page_title %}
   <h3 class="page-title">
-    {{ sub_county.name | capitalize }} Sub-County
+      {{ self.title() }}
     <small></small>
   </h3>
 {% endblock %}
@@ -16,28 +15,35 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(locations.county.id)) }}">{{ locations.county.name | capitalize }} County </a>
+      <a href="{{ request.route_url('counties',traverse=(sub_county.county.id))
+          }}">{{ sub_county.county.pretty }} County </a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      {{ sub_county.name | capitalize }} Sub-County
+      {{ self.title() }}
   </li>
-
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'sub_county', sub_county, 'performance') }}
 {% endblock %}
 {% block content %}
-<div class="col-md-12">
-    <!-- BEGIN SAMPLE TABLE PORTLET-->
-    <div class="portlet">
-      <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>{% trans %}Constituencies{% endtrans %}</div>
-         {{ generate_project_type_dropdown(request, selected_project_type, 'sub_county', sub_county, project_report_sectors)}}
-      </div>
-      {{ generate_performance_indicator_table(request, sub_county, 'constituency', selected_project_type, constituencies, aggregated_indicators, indicator_mapping) }}
+{% for sector, report, label in project_types %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN SAMPLE TABLE PORTLET-->
+            <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                <i class="icon-tasks"></i>
+                {{ gettext(label) }}
+                {% trans %}Projects{% endtrans %}
+                </div>
+            </div>
+            {{ generate_performance_indicator_table(request,
+            'constituency', constituencies,
+            sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
+            </div>
+            <!-- END SAMPLE TABLE PORTLET-->
     </div>
-    <!-- END SAMPLE TABLE PORTLET-->
-</div>
-{{response}}
+{% endfor %}
 {% endblock content %}

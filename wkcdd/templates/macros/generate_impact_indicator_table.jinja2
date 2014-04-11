@@ -2,20 +2,11 @@
 {% macro generate_impact_indicator_table(request, location, location_type, entity_list, impact_indicators, impact_indicator_mapping) %}
       <div class="portlet-body">
          <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
+            <table class="table table-striped table-bordered table-hover
+                data-table">
                {% include 'impact_indicator_table_head.jinja2' %}
                <tbody>
-               <tr>
-                  <td>
-                    {% trans %} Total Summary {% endtrans %}
-                  </td>
-                  {% for indicator in impact_indicator_mapping %}
-                    <td>
-                        {{ impact_indicators['total_indicator_summary'][indicator.key]|default('-') }}
-                    </td>
-                  {% endfor %}
-               </tr>
-               {% for entity in entity_list %}
+                {% for entity in entity_list %}
                   <tr>
                      <td>
                         <a href="{{ request.route_url(location_type, traverse=(entity.id)) }}">
@@ -25,11 +16,24 @@
 
                      {% for indicator in impact_indicator_mapping %}
                         <td>
-                         {{  impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|default('-') }}
+                         {{
+                         impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|format_value(request)|default('-') }}
                         </td>
                      {% endfor %}
                   </tr>
                {% endfor %}
+                  <tr class="bold">
+                    <td>
+                        {% trans %} Total Summary {% endtrans %}
+                    </td>
+                    {% for indicator in impact_indicator_mapping %}
+                        <td>
+                            {{
+                            impact_indicators['total_indicator_summary'][indicator.key]|format_value(request)|default('-') }}
+                        </td>
+                    {% endfor %}
+                  </tr>
+
                </tbody>
             </table>
          </div>

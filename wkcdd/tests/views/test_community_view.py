@@ -1,4 +1,3 @@
-from webob.multidict import MultiDict
 from pyramid import testing
 from wkcdd.tests.test_base import (
     IntegrationTestBase,
@@ -6,7 +5,6 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.views.community import CommunityView
 from wkcdd.models.community import Community
-from wkcdd import constants
 
 
 class TestCommunityView(IntegrationTestBase):
@@ -47,38 +45,11 @@ class TestCommunityView(IntegrationTestBase):
     def test_performance_indicator_aggregates_display_without_reports(self):
         self.setup_test_data()
         community = Community.get(Community.name == 'Maragoli')
-        project = community.projects[0]
         self.request.context = community
         response = self.community_view.performance()
-        project_indicator_list = (
-            response['aggregated_indicators']['indicator_list'])
         self.assertIsInstance(response['community'], Community)
-        self.assertEquals(project_indicator_list[0]['project_name'],
-                          project.name)
-
-    def test_performance_indicator_project_type_selection(self):
-        self.setup_test_data()
-        community = Community.get(Community.name == 'Maragoli')
-        params = MultiDict({'type': constants.FIC_PROJECT_REPORT})
-        self.request.GET = params
-        self.request.context = community
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
-        response = self.community_view.performance()
-        self.assertEqual(
-            response['selected_project_type'],
-            project_report_sectors[constants.FIC_PROJECT_REPORT])
-
-    def test_project_type_selection_with_invalid_type(self):
-        self.setup_test_data()
-        community = Community.get(Community.name == 'Maragoli')
-        params = MultiDict({'type': 'INVALID'})
-        self.request.GET = params
-        self.request.context = community
-        project_report_sectors = constants.PROJECT_REPORT_SECTORS
-        response = self.community_view.performance()
-        self.assertEqual(
-            response['selected_project_type'],
-            project_report_sectors[self.community_view.DEFAULT_PROJECT_TYPE])
+        self.assertIn('sector_aggregated_indicators', response)
+        self.assertIn('project_types', response)
 
 
 class TestCommunityViewsFunctional(FunctionalTestBase):
@@ -102,7 +73,6 @@ class TestCommunityViewsFunctional(FunctionalTestBase):
         self.setup_community_test_data()
         community = Community.get(Community.name == 'lutacho')
         url = self.request.route_path(
-            'community', traverse=(community.id, 'performance'),
-            _query={'type': constants.FIC_PROJECT_REPORT})
+            'community', traverse=(community.id, 'performance'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
