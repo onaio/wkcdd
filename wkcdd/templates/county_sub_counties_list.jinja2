@@ -50,7 +50,7 @@
                   </td>
                   {% for value in summary_row%}
                     <td>
-                        {{ value|default('-') }}
+                        {{ value_or_default(value|format_value(request), '-') }}
                     </td>
                   {% endfor %}
                </tr>

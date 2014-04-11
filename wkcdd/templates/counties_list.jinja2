@@ -44,7 +44,7 @@
                   </td>
                   {% for value in summary_row%}
                     <td>
-                        {{ value|default('-') }}
+                        {{ value_or_default(value|format_value(request), '-') }}
                     </td>
                   {% endfor %}
                </tr>
@@ -52,7 +52,7 @@
                   <tr>
                      <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
-                        <td>{{ col|default('-') }}</td>
+                        <td>{{ value_or_default(col|format_value(request), '-') }}</td>
                      {% endfor %}
                   </tr>
                {% endfor %}
