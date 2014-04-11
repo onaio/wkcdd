@@ -93,3 +93,34 @@ class CountyView(object):
             'sector_aggregated_indicators': sector_aggregated_indicators,
             'sector_indicator_mapping': sector_indicator_mapping
         }
+
+    @view_config(name='performance_summary',
+                 context=LocationFactory,
+                 renderer='counties_performance_list.jinja2',
+                 request_method='GET')
+    def performance_summary(self):
+        sector_indicator_mapping = {}
+        sector_aggregated_indicators = {}
+        counties = County.all()
+        county_ids = [county.id for county in counties]
+        project_types_mappings = helpers.get_project_types(
+            helpers.get_community_ids(
+                helpers.get_constituency_ids(
+                    helpers.get_sub_county_ids(
+                        county_ids))))
+        for reg_id, report_id, title in project_types_mappings:
+            aggregated_indicators = (
+                Report.get_performance_indicator_aggregation_for(
+                    counties, report_id))
+            indicator_mapping = tuple_to_dict_list(
+                ('title', 'group'),
+                constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
+            sector_indicator_mapping[reg_id] = indicator_mapping
+            sector_aggregated_indicators[reg_id] = aggregated_indicators
+        return {
+            'title': "County Performance Indicators Report",
+            'counties': counties,
+            'project_types': project_types_mappings,
+            'sector_aggregated_indicators': sector_aggregated_indicators,
+            'sector_indicator_mapping': sector_indicator_mapping
+        }

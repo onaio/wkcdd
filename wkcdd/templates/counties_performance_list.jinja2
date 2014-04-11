@@ -2,7 +2,7 @@
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
-{% block title %}{{ title }} {% trans %}Constituency{% endtrans %}{% endblock %}
+{% block title %} {{ title }}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
       {{ self.title() }}
@@ -15,19 +15,11 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('sub_county',traverse=(constituency.sub_county.id)) }}">{{ constituency.sub_county.pretty }} {% trans %}Sub County{% endtrans %}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      {{ self.title() }}
+    {{ self.title() }}
   </li>
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'constituency', constituency, 'performance') }}
+  {{ add_indicator_links(request, 'counties', None, 'performance') }}
 {% endblock %}
 {% block content %}
 {% for sector, report, label in project_types %}
@@ -37,16 +29,16 @@
             <div class="portlet">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="icon-tasks"></i>
-                        {{ gettext(label) }}
-                        {% trans %}Projects{% endtrans %}
+                    <i class="icon-tasks"></i>
+                    {{ gettext(label) }}
+                    {% trans %}Projects{% endtrans %}
                     </div>
                 </div>
-                {{ generate_performance_indicator_table(request, 'community', communities,
-                sector_aggregated_indicators[sector],
-                sector_indicator_mapping[sector]) }}
+                {{ generate_performance_indicator_table(request, 'counties',
+                counties,
+                sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->
-    </div>
+        </div>
 {% endfor %}
 {% endblock content %}
