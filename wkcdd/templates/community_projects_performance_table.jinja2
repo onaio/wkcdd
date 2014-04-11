@@ -56,7 +56,7 @@
                       <th class="data-header">{% trans %}Project Name{% endtrans %}</th>
                       {% for indicator in sector_indicator_mapping[sector] %}
                         <th class="data-header">
-                          {{ indicator['title']|number_to_symbol() }}
+                          {{ indicator['title'] }}
                         </th>
                       {% endfor %}
                     </tr>

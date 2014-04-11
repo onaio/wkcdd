@@ -35,14 +35,6 @@ def format_value(value, request):
     return format_number(value, locale=localizer.locale_name)
 
 
-def number_to_symbol(value):
-    """
-    Modify text with Number or Total occurences to #
-    e.g. Number of goats => # of goats
-    """
-    return re.sub('Total|Number', '#', value)
-
-
 def humanize(value):
     """
     Make value pretty for humans.
