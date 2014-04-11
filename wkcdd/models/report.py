@@ -177,24 +177,16 @@ class Report(Base):
     def get_projects_from_location(cls,
                                    location,
                                    *criteria):
-        if type(location) == Community:
-            # no child location
-            projects = get_project_list([location.id], *criteria)
-        elif type(location) == Constituency:
-            # Child location is community
-            projects = get_project_list(
-                get_community_ids([location.id]), *criteria)
-        elif type(location) == SubCounty:
-            # Child location is constituency
-            projects = get_project_list(get_community_ids
-                                        (get_constituency_ids
-                                         ([location.id])), *criteria)
-        elif type(location) == County:
-            # Child location is sub_county
-            projects = get_project_list(get_community_ids
-                                        (get_constituency_ids
-                                         (get_sub_county_ids
-                                          ([location.id]))), *criteria)
+        community_ids = {
+            Community: [location.id],
+            Constituency: get_community_ids([location.id]),
+            SubCounty: get_community_ids(get_constituency_ids
+                                         ([location.id])),
+            County: get_community_ids(get_constituency_ids
+                                      (get_sub_county_ids
+                                       ([location.id])))
+        }[type(location)]
+        projects = get_project_list(community_ids, *criteria)
         return projects
 
     @classmethod
