@@ -301,8 +301,6 @@ class TestReport(TestBase):
             counties, selected_project_type)
         self.assertIsNotNone(results['aggregated_performance_indicators']
                              [counties[0].id])
-        county_1_indicator_list = (results['aggregated_performance_indicators']
-                                   [counties[0].id]['indicator_list'])
         county_1_summary_values = (results['aggregated_performance_indicators']
                                    [counties[0].id]['summary'])
         county_2_summary_values = (results['aggregated_performance_indicators']

@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ title }} {% trans %} County{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -15,7 +16,9 @@
   <li>
       {{ self.title() }}
   </li>
-
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'counties', county, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="row">
@@ -41,16 +44,7 @@
                   </tr>
                </thead>
                <tbody>
-               <tr>
-                  <td>
-                    {% trans %} Total Summary {% endtrans %}
-                  </td>
-                  {% for value in summary_row%}
-                    <td>
-                        {{ value|default('-') }}
-                    </td>
-                  {% endfor %}
-               </tr>
+               
                {% for row in rows %}
                   <tr>
                      <td><a href="{{ request.route_url('sub_county', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
@@ -59,6 +53,16 @@
                      {% endfor %}
                   </tr>
                {% endfor %}
+                  <tr class="bold">
+                     <td>
+                         {% trans %} Total Summary {% endtrans %}
+                     </td>
+                     {% for value in summary_row%}
+                     <td>
+                        {{ value_or_default(value|format_value(request), '-') }}
+                     </td>
+                  {% endfor %}
+                 </tr>
                </tbody>
             </table>
          </div>
