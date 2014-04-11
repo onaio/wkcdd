@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ title }} {% trans %}Sub County{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -20,6 +21,9 @@
       {{ self.title() }}
   </li>
 
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'sub_county', sub_county, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="row">

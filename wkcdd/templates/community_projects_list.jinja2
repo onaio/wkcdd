@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% block title %}{{ title }} {% trans %}Community{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -9,7 +10,8 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="#">Projects Indicators</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
+
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -28,6 +30,9 @@
       {{ self.title() }}
   </li>
 
+{% endblock %}
+{% block indicators %}
+  {{ add_indicator_links(request, 'community', community, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="row">
