@@ -41,26 +41,26 @@ class Report(Base):
         report.save()
 
     # TODO rename to get_impact_indicators
-    def calculate_impact_indicators(cls):
+    def calculate_impact_indicators(self):
         impact_indicators = {}
         for key, impact_indicator_key in constants.IMPACT_INDICATOR_KEYS:
-            impact_indicators[key] = cls.report_data.get(impact_indicator_key)
+            impact_indicators[key] = self.report_data.get(impact_indicator_key)
         return impact_indicators
 
     # TODO rename to get_performance_indicators
-    def calculate_performance_indicators(cls):
+    def calculate_performance_indicators(self):
         performance_indicators = defaultdict(int)
         for key, performance_indicator_key\
-            in constants.PERFORMANCE_INDICATORS[cls.report_data[
+            in constants.PERFORMANCE_INDICATORS[self.report_data[
                 constants.XFORM_ID]]:
             if type(performance_indicator_key) == list:
                 for key_instance in performance_indicator_key:
                     if not performance_indicators[key]:
                         performance_indicators[key] = (
-                            cls.report_data.get(key_instance))
+                            self.report_data.get(key_instance))
             else:
                 performance_indicators[key] = (
-                    cls.report_data.get(performance_indicator_key))
+                    self.report_data.get(performance_indicator_key))
         return performance_indicators
 
     @classmethod
