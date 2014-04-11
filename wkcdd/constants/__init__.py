@@ -1038,7 +1038,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
             ('db_target',
              'db_achievement',
              'db_percentage')),
-        (_('male beneficiaries'),
+        (_('Male beneficiaries'),
             ('mb_target',
              'mb_achievement',
              'mb_percentage')),
