@@ -38,17 +38,7 @@
                   </tr>
                </thead>
                <tbody>
-               <tr>
-                  <td>
-                    {% trans %} Total Summary {% endtrans %}
-                  </td>
-                  {% for value in summary_row%}
-                    <td>
-                        {{ value_or_default(value|format_value(request), '-') }}
-                    </td>
-                  {% endfor %}
-               </tr>
-               {% for row in rows %}
+                {% for row in rows %}
                   <tr>
                      <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
@@ -56,6 +46,16 @@
                      {% endfor %}
                   </tr>
                {% endfor %}
+                  <tr class="bold">
+                     <td>
+                        {% trans %} Total Summary {% endtrans %}
+                     </td>
+                     {% for value in summary_row%}
+                        <td>
+                           {{ value_or_default(value|format_value(request), '-') }}
+                        </td>
+                      {% endfor %}
+                  </tr>
                </tbody>
             </table>
          </div>
