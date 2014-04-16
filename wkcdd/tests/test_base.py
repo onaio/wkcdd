@@ -74,14 +74,15 @@ class TestBase(unittest.TestCase):
                      name='Dairy Goat Project Center 1',
                      community=None,
                      sector=constants.DAIRY_GOAT_PROJECT_REPORT_CODE,
-                     project_type=None):
+                     project_type=None,
+                     geolocation="0.0 0.0 0 0"):
         project = Project(
             code=project_code,
             name=name,
             community=community,
             project_type=project_type,
             sector=sector,
-            geolocation="0.0 0.0"
+            geolocation=geolocation
         )
 
         project.save()
@@ -195,7 +196,8 @@ class TestBase(unittest.TestCase):
                           name="Dairy Cow Project Center 1",
                           community=community2,
                           sector=constants.DAIRY_COWS_PROJECT_REGISTRATION,
-                          project_type=project_type_c
+                          project_type=project_type_c,
+                          geolocation=""
                           )
         self._add_project(project_code="JDCV",
                           name="Dairy Goat Project Center 2",
@@ -205,7 +207,8 @@ class TestBase(unittest.TestCase):
         self._add_project(project_code="WRTD",
                           name="Dairy Goat Project Center 3",
                           community=community2,
-                          project_type=project_type_g
+                          project_type=project_type_g,
+                          geolocation="0.1231 34.1213 1562 5"
                           )
         self._add_project(project_code="NOREPORT",
                           name="Dairy Goat Project Center 4",

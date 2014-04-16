@@ -63,6 +63,11 @@ class Project(Base):
     def pretty(self):
         return humanize(self.name).title()
 
+    @property
+    def latlong(self):
+        latlong = self.geolocation.split(' ')[0:2] if self.geolocation else []
+        return str.join(',', latlong)
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(

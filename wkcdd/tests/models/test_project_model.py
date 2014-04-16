@@ -52,3 +52,12 @@ class TestProject(TestBase):
         locations = Project.get_locations(projects)
         self.assertIsInstance(locations[1][0], Location)
         self.assertEquals(len(locations), 7)
+
+    def test_get_latlong(self):
+        self.setup_test_data()
+        project1 = Project.get(Project.code == 'JDCV')
+        self.assertEquals(project1.latlong, "0.0,0.0")
+        project2 = Project.get(Project.code == 'WRTD')
+        self.assertEquals(project2.latlong, "0.1231,34.1213")
+        project3 = Project.get(Project.code == 'YH9T')
+        self.assertFalse(project3.latlong)
