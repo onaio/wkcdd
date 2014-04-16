@@ -66,7 +66,7 @@ class Project(Base):
     @property
     def latlong(self):
         latlong = self.geolocation.split(' ')[0:2] if self.geolocation else []
-        return str.join(',', latlong)
+        return latlong
 
     @classmethod
     def create(cls, **kwargs):

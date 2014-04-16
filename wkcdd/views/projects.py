@@ -1,3 +1,4 @@
+import json
 from pyramid.view import (
     view_config,
     view_defaults,
@@ -37,12 +38,19 @@ class ProjectViews(object):
         locations = Project.get_locations(projects)
         # get filter criteria
         filter_criteria = Project.get_filter_criteria()
-
+        project_geopoints = [
+            {'id': project.id,
+             'lat': str(project.latlong[0]),
+             'lng': str(project.latlong[1])}
+            for project in projects
+            if project.latlong]
+        project_geopoints = json.dumps(project_geopoints)
         return {
             'project_types': project_types,
             'projects': projects,
             'locations': locations,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'project_geopoints': project_geopoints
         }
 
     @view_config(name='show',

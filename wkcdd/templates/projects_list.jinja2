@@ -12,6 +12,11 @@
 {% endblock %}
 {% block content %}
 <div class="row">
+    <div class="col-md-12">
+        <div id="map"></div>
+    </div>
+</div>
+<div class="row">
   <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
@@ -91,9 +96,11 @@
 </div>
 {% endblock content %}
 {% block page_scripts %}
-  <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
+  map = Custom.display_constituency_map();
   Custom.filterProjectsTable();
+  Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 {% endblock %}
