@@ -139,7 +139,7 @@ class Project(Base):
     @classmethod
     def get_filter_criteria(cls):
         filter_criteria = {
-            'sectors': constants.PROJECT_SECTORS,
+            'sectors': constants.PROJECT_TYPE_MAPPING,
             'counties': County.all(),
             'sub_counties': SubCounty.all(),
             'communities': Community.all(),
