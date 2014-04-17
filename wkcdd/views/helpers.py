@@ -50,6 +50,5 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
     }
 
 
-def project_filter_map(criteria, value):
+def filter_projects_by(criteria, value):
     pass
-
