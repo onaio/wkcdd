@@ -272,7 +272,7 @@ class TestBase(unittest.TestCase):
         sub_county = self._add_sub_county(county=county, name="Bungoma")
 
         constituency = self._add_constituency(
-            sub_county=sub_county, name="Kakamega")
+            sub_county=sub_county, name="sirisia")
         community = self._add_community(
             constituency=constituency, name="lutacho")
         project_type = self._add_project_type(name="CAP")
