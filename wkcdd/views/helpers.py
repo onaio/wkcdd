@@ -48,3 +48,8 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
         'rows': rows,
         'summary_row': summary_row
     }
+
+
+def project_filter_map(criteria, value):
+    pass
+
