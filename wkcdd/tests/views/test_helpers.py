@@ -3,12 +3,22 @@ from pyramid.events import NewRequest
 from pyramid import testing
 
 from wkcdd.libs.utils import humanize
-from wkcdd.tests.test_base import TestBase
+from wkcdd.tests.test_base import TestBase, IntegrationTestBase
 from wkcdd.views.helpers import (
     requested_xlsx_format,
-    build_dataset
+    build_dataset,
+    filter_projects_by
 )
-from wkcdd.models import Location, County, Report, Project
+from wkcdd import constants
+from wkcdd.models import (
+    Location,
+    County,
+    Report,
+    Project,
+    SubCounty,
+    Community,
+    Constituency
+)
 
 
 class TestHelpers(unittest.TestCase):
@@ -55,3 +65,65 @@ class TestBuildDatasetHelpers(TestBase):
         self.assertEquals(dataset['rows'][0][0].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
+
+
+class TestProjectFilter(IntegrationTestBase):
+    def test_filter_projects_by_name(self):
+        self.setup_test_data()
+        search_criteria = "name"
+        search_value = "Cow project 1"
+        projects = filter_projects_by(search_criteria, search_value)
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0].name, search_value)
+
+    def test_filter_projects_by_sector(self):
+        self.setup_test_data()
+        search_criteria = "sector"
+        search_value = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        projects = filter_projects_by(search_criteria, search_value)
+        self.assertEqual({project.sector for project in projects},
+                         {constants.DAIRY_COWS_PROJECT_REGISTRATION})
+
+    def test_filter_projects_by_county(self):
+        self.setup_test_data()
+        county1 = County.get(County.name == "Siaya")
+        county2 = County.get(County.name == "Bungoma")
+
+        search_criteria = "location"
+        search_value = "{}".format(county1.id)
+        projects = filter_projects_by(search_criteria, search_value)
+
+        self.assertEqual(len(projects), 0)
+
+        search_value = "{}".format(county2.id)
+        projects = filter_projects_by(search_criteria, search_value)
+
+        self.assertEqual(len(projects), 7)
+
+    def test_filter_projects_by_sub_county(self):
+        self.setup_test_data()
+        sub_county1 = SubCounty.get(SubCounty.name == "Amagoro")
+        search_criteria = "location"
+        search_value = "{}".format(sub_county1.id)
+
+        projects = filter_projects_by(search_criteria, search_value)
+        self.assertEqual(len(projects), 1)
+
+    def test_filter_projects_by_constituency(self):
+        self.setup_community_test_data()
+        constituency = Constituency.get(Constituency.name == "sirisia")
+        search_criteria = "location"
+        search_value = "{}".format(constituency.id)
+
+        projects = filter_projects_by(search_criteria, search_value)
+        self.assertEqual(len(projects), 4)
+
+    def test_filter_projects_by_community(self):
+        self.setup_community_test_data()
+        community = Community.get(Community.name == "lutacho")
+        search_criteria = "location"
+        search_value = "{}".format(community.id)
+
+        projects = filter_projects_by(search_criteria, search_value)
+        self.assertEqual(len(projects), 4)
+
