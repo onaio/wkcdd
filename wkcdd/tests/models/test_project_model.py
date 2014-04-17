@@ -3,6 +3,7 @@ from wkcdd.models import Location
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
+from wkcdd import constants
 
 
 class TestProject(TestBase):
@@ -61,3 +62,9 @@ class TestProject(TestBase):
         self.assertEquals(project2.latlong, "0.1231,34.1213")
         project3 = Project.get(Project.code == 'YH9T')
         self.assertFalse(project3.latlong)
+
+    def test_sector_name(self):
+        self.setup_test_data()
+        project1 = Project.get(Project.code == 'JDCV')
+        sector_name = project1.sector_name
+        self.assertEqual(sector_name, "Dairy Goat")

@@ -68,6 +68,13 @@ class Project(Base):
         latlong = self.geolocation.split(' ')[0:2] if self.geolocation else []
         return latlong
 
+    @property
+    def sector_name(self):
+        sectors_dict = {
+            reg_id: label
+            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
+        return sectors_dict[self.sector]
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(
@@ -138,8 +145,11 @@ class Project(Base):
 
     @classmethod
     def get_filter_criteria(cls):
+        sector_filter = [
+            (reg_id, label)
+            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING]
         filter_criteria = {
-            'sectors': constants.PROJECT_TYPE_MAPPING,
+            'sectors': sector_filter,
             'counties': County.all(),
             'sub_counties': SubCounty.all(),
             'communities': Community.all(),

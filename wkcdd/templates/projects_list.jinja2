@@ -34,8 +34,8 @@
                 <form class="form-inline">
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Sector--</option>
-                    {% for key in filter_criteria["sectors"] %}
-                        <option value="{{ filter_criteria['sectors'][key] }}">{{ filter_criteria["sectors"][key]}}</option>
+                    {% for key, value in filter_criteria["sectors"] %}
+                        <option value="{{ key }}">{{ value }}</option>
                     {% endfor %}
                 </select>
                 <select  class="form-control input-small select2me" data-placeholder="Select...">
@@ -78,7 +78,7 @@
                {% for project in projects %}
                   <tr>
                      <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
-                     <td>{{ project.sector }}</td>
+                     <td>{{ project.sector_name }}</td>
                      <td>{{ locations[project.id][0].name}}</td>
                      <td>{{ locations[project.id][1].name}}</td>
                      <td>{{ locations[project.id][2].name }}</td>

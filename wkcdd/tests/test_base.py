@@ -73,7 +73,7 @@ class TestBase(unittest.TestCase):
                      project_code='FR3A',
                      name='Dairy Goat Project Center 1',
                      community=None,
-                     sector=constants.DAIRY_GOAT_PROJECT_REPORT_CODE,
+                     sector=constants.DAIRY_GOAT_PROJECT_REGISTRATION,
                      project_type=None,
                      geolocation="0.0 0.0 0 0"):
         project = Project(
