@@ -2,6 +2,19 @@ from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
 from wkcdd.libs.utils import humanize
+from wkcdd.models import (
+    County,
+    SubCounty,
+    Constituency,
+    Community,
+    Project
+)
+from wkcdd.models.helpers import (
+    get_community_ids,
+    get_constituency_ids,
+    get_sub_county_ids,
+    get_project_list
+)
 
 
 @subscriber(NewRequest)
@@ -51,4 +64,19 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
 
 
 def filter_projects_by(criteria, value):
-    pass
+    if criteria == "name":
+        projects = Project.all(Project.name.ilike("%"+value+"%"))
+    elif criteria == "sector":
+        projects = Project.all(Project.sector.like("%"+value+"%"))
+    else:
+        community_ids = {
+            Community: [value],
+            Constituency: get_community_ids([value]),
+            SubCounty: get_community_ids(get_constituency_ids
+                                         ([value])),
+            County: get_community_ids(get_constituency_ids
+                                      (get_sub_county_ids
+                                       ([value])))
+        }[criteria]
+        projects = get_project_list(community_ids)
+    return projects

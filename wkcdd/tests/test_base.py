@@ -162,7 +162,7 @@ class TestBase(unittest.TestCase):
     def setup_test_data(self):
         transaction.begin()
         county = self._add_county(name="Bungoma")
-        county2 = self._add_county(name="Siaya")
+        county3 = self._add_county(name="Siaya")
 
         sub_county = self._add_sub_county(county=county, name="Bungoma")
 

@@ -69,7 +69,7 @@ class TestBuildDatasetHelpers(TestBase):
 
 class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_name(self):
-        self.setup_test_data()
+        self.setup_community_test_data()
         search_criteria = "name"
         search_value = "Cow project 1"
         projects = filter_projects_by(search_criteria, search_value)
@@ -89,7 +89,7 @@ class TestProjectFilter(IntegrationTestBase):
         county1 = County.get(County.name == "Siaya")
         county2 = County.get(County.name == "Bungoma")
 
-        search_criteria = "location"
+        search_criteria = County
         search_value = "{}".format(county1.id)
         projects = filter_projects_by(search_criteria, search_value)
 
@@ -98,12 +98,12 @@ class TestProjectFilter(IntegrationTestBase):
         search_value = "{}".format(county2.id)
         projects = filter_projects_by(search_criteria, search_value)
 
-        self.assertEqual(len(projects), 7)
+        self.assertEqual(len(projects), 6)
 
     def test_filter_projects_by_sub_county(self):
         self.setup_test_data()
-        sub_county1 = SubCounty.get(SubCounty.name == "Amagoro")
-        search_criteria = "location"
+        sub_county1 = SubCounty.get(SubCounty.name == "Teso")
+        search_criteria = SubCounty
         search_value = "{}".format(sub_county1.id)
 
         projects = filter_projects_by(search_criteria, search_value)
@@ -112,7 +112,7 @@ class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_constituency(self):
         self.setup_community_test_data()
         constituency = Constituency.get(Constituency.name == "sirisia")
-        search_criteria = "location"
+        search_criteria = Constituency
         search_value = "{}".format(constituency.id)
 
         projects = filter_projects_by(search_criteria, search_value)
@@ -121,7 +121,7 @@ class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_community(self):
         self.setup_community_test_data()
         community = Community.get(Community.name == "lutacho")
-        search_criteria = "location"
+        search_criteria = Community
         search_value = "{}".format(community.id)
 
         projects = filter_projects_by(search_criteria, search_value)
