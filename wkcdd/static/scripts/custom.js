@@ -35,9 +35,25 @@ var Custom = function () {
             return map;
         },
         process_raw_points = function(raw_data, map) {
+            var latlng, icon,
+                icon_sector_map = {
+                    'Banana': {label:'b', color:'yellow'},
+                    'Catering': {label:'c', color:'orange'},
+                    'Dairy Cows': {label: 'slaughterhouse', color:'brown'},
+                    'Dairy Goat': {label:'g', color:'light-brown'},
+                    'Field Industrial Crops': {label:'garden', color:'green'},
+                    'Fish Farming': {label:'wetland', color:'blue'},
+                    'Motor Cycle': {label:'m', color:'black'},
+                    'Oxen Plough': {label:'o', color:'grey'},
+                    'Piggery': {label:'p', color:'pink'},
+                    'Poultry': {label:'p', color:'light-pink'},
+                    'Tailoring': {label:'t', color:'light-green'}
+                };
             $.each(raw_data, function(index, data){
-                latlng = L.latLng(data.lat, data.lng)
-                L.marker(latlng).addTo(map);
+                latlng = L.latLng(data.lat, data.lng);
+                icon = L.MakiMarkers.icon({icon:icon_sector_map[data.sector].label, size:'s'});
+                marker = L.marker(latlng, {icon: icon, title: data.name}).addTo(map);
+                marker.bindPopup(data.name);
             });
         },
         filterProjectsTable = function() {
