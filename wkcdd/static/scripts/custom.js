@@ -59,7 +59,7 @@ var Custom = function () {
                 marker.bindPopup(data.name);
             });
         },
-        filterProjectsTable = function() {
+        searchProjectsTable = function() {
             $("#search_term").keypress(function(e) {
                 var search_term, filter_url;
                 if (e.which == ENTER_KEY_CODE) {
@@ -69,6 +69,11 @@ var Custom = function () {
                 }
             });
         },
+
+        filterProjectsTable = function() {
+
+        },
+
         init = function(){
         };
     
@@ -77,6 +82,7 @@ var Custom = function () {
         init: init,
         display_constituency_map: display_constituency_map,
         display_county_map: display_county_map,
+        searchProjectsTable: searchProjectsTable,
         filterProjectsTable: filterProjectsTable,
         process_raw_points: process_raw_points
     };

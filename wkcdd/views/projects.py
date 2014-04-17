@@ -34,6 +34,16 @@ class ProjectViews(object):
         else:
             projects = Project.all()
 
+        # Filter by filter criteria
+        filter_list = self.request.GET.get('filter')
+        if filter_list is not None:
+            sector_id = self.request.GET.get('sector')
+            county_id = self.request.GET.get('county')
+            sub_county_id = self.request.GET.get('sub_county')
+            constituency_id = self.request.GET.get('constituency')
+            community_id = self.request.GET.get('community')
+
+
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)
         # get filter criteria

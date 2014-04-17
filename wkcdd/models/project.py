@@ -152,6 +152,7 @@ class Project(Base):
             'sectors': sector_filter,
             'counties': County.all(),
             'sub_counties': SubCounty.all(),
+            'constituencies': Constituency.all(),
             'communities': Community.all(),
         }
 
