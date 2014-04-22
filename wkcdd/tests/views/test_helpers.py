@@ -70,17 +70,16 @@ class TestBuildDatasetHelpers(TestBase):
 class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_name(self):
         self.setup_community_test_data()
-        search_criteria = "name"
         search_value = "Cow project 1"
-        projects = filter_projects_by(search_criteria, search_value)
+        search_criteria = {"name": search_value}
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0].name, search_value)
 
     def test_filter_projects_by_sector(self):
         self.setup_test_data()
-        search_criteria = "sector"
-        search_value = constants.DAIRY_COWS_PROJECT_REGISTRATION
-        projects = filter_projects_by(search_criteria, search_value)
+        search_criteria = {"sector": constants.DAIRY_COWS_PROJECT_REGISTRATION}
+        projects = filter_projects_by(search_criteria)
         self.assertEqual({project.sector for project in projects},
                          {constants.DAIRY_COWS_PROJECT_REGISTRATION})
 
@@ -89,41 +88,60 @@ class TestProjectFilter(IntegrationTestBase):
         county1 = County.get(County.name == "Siaya")
         county2 = County.get(County.name == "Bungoma")
 
-        search_criteria = County
-        search_value = "{}".format(county1.id)
-        projects = filter_projects_by(search_criteria, search_value)
-
+        search_criteria = {"location": county1.id}
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 0)
 
-        search_value = "{}".format(county2.id)
-        projects = filter_projects_by(search_criteria, search_value)
-
+        search_criteria = {"location": county2.id}
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 6)
 
     def test_filter_projects_by_sub_county(self):
         self.setup_test_data()
         sub_county1 = SubCounty.get(SubCounty.name == "Teso")
-        search_criteria = SubCounty
-        search_value = "{}".format(sub_county1.id)
+        search_criteria = {"location": sub_county1.id}
 
-        projects = filter_projects_by(search_criteria, search_value)
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
 
     def test_filter_projects_by_constituency(self):
         self.setup_community_test_data()
         constituency = Constituency.get(Constituency.name == "sirisia")
-        search_criteria = Constituency
-        search_value = "{}".format(constituency.id)
+        search_criteria = {"location": constituency.id}
 
-        projects = filter_projects_by(search_criteria, search_value)
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 4)
 
     def test_filter_projects_by_community(self):
         self.setup_community_test_data()
         community = Community.get(Community.name == "lutacho")
-        search_criteria = Community
-        search_value = "{}".format(community.id)
+        search_criteria = {"location": community.id}
 
-        projects = filter_projects_by(search_criteria, search_value)
+        projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 4)
+
+    def test_filter_with_multiple_criteria(self):
+        self.setup_test_data()
+        project = Project.get(Project.code == "JDCV")
+        search_criteria = {
+              "sector": constants.DAIRY_GOAT_PROJECT_REGISTRATION,
+              "name": "Project Center 2"
+        }
+        projects = filter_projects_by(search_criteria)
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0], project)
+
+    def test_filter_with_location(self):
+        self.setup_test_data()
+        project = Project.get(Project.code == "YH9T")
+        community = Community.get(Community.name == "Bukusu")
+        search_criteria ={
+            "name": "Project Center 1",
+            "location": community.id
+        }
+        projects = filter_projects_by(search_criteria)
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0], project)
+
+
 

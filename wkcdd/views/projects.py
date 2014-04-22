@@ -36,34 +36,40 @@ class ProjectViews(object):
         project_types = ProjectType.all()
 
         # Filter
-        filter = self.request.GET.get('filter')
-        if filter is not None:
+        filter_projects = self.request.GET.get('filter')
+        if filter_projects is not None:
 
             search_term = self.request.GET.get('search')
-            if search_term is not None:
+            if search_term:
                 projects = filter_projects_by("name", search_term)
 
             sector_id = self.request.GET.get('sector')
-            if sector_id is not None and sector_id != "":
+            if sector_id:
                 projects = filter_projects_by("sector", sector_id)
 
             county_id = self.request.GET.get("county")
-            if county_id is not None and county_id != "":
+            if county_id:
                 projects = filter_projects_by(County, county_id)
 
             sub_county_id = self.request.GET.get('sub_county')
-            if sub_county_id is not None and sub_county_id != "" :
+            if sub_county_id:
                 projects = filter_projects_by(SubCounty, sub_county_id)
 
             constituency_id = self.request.GET.get('constituency')
-            if constituency_id is not None and constituency_id != "":
+            if constituency_id:
                 projects = filter_projects_by(Constituency, constituency_id)
 
             community_id = self.request.GET.get('community')
-            if community_id is not None and community_id != "":
+            if community_id:
                 projects = filter_projects_by(Community, community_id)
 
-            #projects = filter_projects_by("sector", sector_id)
+            filters = {'name': self.request.GET.get('search'),
+                       'sector': self.request.GET.get('sector'),
+                       County: self.request.GET.get('county'),
+                       SubCounty: self.request.GET.get('sub_county'),
+                       Constituency: self.request.GET.get('constituency'),
+                       Community: self.request.GET.get('community')}
+
         else:
             projects = Project.all()
 

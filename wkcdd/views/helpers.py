@@ -7,7 +7,8 @@ from wkcdd.models import (
     SubCounty,
     Constituency,
     Community,
-    Project
+    Project,
+    Location
 )
 from wkcdd.models.helpers import (
     get_community_ids,
@@ -63,12 +64,16 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
     }
 
 
-def filter_projects_by(criteria, value):
-    if criteria == "name":
-        projects = Project.all(Project.name.ilike("%"+value+"%"))
-    elif criteria == "sector":
-        projects = Project.all(Project.sector.like("%"+value+"%"))
-    else:
+def filter_projects_by(criteria):
+    project_criteria = []
+    community_ids = []
+    if "name" in criteria:
+        project_criteria.append(Project.name.ilike("%"+criteria['name']+"%"))
+    if "sector" in criteria:
+        project_criteria.append(Project.sector.like("%"+criteria['sector']+"%"))
+    if "location" in criteria:
+        value = criteria['location']
+        location = Location.get(Location.id == value)
         community_ids = {
             Community: [value],
             Constituency: get_community_ids([value]),
@@ -77,6 +82,9 @@ def filter_projects_by(criteria, value):
             County: get_community_ids(get_constituency_ids
                                       (get_sub_county_ids
                                        ([value])))
-        }[criteria]
-        projects = get_project_list(community_ids)
+        }[type(location)]
+    if project_criteria and not community_ids:
+        projects = Project.all(*project_criteria)
+    else:
+        projects = get_project_list(community_ids, *project_criteria)
     return projects

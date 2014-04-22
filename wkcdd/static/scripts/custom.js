@@ -70,7 +70,23 @@ var Custom = function () {
             });
         },
 
-        filterProjectsTable = function() {
+        filterCriteria = function() {
+
+            function getParameterByName(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+                return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+
+            var sector = getParameterByName("sector");
+            $("select[name=sector]").val(sector);
+
+
+
+
+
+
 
         },
 
@@ -83,7 +99,7 @@ var Custom = function () {
         display_constituency_map: display_constituency_map,
         display_county_map: display_county_map,
         searchProjectsTable: searchProjectsTable,
-        filterProjectsTable: filterProjectsTable,
+        filterCriteria: filterCriteria,
         process_raw_points: process_raw_points
     };
 

@@ -33,7 +33,7 @@
              <div class="col-md-8">
                 <form id="filter_criteria" class="form-inline" method="get">
                 <input hidden name="filter" value="1" type="text"/>
-                <select  name="sector"class="form-control input-small select2me" data-placeholder="Select...">
+                <select  name="sector" class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Sector--</option>
                     {% for key, value in filter_criteria["sectors"] %}
                         <option value="{{ key }}">{{ value }}</option>
@@ -109,6 +109,6 @@
   {{ super() }}
   map = Custom.display_constituency_map();
   Custom.searchProjectsTable();
-  Custom.filterProjectsTable();
+  Custom.filterCriteria();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 {% endblock %}
