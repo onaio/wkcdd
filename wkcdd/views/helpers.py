@@ -68,9 +68,11 @@ def filter_projects_by(criteria):
     project_criteria = []
     community_ids = []
     if "name" in criteria:
-        project_criteria.append(Project.name.ilike("%"+criteria['name']+"%"))
+        project_criteria.append(
+            Project.name.ilike("%"+criteria['name']+"%"))
     if "sector" in criteria:
-        project_criteria.append(Project.sector.like("%"+criteria['sector']+"%"))
+        project_criteria.append(
+            Project.sector.like("%"+criteria['sector']+"%"))
     if "location" in criteria:
         value = criteria['location']
         if value:

@@ -57,8 +57,6 @@ class TestCountyViewsFunctional(FunctionalTestBase):
 
     def test_county_performance_summary_view(self):
         self.setup_test_data()
-        county = Location.get(Location.name == 'Bungoma',
-                              Location.location_type == 'county')
         url = self.request.route_path('counties', traverse=(
             'performance_summary'))
         response = self.testapp.get(url)

@@ -124,8 +124,8 @@ class TestProjectFilter(IntegrationTestBase):
         self.setup_test_data()
         project = Project.get(Project.code == "JDCV")
         search_criteria = {
-              "sector": constants.DAIRY_GOAT_PROJECT_REGISTRATION,
-              "name": "Project Center 2"
+            "sector": constants.DAIRY_GOAT_PROJECT_REGISTRATION,
+            "name": "Project Center 2"
         }
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
@@ -135,13 +135,10 @@ class TestProjectFilter(IntegrationTestBase):
         self.setup_test_data()
         project = Project.get(Project.code == "YH9T")
         community = Community.get(Community.name == "Bukusu")
-        search_criteria ={
+        search_criteria = {
             "name": "Project Center 1",
             "location": community.id
         }
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0], project)
-
-
-

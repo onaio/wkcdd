@@ -49,7 +49,8 @@ class TestProjectViews(IntegrationTestBase):
 
     def test_search_project_list(self):
         self.setup_test_data()
-        params = MultiDict({'filter': '1', 'search': 'Dairy Goat Project Center 1'})
+        params = MultiDict({'filter': '1',
+                            'search': 'Dairy Goat Project Center 1'})
         self.request.GET = params
         response = self.project_views.list()
         self.assertEquals(len(response['projects']), 1)

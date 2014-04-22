@@ -31,8 +31,9 @@ def get_community_ids(constituency_ids):
 
 
 def get_project_list(community_ids, *criterion):
-    return DBSession\
-        .query(Project)\
+    return [] \
+        if not community_ids else \
+        DBSession.query(Project)\
         .filter(and_(Project.community_id.in_(community_ids),
                 *criterion))\
         .all()

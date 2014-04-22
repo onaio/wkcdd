@@ -15,12 +15,6 @@ from wkcdd import constants
 
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.views.helpers import filter_projects_by
-from wkcdd.models import (
-    County,
-    SubCounty,
-    Constituency,
-    Community,
-)
 
 
 @view_defaults(route_name='projects')
