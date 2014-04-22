@@ -14,6 +14,13 @@ from wkcdd.models.project import (
 from wkcdd import constants
 
 from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.views.helpers import filter_projects_by
+from wkcdd.models import (
+    County,
+    SubCounty,
+    Constituency,
+    Community,
+)
 
 
 @view_defaults(route_name='projects')
@@ -27,22 +34,38 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-        # Search for projects
-        search_term = self.request.GET.get('search')
-        if search_term is not None:
-            projects = Project.all(Project.name.ilike("%"+search_term+"%"))
+
+        # Filter
+        filter = self.request.GET.get('filter')
+        if filter is not None:
+
+            search_term = self.request.GET.get('search')
+            if search_term is not None:
+                projects = filter_projects_by("name", search_term)
+
+            sector_id = self.request.GET.get('sector')
+            if sector_id is not None and sector_id != "":
+                projects = filter_projects_by("sector", sector_id)
+
+            county_id = self.request.GET.get("county")
+            if county_id is not None and county_id != "":
+                projects = filter_projects_by(County, county_id)
+
+            sub_county_id = self.request.GET.get('sub_county')
+            if sub_county_id is not None and sub_county_id != "" :
+                projects = filter_projects_by(SubCounty, sub_county_id)
+
+            constituency_id = self.request.GET.get('constituency')
+            if constituency_id is not None and constituency_id != "":
+                projects = filter_projects_by(Constituency, constituency_id)
+
+            community_id = self.request.GET.get('community')
+            if community_id is not None and community_id != "":
+                projects = filter_projects_by(Community, community_id)
+
+            #projects = filter_projects_by("sector", sector_id)
         else:
             projects = Project.all()
-
-        # Filter by filter criteria
-        filter_list = self.request.GET.get('filter')
-        if filter_list is not None:
-            sector_id = self.request.GET.get('sector')
-            county_id = self.request.GET.get('county')
-            sub_county_id = self.request.GET.get('sub_county')
-            constituency_id = self.request.GET.get('constituency')
-            community_id = self.request.GET.get('community')
-
 
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)

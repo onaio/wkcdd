@@ -64,7 +64,7 @@ var Custom = function () {
                 var search_term, filter_url;
                 if (e.which == ENTER_KEY_CODE) {
                     search_term = $("#search_term").val();
-                    filter_url = "?search="+search_term
+                    filter_url = "?filter=1&search="+search_term
                     window.location = filter_url;
                 }
             });
