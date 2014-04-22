@@ -73,16 +73,17 @@ def filter_projects_by(criteria):
         project_criteria.append(Project.sector.like("%"+criteria['sector']+"%"))
     if "location" in criteria:
         value = criteria['location']
-        location = Location.get(Location.id == value)
-        community_ids = {
-            Community: [value],
-            Constituency: get_community_ids([value]),
-            SubCounty: get_community_ids(get_constituency_ids
-                                         ([value])),
-            County: get_community_ids(get_constituency_ids
-                                      (get_sub_county_ids
-                                       ([value])))
-        }[type(location)]
+        if value:
+            location = Location.get(Location.id == value)
+            community_ids = {
+                Community: [value],
+                Constituency: get_community_ids([value]),
+                SubCounty: get_community_ids(get_constituency_ids
+                                             ([value])),
+                County: get_community_ids(get_constituency_ids
+                                          (get_sub_county_ids
+                                           ([value])))
+            }[type(location)]
     if project_criteria and not community_ids:
         projects = Project.all(*project_criteria)
     else:

@@ -34,41 +34,22 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-
+        search_criteria = {}
         # Filter
         filter_projects = self.request.GET.get('filter')
         if filter_projects is not None:
+            search = self.request.GET.get('search') or ''
+            sector = self.request.GET.get('sector') or ''
+            location = (self.request.GET.get('community') or
+                        self.request.GET.get('constituency') or
+                        self.request.GET.get('sub_county') or
+                        self.request.GET.get('county') or
+                        None)
+            search_criteria = {'name': search,
+                               'sector': sector,
+                               'location': location}
 
-            search_term = self.request.GET.get('search')
-            if search_term:
-                projects = filter_projects_by("name", search_term)
-
-            sector_id = self.request.GET.get('sector')
-            if sector_id:
-                projects = filter_projects_by("sector", sector_id)
-
-            county_id = self.request.GET.get("county")
-            if county_id:
-                projects = filter_projects_by(County, county_id)
-
-            sub_county_id = self.request.GET.get('sub_county')
-            if sub_county_id:
-                projects = filter_projects_by(SubCounty, sub_county_id)
-
-            constituency_id = self.request.GET.get('constituency')
-            if constituency_id:
-                projects = filter_projects_by(Constituency, constituency_id)
-
-            community_id = self.request.GET.get('community')
-            if community_id:
-                projects = filter_projects_by(Community, community_id)
-
-            filters = {'name': self.request.GET.get('search'),
-                       'sector': self.request.GET.get('sector'),
-                       County: self.request.GET.get('county'),
-                       SubCounty: self.request.GET.get('sub_county'),
-                       Constituency: self.request.GET.get('constituency'),
-                       Community: self.request.GET.get('community')}
+            projects = filter_projects_by(search_criteria)
 
         else:
             projects = Project.all()
@@ -91,7 +72,8 @@ class ProjectViews(object):
             'projects': projects,
             'locations': locations,
             'filter_criteria': filter_criteria,
-            'project_geopoints': project_geopoints
+            'project_geopoints': project_geopoints,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='show',
