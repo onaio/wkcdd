@@ -102,7 +102,8 @@ span.ratio {
     font-size: 11px;
 }
 
-#map { height: 400px; }
+#map {
+height: 400px; }
 
 .btn.download {
     margin-top: 0.6em;
@@ -115,4 +116,12 @@ span.ratio {
 .filter-btn{
     margin-left: 20px;
     margin-right: 20px;
+}
+
+.filters form select {
+     width: auto !important;
+}
+
+.select-sector{
+     z-index: 10001 !important;
 }

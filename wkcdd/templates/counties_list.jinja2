@@ -2,8 +2,19 @@
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
-{% from 'macros/map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% block title %}{{ title }}{% endblock %}
+{% block page_title %}
+   <h3 class="page-title">
+     All Counties
+     <small></small>
+   </h3>
+{% endblock %}
+{% block breadcrumbs %}
+   <li>
+       {% trans %}County Indicators{% endtrans %}
+   </li>
+{% endblock %}
 {% block filters %}
      {{ generate_filter_criteria_dropdowns([]) }}
 {% endblock %}
@@ -11,7 +22,7 @@
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
 {% endblock %}
 {% block content %}
-{{ generate_map_chart() }}
+{{ generate_map_chart(request) }}
 <div class="row">
 <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
