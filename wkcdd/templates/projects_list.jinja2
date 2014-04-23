@@ -85,7 +85,7 @@
                     <option value="">--Community--</option>
                     {% for community in filter_criteria["communities"] %}
                         <option value="{{ community.id }}"
-                        {%if search_criteria["location"] == (community.id | string)%}
+                        {%if search_criteria["location"] == community.id %}
                             selected
                         {%endif%}
                         >{{ community.pretty }}</option>
@@ -140,3 +140,4 @@
   Custom.filterCriteria();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 {% endblock %}
+

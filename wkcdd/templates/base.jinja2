@@ -189,10 +189,10 @@
          </div>
          <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
                     
-         <!-- BEGIN PAGE HEADER-->
+         <!-- BEGIN PAGE HEADER--
          <div class="row">
             <div class="col-md-12">
-               <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+               <!-- BEGIN PAGE TITLE & BREADCRUMB--
                 {% block page_title %}
                <h3 class="page-title">
                    <small></small>
@@ -207,11 +207,12 @@
                   </li>
                    {% block breadcrumbs %}{% endblock %}
                </ul>
-               <!-- END PAGE TITLE & BREADCRUMB-->
+               <!-- END PAGE TITLE & BREADCRUMB--
             </div>
          </div>
          <!-- END PAGE HEADER-->
 		 {% block indicators %}{% endblock %}
+         {% block filters %}{% endblock %}
          <!-- BEGIN PAGE CONTENT-->
 	{% block content %}{% endblock %}
          <!-- END PAGE CONTENT-->     

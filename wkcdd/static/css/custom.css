@@ -103,3 +103,11 @@ span.ratio {
 }
 
 #map { height: 400px; }
+
+.filters{
+    margin: 5px 0 5px 5px;
+}
+.filter-btn{
+    margin-left: 20px;
+    margin-right: 20px;
+}
