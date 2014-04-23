@@ -2,18 +2,13 @@
 <div class="row filters">
   <form id="filter_criteria" class="form-inline" method="get">
     <select name="county" class="form-control input-small" data-placeholder="Select...">
-      <option value="">--County--</option>
+      <option value="">--All Counties--</option>
       {% for county in filter_criteria["counties"] %}
-      <option value="{{ county.id }}"
-      {%if search_criteria["location"] == (county.id | string)%}
-      selected
-      {%endif%}
-      >
-      {{ county.pretty }}</option>
+      <option value="{{ county.id }}">{{ county.pretty }}</option>
       {% endfor %}
     </select>
     <select name="sub_county" class="form-control input-small"  data-placeholder="Select...">
-      <option value="">--Sub-County--</option>
+      <option value="">--All Sub-Counties--</option>
       {% for sub_county in filter_criteria["sub_counties"] %}
       <option value="{{ sub_county.id }}"
       {%if search_criteria["location"] == (sub_county.id | string)%}
@@ -24,7 +19,7 @@
       {% endfor %}
     </select>
     <select name="constituency" class="form-control input-small" data-placeholder="Select...">
-      <option value="">--Constituency--</option>
+      <option value="">--All Constituencies--</option>
       {% for constituency in filter_criteria["constituencies"] %}
       <option value="{{ constituency.id }}"
       {%if search_criteria["location"] == (constituency.id | string)%}
@@ -34,7 +29,7 @@
       {% endfor %}
     </select>
     <select  name="community" class="form-control input-small" data-placeholder="Select...">
-      <option value="">--Community--</option>
+      <option value="">--All Communities--</option>
       {% for community in filter_criteria["communities"] %}
       <option value="{{ community.id }}"
       {%if search_criteria["location"] == (community.id | string)%}
@@ -48,7 +43,7 @@
     <div class="form-group pull-right">
       <label> View by:</label>
       <select  name="view_by" class="form-control input-small" data-placeholder="Select...">
-        <option value="">--View By--</option>
+        <option value="">--View All--</option>
         <option value="">County</option>
         <option value="">Sub-County</option>
         <option value="">Constituency</option>

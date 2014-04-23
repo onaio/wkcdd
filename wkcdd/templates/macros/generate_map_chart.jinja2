@@ -1,13 +1,13 @@
-{% macro generate_map_chart() %}
+{% macro generate_map_chart(request) %}
 <div class="row">
   <div class="col-md-12">
     <div class="portlet">
       <div class="portlet-title">
-        <div class="caption">
+        <div class="caption pull-right">
           <a href="javascript:;"><i class="icon-globe"></i> Map</a> |
           <a href="javascript:;"><i class="icon-bar-chart"></i> Chart</a>
         </div>
-        <div class="tools">
+        <div class="tools pull-left">
           <a href="" class="collapse"></a>
         </div>
       </div>
@@ -18,8 +18,8 @@
               <a href="" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                 Select Indicator <span class="icon-angle-down"></span>
               </a>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:;">Indicator 1</a></li>
+              <ul class="dropdown-menu select-sector">
+                <li><a href="javascript:;" class=>Indicator 1</a></li>
                 <li><a href="javascript:;">Indicator 2</a></li>
                 <li><a href="javascript:;">Indicator 3</a></li>
                 <li><a href="javascript:;">Indicator 4</a></li>
