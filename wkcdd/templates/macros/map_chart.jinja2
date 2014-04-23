@@ -1,0 +1,36 @@
+{% macro generate_map_chart() %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption">
+          <a href="javascript:;"><i class="icon-globe"></i> Map</a> |
+          <a href="javascript:;"><i class="icon-bar-chart"></i> Chart</a>
+        </div>
+        <div class="tools">
+          <a href="" class="collapse"></a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <div id="maps-content" class="display-none" style="display: block;">
+          <div class="btn-toolbar margin-bottom-10">
+            <div class="btn-group">
+              <a href="" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                Select Indicator <span class="icon-angle-down"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:;">Indicator 1</a></li>
+                <li><a href="javascript:;">Indicator 2</a></li>
+                <li><a href="javascript:;">Indicator 3</a></li>
+                <li><a href="javascript:;">Indicator 4</a></li>
+                <li><a href="javascript:;">Indicator 5</a></li>
+              </ul>
+            </div>
+          </div>
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
