@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 from pyramid.view import (
     view_config,
     view_defaults,
@@ -28,17 +29,18 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-        search_criteria = {}
+        search_criteria = defaultdict(str)
         # Filter
         filter_projects = self.request.GET.get('filter')
         if filter_projects is not None:
             search = self.request.GET.get('search') or ''
             sector = self.request.GET.get('sector') or ''
-            location = (self.request.GET.get('community') or
-                        self.request.GET.get('constituency') or
-                        self.request.GET.get('sub_county') or
-                        self.request.GET.get('county') or
-                        None)
+            location = {
+                'community': self.request.GET.get('community'),
+                'constituency': self.request.GET.get('constituency'),
+                'sub_county': self.request.GET.get('sub_county'),
+                'county': self.request.GET.get('county')
+            }
             search_criteria = {'name': search,
                                'sector': sector,
                                'location': location}
@@ -51,7 +53,7 @@ class ProjectViews(object):
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)
         # get filter criteria
-        filter_criteria = Project.get_filter_criteria()
+        filter_criteria = Project.generate_filter_criteria()
         project_geopoints = [
             {'id': project.id,
              'name': project.name,

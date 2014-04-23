@@ -88,3 +88,145 @@ var Custom = function () {
     };
 
 }();
+
+var LocationSelect = function() {
+    var
+        level0 = "county",
+        level1 = "sub_county",
+        level2 = "constituency",
+        level3 = "community",
+        get_filtered_location_list = function(location_type, location_id) {
+            filtered_location_list = [];
+            $.each(this.data_map, function(idx, elem){
+                if(elem[location_type].id == location_id) {
+                    filtered_location_list.push(elem)
+                }
+            });
+            return filtered_location_list;
+        },
+        update_select = function(select, options, default_value) {
+            optionList = [];
+            default_option = $('<option />', {
+                text: default_value,
+                value: ""
+            });
+            optionList.push(default_option);
+            $.each(options, function(idx, elem){
+                option = $('<option />', {
+                    text: elem.name,
+                    value: elem.id
+                });
+                optionList.push(option);
+            });
+            select.empty().append(optionList);
+        },
+        set_select_value = function(select, option) {
+            select.val(option.id);
+        }
+        contains = function(object, list) {
+            var contains = false;
+            $.each(list, function(idx, elem){
+                if(elem.id == object.id) {
+                    contains = true;
+                    return false
+                }
+                else {
+                    contains = false;
+                }
+            });
+            return contains;
+        },
+        level0ChangeListener = function(element) {
+            var 
+                county_id = $(element).val(),
+                locations = get_filtered_location_list(level0, county_id),
+                sub_county_list = [],
+                constituency_list = [],
+                community_list = [];
+            if(locations.length == 0) locations = this.data_map;
+
+            $.each(locations, function(idx, elem){
+                if(!contains(elem['sub_county'], sub_county_list)) {
+                    sub_county_list.push(elem['sub_county']);
+                }
+                if(!contains(elem['constituency'], constituency_list)) {
+                    constituency_list.push(elem['constituency']);
+                }
+                //Communities are all unique
+                community_list.push(elem['community']);
+            });
+            update_select($('select[name=sub_county]'), sub_county_list, "--Sub-County--");
+            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
+            update_select($('select[name=community]'), community_list, "--Community--");
+        },
+        level1ChangeListener = function(element) {
+            //update level 0,2 and 3
+            var 
+                sub_county_id = $(element).val(),
+                locations = get_filtered_location_list(level1, sub_county_id),
+                county = null,
+                constituency_list = [],
+                community_list = [];
+            if(locations.length == 0) {
+                //refresh filter based on parent
+                return;
+            }
+
+            $.each(locations, function(idx, elem){
+                county = elem['county'];
+                if(!contains(elem['constituency'], constituency_list)) {
+                    constituency_list.push(elem['constituency']);
+                }
+                //Communities are all unique
+                community_list.push(elem['community']);
+            });
+            set_select_value($('select[name=county]'), county);
+            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
+            update_select($('select[name=community]'), community_list, "--Community--");
+        },
+        level2ChangeListener = function(element) {
+            //update level 0,1 and 3
+            var 
+                constituency_id = $(element).val(),
+                locations = get_filtered_location_list(level2, constituency_id),
+                county = null,
+                sub_county = null,
+                community_list = [];
+            if(locations.length == 0) {
+                //refresh filter based on parent
+                return;
+            }
+            $.each(locations, function(idx, elem){
+                county = elem['county'];
+                sub_county = elem['sub_county'];
+                community_list.push(elem['community']);
+            });
+            set_select_value($('select[name=county]'), county);
+            set_select_value($('select[name=sub_county]'), sub_county);
+            update_select($('select[name=community]'), community_list, "--Community--");
+        }
+        level3ChangeListener = function(element) {
+            //update level 0, 1 and 2
+            var 
+                community_id = $(element).val(),
+                locations = get_filtered_location_list(level3, community_id),
+                county = locations[0].county,
+                sub_county = locations[0].sub_county,
+                constituency = locations[0].constituency;
+            if(locations.length == 0) {
+                //refresh filter based on parent
+                return;
+            }
+            set_select_value($('select[name=county]'), county);
+            set_select_value($('select[name=sub_county]'), sub_county);
+            set_select_value($('select[name=constituency]'), constituency);
+        };
+    this.data_map = {};
+    this.get_filtered_location_list = get_filtered_location_list;
+    this.level0ChangeListener = level0ChangeListener;
+    this.level1ChangeListener = level1ChangeListener;
+    this.level2ChangeListener = level2ChangeListener;
+    this.level3ChangeListener = level3ChangeListener;
+    this.update_select = update_select;
+    return this;
+}();

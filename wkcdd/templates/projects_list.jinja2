@@ -49,43 +49,43 @@
                     {{ value }}</option>
                     {% endfor %}
                 </select>
-                <select name="county" class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
                     <option value="">--County--</option>
                     {% for county in filter_criteria["counties"] %}
                         <option value="{{ county.id }}"
-                        {%if search_criteria["location"] == (county.id | string)%}
+                        {%if search_criteria["location"]["county"] == (county.id | string)%}
                             selected
                         {%endif%}
                         >
                     {{ county.pretty }}</option>
                     {% endfor %}
                 </select>
-                <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
                     <option value="">--Sub-County--</option>
                     {% for sub_county in filter_criteria["sub_counties"] %}
                         <option value="{{ sub_county.id }}"
-                        {%if search_criteria["location"] == (sub_county.id | string)%}
+                        {%if search_criteria["location"]["sub_county"] == (sub_county.id | string)%}
                             selected
                         {%endif%}
                         >
                     {{ sub_county.pretty }}</option>
                     {% endfor %}
                 </select>
-                <select name="constituency" class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
                     <option value="">--Constituency--</option>
                     {% for constituency in filter_criteria["constituencies"] %}
                         <option value="{{ constituency.id }}"
-                        {%if search_criteria["location"] == (constituency.id | string)%}
+                        {%if search_criteria["location"]["constituency"] == (constituency.id | string)%}
                             selected
                         {%endif%}
                         >{{ constituency.pretty }}</option>
                     {% endfor %}
                 </select>
-                <select  name="community" class="form-control input-small select2me" data-placeholder="Select...">
+                <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
                     <option value="">--Community--</option>
                     {% for community in filter_criteria["communities"] %}
                         <option value="{{ community.id }}"
-                        {%if search_criteria["location"] == (community.id | string)%}
+                        {%if search_criteria["location"]["community"] == (community.id | string)%}
                             selected
                         {%endif%}
                         >{{ community.pretty }}</option>
@@ -136,6 +136,8 @@
 {% block jquery_ready %}
   {{ super() }}
   map = Custom.display_constituency_map();
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
   Custom.searchProjectsTable();
   Custom.filterCriteria();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
