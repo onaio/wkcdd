@@ -103,11 +103,13 @@ span.ratio {
 }
 
 #map {
-height: 400px; }
+    height: 400px;
+}
 
 .filters{
     margin: 5px 0 5px 5px;
 }
+
 .filter-btn{
     margin-left: 20px;
     margin-right: 20px;
@@ -119,4 +121,9 @@ height: 400px; }
 
 .select-sector{
      z-index: 10001 !important;
+
+.btn.download {
+    margin-top: 0.6em;
+    font-size: 13px;
+    margin-right: 0.4em;
 }

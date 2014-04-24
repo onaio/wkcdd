@@ -1,55 +1,63 @@
 {% macro add_indicator_links(request, location_type, location, page) %}
-<div class="row indicator_links">
- <ul class="nav navbar-nav">
+<div class="row nav-holder indicator_links">
+    <ul class="nav navbar-nav pull-left">
     {% if location %}
-      <li class="indicator_list">
-          <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
+        <li class="indicator_list">
+            <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
             {% if page == 'performance'%}
-                 class="selected" >
+                    class="selected" >
             {% else %}
-                  >
+                    >
             {% endif %}
             {% trans %} Performance {% endtrans %}
-          </a>
-      </li>
-      <li class="indicator_list">
-          <a href="{{ request.route_url(location_type,traverse=(location.id)) }}"
+            </a>
+        </li>
+        <li class="indicator_list">
+            <a href="{{ request.route_url(location_type,traverse=(location.id)) }}"
             {% if page == 'impact' %}
-                 class="selected" >
+                    class="selected" >
             {% else %}
-                  >
+                    >
             {% endif %}
             {% trans %} Impact {% endtrans %}
-          </a>
-      </li>
-      <li class="indicator_list">
-          <a href="#">{% trans %} Result Framework {% endtrans %}</a>
-      </li>
+            </a>
+        </li>
+        <li class="indicator_list">
+            <a href="#">{% trans %} Result Framework {% endtrans %}</a>
+        </li>
     {% else %}
-      <li class="indicator_list">
-          <a href="{{ request.route_url('counties',traverse=('performance_summary')) }}"
+        <li class="indicator_list">
+            <a href="{{ request.route_url('counties',traverse=('performance_summary')) }}"
             {% if page == 'performance'%}
-                 class="selected" >
+                    class="selected" >
             {% else %}
-                  >
+                    >
             {% endif %}
             {% trans %} Performance {% endtrans %}
-          </a>
-      </li>
-      <li class="indicator_list">
-          <a href="{{ request.route_url('counties',traverse=()) }}"
+            </a>
+        </li>
+        <li class="indicator_list">
+            <a href="{{ request.route_url('counties',traverse=()) }}"
             {% if page == 'impact' %}
-                 class="selected" >
+                    class="selected" >
             {% else %}
-                  >
+                    >
             {% endif %}
             {% trans %} Impact {% endtrans %}
-          </a>
-      </li>
-      <li class="indicator_list">
-          <a href="#">{% trans %} Result Framework {% endtrans %}</a>
-      </li>
+            </a>
+        </li>
+        <li class="indicator_list">
+            <a href="#">{% trans %} Result Framework {% endtrans %}</a>
+        </li>
     {% endif %}
- </ul>
+    </ul>
+    {% if page == 'impact' %}
+        <div class="pull-right">
+            <a href="{{ request.route_url(location_type, traverse=(location.id),
+                _query={'format':'xlsx'})}}" class="btn btn-default download" role="button">
+                Download XLSX Report
+            </a>
+        </div>
+    {% endif %}
 </div>
 {% endmacro %}
