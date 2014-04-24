@@ -16,7 +16,7 @@
    </li>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns([]) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria) }}
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
@@ -82,4 +82,6 @@
 {% block jquery_ready %}
   {{ super() }}
   map = Custom.display_constituency_map();
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
 {% endblock %}

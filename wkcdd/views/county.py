@@ -122,10 +122,12 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'title': "County Performance Indicators Report",
             'counties': counties,
             'project_types': project_types_mappings,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping
+            'sector_indicator_mapping': sector_indicator_mapping,
+            'filter_criteria': filter_criteria
         }
