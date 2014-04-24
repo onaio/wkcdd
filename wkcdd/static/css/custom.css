@@ -128,3 +128,39 @@ span.ratio {
 .select-sector{
      z-index: 10001 !important;
 }
+
+/*datatables*/
+.dataTables_wrapper {
+    border-top: 1px dashed #dedede;
+    font-size:12px;
+    margin-top: 1.6em;
+    padding-top: 1.6em;
+}
+.dataTable{
+    margin-bottom:1em;
+}
+.dataTables_filter input[type=text], .dataTables_length select{
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #333333;
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: normal;
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.dataTables_filter{
+    margin-top:-0.2em;
+    width:40em;
+}
+.dataTables_filter input[type=text]{
+    width:20em;
+}
+.dataTables_filter, dataTables_length{
+    margin-bottom:0.8em;
+}
