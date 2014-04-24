@@ -3,16 +3,12 @@ from wkcdd.models import Location
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
-<<<<<<< HEAD
-=======
 from wkcdd.models import (
     Location,
     Constituency,
     SubCounty,
     County
 )
-from wkcdd import constants
->>>>>>> GM:Add Location select functionality to project dropdown
 
 
 class TestProject(TestBase):
