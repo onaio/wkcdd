@@ -105,8 +105,6 @@
                      <th>{% trans %} Sub-county {% endtrans %}</th>
                      <th>{% trans %} Constituency {% endtrans %}</th>
                      <th>{% trans %} Community {% endtrans %}</th>
-                     <th></th>
-
                   </tr>
                </thead>
                <tbody>
@@ -118,7 +116,6 @@
                      <td>{{ locations[project.id][1].pretty}}</td>
                      <td>{{ locations[project.id][2].pretty }}</td>
                      <td>{{ project.community.pretty }}</td>
-                     <td> Edit</td>
                   </tr>
                {% endfor %}
                </tbody>
