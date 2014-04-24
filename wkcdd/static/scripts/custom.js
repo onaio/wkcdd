@@ -9,6 +9,7 @@ var Custom = function () {
         map;
         ENTER_KEY_CODE = 13,
         display_county_map = function() {
+
             if(map) map = null;
             county_map = new L.Map('map', {
                 layers: [
@@ -18,11 +19,14 @@ var Custom = function () {
                             attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
                     })]     
             }).setView([0.38, 34.5], 9);
+
             map = county_map;
+
             return map
         },
         display_constituency_map = function() {
             if(map) map = null;
+
             constituencies_map = new L.Map('map', {
                     layers: [
                             L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.snd5z5mi/{z}/{x}/{y}.png', {
@@ -32,6 +36,7 @@ var Custom = function () {
                                 })]
             }).setView([0.31, 34.5], 9);
             map = constituencies_map;
+
             return map;
         },
         process_raw_points = function(raw_data, map) {
@@ -62,16 +67,13 @@ var Custom = function () {
         searchProjectsTable = function() {
             $("#search_term").keypress(function(e) {
                 var search_term, filter_url;
+
                 if (e.which == ENTER_KEY_CODE) {
                     search_term = $("#search_term").val();
                     filter_url = "?filter=1&search="+search_term
                     window.location = filter_url;
                 }
             });
-        },
-
-        filterCriteria = function() {
-
         },
 
         init = function(){
@@ -83,7 +85,6 @@ var Custom = function () {
         display_constituency_map: display_constituency_map,
         display_county_map: display_county_map,
         searchProjectsTable: searchProjectsTable,
-        filterCriteria: filterCriteria,
         process_raw_points: process_raw_points
     };
 
@@ -111,6 +112,7 @@ var LocationSelect = function() {
                 value: ""
             });
             optionList.push(default_option);
+
             $.each(options, function(idx, elem){
                 option = $('<option />', {
                     text: elem.name,
@@ -125,6 +127,7 @@ var LocationSelect = function() {
         }
         contains = function(object, list) {
             var contains = false;
+
             $.each(list, function(idx, elem){
                 if(elem.id == object.id) {
                     contains = true;
@@ -134,6 +137,7 @@ var LocationSelect = function() {
                     contains = false;
                 }
             });
+
             return contains;
         },
         level0ChangeListener = function(element) {
@@ -143,15 +147,19 @@ var LocationSelect = function() {
                 sub_county_list = [],
                 constituency_list = [],
                 community_list = [];
+
             if(locations.length == 0) locations = this.data_map;
 
             $.each(locations, function(idx, elem){
+
                 if(!contains(elem['sub_county'], sub_county_list)) {
                     sub_county_list.push(elem['sub_county']);
                 }
+
                 if(!contains(elem['constituency'], constituency_list)) {
                     constituency_list.push(elem['constituency']);
                 }
+
                 //Communities are all unique
                 community_list.push(elem['community']);
             });
@@ -167,6 +175,7 @@ var LocationSelect = function() {
                 county = null,
                 constituency_list = [],
                 community_list = [];
+
             if(locations.length == 0) {
                 //refresh filter based on parent
                 return;
@@ -174,9 +183,11 @@ var LocationSelect = function() {
 
             $.each(locations, function(idx, elem){
                 county = elem['county'];
+
                 if(!contains(elem['constituency'], constituency_list)) {
                     constituency_list.push(elem['constituency']);
                 }
+
                 //Communities are all unique
                 community_list.push(elem['community']);
             });
@@ -192,10 +203,12 @@ var LocationSelect = function() {
                 county = null,
                 sub_county = null,
                 community_list = [];
+
             if(locations.length == 0) {
                 //refresh filter based on parent
                 return;
             }
+
             $.each(locations, function(idx, elem){
                 county = elem['county'];
                 sub_county = elem['sub_county'];
@@ -213,14 +226,17 @@ var LocationSelect = function() {
                 county = locations[0].county,
                 sub_county = locations[0].sub_county,
                 constituency = locations[0].constituency;
+
             if(locations.length == 0) {
                 //refresh filter based on parent
                 return;
             }
+
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             set_select_value($('select[name=constituency]'), constituency);
         };
+
     this.data_map = {};
     this.get_filtered_location_list = get_filtered_location_list;
     this.level0ChangeListener = level0ChangeListener;
@@ -228,5 +244,6 @@ var LocationSelect = function() {
     this.level2ChangeListener = level2ChangeListener;
     this.level3ChangeListener = level3ChangeListener;
     this.update_select = update_select;
+
     return this;
 }();
