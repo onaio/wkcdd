@@ -1,5 +1,5 @@
 import os
-from fabric.api import local, cd, run, settings, env, prefix
+from fabric.api import cd, run, env, prefix
 
 DEPLOYMENTS = {
     'prod': {
@@ -24,6 +24,7 @@ def deploy(deployment="prod", branch="master"):
         run('find . -name "*.pyc" -exec rm -rf {} \;')
 
         with prefix(virtual_env_command):
+            run('pip install -r requirements.txt')
             run("python setup.py test -q")
             run("python setup.py install")
             # run migrations
