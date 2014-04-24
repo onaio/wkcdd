@@ -106,6 +106,12 @@ span.ratio {
     height: 400px;
 }
 
+.btn.download {
+    margin-top: 0.6em;
+    font-size: 13px;
+    margin-right: 0.4em;
+}
+
 .filters{
     margin: 5px 0 5px 5px;
 }
@@ -121,9 +127,4 @@ span.ratio {
 
 .select-sector{
      z-index: 10001 !important;
-
-.btn.download {
-    margin-top: 0.6em;
-    font-size: 13px;
-    margin-right: 0.4em;
 }
