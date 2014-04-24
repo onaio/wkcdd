@@ -1,4 +1,4 @@
-{% from 'macros/value_or_default.jinja2' import value_or_default %}
+{% from 'value_or_default.jinja2' import value_or_default %}
 {% macro generate_performance_indicator_table(request, location_type, entity_list, aggregated_indicators, indicator_mapping) %}
   <div class="portlet-body">
   {% if aggregated_indicators['total_indicator_summary'] %}
