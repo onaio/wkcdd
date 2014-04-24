@@ -136,8 +136,8 @@ span.ratio {
     margin-top: 1.6em;
     padding-top: 1.6em;
 }
-.dataTable{
-    margin-bottom:1em;
+table.dataTable{
+    margin-bottom:1em!important;
 }
 .dataTables_filter input[type=text], .dataTables_length select{
     background-color: #ffffff;
