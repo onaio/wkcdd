@@ -1,4 +1,4 @@
-from wkcdd.models import *
+from wkcdd.models import *  # noqa
 from wkcdd.tests.test_base import TestBase
 
 

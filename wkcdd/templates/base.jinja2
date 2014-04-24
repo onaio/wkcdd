@@ -26,6 +26,7 @@
    <link href="{{ request.static_url('wkcdd:static/css/plugins.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/themes/default.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
    <link href="{{ request.static_url('wkcdd:static/css/custom.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ request.static_url('wkcdd:static/leaflet/leaflet.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
    <!-- END THEME STYLES -->
    <link rel="shortcut icon" href="favicon.ico" />
 </head>
@@ -137,7 +138,7 @@
                 {%endif%}"
                 href="{{ request.route_url('counties', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
-			<span class="title">{% trans %} COUNTY <br/>INDICATORS {% endtrans %}</span>
+			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
 		<li>
@@ -197,7 +198,7 @@
                    <small></small>
                </h3>
                 {% endblock %}
-               
+               <!--
                <ul class="page-breadcrumb breadcrumb">
                   <li>
                      <i class="icon-home"> </i>
@@ -206,10 +207,12 @@
                   </li>
                    {% block breadcrumbs %}{% endblock %}
                </ul>
+               -->
                <!-- END PAGE TITLE & BREADCRUMB-->
             </div>
          </div>
          <!-- END PAGE HEADER-->
+         {% block filters %}{% endblock %}
 		 {% block indicators %}{% endblock %}
          <!-- BEGIN PAGE CONTENT-->
 	{% block content %}{% endblock %}
@@ -246,6 +249,8 @@
    <script src="{{ request.static_url('wkcdd:static/plugins/jquery.blockui.min.js') }}" type="text/javascript"></script>
    <script src="{{ request.static_url('wkcdd:static/plugins/jquery.cookie.min.js') }}" type="text/javascript"></script>
    <script src="{{ request.static_url('wkcdd:static/plugins/uniform/jquery.uniform.min.js') }}" type="text/javascript" ></script>
+   <script src="{{ request.static_url('wkcdd:static/leaflet/leaflet.js') }}" type="text/javascript" ></script>
+   <script src="{{ request.static_url('wkcdd:static/leaflet/Leaflet.MakiMarkers.js') }}" type="text/javascript" ></script>
    <!-- END CORE PLUGINS -->
    <!-- BEGIN PAGE LEVEL SCRIPTS -->
    <script src="{{ request.static_url('wkcdd:static/scripts/app.js') }}"></script>

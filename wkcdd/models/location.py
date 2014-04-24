@@ -12,7 +12,7 @@ from sqlalchemy import (
     ForeignKey
 )
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 from wkcdd.libs.utils import humanize
 

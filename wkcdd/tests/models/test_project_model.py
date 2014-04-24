@@ -52,3 +52,23 @@ class TestProject(TestBase):
         locations = Project.get_locations(projects)
         self.assertIsInstance(locations[1][0], Location)
         self.assertEquals(len(locations), 7)
+
+    def test_get_latlong(self):
+        self.setup_test_data()
+        project1 = Project.get(Project.code == 'JDCV')
+        self.assertEquals(project1.latlong, ["0.0", "0.0"])
+        project2 = Project.get(Project.code == 'WRTD')
+        self.assertEquals(project2.latlong, ["0.1231", "34.1213"])
+        project3 = Project.get(Project.code == 'YH9T')
+        self.assertFalse(project3.latlong)
+
+    def test_sector_name(self):
+        self.setup_test_data()
+        project1 = Project.get(Project.code == 'JDCV')
+        sector_name = project1.sector_name
+        self.assertEqual(sector_name, "Dairy Goat")
+
+    def test_generate_filter_criteria(self):
+        self.setup_test_data()
+        location_map = Project.generate_filter_criteria()
+        self.assertIsInstance(location_map['location_json_data'], str)

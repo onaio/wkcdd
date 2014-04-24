@@ -1,30 +1,37 @@
-
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
+{% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% block title %}{{ title }}{% endblock %}
 {% block page_title %}
-  <h3 class="page-title">
-    All Counties
-    <small></small>
-  </h3>
+   <h3 class="page-title">
+     All Counties
+     <small></small>
+   </h3>
 {% endblock %}
 {% block breadcrumbs %}
-  <li>
-      {% trans %}County Indicators{% endtrans %}
-  </li>
-
+   <li>
+       {% trans %}County Indicators{% endtrans %}
+   </li>
+{% endblock %}
+{% block filters %}
+     {{ generate_filter_criteria_dropdowns(filter_criteria) }}
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
 {% endblock %}
 {% block content %}
+{{ generate_map_chart(request) }}
 <div class="row">
 <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
          <div class="caption"><i class="icon-tasks"></i>{% trans %}Counties{% endtrans %}</div>
+         <div class="tools">
+          <a href="" class="collapse"></a>
+        </div>
       </div>
       <div class="portlet-body">
          <div class="">
@@ -69,3 +76,12 @@
 {{response}}
 </div>
 {% endblock content %}
+{% block page_scripts %}
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+  {{ super() }}
+  map = Custom.display_constituency_map();
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
+{% endblock %}

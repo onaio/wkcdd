@@ -2,6 +2,20 @@ from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
 from wkcdd.libs.utils import humanize
+from wkcdd.models import (
+    County,
+    SubCounty,
+    Constituency,
+    Community,
+    Project,
+    Location
+)
+from wkcdd.models.helpers import (
+    get_community_ids,
+    get_constituency_ids,
+    get_sub_county_ids,
+    get_project_list
+)
 
 
 @subscriber(NewRequest)
@@ -48,3 +62,35 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
         'rows': rows,
         'summary_row': summary_row
     }
+
+
+def filter_projects_by(criteria):
+    project_criteria = []
+    community_ids = []
+    if "name" in criteria:
+        project_criteria.append(
+            Project.name.ilike("%"+criteria['name']+"%"))
+    if "sector" in criteria:
+        project_criteria.append(
+            Project.sector.like("%"+criteria['sector']+"%"))
+    if "location" in criteria:
+        value = (criteria['location']['community'] or
+                 criteria['location']['constituency'] or
+                 criteria['location']['sub_county'] or
+                 criteria['location']['county'])
+        if value:
+            location = Location.get(Location.id == value)
+            community_ids = {
+                Community: [value],
+                Constituency: get_community_ids([value]),
+                SubCounty: get_community_ids(get_constituency_ids
+                                             ([value])),
+                County: get_community_ids(get_constituency_ids
+                                          (get_sub_county_ids
+                                           ([value])))
+            }[type(location)]
+    if project_criteria and not community_ids:
+        projects = Project.all(*project_criteria)
+    else:
+        projects = get_project_list(community_ids, *project_criteria)
+    return projects

@@ -1,11 +1,13 @@
 {% macro generate_project_type_dropdown(request, selected_project_type, location_type, location, project_report_sectors) %}
-    <div class="actions">
+
+<div class="btn-toolbar actions margin-bottom-10 pull-right">
+    <label class="pull-left margin-right-10"> Sector:</label>
       <div class="btn-group">
-         <a class="btn btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+         <a class="btn btn-sm btn-success dropdown-toggle" href="#" data-toggle="dropdown">
          {{ selected_project_type }}
-         <i class="icon-angle-down "></i>
+         <i class="icon-angle-down"></i>
          </a>
-         <ul class="dropdown-menu pull-right">
+         <ul class="dropdown-menu pull-left">
           {% for project_sector in project_report_sectors %}
             <li>
               <a href="{{ request.route_url(location_type, traverse=(location.id, 'performance'), _query={'type': project_sector[0]}) }}">

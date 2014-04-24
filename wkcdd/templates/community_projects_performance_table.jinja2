@@ -24,7 +24,7 @@
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(community.constituency.id)) }}">{{ community.constituency.sub_county.pretty }} {% trans %}Sub County{% endtrans %}</a>
+      <a href="{{ request.route_url('constituency',traverse=(community.constituency.id)) }}">{{ community.constituency.pretty }} {% trans %}Constituency{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>

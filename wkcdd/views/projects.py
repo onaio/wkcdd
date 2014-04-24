@@ -1,3 +1,5 @@
+import json
+from collections import defaultdict
 from pyramid.view import (
     view_config,
     view_defaults,
@@ -13,6 +15,7 @@ from wkcdd.models.project import (
 from wkcdd import constants
 
 from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.views.helpers import filter_projects_by
 
 
 @view_defaults(route_name='projects')
@@ -26,23 +29,47 @@ class ProjectViews(object):
                  request_method='GET')
     def list(self):
         project_types = ProjectType.all()
-        # Search for projects
-        search_term = self.request.GET.get('search')
-        if search_term is not None:
-            projects = Project.all(Project.name.ilike("%"+search_term+"%"))
+        search_criteria = defaultdict(str)
+        # Filter
+        filter_projects = self.request.GET.get('filter')
+        if filter_projects is not None:
+            search = self.request.GET.get('search') or ''
+            sector = self.request.GET.get('sector') or ''
+            location = {
+                'community': self.request.GET.get('community'),
+                'constituency': self.request.GET.get('constituency'),
+                'sub_county': self.request.GET.get('sub_county'),
+                'county': self.request.GET.get('county')
+            }
+            search_criteria = {'name': search,
+                               'sector': sector,
+                               'location': location}
+
+            projects = filter_projects_by(search_criteria)
+
         else:
             projects = Project.all()
 
         # get locations (count and sub-county)
         locations = Project.get_locations(projects)
         # get filter criteria
-        filter_criteria = Project.get_filter_criteria()
-
+        filter_criteria = Project.generate_filter_criteria()
+        project_geopoints = [
+            {'id': project.id,
+             'name': project.name,
+             'sector': project.sector_name,
+             'lat': str(project.latlong[0]),
+             'lng': str(project.latlong[1])}
+            for project in projects
+            if project.latlong]
+        project_geopoints = json.dumps(project_geopoints)
         return {
             'project_types': project_types,
             'projects': projects,
             'locations': locations,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'project_geopoints': project_geopoints,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='show',

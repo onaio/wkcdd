@@ -1,4 +1,5 @@
 import warnings
+import json
 
 from wkcdd import constants
 from wkcdd.models.base import Base, BaseModelFactory
@@ -62,6 +63,18 @@ class Project(Base):
     @property
     def pretty(self):
         return humanize(self.name).title()
+
+    @property
+    def latlong(self):
+        latlong = self.geolocation.split(' ')[0:2] if self.geolocation else []
+        return latlong
+
+    @property
+    def sector_name(self):
+        sectors_dict = {
+            reg_id: label
+            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
+        return sectors_dict[self.sector]
 
     @classmethod
     def create(cls, **kwargs):
@@ -132,12 +145,37 @@ class Project(Base):
             return None
 
     @classmethod
-    def get_filter_criteria(cls):
+    def generate_filter_criteria(cls):
+        sector_filter = [
+            (reg_id, label)
+            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING]
+        counties = County.all()
+        sub_counties = SubCounty.all()
+        constituencies = Constituency.all()
+        communities = Community.all()
+        location_json_data = [
+            {
+                "community": {
+                    "name": community.pretty,
+                    "id": community.id},
+                "constituency": {
+                    "name": community.constituency.pretty,
+                    "id": community.constituency.id},
+                "sub_county": {
+                    "name": community.constituency.sub_county.pretty,
+                    "id": community.constituency.sub_county.id},
+                "county": {
+                    "name": community.constituency.sub_county.county.pretty,
+                    "id": community.constituency.sub_county.county.id}
+            }
+            for community in communities]
         filter_criteria = {
-            'sectors': constants.PROJECT_SECTORS,
-            'counties': County.all(),
-            'sub_counties': SubCounty.all(),
-            'communities': Community.all(),
+            'sectors': sector_filter,
+            'counties': counties,
+            'sub_counties': sub_counties,
+            'constituencies': constituencies,
+            'communities': communities,
+            'location_json_data': json.dumps(location_json_data)
         }
 
         return filter_criteria
