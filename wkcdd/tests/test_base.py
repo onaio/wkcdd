@@ -161,6 +161,13 @@ class TestBase(unittest.TestCase):
 
     def setup_test_data(self):
         transaction.begin()
+        """
+          ### Locations
+          Bungoma county -> Bungoma Sub County -> Kakamega Const ->
+            Maragoli Community, Bukusu Community
+          Busia County -> Teso Sub County -> Amagoro -> Rwatama
+
+        """
         county = self._add_county(name="Bungoma")
         county3 = self._add_county(name="Siaya")  # noqa
 
