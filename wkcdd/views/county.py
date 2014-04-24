@@ -35,7 +35,7 @@ class CountyView(object):
         dataset = build_dataset(Location.COUNTY,
                                 counties,
                                 impact_indicators)
-        filter_criteria = Project.get_filter_criteria()
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'title': "County Impact Indicators Report",
             'headers': dataset['headers'],
@@ -88,7 +88,7 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
-        filter_criteria = Project.get_filter_criteria()
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'title': county.pretty,
             'county': county,
