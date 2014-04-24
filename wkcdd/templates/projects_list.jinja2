@@ -136,7 +136,6 @@
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
   Custom.searchProjectsTable();
-  Custom.filterCriteria();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 {% endblock %}
 
