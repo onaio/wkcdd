@@ -73,11 +73,11 @@ def filter_projects_by(criteria):
     if "sector" in criteria:
         project_criteria.append(
             Project.sector.like("%"+criteria['sector']+"%"))
-    if "location" in criteria:
-        value = (criteria['location']['community'] or
-                 criteria['location']['constituency'] or
-                 criteria['location']['sub_county'] or
-                 criteria['location']['county'])
+    if "location_map" in criteria:
+        value = (criteria['location_map']['community'] or
+                 criteria['location_map']['constituency'] or
+                 criteria['location_map']['sub_county'] or
+                 criteria['location_map']['county'])
         if value:
             location = Location.get(Location.id == value)
             community_ids = {
@@ -94,3 +94,11 @@ def filter_projects_by(criteria):
     else:
         projects = get_project_list(community_ids, *project_criteria)
     return projects
+
+
+def generate_impact_indicators_for(location):
+    pass
+
+
+def generate_performance_indicators_for(location, sector, level):
+    pass
