@@ -88,20 +88,20 @@ class TestProjectFilter(IntegrationTestBase):
         county1 = County.get(County.name == "Siaya")
         county2 = County.get(County.name == "Bungoma")
 
-        search_criteria = {"location":
-                          {"community": '',
-                           "constituency": '',
-                           "sub_county": '',
-                           "county": county1.id}
+        search_criteria = {"location": {"community": '',
+                                        "constituency": '',
+                                        "sub_county": '',
+                                        "county": county1.id
+                                        }
                            }
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 0)
 
-        search_criteria = {"location":
-                          {"community": '',
-                           "constituency": '',
-                           "sub_county": '',
-                           "county": county2.id}
+        search_criteria = {"location": {"community": '',
+                                        "constituency": '',
+                                        "sub_county": '',
+                                        "county": county2.id
+                                        }
                            }
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 6)
@@ -109,11 +109,11 @@ class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_sub_county(self):
         self.setup_test_data()
         sub_county1 = SubCounty.get(SubCounty.name == "Teso")
-        search_criteria = {"location":
-                          {"community": '',
-                           "constituency": '',
-                           "sub_county": sub_county1.id,
-                           "county": ''}
+        search_criteria = {"location": {"community": '',
+                                        "constituency": '',
+                                        "sub_county": sub_county1.id,
+                                        "county": ''
+                                        }
                            }
 
         projects = filter_projects_by(search_criteria)
@@ -122,11 +122,11 @@ class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_constituency(self):
         self.setup_community_test_data()
         constituency = Constituency.get(Constituency.name == "sirisia")
-        search_criteria = {"location":
-                          {"community": '',
-                           "constituency": constituency.id,
-                           "sub_county": '',
-                           "county": ''}
+        search_criteria = {"location": {"community": '',
+                                        "constituency": constituency.id,
+                                        "sub_county": '',
+                                        "county": ''
+                                        }
                            }
 
         projects = filter_projects_by(search_criteria)
@@ -135,11 +135,11 @@ class TestProjectFilter(IntegrationTestBase):
     def test_filter_projects_by_community(self):
         self.setup_community_test_data()
         community = Community.get(Community.name == "lutacho")
-        search_criteria = {"location":
-                          {"community": community.id,
-                           "constituency": '',
-                           "sub_county": '',
-                           "county": ''}
+        search_criteria = {"location": {"community": community.id,
+                                        "constituency": '',
+                                        "sub_county": '',
+                                        "county": ''
+                                        }
                            }
 
         projects = filter_projects_by(search_criteria)
@@ -165,7 +165,8 @@ class TestProjectFilter(IntegrationTestBase):
             "location": {"community": community.id,
                          "constituency": '',
                          "sub_county": '',
-                         "county": ''}
+                         "county": ''
+                         }
         }
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
