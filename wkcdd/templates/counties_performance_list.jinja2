@@ -29,8 +29,8 @@
 {% endblock %}
 {% block content %}
 {{ generate_map_chart(request) }}
-{{ generate_project_type_dropdown(request, "All Sectors", location_type, location, project_report_sectors)}}
-{% for sector, report, label in project_types %}
+{{ generate_project_type_dropdown(request, selected_project_types[0][2], 'counties', '', project_types)}}
+{% for sector, report, label in selected_project_types %}
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN SAMPLE TABLE PORTLET-->
