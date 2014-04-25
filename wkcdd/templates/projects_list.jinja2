@@ -53,7 +53,7 @@
                     <option value="">--County--</option>
                     {% for county in filter_criteria["counties"] %}
                         <option value="{{ county.id }}"
-                        {%if search_criteria["location"]["county"] == (county.id | string)%}
+                        {%if search_criteria["location_map"]["county"] == (county.id | string)%}
                             selected
                         {%endif%}
                         >
@@ -64,7 +64,7 @@
                     <option value="">--Sub-County--</option>
                     {% for sub_county in filter_criteria["sub_counties"] %}
                         <option value="{{ sub_county.id }}"
-                        {%if search_criteria["location"]["sub_county"] == (sub_county.id | string)%}
+                        {%if search_criteria["location_map"]["sub_county"] == (sub_county.id | string)%}
                             selected
                         {%endif%}
                         >
@@ -75,7 +75,7 @@
                     <option value="">--Constituency--</option>
                     {% for constituency in filter_criteria["constituencies"] %}
                         <option value="{{ constituency.id }}"
-                        {%if search_criteria["location"]["constituency"] == (constituency.id | string)%}
+                        {%if search_criteria["location_map"]["constituency"] == (constituency.id | string)%}
                             selected
                         {%endif%}
                         >{{ constituency.pretty }}</option>
@@ -85,7 +85,7 @@
                     <option value="">--Community--</option>
                     {% for community in filter_criteria["communities"] %}
                         <option value="{{ community.id }}"
-                        {%if search_criteria["location"]["community"] == (community.id | string)%}
+                        {%if search_criteria["location_map"]["community"] == (community.id | string)%}
                             selected
                         {%endif%}
                         >{{ community.pretty }}</option>
