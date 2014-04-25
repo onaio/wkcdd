@@ -19,6 +19,7 @@ from wkcdd.views.helpers import (
     get_project_geolocations
 )
 
+
 @view_defaults(route_name='counties')
 class CountyView(object):
     DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REPORT
@@ -137,7 +138,8 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
-            project_geopoints = get_project_geolocations(aggregated_indicators['project_list'])
+            project_geopoints = get_project_geolocations(
+                aggregated_indicators['project_list'])
             project_type_geopoints[reg_id] = project_geopoints
 
         filter_criteria = Project.generate_filter_criteria()

@@ -5,7 +5,11 @@ from pyramid.events import NewRequest
 from pyramid import testing
 
 from wkcdd.libs.utils import humanize
-from wkcdd.tests.test_base import TestBase, IntegrationTestBase, _load_json_fixture
+from wkcdd.tests.test_base import (
+    TestBase,
+    IntegrationTestBase,
+    _load_json_fixture
+)
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset,

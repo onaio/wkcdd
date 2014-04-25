@@ -9,8 +9,7 @@ from wkcdd.models import (
     Constituency,
     Community,
     Project,
-    Location,
-    Report
+    Location
 )
 from wkcdd.models.helpers import (
     get_community_ids,
