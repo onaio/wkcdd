@@ -98,14 +98,10 @@ def filter_projects_by(criteria):
     return projects
 
 
-def get_project_geolocations(locations, *criterion):
+def get_project_geolocations(projects):
     """
-    Get project geopoints for locations
+    Get project geopoints for a list of projects
     """
-    projects = []
-    for location in locations:
-        projects = projects + Report.get_projects_from_location(location, *criterion)
-
     project_geopoints = [
         {'id': project.id,
          'name': project.name,

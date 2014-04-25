@@ -179,6 +179,6 @@ class TestProjectFilter(IntegrationTestBase):
         self.setup_test_data()
         geopoints = json.dumps(_load_json_fixture(os.path.join(
             self.test_dir, 'fixtures', 'geopoints.json')))
-        counties = County.all()
-        project_geopoints = get_project_geolocations(counties)
+        projects = Project.all()
+        project_geopoints = get_project_geolocations(projects)
         self.assertEquals(project_geopoints, geopoints)
