@@ -120,8 +120,8 @@ class CountyView(object):
             selected_project_types = helpers.get_project_types(
                 helpers.get_community_ids(
                     helpers.get_constituency_ids(
-                    helpers.get_sub_county_ids(
-                        county_ids))), Project.sector == project_type)
+                        helpers.get_sub_county_ids(
+                            county_ids))), Project.sector == project_type)
 
         else:
             selected_project_types = project_types_mappings
