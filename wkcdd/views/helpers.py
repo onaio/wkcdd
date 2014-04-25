@@ -124,10 +124,10 @@ def generate_impact_indicators_for(location_map, level=None):
     impact_indicators = (
         Report.get_impact_indicator_aggregation_for(
             locations_to_aggregate))
-    location_type = (location.location_type if location
-                     else locations_to_aggregate[0].location_type)
+    location_type = locations_to_aggregate[0].location_type
     return {
         'location_type': location_type,
+        'location': location,
         'locations': locations_to_aggregate,
         'impact_indicators': impact_indicators
     }

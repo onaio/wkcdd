@@ -200,7 +200,7 @@ class TestImpactIndicatorGeneration(TestBase):
 
         results = generate_impact_indicators_for(location_map)
         self.assertEqual(results['locations'], county.children())
-        self.assertEqual(results['location_type'], Location.COUNTY)
+        self.assertEqual(results['location_type'], Location.SUB_COUNTY)
 
         impact_indicators = results['impact_indicators']
         self.assertIn('aggregated_impact_indicators', impact_indicators)

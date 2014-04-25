@@ -43,13 +43,16 @@ class CountyView(object):
             'county': self.request.GET.get('county')
         }
         impact_indicator_results = generate_impact_indicators_for(location_map)
-        dataset = build_dataset(impact_indicator_results['location_type'],
+        location_type = impact_indicator_results['location_type']
+        location = impact_indicator_results['location']
+        dataset = build_dataset(location_type,
                                 impact_indicator_results['locations'],
                                 impact_indicator_results['impact_indicators'])
         search_criteria = {'view_by': view_by,
                            'location_map': location_map}
         return {
-            'title': "County Impact Indicators Report",
+            'title': "Impact Indicators Report",
+            'location': location,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
