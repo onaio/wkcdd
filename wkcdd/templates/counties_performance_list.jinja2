@@ -4,7 +4,7 @@
 {% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
- {% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
 {% block title %} {{ title }}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -29,7 +29,7 @@
 {% endblock %}
 {% block content %}
 <!--MAP-->
-{{ generate_map_chart(request) }}
+{{ generate_map_chart(request, sector_indicator_mapping[selected_project_types[0][0]]) }}
 <!--END MAP-->
 
 <!--PROJECT TYPE DROP DOWN-->
