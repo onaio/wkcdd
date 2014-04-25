@@ -8,6 +8,7 @@ from wkcdd.models.county import County
 from wkcdd.models.location import Location
 from webob.multidict import MultiDict
 
+
 class TestCountyViews(IntegrationTestBase):
     def setUp(self):
         super(TestCountyViews, self).setUp()
