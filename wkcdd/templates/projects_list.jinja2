@@ -137,5 +137,14 @@
   LocationSelect.data_map = location_json_data;
   Custom.searchProjectsTable();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
+
+  {% set location_map = search_criteria['location_map'] %}
+  {% if location_map['constituency'] %}
+    LocationSelect.level2ChangeListener($('select[name=constituency]'));
+  {% elif location_map['sub_county'] %}
+    LocationSelect.level1ChangeListener($('select[name=sub_county]'));
+  {% elif location_map['county'] %}
+    LocationSelect.level0ChangeListener($('select[name=county]'));
+  {% endif %}
 {% endblock %}
 
