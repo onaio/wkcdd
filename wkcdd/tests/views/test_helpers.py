@@ -7,7 +7,9 @@ from wkcdd.tests.test_base import TestBase, IntegrationTestBase
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset,
-    filter_projects_by
+    filter_projects_by,
+    generate_impact_indicators_for,
+    generate_performance_indicators_for
 )
 from wkcdd import constants
 from wkcdd.models import (
@@ -171,3 +173,62 @@ class TestProjectFilter(IntegrationTestBase):
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0], project)
+
+
+class TestImpactIndicatorGeneration(TestBase):
+    def test_generate_impact_indicators_for_none(self):
+        self.setup_test_data()
+        results = generate_impact_indicators_for(None)
+
+        self.assertEqual(results['locations'], County.all())
+        self.assertEqual(results['location_type'], Location.COUNTY)
+
+        impact_indicators = results['impact_indicators']
+        self.assertIn('aggregated_impact_indicators', impact_indicators)
+        self.assertIn('total_indicator_summary', impact_indicators)
+
+    def test_generate_impact_indicators_for_county(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Busia")
+
+        location_map = {
+            "community": '',
+            "constituency": '',
+            "sub_county": '',
+            "county": "{}".format(county.id)
+        }
+
+        results = generate_impact_indicators_for(location_map)
+        self.assertEqual(results['locations'], county.children())
+        self.assertEqual(results['location_type'], Location.COUNTY)
+
+        impact_indicators = results['impact_indicators']
+        self.assertIn('aggregated_impact_indicators', impact_indicators)
+        self.assertIn('total_indicator_summary', impact_indicators)
+
+
+class TestPerformanceIndicatorGeneration(TestBase):
+    def test_generate_performance_indicators_for_none(self):
+        self.setup_test_data()
+        results = generate_performance_indicators_for(None)
+        self.assertIsNotNone(results['project_types'])
+
+    def test_generate_performance_indicators_for_county(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Busia")
+        sub_county = SubCounty.get(SubCounty.name == "Teso")
+        location_map = {
+            "community": '',
+            "constituency": '',
+            "sub_county": '',
+            "county": "{}".format(county.id)
+        }
+        results = generate_performance_indicators_for(
+            location_map)
+        self.assertIsNotNone(results['project_types'])
+        teso_sub_county_indicators = (
+            results['sector_aggregated_indicators']
+            [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
+            ['aggregated_performance_indicators']
+            [sub_county.id]['summary'])
+        self.assertIsNotNone(teso_sub_county_indicators)

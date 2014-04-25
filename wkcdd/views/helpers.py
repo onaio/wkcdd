@@ -1,20 +1,22 @@
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
-from wkcdd.libs.utils import humanize
+from wkcdd.libs.utils import humanize, tuple_to_dict_list
 from wkcdd.models import (
     County,
     SubCounty,
     Constituency,
     Community,
     Project,
-    Location
+    Location,
+    Report
 )
 from wkcdd.models.helpers import (
     get_community_ids,
     get_constituency_ids,
     get_sub_county_ids,
-    get_project_list
+    get_project_list,
+    get_project_types
 )
 
 
@@ -74,10 +76,7 @@ def filter_projects_by(criteria):
         project_criteria.append(
             Project.sector.like("%"+criteria['sector']+"%"))
     if "location_map" in criteria:
-        value = (criteria['location_map']['community'] or
-                 criteria['location_map']['constituency'] or
-                 criteria['location_map']['sub_county'] or
-                 criteria['location_map']['county'])
+        value = get_lowest_location_value(criteria['location_map'])
         if value:
             location = Location.get(Location.id == value)
             community_ids = {
@@ -96,9 +95,94 @@ def filter_projects_by(criteria):
     return projects
 
 
-def generate_impact_indicators_for(location):
-    pass
+def get_lowest_location_value(location_map):
+    if location_map:
+        value = (location_map['community'] or
+                 location_map['constituency'] or
+                 location_map['sub_county'] or
+                 location_map['county'])
+        return value
 
 
-def generate_performance_indicators_for(location, sector, level):
-    pass
+def generate_impact_indicators_for(location_map, level=None):
+    location_id = get_lowest_location_value(location_map)
+    location = None
+    if location_id:
+        location = Location.get(Location.id == location_id)
+        level_map = {
+            None: location.children(),
+            'county': '',
+            'sub_county': '',
+            'constituency': '',
+            'community': ''
+        }
+        locations_to_aggregate = level_map[level]
+    else:
+        # Default aggregation level is all counties
+        locations_to_aggregate = County.all()
+
+    impact_indicators = (
+        Report.get_impact_indicator_aggregation_for(
+            locations_to_aggregate))
+    location_type = (location.location_type if location
+                     else locations_to_aggregate[0].location_type)
+    return {
+        'location_type': location_type,
+        'locations': locations_to_aggregate,
+        'impact_indicators': impact_indicators
+    }
+
+
+def generate_performance_indicators_for(location_map,
+                                        sector=None,
+                                        level=None):
+    sector_indicator_mapping = {}
+    sector_aggregated_indicators = {}
+    location_id = get_lowest_location_value(location_map)
+
+    if location_id:
+        location = Location.get(Location.id == location_id)
+
+        level_map = {
+            None: location.children(),
+            'county': '',
+            'sub_county': '',
+            'constituency': '',
+            'community': ''
+        }
+
+        locations_to_aggregate = level_map[level]
+    else:
+        # Default aggregation level is all counties
+        locations_to_aggregate = County.all()
+
+    location_ids = [child_location.id
+                    for child_location in locations_to_aggregate]
+
+    project_types_mappings = get_project_types(
+        get_community_ids(
+            get_constituency_ids(
+                location_ids)))
+
+    for reg_id, report_id, title in project_types_mappings:
+        # Skip execution until the selected sector is encountered
+
+        if sector and reg_id != sector:
+            continue
+
+        aggregated_indicators = (
+            Report.get_performance_indicator_aggregation_for(
+                locations_to_aggregate, report_id))
+
+        indicator_mapping = tuple_to_dict_list(
+            ('title', 'group'),
+            constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
+
+        sector_indicator_mapping[reg_id] = indicator_mapping
+        sector_aggregated_indicators[reg_id] = aggregated_indicators
+
+    return {
+        'project_types': project_types_mappings,
+        'sector_aggregated_indicators': sector_aggregated_indicators,
+        'sector_indicator_mapping': sector_indicator_mapping
+    }
