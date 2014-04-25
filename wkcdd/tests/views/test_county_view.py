@@ -6,7 +6,6 @@ from wkcdd.tests.test_base import (
 from wkcdd.views.county import CountyView
 from wkcdd.models.county import County
 from wkcdd.models.location import Location
-from webob.multidict import MultiDict
 
 
 class TestCountyViews(IntegrationTestBase):
@@ -30,14 +29,6 @@ class TestCountyViews(IntegrationTestBase):
         self.assertEquals(response['rows'][0][0].name, "Bungoma")
         self.assertEquals(len(response['rows']), 1)
         self.assertEquals(response['summary_row'], [16, 1, 3, 8])
-
-    def test_show_all_counties_with_sub_county_aggregation_level(self):
-        self.setup_test_data()
-        params = MultiDict({'view_by': 'sub_county'})
-        self.request.GET = params
-        response = self.county_view.show_all_counties()
-        self.assertEquals(len(response['rows']), 2)
-        self.assertEquals(response['rows'][0][0].name, "Bungoma")
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):
