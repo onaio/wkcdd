@@ -29,7 +29,11 @@
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>{{location.pretty}} {{location.location_type|humanize()|title()}}</div>
+        {% if location %}
+          <div class="caption"><i class="icon-tasks"></i>{{location.pretty}} {{location.location_type|humanize()|title()}}</div>
+        {% else %}
+          <div class="caption"><i class="icon-tasks"></i>{% trans %}All Counties {% endtrans %}</div>
+        {% endif %}
          <div class="tools">
           <a href="" class="collapse"></a>
         </div>
