@@ -71,4 +71,7 @@
   map = Custom.display_constituency_map();
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
+  {% for sector, report, label  in selected_project_types %}
+    Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
+  {% endfor %}
 {% endblock %}
