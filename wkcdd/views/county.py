@@ -14,7 +14,11 @@ from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd.models import helpers
-from wkcdd.views.helpers import build_dataset
+from wkcdd.views.helpers import (
+    build_dataset,
+    generate_impact_indicators_for,
+    generate_performance_indicators_for
+)
 
 
 @view_defaults(route_name='counties')
@@ -30,18 +34,27 @@ class CountyView(object):
                  request_method='GET')
     def show_all_counties(self):
         counties = County.all()
-        impact_indicators = \
-            Report.get_impact_indicator_aggregation_for(counties)
-        dataset = build_dataset(Location.COUNTY,
-                                counties,
-                                impact_indicators)
         filter_criteria = Project.generate_filter_criteria()
+        view_by = self.request.GET.get('view_by')
+        location_map = {
+            'community': self.request.GET.get('community'),
+            'constituency': self.request.GET.get('constituency'),
+            'sub_county': self.request.GET.get('sub_county'),
+            'county': self.request.GET.get('county')
+        }
+        impact_indicator_results = generate_impact_indicators_for(location_map)
+        dataset = build_dataset(impact_indicator_results['location_type'],
+                                impact_indicator_results['locations'],
+                                impact_indicator_results['impact_indicators'])
+        search_criteria = {'view_by': view_by,
+                           'location_map': location_map}
         return {
             'title': "County Impact Indicators Report",
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='',
