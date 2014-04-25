@@ -28,8 +28,19 @@
   {{ add_indicator_links(request, 'counties', None, 'performance') }}
 {% endblock %}
 {% block content %}
+<!--MAP-->
 {{ generate_map_chart(request) }}
-{{ generate_project_type_dropdown(request, selected_project_types[0][2], 'counties', '', project_types)}}
+<!--END MAP-->
+
+<!--PROJECT TYPE DROP DOWN-->
+{% if selected_project_types | length > 1 %}
+    {% set selected_name = 'All Sectors' %}
+{% else %}
+    {% set selected_name = selected_project_types[0][2] %}
+{% endif %}
+{{ generate_project_type_dropdown(request, selected_name, 'counties', '', project_types)}}
+
+<!--PERFORMANCE INDICATOR TABLES-->
 {% for sector, report, label in selected_project_types %}
     <div class="row">
         <div class="col-md-12">
@@ -50,6 +61,7 @@
         </div>
 
 {% endfor %}
+<!--PERFORMANCE INDICATOR TABLES END-->
 {% endblock content %}
 {% block page_scripts %}
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
