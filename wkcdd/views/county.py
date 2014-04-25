@@ -43,11 +43,19 @@ class CountyView(object):
             'county': self.request.GET.get('county')
         }
         impact_indicator_results = generate_impact_indicators_for(location_map)
-        location_type = impact_indicator_results['location_type']
+        aggregate_type = impact_indicator_results['aggregate_type']
         location = impact_indicator_results['location']
-        dataset = build_dataset(location_type,
-                                impact_indicator_results['locations'],
-                                impact_indicator_results['impact_indicators'])
+        if aggregate_type is 'Project':
+            dataset = build_dataset(
+                aggregate_type,
+                None,
+                impact_indicator_results['impact_indicators'],
+                impact_indicator_results['aggregate_list'])
+        else:
+            dataset = build_dataset(
+                aggregate_type,
+                impact_indicator_results['aggregate_list'],
+                impact_indicator_results['impact_indicators'])
         search_criteria = {'view_by': view_by,
                            'location_map': location_map}
         return {

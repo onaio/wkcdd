@@ -107,6 +107,9 @@ def get_lowest_location_value(location_map):
 def generate_impact_indicators_for(location_map, level=None):
     location_id = get_lowest_location_value(location_map)
     location = None
+    aggregate_list = []
+    aggregate_type = ''
+
     if location_id:
         location = Location.get(Location.id == location_id)
         level_map = {
@@ -116,19 +119,27 @@ def generate_impact_indicators_for(location_map, level=None):
             'constituency': '',
             'community': ''
         }
-        locations_to_aggregate = level_map[level]
+        aggregate_list = level_map[level]
     else:
         # Default aggregation level is all counties
-        locations_to_aggregate = County.all()
+        aggregate_list = County.all()
+    if aggregate_list:
+        impact_indicators = (
+            Report.get_impact_indicator_aggregation_for(
+                aggregate_list))
+        aggregate_type = aggregate_list[0].location_type
 
-    impact_indicators = (
-        Report.get_impact_indicator_aggregation_for(
-            locations_to_aggregate))
-    location_type = locations_to_aggregate[0].location_type
+    else:
+        if location and type(location) is Community:
+            aggregate_list = location.projects
+            impact_indicators = Report.get_aggregated_impact_indicators(
+                aggregate_list)
+            aggregate_type = 'Project'
+
     return {
-        'location_type': location_type,
+        'aggregate_type': aggregate_type,
         'location': location,
-        'locations': locations_to_aggregate,
+        'aggregate_list': aggregate_list,
         'impact_indicators': impact_indicators
     }
 
@@ -151,13 +162,13 @@ def generate_performance_indicators_for(location_map,
             'community': ''
         }
 
-        locations_to_aggregate = level_map[level]
+        aggregate_list = level_map[level]
     else:
         # Default aggregation level is all counties
-        locations_to_aggregate = County.all()
+        aggregate_list = County.all()
 
     location_ids = [child_location.id
-                    for child_location in locations_to_aggregate]
+                    for child_location in aggregate_list]
 
     project_types_mappings = get_project_types(
         get_community_ids(
@@ -172,7 +183,7 @@ def generate_performance_indicators_for(location_map,
 
         aggregated_indicators = (
             Report.get_performance_indicator_aggregation_for(
-                locations_to_aggregate, report_id))
+                aggregate_list, report_id))
 
         indicator_mapping = tuple_to_dict_list(
             ('title', 'group'),

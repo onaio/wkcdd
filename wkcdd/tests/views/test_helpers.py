@@ -180,8 +180,8 @@ class TestImpactIndicatorGeneration(TestBase):
         self.setup_test_data()
         results = generate_impact_indicators_for(None)
 
-        self.assertEqual(results['locations'], County.all())
-        self.assertEqual(results['location_type'], Location.COUNTY)
+        self.assertEqual(results['aggregate_list'], County.all())
+        self.assertEqual(results['aggregate_type'], Location.COUNTY)
 
         impact_indicators = results['impact_indicators']
         self.assertIn('aggregated_impact_indicators', impact_indicators)
@@ -199,12 +199,28 @@ class TestImpactIndicatorGeneration(TestBase):
         }
 
         results = generate_impact_indicators_for(location_map)
-        self.assertEqual(results['locations'], county.children())
-        self.assertEqual(results['location_type'], Location.SUB_COUNTY)
+
+        self.assertEqual(results['aggregate_list'], county.children())
+        self.assertEqual(results['aggregate_type'], Location.SUB_COUNTY)
 
         impact_indicators = results['impact_indicators']
         self.assertIn('aggregated_impact_indicators', impact_indicators)
         self.assertIn('total_indicator_summary', impact_indicators)
+
+    def test_generate_impact_indicators_for_community(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        location_map = {
+            "community": community.id,
+            "constituency": '',
+            "sub_county": '',
+            "county": ""
+        }
+
+        results = generate_impact_indicators_for(location_map)
+
+        self.assertEqual(results['aggregate_type'], 'Project')
+        self.assertEqual(results['aggregate_list'], community.projects)
 
 
 class TestPerformanceIndicatorGeneration(TestBase):
