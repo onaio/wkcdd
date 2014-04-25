@@ -113,6 +113,19 @@ class CountyView(object):
                 helpers.get_constituency_ids(
                     helpers.get_sub_county_ids(
                         county_ids))))
+
+        project_type = self.request.GET.get('type')
+
+        if project_type:
+            selected_project_types = helpers.get_project_types(
+                helpers.get_community_ids(
+                    helpers.get_constituency_ids(
+                        helpers.get_sub_county_ids(
+                            county_ids))), Project.sector == project_type)
+
+        else:
+            selected_project_types = project_types_mappings
+
         for reg_id, report_id, title in project_types_mappings:
             aggregated_indicators = (
                 Report.get_performance_indicator_aggregation_for(
@@ -123,10 +136,12 @@ class CountyView(object):
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
         filter_criteria = Project.generate_filter_criteria()
+
         return {
             'title': "County Performance Indicators Report",
             'counties': counties,
             'project_types': project_types_mappings,
+            'selected_project_types': selected_project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
             'sector_indicator_mapping': sector_indicator_mapping,
             'filter_criteria': filter_criteria

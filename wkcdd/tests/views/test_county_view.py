@@ -6,6 +6,7 @@ from wkcdd.tests.test_base import (
 from wkcdd.views.county import CountyView
 from wkcdd.models.county import County
 from wkcdd.models.location import Location
+from webob.multidict import MultiDict
 
 
 class TestCountyViews(IntegrationTestBase):
@@ -29,6 +30,13 @@ class TestCountyViews(IntegrationTestBase):
         self.assertEquals(response['rows'][0][0].name, "Bungoma")
         self.assertEquals(len(response['rows']), 1)
         self.assertEquals(response['summary_row'], [16, 1, 3, 8])
+
+    def test_county_list_performance_indicators_with_selected_sector(self):
+        self.setup_test_data()
+        params = MultiDict({'type': 'dairy_goat_project_registration'})
+        self.request.GET = params
+        response = self.county_view.performance_summary()
+        self.assertEquals(len(response['selected_project_types']), 1)
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):
