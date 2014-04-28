@@ -12,6 +12,11 @@
 {% endblock %}
 {% block content %}
 <div class="row">
+    <div class="col-md-12">
+        <div id="map"></div>
+    </div>
+</div>
+<div class="row">
   <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
@@ -22,33 +27,68 @@
          <div class="row">
              <div class="col-md-4">
                 <div class="input-icon right">
-                   <input id="search_term" type="text" class="form-control input-medium input-sm" name="search_project" placeholder="Search...">
+                   <input id="search_term"
+                          type="text"
+                          class="form-control input-medium input-sm"
+                          name="search_project"
+                          placeholder="Search..."
+                          value="{{search_criteria['name']}}">
                 </div>
              </div>
              <div class="col-md-8">
-                <form class="form-inline">
-                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                <form id="filter_criteria" class="form-inline" method="get">
+                <input hidden name="filter" value="1" type="text"/>
+                <select  name="sector" class="form-control input-small select2me" data-placeholder="Select...">
                     <option value="">--Sector--</option>
-                    {% for key in filter_criteria["sectors"] %}
-                        <option value="{{ filter_criteria['sectors'][key] }}">{{ filter_criteria["sectors"][key]}}</option>
+                    {% for key, value in filter_criteria["sectors"] %}
+                        <option value="{{ key }}"
+                        {%if search_criteria["sector"] == key%}
+                            selected
+                        {%endif%}
+                        >
+                    {{ value }}</option>
                     {% endfor %}
                 </select>
-                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
                     <option value="">--County--</option>
                     {% for county in filter_criteria["counties"] %}
-                        <option value="{{ county.id }}">{{ county.name }}</option>
+                        <option value="{{ county.id }}"
+                        {%if search_criteria["location"]["county"] == (county.id | string)%}
+                            selected
+                        {%endif%}
+                        >
+                    {{ county.pretty }}</option>
                     {% endfor %}
                 </select>
-                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
                     <option value="">--Sub-County--</option>
                     {% for sub_county in filter_criteria["sub_counties"] %}
-                        <option value="{{ sub_county.id }}">{{ sub_county.name }}</option>
+                        <option value="{{ sub_county.id }}"
+                        {%if search_criteria["location"]["sub_county"] == (sub_county.id | string)%}
+                            selected
+                        {%endif%}
+                        >
+                    {{ sub_county.pretty }}</option>
                     {% endfor %}
                 </select>
-                <select  class="form-control input-small select2me" data-placeholder="Select...">
+                <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
+                    <option value="">--Constituency--</option>
+                    {% for constituency in filter_criteria["constituencies"] %}
+                        <option value="{{ constituency.id }}"
+                        {%if search_criteria["location"]["constituency"] == (constituency.id | string)%}
+                            selected
+                        {%endif%}
+                        >{{ constituency.pretty }}</option>
+                    {% endfor %}
+                </select>
+                <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
                     <option value="">--Community--</option>
                     {% for community in filter_criteria["communities"] %}
-                        <option value="{{ community.id }}">{{ community.name }}</option>
+                        <option value="{{ community.id }}"
+                        {%if search_criteria["location"]["community"] == (community.id | string)%}
+                            selected
+                        {%endif%}
+                        >{{ community.pretty }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
@@ -65,20 +105,17 @@
                      <th>{% trans %} Sub-county {% endtrans %}</th>
                      <th>{% trans %} Constituency {% endtrans %}</th>
                      <th>{% trans %} Community {% endtrans %}</th>
-                     <th></th>
-
                   </tr>
                </thead>
                <tbody>
                {% for project in projects %}
                   <tr>
                      <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
-                     <td>{{ project.sector }}</td>
-                     <td>{{ locations[project.id][0].name}}</td>
-                     <td>{{ locations[project.id][1].name}}</td>
-                     <td>{{ locations[project.id][2].name }}</td>
-                     <td>{{ project.community.name }}</td>
-                     <td> Edit</td>
+                     <td>{{ project.sector_name }}</td>
+                     <td>{{ locations[project.id][0].pretty}}</td>
+                     <td>{{ locations[project.id][1].pretty}}</td>
+                     <td>{{ locations[project.id][2].pretty }}</td>
+                     <td>{{ project.community.pretty }}</td>
                   </tr>
                {% endfor %}
                </tbody>
@@ -91,9 +128,14 @@
 </div>
 {% endblock content %}
 {% block page_scripts %}
-  <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  Custom.filterProjectsTable();
+  map = Custom.display_constituency_map();
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
+  Custom.searchProjectsTable();
+  Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 {% endblock %}
+

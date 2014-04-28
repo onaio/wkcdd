@@ -11,9 +11,13 @@ from wkcdd.models.location import (
 )
 from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
+from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd.models import helpers
-from wkcdd.views.helpers import build_dataset
+from wkcdd.views.helpers import (
+    build_dataset,
+    get_project_geolocations
+)
 
 
 @view_defaults(route_name='counties')
@@ -34,11 +38,13 @@ class CountyView(object):
         dataset = build_dataset(Location.COUNTY,
                                 counties,
                                 impact_indicators)
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'title': "County Impact Indicators Report",
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
+            'filter_criteria': filter_criteria
         }
 
     @view_config(name='',
@@ -85,13 +91,15 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'title': county.pretty,
             'county': county,
             'sub_counties': sub_counties,
             'project_types': project_types_mappings,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping
+            'sector_indicator_mapping': sector_indicator_mapping,
+            'filter_criteria': filter_criteria
         }
 
     @view_config(name='performance_summary',
@@ -108,6 +116,19 @@ class CountyView(object):
                 helpers.get_constituency_ids(
                     helpers.get_sub_county_ids(
                         county_ids))))
+
+        project_type = self.request.GET.get('type')
+
+        if project_type:
+            selected_project_types = helpers.get_project_types(
+                helpers.get_community_ids(
+                    helpers.get_constituency_ids(
+                        helpers.get_sub_county_ids(
+                            county_ids))), Project.sector == project_type)
+
+        else:
+            selected_project_types = project_types_mappings
+        project_type_geopoints = {}
         for reg_id, report_id, title in project_types_mappings:
             aggregated_indicators = (
                 Report.get_performance_indicator_aggregation_for(
@@ -117,10 +138,20 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
+            project_geopoints = get_project_geolocations(
+                aggregated_indicators['project_list'])
+            project_type_geopoints[reg_id] = project_geopoints
+
+        filter_criteria = Project.generate_filter_criteria()
+
         return {
             'title': "County Performance Indicators Report",
             'counties': counties,
             'project_types': project_types_mappings,
+            'selected_project_types': selected_project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping
+            'sector_indicator_mapping': sector_indicator_mapping,
+            'filter_criteria': filter_criteria,
+            'project_type_geopoints': project_type_geopoints
+
         }

@@ -78,4 +78,3 @@ class CommunityView(object):
             ('title', 'key'),
             constants.IMPACT_INDICATOR_REPORT)
         return indicator_mapping, aggregated_indicators
-

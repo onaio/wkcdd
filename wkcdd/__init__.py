@@ -44,6 +44,8 @@ def main(global_config, **settings):
 
 def includeme(config):
     config.include('pyramid_jinja2')
+    # commit config to ensure config.get_jinja2_environment() is not None
+    config.commit()
     config.add_jinja2_search_path("wkcdd:templates")
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value

@@ -1,0 +1,34 @@
+{% macro generate_map_chart(request, sector_indicator_mapping) %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet">
+      <div class="portlet-title">
+        <div class="caption pull-right">
+          <a href="javascript:;"><i class="icon-globe"></i> Map</a> |
+          <a href="javascript:;"><i class="icon-bar-chart"></i> Chart</a>
+        </div>
+        <div class="tools pull-left">
+          <a href="" class="collapse"></a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <div id="maps-content" class="display-none" style="display: block;">
+          <div class="btn-toolbar margin-bottom-10">
+            <div class="btn-group">
+              <a href="" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                Select Indicator <span class="icon-angle-down"></span>
+              </a>
+              <ul class="dropdown-menu select-sector">
+                {% for indicator in sector_indicator_mapping%}
+                  <li><a href="javascript:;" class=> {{ indicator['title'] }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
