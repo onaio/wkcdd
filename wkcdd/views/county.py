@@ -14,7 +14,10 @@ from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd.models import helpers
-from wkcdd.views.helpers import build_dataset
+from wkcdd.views.helpers import (
+    build_dataset,
+    get_project_geolocations
+)
 
 
 @view_defaults(route_name='counties')
@@ -125,7 +128,7 @@ class CountyView(object):
 
         else:
             selected_project_types = project_types_mappings
-
+        project_type_geopoints = {}
         for reg_id, report_id, title in project_types_mappings:
             aggregated_indicators = (
                 Report.get_performance_indicator_aggregation_for(
@@ -135,6 +138,10 @@ class CountyView(object):
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             sector_indicator_mapping[reg_id] = indicator_mapping
             sector_aggregated_indicators[reg_id] = aggregated_indicators
+            project_geopoints = get_project_geolocations(
+                aggregated_indicators['project_list'])
+            project_type_geopoints[reg_id] = project_geopoints
+
         filter_criteria = Project.generate_filter_criteria()
 
         return {
@@ -144,5 +151,7 @@ class CountyView(object):
             'selected_project_types': selected_project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
             'sector_indicator_mapping': sector_indicator_mapping,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'project_type_geopoints': project_type_geopoints
+
         }

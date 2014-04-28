@@ -1,3 +1,4 @@
+import json
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
@@ -94,3 +95,20 @@ def filter_projects_by(criteria):
     else:
         projects = get_project_list(community_ids, *project_criteria)
     return projects
+
+
+def get_project_geolocations(projects):
+    """
+    Get project geopoints for a list of projects
+    """
+    project_geopoints = [
+        {'id': project.id,
+         'name': project.name,
+         'sector': project.sector_name,
+         'lat': str(project.latlong[0]),
+         'lng': str(project.latlong[1])}
+        for project in projects if project.latlong]
+
+    project_geopoints = json.dumps(project_geopoints)
+
+    return project_geopoints

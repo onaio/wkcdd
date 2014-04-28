@@ -1,13 +1,20 @@
 import unittest
+import os
+import json
 from pyramid.events import NewRequest
 from pyramid import testing
 
 from wkcdd.libs.utils import humanize
-from wkcdd.tests.test_base import TestBase, IntegrationTestBase
+from wkcdd.tests.test_base import (
+    TestBase,
+    IntegrationTestBase,
+    _load_json_fixture
+)
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset,
-    filter_projects_by
+    filter_projects_by,
+    get_project_geolocations
 )
 from wkcdd import constants
 from wkcdd.models import (
@@ -171,3 +178,11 @@ class TestProjectFilter(IntegrationTestBase):
         projects = filter_projects_by(search_criteria)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0], project)
+
+    def test_get_project_geolocations(self):
+        self.setup_test_data()
+        geopoints = json.dumps(_load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'geopoints.json')))
+        projects = Project.all()
+        project_geopoints = get_project_geolocations(projects)
+        self.assertEquals(project_geopoints, geopoints)
