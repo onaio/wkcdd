@@ -149,20 +149,18 @@ class CountyView(object):
         search_criteria = {'view_by': view_by,
                            'location_map': location_map}
 
+        community_ids = helpers.get_community_ids(
+            helpers.get_constituency_ids(
+                helpers.get_sub_county_ids(
+                    county_ids)))
         project_types_mappings = helpers.get_project_types(
-            helpers.get_community_ids(
-                helpers.get_constituency_ids(
-                    helpers.get_sub_county_ids(
-                        county_ids))))
+            community_ids)
 
         project_type = self.request.GET.get('type')
 
         if project_type:
             selected_project_types = helpers.get_project_types(
-                helpers.get_community_ids(
-                    helpers.get_constituency_ids(
-                        helpers.get_sub_county_ids(
-                            county_ids))), Project.sector == project_type)
+                community_ids, Project.sector == project_type)
 
         else:
             selected_project_types = project_types_mappings
