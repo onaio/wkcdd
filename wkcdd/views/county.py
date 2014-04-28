@@ -161,7 +161,6 @@ class CountyView(object):
         if project_type:
             selected_project_types = helpers.get_project_types(
                 community_ids, Project.sector == project_type)
-
         else:
             selected_project_types = project_types_mappings
 
