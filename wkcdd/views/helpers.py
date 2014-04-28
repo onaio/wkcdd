@@ -1,3 +1,4 @@
+import json
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
@@ -197,3 +198,20 @@ def generate_performance_indicators_for(location_map,
         'sector_aggregated_indicators': sector_aggregated_indicators,
         'sector_indicator_mapping': sector_indicator_mapping
     }
+
+
+def get_project_geolocations(projects):
+    """
+    Get project geopoints for a list of projects
+    """
+    project_geopoints = [
+        {'id': project.id,
+         'name': project.name,
+         'sector': project.sector_name,
+         'lat': str(project.latlong[0]),
+         'lng': str(project.latlong[1])}
+        for project in projects if project.latlong]
+
+    project_geopoints = json.dumps(project_geopoints)
+
+    return project_geopoints

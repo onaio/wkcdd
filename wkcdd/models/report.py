@@ -219,10 +219,12 @@ class Report(Base):
         performance_indicators = {}
         total_indicator_summary = defaultdict(int)
         location_count = len(child_locations)
+        project_list = []
         for child_location in child_locations:
             projects = Report.get_projects_from_location(
                 child_location,
                 (Project.sector == project_type))
+            project_list = project_list + projects
             indicators = Report.get_aggregated_performance_indicators(
                 projects, report_type)
             performance_indicators[child_location.id] = indicators
@@ -238,7 +240,9 @@ class Report(Base):
             Report.average_performance_ratios(report_type,
                                               total_indicator_summary,
                                               location_count)
+
         return {
             'aggregated_performance_indicators': performance_indicators,
-            'total_indicator_summary': total_indicator_summary
+            'total_indicator_summary': total_indicator_summary,
+            'project_list': project_list
         }
