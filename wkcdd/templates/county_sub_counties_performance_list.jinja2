@@ -11,7 +11,7 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
+      <a href="{{ request.route_url('county', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -19,7 +19,7 @@
   </li>
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'counties', county, 'performance') }}
+  {{ add_indicator_links(request, 'county', county, 'performance') }}
 {% endblock %}
 {% block content %}
 {% for sector, report, label in project_types %}
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 {{ generate_performance_indicator_table(request, 'sub_county',
-                sub_counties,
+                sub_county,
                 sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->

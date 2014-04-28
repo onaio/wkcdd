@@ -20,7 +20,7 @@
      {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'counties', None, 'impact') }}
+  {{ add_indicator_links(request, 'county', None, 'impact') }}
 {% endblock %}
 {% block content %}
 {{ generate_map_chart(request) }}
@@ -55,7 +55,7 @@
                <tbody>
                 {% for row in rows %}
                   <tr>
-                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
+                     <td><a href="{{ request.route_url('county', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
                      {% for col in row[1:] %}
                         <td>{{ value_or_default(col|format_value(request), '-') }}</td>
                      {% endfor %}

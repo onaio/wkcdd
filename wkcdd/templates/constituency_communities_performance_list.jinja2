@@ -11,11 +11,11 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
+      <a href="{{ request.route_url('county', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('counties',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
+      <a href="{{ request.route_url('county',traverse=(constituency.sub_county.county.id)) }}">{{ constituency.sub_county.county.pretty }} {% trans %}County{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>

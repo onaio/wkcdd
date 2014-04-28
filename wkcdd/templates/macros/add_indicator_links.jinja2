@@ -27,7 +27,7 @@
         </li>
     {% else %}
         <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=('performance_summary')) }}"
+            <a href="{{ request.route_url('county',traverse=('performance_summary')) }}"
             {% if page == 'performance'%}
                     class="selected" >
             {% else %}
@@ -37,7 +37,7 @@
             </a>
         </li>
         <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=()) }}"
+            <a href="{{ request.route_url('county',traverse=()) }}"
             {% if page == 'impact' %}
                     class="selected" >
             {% else %}

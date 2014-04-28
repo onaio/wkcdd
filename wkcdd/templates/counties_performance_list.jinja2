@@ -17,7 +17,7 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
+      <a href="{{ request.route_url('county', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -25,7 +25,7 @@
   </li>
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'counties', None, 'performance') }}
+  {{ add_indicator_links(request, 'county', None, 'performance') }}
 {% endblock %}
 {% block content %}
 <!--MAP-->
@@ -33,15 +33,10 @@
 <!--END MAP-->
 
 <!--PROJECT TYPE DROP DOWN-->
-{% if selected_project_types | length > 1 %}
-    {% set selected_name = 'All Sectors' %}
-{% else %}
-    {% set selected_name = selected_project_types[0][2] %}
-{% endif %}
-{{ generate_project_type_dropdown(request, selected_name, 'counties', '', project_types)}}
+{{ generate_project_type_dropdown(request, selected_project_type, aggregate_type, '', project_types)}}
 
 <!--PERFORMANCE INDICATOR TABLES-->
-{% for sector, report, label in selected_project_types %}
+{% for sector, report, label in project_types %}
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -53,8 +48,8 @@
                     {% trans %}Projects{% endtrans %}
                     </div>
                 </div>
-                {{ generate_performance_indicator_table(request, 'counties',
-                counties,
+                {{ generate_performance_indicator_table(request, aggregate_type,
+                aggregate_list,
                 sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->
