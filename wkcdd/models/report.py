@@ -3,10 +3,6 @@ from collections import defaultdict
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.project import Project
-from wkcdd.models.community import Community
-from wkcdd.models.county import County
-from wkcdd.models.sub_county import SubCounty
-from wkcdd.models.constituency import Constituency
 
 from wkcdd.models.base import (
     Base
@@ -20,9 +16,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSON
 from wkcdd.models.helpers import (
     get_project_list,
-    get_community_ids,
-    get_constituency_ids,
-    get_sub_county_ids
+    get_community_ids_for
 )
 
 
@@ -177,15 +171,7 @@ class Report(Base):
     def get_projects_from_location(cls,
                                    location,
                                    *criteria):
-        community_ids = {
-            Community: [location.id],
-            Constituency: get_community_ids([location.id]),
-            SubCounty: get_community_ids(get_constituency_ids
-                                         ([location.id])),
-            County: get_community_ids(get_constituency_ids
-                                      (get_sub_county_ids
-                                       ([location.id])))
-        }[type(location)]
+        community_ids = get_community_ids_for(type(location), [location.id])
         projects = get_project_list(community_ids, *criteria)
         return projects
 

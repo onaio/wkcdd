@@ -7,6 +7,7 @@ from wkcdd.models import (
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
+from wkcdd.models.county import County
 
 
 def get_sub_county_ids(county_ids):
@@ -48,3 +49,16 @@ def get_project_types(community_ids, *criterion):
     return [(reg_id, report_id, label)
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING
             if reg_id in registration_ids]
+
+
+def get_community_ids_for(location_type, location_ids):
+    community_ids = {
+        Community: location_ids,
+        Constituency: get_community_ids(location_ids),
+        SubCounty: get_community_ids(get_constituency_ids
+                                     (location_ids)),
+        County: get_community_ids(get_constituency_ids
+                                  (get_sub_county_ids
+                                   (location_ids)))
+    }[location_type]
+    return community_ids
