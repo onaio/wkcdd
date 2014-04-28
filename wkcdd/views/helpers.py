@@ -123,14 +123,14 @@ def generate_impact_indicators_for(location_map, level=None):
     else:
         # Default aggregation level is all counties
         aggregate_list = County.all()
+
     if aggregate_list:
         impact_indicators = (
             Report.get_impact_indicator_aggregation_for(
                 aggregate_list))
         aggregate_type = aggregate_list[0].location_type
 
-    else:
-        if location and type(location) is Community:
+    elif location and type(location) is Community:
             aggregate_list = location.projects
             impact_indicators = Report.get_aggregated_impact_indicators(
                 aggregate_list)
