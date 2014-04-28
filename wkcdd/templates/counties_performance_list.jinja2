@@ -13,7 +13,7 @@
   </h3>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block breadcrumbs %}
   <li>

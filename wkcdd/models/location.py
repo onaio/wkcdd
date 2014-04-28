@@ -39,6 +39,9 @@ class Location(Base):
     def __str__(self):
         return self.name
 
+    def children(self):
+        return Location.all(Location.parent_id == self.id)
+
     @classmethod
     def get_or_create(cls, name, parent, location_type):
 

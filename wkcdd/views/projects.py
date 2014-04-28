@@ -35,7 +35,7 @@ class ProjectViews(object):
         if filter_projects is not None:
             search = self.request.GET.get('search') or ''
             sector = self.request.GET.get('sector') or ''
-            location = {
+            location_map = {
                 'community': self.request.GET.get('community'),
                 'constituency': self.request.GET.get('constituency'),
                 'sub_county': self.request.GET.get('sub_county'),
@@ -43,7 +43,7 @@ class ProjectViews(object):
             }
             search_criteria = {'name': search,
                                'sector': sector,
-                               'location': location}
+                               'location_map': location_map}
 
             projects = filter_projects_by(search_criteria)
 

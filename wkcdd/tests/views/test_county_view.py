@@ -15,9 +15,9 @@ class TestCountyViews(IntegrationTestBase):
         self.request = testing.DummyRequest()
         self.county_view = CountyView(self.request)
 
-    def test_show_all_counties(self):
+    def test_show_all(self):
         self.setup_test_data()
-        response = self.county_view.show_all_counties()
+        response = self.county_view.show_all()
         self.assertEquals(response['rows'][0][0].name, "Bungoma")
         self.assertEquals(len(response['rows']), 3)
         self.assertEquals(response['summary_row'], [20, 1, 3, 8])
@@ -40,7 +40,7 @@ class TestCountyViews(IntegrationTestBase):
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):
-    def test_show_all_counties_view(self):
+    def test_show_all_view(self):
         self.setup_test_data()
         url = self.request.route_path('counties',  traverse='')
         response = self.testapp.get(url)
