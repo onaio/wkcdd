@@ -224,6 +224,18 @@ class TestImpactIndicatorGeneration(TestBase):
 
 
 class TestPerformanceIndicatorGeneration(TestBase):
+    def setup_location_map(self,
+                           community='',
+                           constituency='',
+                           sub_county='',
+                           county=''):
+        return {
+            "community": community,
+            "constituency": constituency,
+            "sub_county": sub_county,
+            "county": county
+        }
+
     def test_generate_performance_indicators_for_none(self):
         self.setup_test_data()
         results = generate_performance_indicators_for(None)
@@ -233,12 +245,9 @@ class TestPerformanceIndicatorGeneration(TestBase):
         self.setup_test_data()
         county = County.get(County.name == "Busia")
         sub_county = SubCounty.get(SubCounty.name == "Teso")
-        location_map = {
-            "community": '',
-            "constituency": '',
-            "sub_county": '',
-            "county": "{}".format(county.id)
-        }
+        location_map = self.setup_location_map(
+            county="{}".format(county.id))
+
         results = generate_performance_indicators_for(
             location_map)
         self.assertIsNotNone(results['project_types'])
@@ -248,3 +257,25 @@ class TestPerformanceIndicatorGeneration(TestBase):
             ['aggregated_performance_indicators']
             [sub_county.id]['summary'])
         self.assertIsNotNone(teso_sub_county_indicators)
+
+    def test_generate_performance_indicators_for_community(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        location_map = self.setup_location_map(
+            community="{}".format(community.id))
+
+        results = generate_performance_indicators_for(location_map)
+        self.assertIsNotNone(results['project_types'])
+
+    def test_generate_performance_indicators_for_community_sector(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        location_map = self.setup_location_map(
+            community="{}".format(community.id))
+
+        results = generate_performance_indicators_for(
+            location_map,
+            constants.DAIRY_COWS_PROJECT_REGISTRATION
+        )
+        self.assertIsNone(results['sector_aggregated_indicators'])
+        self.assertIsNone(results['sector_indicator_mapping'])
