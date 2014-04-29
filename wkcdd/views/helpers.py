@@ -79,23 +79,27 @@ def build_performance_dataset(location_type,
     summary_row = []
 
     if projects:
-        for project_indicator in indicators['indicator_list']:
+        location = locations[0]
+        project_indicators = (
+            indicators['aggregated_performance_indicators'][location.id])
+
+        for project_indicator in project_indicators['indicator_list']:
             for project in projects:
                 if project.id == project_indicator['project_id']:
                     row = [project]
-            for group in indicator_keys:
-                item_group = []
-                for key in group:
-                    value = 0 if project_indicator['indicators'] is \
-                        None else project_indicator['indicators'][key]
-                    item_group.append(value)
-                row.append(item_group)
+                    for group in indicator_keys:
+                        item_group = []
+                        for key in group:
+                            value = 0 if project_indicator['indicators'] is \
+                                None else project_indicator['indicators'][key]
+                            item_group.append(value)
+                        row.append(item_group)
             rows.append(row)
         summary_row.extend(
             [
-                [indicators['summary'][key[0]],
-                 indicators['summary'][key[1]],
-                 indicators['summary'][key[2]]]
+                [project_indicators['summary'][key[0]],
+                 project_indicators['summary'][key[1]],
+                 project_indicators['summary'][key[2]]]
                 for key in indicator_keys])
     else:
         for location in locations:
@@ -245,11 +249,11 @@ def generate_performance_indicators_for(location_map,
             constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
         if aggregate_type == PROJECT_LABEL:
             aggregated_indicators = (
-                Report.get_aggregated_performance_indicators(
-                    aggregate_list, report_id))
+                Report.get_performance_indicator_aggregation_for(
+                    [location], report_id))
             dataset = build_performance_dataset(
                 aggregate_type,
-                None,
+                [location],
                 aggregated_indicators,
                 projects=aggregate_list,
                 sector_report_map=indicator_mapping)
