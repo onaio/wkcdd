@@ -105,6 +105,61 @@ def get_lowest_location_value(location_map):
         return value
 
 
+def get_aggregate_list_for_location_by_level(location, level):
+    projects = Report.get_projects_from_location(location)
+    level_map_county = {
+        None: location.children(),
+        'counties': '',
+        'sub_counties': location.children(),
+        'constituencies': [constituencies
+                           for sub_counties in location.children()
+                           for constituencies in sub_counties.children()],
+        'communities': [communities
+                        for sub_counties in location.children()
+                        for constituencies in sub_counties.children()
+                        for communities in constituencies.children()],
+        'projects': projects
+    }
+    level_map_sub_county = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': [constituencies
+                           for constituencies in location.children()],
+        'communities': [communities
+                        for constituencies in location.children()
+                        for communities in constituencies.children()],
+        'projects': projects
+    }
+    level_map_constituency = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': '',
+        'communities': [communities
+                        for communities in location.children()],
+        'projects': projects
+    }
+
+    level_map_community = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': '',
+        'communities': '',
+        'projects': projects
+    }
+
+    aggregate_list = {
+        County: level_map_county[level],
+        SubCounty: level_map_sub_county[level],
+        Constituency: level_map_constituency[level],
+        Community: level_map_community[level],
+    }[type(location)]
+
+    return aggregate_list
+
+
 def generate_impact_indicators_for(location_map, level=None):
     location_id = get_lowest_location_value(location_map)
     location = None
@@ -113,17 +168,20 @@ def generate_impact_indicators_for(location_map, level=None):
 
     if location_id:
         location = Location.get(Location.id == location_id)
-        level_map = {
-            None: location.children(),
-            'county': '',
-            'sub_county': '',
-            'constituency': '',
-            'community': ''
-        }
-        aggregate_list = level_map[level]
+        aggregate_list = \
+            get_aggregate_list_for_location_by_level(location, level)
+
     else:
         # Default aggregation level is all counties
-        aggregate_list = County.all()
+        level_map = {
+            None: County.all(),
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'constituencies': Constituency.all(),
+            'communities': Community.all(),
+            'projects': Project.all()
+        }
+        aggregate_list = level_map[level]
 
     if aggregate_list:
         impact_indicators = (

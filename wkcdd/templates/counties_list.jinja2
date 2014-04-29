@@ -90,6 +90,6 @@
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
 
-  {{ update_selected_location_dropdowns(search_criteria['location_map']) }}
+  {{ update_selected_location_dropdowns(search_criteria) }}
   
 {% endblock %}

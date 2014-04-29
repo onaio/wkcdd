@@ -252,25 +252,42 @@ var LocationSelect = function() {
                 case "sub_counties":
                     if ($('select[name=county]').val() == '') {
                         view_by.children('option[value=counties]').prop('disabled', false);
-                        view_by.val('counties');
                     }else{
                         view_by.children('option[value=counties]').attr('disabled', true);
                     }
                 break;
                 case "constituencies":
-                   view_by.children('option[value=counties]').attr('disabled', true);
-                   view_by.children('option[value=sub_counties]').attr('disabled', true);
+                    if ($('select[name=sub_county').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                    }
                 break;
                 case "communities":
-                   view_by.children('option[value=counties]').attr('disabled', true);
-                   view_by.children('option[value=sub_counties]').attr('disabled', true);
-                   view_by.children('option[value=constituencies]').attr('disabled', true);
+                    if ($('select[name=constituency').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                        view_by.children('option[value=constituencies]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                        view_by.children('option[value=constituencies]').attr('disabled', true);
+                    }
                 break;
                 case "projects":
-                   view_by.children('option[value=counties]').attr('disabled', true);
-                   view_by.children('option[value=sub_counties]').attr('disabled', true);
-                   view_by.children('option[value=constituencies]').attr('disabled', true);
-                   view_by.children('option[value=communities]').attr('disabled', true);
+                     if ($('select[name=constituency').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                        view_by.children('option[value=constituencies]').attr('disabled', false);
+                        view_by.children('option[value=communities]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                        view_by.children('option[value=constituencies]').attr('disabled', true);
+                        view_by.children('option[value=communities]').attr('disabled', true);
+                    }
                 break;
             }
 
