@@ -94,8 +94,8 @@ class TestBuildDatasetHelpers(TestBase):
         community = Community.get(Community.name == "Rwatama")
         projects = community.projects
         performance_indicators = (
-            Report.get_aggregated_performance_indicators(
-                projects, constants.DAIRY_GOAT_PROJECT_REPORT))
+            Report.get_performance_indicator_aggregation_for(
+                [community], constants.DAIRY_GOAT_PROJECT_REPORT))
 
         sector_report_map = (
             constants.PERFORMANCE_INDICATOR_REPORTS
@@ -103,7 +103,7 @@ class TestBuildDatasetHelpers(TestBase):
 
         dataset = build_performance_dataset(
             Location.COMMUNITY,
-            None,
+            [community],
             performance_indicators,
             projects=projects,
             sector_report_map=sector_report_map)
@@ -111,7 +111,7 @@ class TestBuildDatasetHelpers(TestBase):
                           humanize(Location.COMMUNITY).title())
         self.assertEquals(dataset['rows'][0][0].name,
                           projects[0].name)
-        self.assertEquals(dataset['summary_row'][0], 0)
+        self.assertEquals(dataset['summary_row'][0], [24000, 24000, 100.0])
 
 
 class TestProjectFilter(IntegrationTestBase):
@@ -334,5 +334,5 @@ class TestPerformanceIndicatorGeneration(TestBase):
             location_map,
             constants.DAIRY_COWS_PROJECT_REGISTRATION
         )
-        self.assertIsNone(results['sector_aggregated_indicators'])
-        self.assertIsNone(results['sector_indicator_mapping'])
+        self.assertFalse(results['sector_aggregated_indicators'])
+        self.assertFalse(results['sector_indicator_mapping'])
