@@ -34,9 +34,15 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
     headers = {
         'county': [humanize(location_type).title()],
         'sub_county': ["County", humanize(location_type).title()],
-        'constituency': ["County", "Sub-County", humanize(location_type).title()],
-        'community': ["County", "Sub-County", "Constituency", humanize(location_type).title()],
-        'Project': ["Country", "Sub-County", "Constituency", "Community", location_type]
+        'constituency': ["County", "Sub-County",
+                         humanize(location_type).title()],
+        'community': ["County", "Sub-County", "Constituency",
+                      humanize(location_type).title()],
+        'Project': ["Country",
+                    "Sub-County",
+                    "Constituency",
+                    "Community",
+                    location_type]
     }[location_type]
     indicator_headers, indicator_keys = zip(*constants.IMPACT_INDICATOR_REPORT)
     headers.extend(indicator_headers)
@@ -61,20 +67,23 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                             [key] for key in indicator_keys])
     else:
         for location in locations:
-            row = {
-                'county': [location],
-                'sub_county': [location.parent, location],
-                'constituency': [Location.get(Location.id == location.parent.id).parent,
-                                 location.parent,
-                                 location],
-                'community': [Location.get(Location.id ==
-                                           Location.get(Location.id ==
-                                                        location.parent.id).parent.id).parent,
-                              Location.get(Location.id == location.parent.id).parent,
-                              location.parent,
-                              location]
+            if location_type == 'county':
+                row = [location]
+            elif location_type == 'sub_county':
+                row = [location.parent, location]
+            elif location_type == 'constituency':
+                row = [Location.get(
+                    Location.id == location.parent.id).parent,
+                    location.parent, location]
+            elif location_type == 'community':
+                row = [Location.get(Location.id ==
+                                    Location.get(Location.id ==
+                                                 location.parent.id)
+                                    .parent.id).parent,
+                       Location.get(Location.id == location.parent.id).parent,
+                       location.parent,
+                       location]
 
-            }[location_type]
             location_summary = \
                 (impact_indicators['aggregated_impact_indicators']
                  [location.id]['summary'])

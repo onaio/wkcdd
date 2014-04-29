@@ -68,9 +68,9 @@ class TestBuildDatasetHelpers(TestBase):
                                 impact_indicators,
                                 projects
                                 )
-        self.assertEquals(dataset['headers'][0],
+        self.assertEquals(dataset['headers'][3],
                           humanize(Location.COMMUNITY).title())
-        self.assertEquals(dataset['rows'][0][0].name,
+        self.assertEquals(dataset['rows'][0][4].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
 
@@ -264,8 +264,8 @@ class TestImpactIndicatorGeneration(TestBase):
         results = generate_impact_indicators_for(location_map, view_by)
         communities = [communities
                        for sub_counties in county.children()
-                       for constituencies in sub_counties.children()
-                       for communities in constituencies.children()]
+                       for consts in sub_counties.children()
+                       for communities in consts.children()]
         self.assertEqual(results['aggregate_list'], communities)
         self.assertEqual(results['aggregate_type'], Location.COMMUNITY)
 
