@@ -139,7 +139,8 @@ class CountyView(object):
         search_criteria = {'view_by': view_by,
                            'location_map': location_map}
         indicators = generate_performance_indicators_for(
-            location_map)
+            location_map,
+            selected_project_type)
 
         location = indicators['location']
         project_types = indicators['project_types']

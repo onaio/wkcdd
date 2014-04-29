@@ -38,7 +38,24 @@
 {{ generate_project_type_dropdown(request, selected_project_type, aggregate_type, '', project_types)}}
 
 <!--PERFORMANCE INDICATOR TABLES-->
-{% for sector, report, label in project_types %}
+{% if selected_project_type %}
+  <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN SAMPLE TABLE PORTLET-->
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                    <i class="icon-tasks"></i>
+                    {{ gettext(label) }}
+                    {% trans %}Projects{% endtrans %}
+                    </div>
+                </div>
+                {{ generate_performance_indicator_table(request, aggregate_type, sector_aggregated_indicators[selected_project_type]) }}
+            </div>
+            <!-- END SAMPLE TABLE PORTLET-->
+        </div>
+{% else %}
+  {% for sector, report, label in project_types %}
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -56,6 +73,8 @@
         </div>
 
 {% endfor %}
+
+{% endif %}
 <!--PERFORMANCE INDICATOR TABLES END-->
 {% endblock content %}
 {% block page_scripts %}
@@ -63,10 +82,10 @@
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
-  {% for sector, report, label  in project_types %}
-    Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
-  {% endfor %}
+  {% if selected_project_type %}
+    map = Custom.display_constituency_map();
+    Custom.process_raw_points({{ project_type_geopoints[selected_project_type]|safe() }}, map);
+  {% endif %}
 {% endblock %}

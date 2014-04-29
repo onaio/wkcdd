@@ -244,7 +244,6 @@ def generate_performance_indicators_for(location_map,
 
     for reg_id, report_id, title in project_types_mappings:
         # Skip execution until the selected sector is encountered
-
         if sector and reg_id != sector:
             continue
         indicator_mapping = (
