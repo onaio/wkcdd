@@ -107,8 +107,6 @@ class Report(Base):
 
     @classmethod
     def get_aggregated_performance_indicators(cls, project_list, project_type):
-        pass
-
         indicator_list = None
         summary = None
         summary_report_count = 0
