@@ -56,7 +56,29 @@
                 {% for row in rows %}
                   <tr>
                      <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
-                     {% for col in row[1:] %}
+                     {% if search_criteria['view_by'] == "sub_counties" %}
+                        {% set level = 2 %}
+                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+                     {% elif search_criteria['view_by'] == "constituencies"%}
+                        {% set level = 3 %}
+                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+                      {% elif search_criteria['view_by'] == "communities"%}
+                        {% set level = 4 %}
+                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
+                      {% elif search_criteria['view_by'] == "projects"%}
+                        {% set level = 5 %}
+                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
+                        <td><a href="{{ request.route_url('projects', traverse=(row[4].id)) }}">{{ row[4] }}</a></td>
+                     {% else %}
+                        {% set level = 1 %}
+
+                     {% endif%}
+                     {% for col in row[level:] %}
                         <td>{{ value_or_default(col|format_value(request), '-') }}</td>
                      {% endfor %}
                   </tr>

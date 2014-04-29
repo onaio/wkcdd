@@ -30,7 +30,14 @@ def requested_xlsx_format(event):
 
 
 def build_dataset(location_type, locations, impact_indicators, projects=None):
-    headers = [humanize(location_type).title()]
+
+    headers = {
+        'county': [humanize(location_type).title()],
+        'sub_county': ["County", humanize(location_type).title()],
+        'constituency': ["County", "Sub-County", humanize(location_type).title()],
+        'community': ["County", "Sub-County", "Constituency", humanize(location_type).title()],
+        'Project': ["Country", "Sub-County", "Constituency", "Community", location_type]
+    }[location_type]
     indicator_headers, indicator_keys = zip(*constants.IMPACT_INDICATOR_REPORT)
     headers.extend(indicator_headers)
     rows = []
@@ -40,7 +47,11 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
         for project_indicator in impact_indicators['indicator_list']:
             for project in projects:
                 if project.id == project_indicator['project_id']:
-                    row = [project]
+                    row = [project.community.constituency.sub_county.county,
+                           project.community.constituency.sub_county,
+                           project.community.constituency,
+                           project.community,
+                           project]
             for key in indicator_keys:
                 value = 0 if project_indicator['indicators'] is \
                     None else project_indicator['indicators'][key]
@@ -50,7 +61,20 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                             [key] for key in indicator_keys])
     else:
         for location in locations:
-            row = [location]
+            row = {
+                'county': [location],
+                'sub_county': [location.parent, location],
+                'constituency': [Location.get(Location.id == location.parent.id).parent,
+                                 location.parent,
+                                 location],
+                'community': [Location.get(Location.id ==
+                                           Location.get(Location.id ==
+                                                        location.parent.id).parent.id).parent,
+                              Location.get(Location.id == location.parent.id).parent,
+                              location.parent,
+                              location]
+
+            }[location_type]
             location_summary = \
                 (impact_indicators['aggregated_impact_indicators']
                  [location.id]['summary'])
