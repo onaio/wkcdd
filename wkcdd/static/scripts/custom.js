@@ -29,7 +29,7 @@ var Custom = function () {
 
             constituencies_map = new L.Map('map', {
                     layers: [
-                            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.snd5z5mi/{z}/{x}/{y}.png', {
+                            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hmlj38/{z}/{x}/{y}.png', {
                             maxZoom: 13,
                             minZoom: 9,
                             attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'

@@ -146,7 +146,9 @@ class CountyView(object):
         aggregate_type = indicators['aggregate_type']
         sector_aggregated_indicators = (
             indicators['sector_aggregated_indicators'])
+        project_type_geopoints = indicators['project_type_geopoints']
 
+        sector_indicator_mapping = indicators['sector_indicator_mapping']
         filter_criteria = Project.generate_filter_criteria()
 
         return {
@@ -156,6 +158,8 @@ class CountyView(object):
             'project_types': project_types,
             'selected_project_type': selected_project_type,
             'sector_aggregated_indicators': sector_aggregated_indicators,
+            'sector_indicator_mapping': sector_indicator_mapping,
             'filter_criteria': filter_criteria,
-            'search_criteria': search_criteria
+            'search_criteria': search_criteria,
+            'project_type_geopoints': project_type_geopoints
         }

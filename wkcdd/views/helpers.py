@@ -1,3 +1,4 @@
+import json
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
@@ -180,14 +181,14 @@ def generate_impact_indicators_for(location_map, level=None):
     else:
         # Default aggregation level is all counties
         aggregate_list = County.all()
+
     if aggregate_list:
         impact_indicators = (
             Report.get_impact_indicator_aggregation_for(
                 aggregate_list))
         aggregate_type = aggregate_list[0].location_type
 
-    else:
-        if location and type(location) is Community:
+    elif location and type(location) is Community:
             aggregate_list = location.projects
             impact_indicators = Report.get_aggregated_impact_indicators(
                 aggregate_list)
@@ -206,6 +207,7 @@ def generate_performance_indicators_for(location_map,
                                         level=None):
     sector_indicator_mapping = {}
     sector_aggregated_indicators = {}
+    project_type_geopoints = {}
     location_id = get_lowest_location_value(location_map)
     location = None
     aggregate_type = None
@@ -251,6 +253,9 @@ def generate_performance_indicators_for(location_map,
             aggregated_indicators = (
                 Report.get_performance_indicator_aggregation_for(
                     [location], report_id))
+            project_geopoints = get_project_geolocations(
+                aggregated_indicators['project_list'])
+
             dataset = build_performance_dataset(
                 aggregate_type,
                 [location],
@@ -261,12 +266,16 @@ def generate_performance_indicators_for(location_map,
             aggregated_indicators = (
                 Report.get_performance_indicator_aggregation_for(
                     aggregate_list, report_id))
+            project_geopoints = get_project_geolocations(
+                aggregated_indicators['project_list'])
+
             dataset = build_performance_dataset(
                 aggregate_type,
                 aggregate_list,
                 aggregated_indicators,
                 sector_report_map=indicator_mapping)
 
+        project_type_geopoints[reg_id] = project_geopoints
         sector_indicator_mapping[reg_id] = indicator_mapping
         sector_aggregated_indicators[reg_id] = dataset
 
@@ -276,5 +285,23 @@ def generate_performance_indicators_for(location_map,
         'aggregate_type': aggregate_type,
         'aggregate_list': aggregate_list,
         'sector_aggregated_indicators': sector_aggregated_indicators,
-        'sector_indicator_mapping': sector_indicator_mapping
+        'sector_indicator_mapping': sector_indicator_mapping,
+        'project_type_geopoints': project_type_geopoints
     }
+
+
+def get_project_geolocations(projects):
+    """
+    Get project geopoints for a list of projects
+    """
+    project_geopoints = [
+        {'id': project.id,
+         'name': project.name,
+         'sector': project.sector_name,
+         'lat': str(project.latlong[0]),
+         'lng': str(project.latlong[1])}
+        for project in projects if project.latlong]
+
+    project_geopoints = json.dumps(project_geopoints)
+
+    return project_geopoints
