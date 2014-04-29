@@ -260,6 +260,21 @@ class TestImpactIndicatorGeneration(TestBase):
         self.assertEqual(results['aggregate_list'], constituencies)
         self.assertEqual(results['aggregate_type'], Location.CONSTITUENCY)
 
+        view_by = "communities"
+        results = generate_impact_indicators_for(location_map, view_by)
+        communities = [communities
+                       for sub_counties in county.children()
+                       for constituencies in sub_counties.children()
+                       for communities in constituencies.children()]
+        self.assertEqual(results['aggregate_list'], communities)
+        self.assertEqual(results['aggregate_type'], Location.COMMUNITY)
+
+        view_by = "projects"
+        results = generate_impact_indicators_for(location_map, view_by)
+        projects = Report.get_projects_from_location(county)
+        self.assertEqual(results['aggregate_list'], projects)
+        self.assertEqual(results['aggregate_type'], 'Project')
+
 
 class TestPerformanceIndicatorGeneration(TestBase):
     def test_generate_performance_indicators_for_none(self):
