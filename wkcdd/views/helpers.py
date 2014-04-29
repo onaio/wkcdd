@@ -183,17 +183,15 @@ def generate_impact_indicators_for(location_map, level=None):
         }
         aggregate_list = level_map[level]
 
-    if aggregate_list:
+    if type(aggregate_list[0]) == Project:
+        impact_indicators = \
+            Report.get_aggregated_impact_indicators(aggregate_list)
+        aggregate_type = 'Project'
+    else:
         impact_indicators = (
             Report.get_impact_indicator_aggregation_for(
                 aggregate_list))
         aggregate_type = aggregate_list[0].location_type
-
-    elif location and type(location) is Community:
-            aggregate_list = location.projects
-            impact_indicators = Report.get_aggregated_impact_indicators(
-                aggregate_list)
-            aggregate_type = 'Project'
 
     return {
         'aggregate_type': aggregate_type,

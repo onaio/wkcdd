@@ -231,7 +231,7 @@ class TestImpactIndicatorGeneration(TestBase):
             "county": ""
         }
 
-        results = generate_impact_indicators_for(location_map)
+        results = generate_impact_indicators_for(location_map, "projects")
 
         self.assertEqual(results['aggregate_type'], 'Project')
         self.assertEqual(results['aggregate_list'], community.projects)
