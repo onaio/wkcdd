@@ -36,7 +36,8 @@ class TestCountyViews(IntegrationTestBase):
         params = MultiDict({'type': 'dairy_goat_project_registration'})
         self.request.GET = params
         response = self.county_view.performance_summary()
-        self.assertEquals(len(response['selected_project_types']), 1)
+        self.assertEquals(response['selected_project_type'],
+                          'dairy_goat_project_registration')
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):

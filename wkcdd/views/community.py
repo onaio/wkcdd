@@ -4,10 +4,12 @@ from pyramid.view import (
 )
 from wkcdd.models.community import Community
 from wkcdd.models.report import Report
-from wkcdd.views.helpers import build_dataset
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
-from wkcdd.models import helpers
+from wkcdd.views.helpers import (
+    build_dataset,
+    generate_performance_indicators_for
+)
 
 
 @view_defaults(route_name='community')
@@ -47,28 +49,24 @@ class CommunityView(object):
                  request_method='GET')
     def performance(self):
         community = self.request.context
-        project_types_mappings = helpers.get_project_types([community.id])
-        sector_indicator_mapping = {}
-        sector_aggregated_indicators = {}
-        for reg_id, report_id, title in project_types_mappings:
-            total_aggregated_indicators = (
-                Report.get_performance_indicator_aggregation_for(
-                    [community], report_id))
-            aggregated_indicators = (
-                total_aggregated_indicators
-                ['aggregated_performance_indicators']
-                [community.id])
-            indicator_mapping = tuple_to_dict_list(
-                ('title', 'group'),
-                constants.PERFORMANCE_INDICATOR_REPORTS[
-                    report_id])
-            sector_indicator_mapping[reg_id] = indicator_mapping
-            sector_aggregated_indicators[reg_id] = aggregated_indicators
+        location_map = {
+            'community': community.id,
+            'constituency': '',
+            'sub_county': '',
+            'county': ''
+        }
+        indicators = generate_performance_indicators_for(
+            location_map)
+        project_types = indicators['project_types']
+        aggregate_type = indicators['aggregate_type']
+        sector_aggregated_indicators = (
+            indicators['sector_aggregated_indicators'])
         return {
+            'title': community.pretty,
+            'aggregate_type': aggregate_type,
             'community': community,
-            'project_types': project_types_mappings,
+            'project_types': project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping
         }
 
     def get_impact_indicators(self, projects):

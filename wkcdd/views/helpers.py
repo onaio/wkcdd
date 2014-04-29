@@ -105,7 +105,6 @@ def build_performance_dataset(location_type,
                 [location.id]['summary'])
             for group in indicator_keys:
                 item_group = []
-                summary_group = []
                 for item in group:
                     item_group.append(location_summary[item])
 
@@ -188,7 +187,7 @@ def generate_impact_indicators_for(location_map, level=None):
             aggregate_list = location.projects
             impact_indicators = Report.get_aggregated_impact_indicators(
                 aggregate_list)
-            aggregate_type = PROJECT_LABEL
+            aggregate_type = "Project"
 
     return {
         'aggregate_type': aggregate_type,

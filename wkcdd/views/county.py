@@ -4,7 +4,6 @@ from pyramid.view import (
 )
 
 from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.location import (
     LocationFactory,
     Location
@@ -13,7 +12,6 @@ from wkcdd.models.county import County
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
-from wkcdd.models import helpers
 from wkcdd.views.helpers import (
     build_dataset,
     generate_impact_indicators_for,
@@ -100,38 +98,31 @@ class CountyView(object):
                  renderer='county_sub_counties_performance_list.jinja2',
                  request_method='GET')
     def performance(self):
-        sector_indicator_mapping = {}
-        sector_aggregated_indicators = {}
-        location_map = self.get_location_map()
-        view_by = self.request.GET.get('view_by')
-
         county = self.request.context
-        sub_counties = SubCounty.all(SubCounty.parent_id == county.id)
-        sub_county_ids = [subcounty.id for subcounty in sub_counties]
-        project_types_mappings = helpers.get_project_types(
-            helpers.get_community_ids(
-                helpers.get_constituency_ids(
-                    sub_county_ids)))
-        for reg_id, report_id, title in project_types_mappings:
-            aggregated_indicators = (
-                Report.get_performance_indicator_aggregation_for(
-                    sub_counties, report_id))
-            indicator_mapping = tuple_to_dict_list(
-                ('title', 'group'),
-                constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
-            sector_indicator_mapping[reg_id] = indicator_mapping
-            sector_aggregated_indicators[reg_id] = aggregated_indicators
-        filter_criteria = Project.generate_filter_criteria()
-
+        location_map = {
+            'community': '',
+            'constituency': '',
+            'sub_county': '',
+            'county': county.id
+        }
+        view_by = self.request.GET.get('view_by')
         search_criteria = {'view_by': view_by,
                            'location_map': location_map}
+        indicators = generate_performance_indicators_for(
+            location_map)
+        project_types = indicators['project_types']
+        aggregate_type = indicators['aggregate_type']
+        sector_aggregated_indicators = (
+            indicators['sector_aggregated_indicators'])
+
+        filter_criteria = Project.generate_filter_criteria()
+
         return {
             'title': county.pretty,
+            'aggregate_type': aggregate_type,
             'county': county,
-            'sub_counties': sub_counties,
-            'project_types': project_types_mappings,
+            'project_types': project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping,
             'filter_criteria': filter_criteria,
             'search_criteria': search_criteria
         }
@@ -153,7 +144,6 @@ class CountyView(object):
         location = indicators['location']
         project_types = indicators['project_types']
         aggregate_type = indicators['aggregate_type']
-        aggregate_list = indicators['aggregate_list']
         sector_aggregated_indicators = (
             indicators['sector_aggregated_indicators'])
 

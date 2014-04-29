@@ -107,8 +107,8 @@ class Report(Base):
 
     @classmethod
     def get_aggregated_performance_indicators(cls, project_list, project_type):
-        indicator_list = None
-        summary = None
+        indicator_list = []
+        summary = defaultdict(int)
         summary_report_count = 0
         if project_list:
             indicator_list = []

@@ -7,6 +7,7 @@ from wkcdd.tests.test_base import TestBase, IntegrationTestBase
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset,
+    build_performance_dataset,
     filter_projects_by,
     generate_impact_indicators_for,
     generate_performance_indicators_for
@@ -67,6 +68,50 @@ class TestBuildDatasetHelpers(TestBase):
         self.assertEquals(dataset['rows'][0][0].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
+
+    def test_build_dataset_for_performance_indicators(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Busia")
+        sub_counties = county.children()
+        performance_indicators = (
+            Report.get_performance_indicator_aggregation_for(
+                county.children(), constants.DAIRY_GOAT_PROJECT_REPORT))
+        sector_report_map = (
+            constants.PERFORMANCE_INDICATOR_REPORTS
+            [constants.DAIRY_GOAT_PROJECT_REPORT])
+        dataset = build_performance_dataset(
+            Location.SUB_COUNTY,
+            sub_counties,
+            performance_indicators,
+            sector_report_map=sector_report_map)
+        self.assertEquals(dataset['headers'][0],
+                          humanize(Location.SUB_COUNTY).title())
+        self.assertEquals(dataset['rows'][0][0].name,
+                          sub_counties[0].name)
+
+    def test_build_dataset_for_performance_project_list(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        projects = community.projects
+        performance_indicators = (
+            Report.get_aggregated_performance_indicators(
+                projects, constants.DAIRY_GOAT_PROJECT_REPORT))
+
+        sector_report_map = (
+            constants.PERFORMANCE_INDICATOR_REPORTS
+            [constants.DAIRY_GOAT_PROJECT_REPORT])
+
+        dataset = build_performance_dataset(
+            Location.COMMUNITY,
+            None,
+            performance_indicators,
+            projects=projects,
+            sector_report_map=sector_report_map)
+        self.assertEquals(dataset['headers'][0],
+                          humanize(Location.COMMUNITY).title())
+        self.assertEquals(dataset['rows'][0][0].name,
+                          projects[0].name)
+        self.assertEquals(dataset['summary_row'][0], 0)
 
 
 class TestProjectFilter(IntegrationTestBase):
@@ -240,6 +285,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
         self.setup_test_data()
         results = generate_performance_indicators_for(None)
         self.assertIsNotNone(results['project_types'])
+        self.assertEqual(results['aggregate_list'], County.all())
 
     def test_generate_performance_indicators_for_county(self):
         self.setup_test_data()
@@ -251,12 +297,23 @@ class TestPerformanceIndicatorGeneration(TestBase):
         results = generate_performance_indicators_for(
             location_map)
         self.assertIsNotNone(results['project_types'])
-        teso_sub_county_indicators = (
+
+        teso_sub_county_row = (
             results['sector_aggregated_indicators']
             [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
-            ['aggregated_performance_indicators']
-            [sub_county.id]['summary'])
-        self.assertIsNotNone(teso_sub_county_indicators)
+            ['rows'][0])
+        self.assertEquals(teso_sub_county_row[0].name, sub_county.name)
+
+    def test_generate_performance_indicators_for_constituency(self):
+        self.setup_test_data()
+        constituency = Constituency.get(Constituency.name == "Amagoro")
+        location_map = self.setup_location_map(
+            constituency="{}".format(constituency.id))
+
+        results = generate_performance_indicators_for(
+            location_map)
+        self.assertEqual(results['aggregate_list'],
+                         constituency.children())
 
     def test_generate_performance_indicators_for_community(self):
         self.setup_test_data()
