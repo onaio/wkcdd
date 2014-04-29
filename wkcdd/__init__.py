@@ -5,7 +5,8 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from sqlalchemy import engine_from_config
 from wkcdd.libs.utils import (
     format_percent,
-    format_value
+    format_value,
+    humanize
 )
 
 from wkcdd.security import group_finder, pwd_context
@@ -49,6 +50,7 @@ def includeme(config):
     config.add_jinja2_search_path("wkcdd:templates")
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value
+    config.get_jinja2_environment().filters['humanize'] = humanize
     config.add_renderer('xlsx', 'wkcdd.renderers.TablibXLSXRenderer')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('auth', '/auth/{action}')

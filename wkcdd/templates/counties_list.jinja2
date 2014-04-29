@@ -3,6 +3,7 @@
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{{ title }}{% endblock %}
 {% block page_title %}
    <h3 class="page-title">
@@ -16,7 +17,7 @@
    </li>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
@@ -28,7 +29,11 @@
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>{% trans %}Counties{% endtrans %}</div>
+        {% if location %}
+          <div class="caption"><i class="icon-tasks"></i>{{location.pretty}} {{location.location_type|humanize()|title()}}</div>
+        {% else %}
+          <div class="caption"><i class="icon-tasks"></i>{% trans %}All Counties {% endtrans %}</div>
+        {% endif %}
          <div class="tools">
           <a href="" class="collapse"></a>
         </div>
@@ -84,4 +89,7 @@
   map = Custom.display_constituency_map();
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
+
+  {{ update_selected_location_dropdowns(search_criteria['location_map']) }}
+  
 {% endblock %}

@@ -1,0 +1,11 @@
+{% macro filter_criteria_options (filter_criteria, location_map, filter_location_type, location_type) %}
+    {% for location in filter_criteria[filter_location_type] %}
+    <option value="{{ location.id }}"
+        {%if location_map[location_type] == (location.id | string)%}
+            selected
+        {%endif%}
+    >
+        {{ location.pretty }}
+    </option>
+    {% endfor %}
+{% endmacro %}
