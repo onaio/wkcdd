@@ -1,6 +1,6 @@
 {% macro add_indicator_links(request, location_type, location, page) %}
 <div class="row nav-holder indicator_links">
-    <ul class="nav navbar-nav pull-left">
+    <ul class="nav nav-tabs pull-left">
     {% if location %}
         <li class="indicator_list">
             <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
@@ -55,7 +55,7 @@
         <div class="pull-right">
             <a href="{{ request.route_url(location_type, traverse=(location.id),
                 _query={'format':'xlsx'})}}" class="btn btn-default download" role="button">
-                Download XLS Report
+                Download XLS
             </a>
         </div>
     {% endif %}
