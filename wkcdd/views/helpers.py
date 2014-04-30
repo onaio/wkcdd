@@ -369,6 +369,13 @@ def generate_performance_indicators_for(location_map,
                 location_ids)
 
     project_types_mappings = get_project_types(community_ids)
+    # check if provided sector is in project types
+    if sector:
+        label = [label
+                 for sec, rep, label in project_types_mappings
+                 if sec == sector]
+        if not label:
+            sector = None
 
     for reg_id, report_id, title in project_types_mappings:
         # Skip execution until the selected sector is encountered

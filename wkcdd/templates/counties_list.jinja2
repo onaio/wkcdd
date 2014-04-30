@@ -18,7 +18,7 @@
    </li>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'impact') }}

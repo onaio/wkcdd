@@ -163,8 +163,12 @@ class CountyView(object):
         selected_project_label = [label
                                   for sector, report, label in project_types
                                   if sector == selected_project_type]
-        selected_project_label = (selected_project_label[0]
-                                  if selected_project_label else '')
+
+        if not selected_project_label:
+            selected_project_label = selected_project_type = ''
+        else:
+            selected_project_label = selected_project_label[0]
+
         search_criteria = {'view_by': level,
                            'selected_project_type': selected_project_type,
                            'selected_project_label': selected_project_label,
