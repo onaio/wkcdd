@@ -35,6 +35,61 @@ var Map = (function(root){
     // @todo: temporary
     var lookupProperty = 'COUNTY';
 
+    var InfoBox = L.Control.extend({
+        template: _.template('<h4><%= title %></h4>' +
+            '<p><%= indicator %>: <%= value %></p>'),
+        onAdd: function (map) {
+            return L.DomUtil.create('div', 'info');
+        },
+        update: function (title, indicator, value) {
+            if (title && indicator && value) {
+                container.style.display = 'block';
+                this.getContainer().innerHTML = this.template({
+                    title: title,
+                    indicator: indicator,
+                    value: value
+                });
+            } else {
+                var container = this.getContainer();
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
+        }
+    });
+
+    // control that shows state info on hover
+    var info = new InfoBox();
+    info.addTo(map);
+    info.update();
+
+    // Map legend
+    var Legend = L.Control.extend({
+        template: _.template('<% _.each(items, function (item) { %>' +
+            '<i style="background: <%= item.color %>"></i> <%= item.label %><br />' +
+            '<% }) %>'),
+        options: {
+            position: 'bottomright'
+        },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'info legend');
+            return container;
+        },
+        update: function (items) {
+            this.getContainer().innerHTML = this.template({
+                items: items
+            });
+        }
+    });
+
+    var legend = new Legend();
+    legend.addTo(map);
+    legend.update([
+        {color: '#2ECC40', label: '&gt; 80%'},
+        {color: '#FFDC00', label: '60&ndash;80%'},
+        {color: '#FF4136', label: '&lt; 60%'},
+        {color: '#ccc', label: 'No Reports'}
+    ]);
+
     var shapeLayer = L.geoJson(null, {
         /*style: function () {
             console.log("style: " + arguments);
@@ -67,7 +122,7 @@ var Map = (function(root){
             var dataID = feature.properties[lookupProperty];
             var value = data[dataID][indicator];
             if (value === null) {
-                return { color: "#35363a" };
+                return { color: "#ccc" };
             }
             else if (value < 60) {
                 return { color: "#FF4136" };
