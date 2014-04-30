@@ -14,15 +14,17 @@
       <option value="">All Constituencies</option>
       {{ filter_criteria_options(filter_criteria, location_map, "constituencies", "constituency" ) }}
     </select>
-    <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
+    <select  class="btn btn-default" name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
       <option value="">All Communities</option>
        {{ filter_criteria_options(filter_criteria, location_map, "communities", "community" ) }}
     </select>
 
     <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
     <div class="form-group pull-right">
-      <label> View by:</label>
-      <select  name="view_by" class="form-control input-small" data-placeholder="Select...">
+    
+      <label> Aggregate by:</label>
+  
+      <select name="view_by" class="form-control input-small" data-placeholder="Select...">
         <option value="counties">Counties</option>
         <option value="sub_counties">Sub-Counties</option>
         <option value="constituencies">Constituencies</option>
