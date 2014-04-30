@@ -146,8 +146,6 @@ class CountyView(object):
         elif selected_project_type == '':
             selected_project_type = self.DEFAULT_PROJECT_TYPE
 
-        search_criteria = {'view_by': level,
-                           'location_map': location_map}
         indicators = generate_performance_indicators_for(
             location_map,
             selected_project_type,
@@ -161,21 +159,24 @@ class CountyView(object):
         project_type_geopoints = indicators['project_type_geopoints']
 
         sector_indicator_mapping = indicators['sector_indicator_mapping']
-        filter_criteria = Project.generate_filter_criteria()
 
         selected_project_label = [label
                                   for sector, report, label in project_types
                                   if sector == selected_project_type]
         selected_project_label = (selected_project_label[0]
                                   if selected_project_label else '')
+        search_criteria = {'view_by': level,
+                           'selected_project_type': selected_project_type,
+                           'selected_project_label': selected_project_label,
+                           'location_map': location_map}
+
+        filter_criteria = Project.generate_filter_criteria()
 
         return {
             'title': "Performance Indicators Report",
             'aggregate_type': aggregate_type,
             'location': location,
             'project_types': project_types,
-            'selected_project_type': selected_project_type,
-            'selected_project_label': selected_project_label,
             'sector_aggregated_indicators': sector_aggregated_indicators,
             'sector_indicator_mapping': sector_indicator_mapping,
             'filter_criteria': filter_criteria,
