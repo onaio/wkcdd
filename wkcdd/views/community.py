@@ -32,13 +32,14 @@ class CommunityView(object):
                                 impact_indicators,
                                 projects
                                 )
-
+        search_criteria = {'view_by': 'projects'}
         return{
             'title': community.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
-            'community': community
+            'community': community,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='performance',

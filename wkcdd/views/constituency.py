@@ -31,12 +31,15 @@ class ConstituencyView(object):
         dataset = build_dataset(Location.COMMUNITY,
                                 communities,
                                 impact_indicators)
+        search_criteria = {'view_by': 'communities'}
+
         return {
             'title': constituency.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
-            'constituency': constituency
+            'constituency': constituency,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='performance',

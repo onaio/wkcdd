@@ -4,6 +4,7 @@
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
+{% from 'macros/generate_location_columns.jinja2' import generate_location_columns %}
 {% block title %}{{ title }}{% endblock %}
 {% block page_title %}
    <h3 class="page-title">
@@ -53,14 +54,7 @@
                   </tr>
                </thead>
                <tbody>
-                {% for row in rows %}
-                  <tr>
-                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
-                     {% for col in row[1:] %}
-                        <td>{{ value_or_default(col|format_value(request), '-') }}</td>
-                     {% endfor %}
-                  </tr>
-               {% endfor %}
+                {{generate_location_columns(request, rows, search_criteria)}}
                   <tr class="bold">
                      <td>
                         {% trans %} Total Summary {% endtrans %}
@@ -90,6 +84,6 @@
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
 
-  {{ update_selected_location_dropdowns(search_criteria['location_map']) }}
+  {{ update_selected_location_dropdowns(search_criteria) }}
   
 {% endblock %}

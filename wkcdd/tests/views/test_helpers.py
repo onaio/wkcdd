@@ -68,9 +68,9 @@ class TestBuildDatasetHelpers(TestBase):
                                 impact_indicators,
                                 projects
                                 )
-        self.assertEquals(dataset['headers'][0],
+        self.assertEquals(dataset['headers'][3],
                           humanize(Location.COMMUNITY).title())
-        self.assertEquals(dataset['rows'][0][0].name,
+        self.assertEquals(dataset['rows'][0][4].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
 
@@ -231,10 +231,49 @@ class TestImpactIndicatorGeneration(TestBase):
             "county": ""
         }
 
-        results = generate_impact_indicators_for(location_map)
+        results = generate_impact_indicators_for(location_map, "projects")
 
         self.assertEqual(results['aggregate_type'], 'Project')
         self.assertEqual(results['aggregate_list'], community.projects)
+
+    def test_generate_impact_indicators_for_county_view_by_levels(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Bungoma")
+        location_map = {
+            "community": '',
+            "constituency": '',
+            "sub_county": '',
+            "county": "{}".format(county.id)
+        }
+
+        view_by = "sub_counties"
+        results = generate_impact_indicators_for(location_map, view_by)
+
+        self.assertEqual(results['aggregate_list'], county.children())
+        self.assertEqual(results['aggregate_type'], Location.SUB_COUNTY)
+
+        view_by = "constituencies"
+        results = generate_impact_indicators_for(location_map, view_by)
+        constituencies = [constituencies
+                          for sub_counties in county.children()
+                          for constituencies in sub_counties.children()]
+        self.assertEqual(results['aggregate_list'], constituencies)
+        self.assertEqual(results['aggregate_type'], Location.CONSTITUENCY)
+
+        view_by = "communities"
+        results = generate_impact_indicators_for(location_map, view_by)
+        communities = [communities
+                       for sub_counties in county.children()
+                       for consts in sub_counties.children()
+                       for communities in consts.children()]
+        self.assertEqual(results['aggregate_list'], communities)
+        self.assertEqual(results['aggregate_type'], Location.COMMUNITY)
+
+        view_by = "projects"
+        results = generate_impact_indicators_for(location_map, view_by)
+        projects = Report.get_projects_from_location(county)
+        self.assertEqual(results['aggregate_list'], projects)
+        self.assertEqual(results['aggregate_type'], 'Project')
 
 
 class TestPerformanceIndicatorGeneration(TestBase):

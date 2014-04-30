@@ -114,6 +114,6 @@
   Custom.searchProjectsTable();
   Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 
-  {{ update_selected_location_dropdowns(search_criteria['location_map']) }}
+  {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}
 
