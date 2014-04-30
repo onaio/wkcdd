@@ -1,3 +1,3 @@
-{% macro value_or_default(value, default) %}
+{% macro value_or_default(value, default) -%}
   {% if value is undefined or value is none %} {{ default }} {% else %} {{ value }} {% endif %}
-{% endmacro %}
+{%- endmacro %}

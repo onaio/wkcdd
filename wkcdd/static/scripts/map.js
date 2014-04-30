@@ -8,29 +8,7 @@ var Map = (function(root){
             })]
     }).setView([0.31, 34.5], 9);
 
-    // @todo: temporary
-    var data = {
-        'Bungoma': {
-            community_contribution: '69.8%',
-            bb_harvested_percentage: '1.7%'
-        },
-        'Kakamega': {
-            community_contribution: '100%',
-            bb_harvested_percentage: null
-        },
-        Busia: {
-            community_contribution: '26%',
-            bb_harvested_percentage: '8%'
-        },
-        'Siaya': {
-            community_contribution: '132%',
-            bb_harvested_percentage: '20%'
-        },
-        'Vihiga': {
-            community_contribution: '75%',
-            bb_harvested_percentage: null
-        }
-    };
+    var data = {};
 
     // @todo: temporary
     var lookupProperty = 'COUNTY';
@@ -43,12 +21,12 @@ var Map = (function(root){
         },
         update: function (title, label, value) {
             var container = this.getContainer();
-            if (title && label && value) {
+            if (title !== undefined && label !== undefined && value !== undefined) {
                 container.style.display = 'block';
                 container.innerHTML = this.template({
                     title: title,
                     label: label,
-                    value: value
+                    value: value !== null?value:'No Reports'
                 });
             } else {
                 container.innerHTML = '';
@@ -71,8 +49,7 @@ var Map = (function(root){
             position: 'bottomright'
         },
         onAdd: function (map) {
-            var container = L.DomUtil.create('div', 'info legend');
-            return container;
+            return L.DomUtil.create('div', 'info legend');
         },
         update: function (items) {
             this.getContainer().innerHTML = this.template({
@@ -81,13 +58,20 @@ var Map = (function(root){
         }
     });
 
+    var colors = {
+        GREY: '#ccc',
+        RED: '#FF4136',
+        AMBER: '#FFDC00',
+        GREEN: '#2ECC40'
+    };
+
     var legend = new Legend();
     legend.addTo(map);
     legend.update([
-        {color: '#2ECC40', label: '&gt; 80%'},
-        {color: '#FFDC00', label: '60&ndash;80%'},
-        {color: '#FF4136', label: '&lt; 60%'},
-        {color: '#ccc', label: 'No Reports'}
+        {color: colors.GREEN, label: '&gt; 80%'},
+        {color: colors.AMBER, label: '60&ndash;80%'},
+        {color: colors.RED, label: '&lt; 60%'},
+        {color: colors.GREY, label: 'No Reports'}
     ]);
 
     var shapeLayer = L.geoJson(null, {
@@ -99,7 +83,7 @@ var Map = (function(root){
                         fillOpacity: 0.5
                     });
                     info.update(
-                        layer.feature.properties[lookupProperty],
+                        layer.feature.properties.title,
                         layer.feature.properties.label,
                         layer.feature.properties.value);
                 },
@@ -114,33 +98,44 @@ var Map = (function(root){
         }
     }).addTo(map);
 
-    var setGeoJSON = function (geojson) {
-        shapeLayer.clearLayers();
-        shapeLayer.addData(geojson);
+    var setData = function (newData) {
+        data = newData;
     };
 
-    var setIndicator = function (indicator) {
+    var setGeoJSON = function (geoJson) {
+        shapeLayer.clearLayers();
+        shapeLayer.addData(geoJson);
+    };
+
+    var setIndicator = function (indicator_id) {
         shapeLayer.setStyle(function (feature) {
             var location = feature.properties[lookupProperty];
-            var value = data[location][indicator];
-            feature.properties.label = indicator;
-            feature.properties.value = value;
+            var indicator = data[location][indicator_id];
+            var value = indicator.value;
+            feature.properties.title = location;
+            feature.properties.label = indicator.label;
+            feature.properties.value = indicator.value;
             var intValue = parseInt(value);
-            if (intValue === null) {
-                return { color: "#ccc" };
-            }
-            else if (intValue < 60) {
-                return { color: "#FF4136" };
-            } else if (intValue > 60 && intValue < 80) {
-                return { color: "#FFDC00" };
-            } else {
-                return { color: "#2ECC40" };
-            }
+            return { color: getColor(intValue) };
         });
+    };
+
+    var getColor = function (value) {
+        if (value === null || isNaN(value)) {
+            return colors.GREY;
+        }
+        else if (value < 60) {
+            return colors.RED;
+        } else if (value > 60 && value < 80) {
+            return colors.AMBER;
+        } else {
+            return colors.GREEN;
+        }
     };
 
     return {
         map: map,
+        setData: setData,
         setGeoJSON: setGeoJSON,
         setIndicator: setIndicator
     }

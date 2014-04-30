@@ -76,10 +76,30 @@
     //2Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
   {% endfor %}
 
-  // load json layer
-  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
-    dataType: 'json'
-  }).done(function(data, status){
-    Map.setGeoJSON(data);
-  });
+  // if we're viewing a single sector, get its indicator data
+  {% if selected_project_types|length == 1 %}
+    {% set sector, report, label = selected_project_types[0]  %}
+    {% set aggregated_indicators = sector_aggregated_indicators[sector] %}
+    var data = {
+    {% for location in counties -%}
+      {% set indicator_summaries = aggregated_indicators['aggregated_performance_indicators'][location.id]['summary'] %}
+      '{{ location.pretty }}': {
+        {% for mapping in sector_indicator_mapping[sector] -%}
+          {% set target, actual, percentage = mapping['group'] -%}
+          '{{ percentage }}': {
+            label: '{{ mapping.title }}',
+            value: {% if indicator_summaries[percentage] is defined %}'{{ indicator_summaries[percentage]|format_percent(request) }}'{% else %}null{% endif %}
+          },
+        {% endfor %}
+      },
+    {% endfor %}
+    };
+    Map.setData(data);
+    // load json layer
+    $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+      dataType: 'json'
+    }).done(function(data, status){
+      Map.setGeoJSON(data);
+    });
+  {% endif %}
 {% endblock %}
