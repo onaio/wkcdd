@@ -1,6 +1,6 @@
 {% from 'generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
 
-{% macro generate_performance_indicator_row(request, label, url, indicators) %}
+{% macro generate_performance_indicator_row(request, label, url, indicators, search_criteria) %}
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -12,7 +12,7 @@
                     {% trans %}Projects{% endtrans %}
                     </div>
                 </div>
-                {{ generate_performance_indicator_table(request, url, indicators) }}
+                {{ generate_performance_indicator_table(request, url, indicators, search_criteria) }}
             </div>
             <!-- END SAMPLE TABLE PORTLET-->
         </div>

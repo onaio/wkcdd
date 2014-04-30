@@ -107,12 +107,14 @@ class CountyView(object):
             'sub_county': '',
             'county': county.id
         }
-        level = self.request.GET.get('view_by') or self.DEFAULT_LEVEL
-
+        level = self.request.GET.get('view_by') or "sub_counties"
+        selected_project_type = self.request.GET.get('type')
         search_criteria = {'view_by': level,
                            'location_map': location_map}
         indicators = generate_performance_indicators_for(
-            location_map)
+            location_map,
+            selected_project_type,
+            level)
         project_types = indicators['project_types']
         aggregate_type = indicators['aggregate_type']
         sector_aggregated_indicators = (

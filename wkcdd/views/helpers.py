@@ -35,9 +35,9 @@ def requested_xlsx_format(event):
         return True
 
 
-def build_dataset(location_type, locations, impact_indicators, projects=None):
+def get_dataset_headers(location_type):
 
-    headers = {
+    return {
         'county': [humanize(location_type).title()],
         'sub_county': ["County", humanize(location_type).title()],
         'constituency': ["County", "Sub-County",
@@ -48,8 +48,44 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                     "Sub-County",
                     "Constituency",
                     "Community",
-                    location_type]
+                    location_type],
+        'projects': ["Country",
+                     "Sub-County",
+                     "Constituency",
+                     "Community",
+                     location_type]
     }[location_type]
+
+
+def get_dataset_rows(location, location_type):
+    if location_type == 'county':
+        row = [location]
+    elif location_type == 'sub_county':
+        row = [location.county,
+               location]
+    elif location_type == 'constituency':
+        row = [location.sub_county.county,
+               location.sub_county,
+               location]
+    elif location_type == 'community':
+        row = [location.constituency.sub_county.county,
+               location.constituency.sub_county,
+               location.constituency,
+               location]
+    return row
+
+
+def get_dataset_project_rows(project):
+    return [project.community.constituency.sub_county.county,
+            project.community.constituency.sub_county,
+            project.community.constituency,
+            project.community,
+            project]
+
+
+def build_dataset(location_type, locations, impact_indicators, projects=None):
+
+    headers = get_dataset_headers(location_type)
     indicator_headers, indicator_keys = zip(*constants.IMPACT_INDICATOR_REPORT)
     headers.extend(indicator_headers)
     rows = []
@@ -59,11 +95,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
         for project_indicator in impact_indicators['indicator_list']:
             for project in projects:
                 if project.id == project_indicator['project_id']:
-                    row = [project.community.constituency.sub_county.county,
-                           project.community.constituency.sub_county,
-                           project.community.constituency,
-                           project.community,
-                           project]
+                    row = get_dataset_project_rows(project)
             for key in indicator_keys:
                 value = 0 if project_indicator['indicators'] is \
                     None else project_indicator['indicators'][key]
@@ -73,22 +105,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                             [key] for key in indicator_keys])
     else:
         for location in locations:
-            if location_type == 'county':
-                row = [location]
-            elif location_type == 'sub_county':
-                row = [location.parent, location]
-            elif location_type == 'constituency':
-                row = [Location.get(
-                    Location.id == location.parent.id).parent,
-                    location.parent, location]
-            elif location_type == 'community':
-                row = [Location.get(Location.id ==
-                                    Location.get(Location.id ==
-                                                 location.parent.id)
-                                    .parent.id).parent,
-                       Location.get(Location.id == location.parent.id).parent,
-                       location.parent,
-                       location]
+            row = get_dataset_rows(location, location_type)
 
             location_summary = \
                 (impact_indicators['aggregated_impact_indicators']
@@ -111,7 +128,7 @@ def build_performance_dataset(location_type,
                               indicators,
                               projects=None,
                               sector_report_map=None):
-    headers = [humanize(location_type).title()]
+    headers = get_dataset_headers(location_type)
     indicator_headers, indicator_keys = zip(*sector_report_map)
     headers.extend(indicator_headers)
     rows = []
@@ -125,7 +142,7 @@ def build_performance_dataset(location_type,
             for project_indicator in project_indicators['indicator_list']:
                 for project in projects:
                     if project.id == project_indicator['project_id']:
-                        row = [project]
+                        row = get_dataset_project_rows(project)
                         for group in indicator_keys:
                             item_group = []
                             for key in group:
@@ -148,7 +165,7 @@ def build_performance_dataset(location_type,
                 indicators['aggregated_performance_indicators']
                 [location.id]['summary'])
             if location_summary:
-                row = [location]
+                row = get_dataset_rows(location, location_type)
                 for group in indicator_keys:
                     item_group = []
                     for item in group:

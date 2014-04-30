@@ -54,8 +54,13 @@ class ConstituencyView(object):
             'sub_county': '',
             'county': ''
         }
+        default_level = 'communities'
+        level = self.request.GET.get('view_by') or default_level
+        selected_project_type = self.request.GET.get('type')
+        search_criteria = {'view_by': level,
+                           'location_map': location_map}
         indicators = generate_performance_indicators_for(
-            location_map)
+            location_map, selected_project_type, level)
         project_types = indicators['project_types']
         aggregate_type = indicators['aggregate_type']
         sector_aggregated_indicators = (
@@ -66,4 +71,5 @@ class ConstituencyView(object):
             'constituency': constituency,
             'project_types': project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
+            'search_criteria': search_criteria
         }

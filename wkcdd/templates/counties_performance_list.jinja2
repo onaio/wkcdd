@@ -48,9 +48,9 @@
 
   {% for sector, report, label in project_types %}
     {% if location %}
-      {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[sector]) }}
+      {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[sector], search_criteria) }}
     {% else %}
-      {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[sector]) }}
+      {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[sector], search_criteria) }}
     {% endif %}
   {% endfor %}
 

@@ -1,5 +1,6 @@
 {% from 'value_or_default.jinja2' import value_or_default %}
-{% macro generate_performance_indicator_table(request, location_type, dataset) %}  
+{% from 'generate_location_columns.jinja2' import generate_location_columns %}
+{% macro generate_performance_indicator_table(request, location_type, dataset, search_criteria) %}
   <div class="portlet-body">
   {% if dataset['rows'] and dataset['summary_row'] %}
     <div class="table-responsive table-scrollable">
@@ -14,40 +15,7 @@
                  </tr>
             </thead>
             <tbody>
-               {% for row in dataset['rows'] %}
-                  <tr>
-                     <td><a href="{{ request.route_url(location_type, traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
-                     {% for col in row[1:] %}
-                        {% set target = col[0] %}
-                        {% set actual = col[1] %}
-                        {% set percentage = col[2] %}
-                        <td>
-                            {{ value_or_default(percentage|format_value(request), '-') }}%
-                            <span class="ratio">
-                                {{ value_or_default(actual|format_value(request), '-') }}
-                                /{{ value_or_default(target|format_value(request), '-') }}
-                            </span>
-                        </td>
-                     {% endfor %}
-                  </tr>
-               {% endfor %}
-                  <tr class="bold">
-                     <td>
-                        {% trans %} Total Summary {% endtrans %}
-                     </td>
-                     {% for col in dataset['summary_row']%}
-                        {% set target = col[0] %}
-                        {% set actual = col[1] %}
-                        {% set percentage = col[2] %}
-                        <td>
-                            {{ value_or_default(percentage|format_value(request), '-') }}%
-                            <span class="ratio">
-                                {{ value_or_default(actual|format_value(request), '-') }}
-                                /{{ value_or_default(target|format_value(request), '-') }}
-                            </span>
-                        </td>
-                     {% endfor %}
-                  </tr>
+              {{ generate_location_columns(request, dataset['rows'], dataset['summary_row'], search_criteria, "performance") }}
             </tbody>
         </table>
     </div>

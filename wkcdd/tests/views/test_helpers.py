@@ -90,9 +90,9 @@ class TestBuildDatasetHelpers(TestBase):
             sub_counties,
             performance_indicators,
             sector_report_map=sector_report_map)
-        self.assertEquals(dataset['headers'][0],
+        self.assertEquals(dataset['headers'][1],
                           humanize(Location.SUB_COUNTY).title())
-        self.assertEquals(dataset['rows'][0][0].name,
+        self.assertEquals(dataset['rows'][0][1].name,
                           sub_counties[0].name)
 
     def test_build_dataset_for_performance_project_list(self):
@@ -113,9 +113,9 @@ class TestBuildDatasetHelpers(TestBase):
             performance_indicators,
             projects=projects,
             sector_report_map=sector_report_map)
-        self.assertEquals(dataset['headers'][0],
+        self.assertEquals(dataset['headers'][3],
                           humanize(Location.COMMUNITY).title())
-        self.assertEquals(dataset['rows'][0][0].name,
+        self.assertEquals(dataset['rows'][0][4].name,
                           projects[0].name)
         self.assertEquals(dataset['summary_row'][0], [24000, 24000, 100.0])
 
@@ -355,7 +355,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
             results['sector_aggregated_indicators']
             [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
             ['rows'][0])
-        self.assertEquals(teso_sub_county_row[0].name, sub_county.name)
+        self.assertEquals(teso_sub_county_row[1].name, sub_county.name)
 
     def test_generate_performance_indicators_for_constituency(self):
         self.setup_test_data()
@@ -374,7 +374,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
         location_map = self.setup_location_map(
             community="{}".format(community.id))
 
-        results = generate_performance_indicators_for(location_map)
+        results = generate_performance_indicators_for(location_map, "projects")
         self.assertIsNotNone(results['project_types'])
 
     def test_generate_performance_indicators_for_community_sector(self):
@@ -403,7 +403,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
                 [constants.DAIRY_COWS_PROJECT_REGISTRATION]
                 ['rows'])
         self.assertIsNotNone(results['project_types'])
-        constituencies_in_dataset = [row[0] for row in rows]
+        constituencies_in_dataset = [row[2] for row in rows]
         self.assertEquals(constituencies_in_dataset, [constituency])
 
     def test_all_county_view_by_communities(self):
@@ -419,7 +419,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
                 [constants.DAIRY_COWS_PROJECT_REGISTRATION]
                 ['rows'])
         self.assertIsNotNone(results['project_types'])
-        communities_in_dataset = [row[0] for row in rows]
+        communities_in_dataset = [row[3] for row in rows]
         self.assertEquals(communities_in_dataset, communities)
 
     def test_only_relevant_communities_display_for_sub_county(self):
@@ -456,5 +456,5 @@ class TestPerformanceIndicatorGeneration(TestBase):
                 [constants.DAIRY_COWS_PROJECT_REGISTRATION]
                 ['rows'])
         self.assertIsNotNone(results['project_types'])
-        projects_in_dataset = [row[0] for row in rows]
+        projects_in_dataset = [row[4] for row in rows]
         self.assertEquals(projects_in_dataset, projects)
