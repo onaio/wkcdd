@@ -2,15 +2,11 @@
 
 {% macro generate_project_type_dropdown(request, selected_project_label, location_type, location, project_report_sectors, search_criteria) %}
 <div class="btn-toolbar actions margin-bottom-10">
-    <label class="pull-left margin-right-10"> Sector:</label>
+    <!--<label class="pull-left margin-right-10"> Sector:</label>-->
       <div class="btn-group">
-         <a class="btn btn-sm btn-success dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown">
-          {% if selected_project_label %}
-            {{ selected_project_label }}
-          {% else %}
-            All Sectors
-          {% endif %}
-           <i class="icon-angle-down"></i>
+         <a class="btn btn-default btn-lg dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown">
+         {{ selected_project_type or "Select Sector" }}
+         <i class="icon-angle-down"></i>
          </a>
          <ul class="dropdown-menu"> 
             {{ generate_project_type_dropdown_link(request, location_type, 'All sectors', 'default', search_criteria) }}

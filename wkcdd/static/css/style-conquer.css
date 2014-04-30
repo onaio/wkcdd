@@ -227,7 +227,7 @@ Dropdown Menu Badges
 
 /***
 Forms
-***/
+***/*
 code {
   border: 1px solid #e1e1e1;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -251,6 +251,7 @@ label {
 .form-control::-webkit-input-placeholder {
   color: #999999;
 }
+
 .form-control {  
   font-size: 14px;
   font-weight: normal;
@@ -274,6 +275,7 @@ fieldset[disabled] .form-control {
   cursor: not-allowed;
   background-color: #eeeeee;
 }
+
 
 .uneditable-input {
   padding: 6px 12px;
@@ -311,6 +313,8 @@ textarea[readonly] {
 }
 
 /* input  groups */
+
+
 .input-group.input-group-fixed {
   width: auto !important;
 }
@@ -323,8 +327,11 @@ textarea[readonly] {
 .input-group-addon > i {
   color: #999;
 }
+*/
 
 /* form control sizing */
+
+
 .form-control-inline {
   display: inline-block !important;
 }
@@ -348,6 +355,9 @@ textarea[readonly] {
 .input-xlarge {
   width: 480px !important;
 }
+
+
+*/
 
 /***
 Input spinner(in v1.4)

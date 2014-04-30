@@ -4,7 +4,7 @@
   <div class="portlet-body">
   {% if dataset['rows'] and dataset['summary_row'] %}
     <div class="table-responsive table-scrollable">
-        <table class="table table-striped table-bordered table-hover data-table">
+        <table class="table table-striped table-bordered table-hover data-table" id="prjDatatable">
             <thead>
                 <tr>
                     {% for header in dataset['headers'] %}

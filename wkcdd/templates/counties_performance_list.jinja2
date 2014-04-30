@@ -8,13 +8,14 @@
 {% block title %} {{ title }}{% endblock %}
 {% set selected_project_type = search_criteria['selected_project_type']%}
 {% block page_title %}
-  <h3 class="page-title">
+ <!-- <h3 class="page-title">
       {{ self.title() }}
     <small></small>
   </h3>
+-->
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
+  {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
 {% endblock %}
 {% block breadcrumbs %}
   <li>
@@ -27,16 +28,16 @@
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'performance') }}
+
 {% endblock %}
 {% block content %}
+  <!--PROJECT TYPE DROP DOWN-->
+{{ generate_project_type_dropdown(request, search_criteria['selected_project_label'], 'counties', '', project_types, search_criteria)}}
 <!--MAP-->
 {% if selected_project_type %}
   {{ generate_map_chart(request, sector_indicator_mapping[selected_project_type]) }}
 {% endif %}
 <!--END MAP-->
-
-<!--PROJECT TYPE DROP DOWN-->
-{{ generate_project_type_dropdown(request, search_criteria['selected_project_label'], 'counties', '', project_types, search_criteria)}}
 
 <!--PERFORMANCE INDICATOR TABLES-->
 {% if selected_project_type %}
@@ -58,6 +59,7 @@
 {% endif %}
 <!--PERFORMANCE INDICATOR TABLES END-->
 {% endblock content %}
+
 {% block page_scripts %}
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
 {% endblock %}
