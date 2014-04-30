@@ -182,7 +182,7 @@ var LocationSelect = function() {
 
             if(locations.length == 0) {
                 //refresh filter based on parent
-                setViewByValue('sub_county');
+                setViewByValue('sub_counties');
                 return;
             }
 
