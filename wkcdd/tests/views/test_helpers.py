@@ -336,7 +336,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
 
     def test_generate_performance_indicators_for_none(self):
         self.setup_test_data()
-        results = generate_performance_indicators_for(None, level='county')
+        results = generate_performance_indicators_for(None, level='counties')
         self.assertIsNotNone(results['project_types'])
         self.assertEqual(results['aggregate_list'], County.all())
 
@@ -397,7 +397,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
 
         results = generate_performance_indicators_for(
             location_map,
-            level='constituency')
+            level='constituencies')
         self.assertIsNotNone(results['project_types'])
         sirisia_constituency_row = (
             results['sector_aggregated_indicators']
@@ -412,7 +412,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
 
         results = generate_performance_indicators_for(
             location_map,
-            level='community')
+            level='communities')
         self.assertIsNotNone(results['project_types'])
         sirisia_community_row = (
             results['sector_aggregated_indicators']

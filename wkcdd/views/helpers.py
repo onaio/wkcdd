@@ -19,6 +19,10 @@ from wkcdd.models.helpers import (
 )
 
 PROJECT_LABEL = 'projects'
+COUNTIES_LABEL = 'counties'
+SUB_COUNTIES_LABEL = 'sub_counties'
+CONSTITUENCIES_LABEL = 'constituencies'
+COMMUNITIES_LABEL = 'communities'
 
 
 @subscriber(NewRequest)
@@ -50,7 +54,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
     summary_row = []
 
     if projects:
-        for project_indicator in indicators['indicator_list']:
+        for project_indicator in impact_indicators['indicator_list']:
             for project in projects:
                 if project.id == project_indicator['project_id']:
                     row = [project.community.constituency.sub_county.county,
@@ -63,7 +67,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
                     None else project_indicator['indicators'][key]
                 row.extend([value])
             rows.append(row)
-        summary_row.extend([indicators['summary']
+        summary_row.extend([impact_indicators['summary']
                             [key] for key in indicator_keys])
     else:
         for location in locations:
@@ -90,7 +94,7 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
             row.extend([location_summary[key] for key in indicator_keys])
             rows.append(row)
 
-        summary_row.extend([indicators['total_indicator_summary']
+        summary_row.extend([impact_indicators['total_indicator_summary']
                             [key] for key in indicator_keys])
 
     return{
@@ -198,44 +202,44 @@ def get_aggregate_list_for_location_by_level(location, level):
     projects = Report.get_projects_from_location(location)
     level_map_county = {
         None: location.children(),
-        'counties': '',
-        'sub_counties': location.children(),
-        'constituencies': [constituencies
-                           for sub_counties in location.children()
-                           for constituencies in sub_counties.children()],
-        'communities': [communities
-                        for sub_counties in location.children()
-                        for constituencies in sub_counties.children()
-                        for communities in constituencies.children()],
+        COUNTIES_LABEL: '',
+        SUB_COUNTIES_LABEL: location.children(),
+        CONSTITUENCIES_LABEL: [constituencies
+                               for sub_counties in location.children()
+                               for constituencies in sub_counties.children()],
+        COMMUNITIES_LABEL: [communities
+                            for sub_counties in location.children()
+                            for constituencies in sub_counties.children()
+                            for communities in constituencies.children()],
         'projects': projects
     }
     level_map_sub_county = {
         None: '',
-        'counties': '',
-        'sub_counties': '',
-        'constituencies': [constituencies
-                           for constituencies in location.children()],
-        'communities': [communities
-                        for constituencies in location.children()
-                        for communities in constituencies.children()],
+        COUNTIES_LABEL: '',
+        SUB_COUNTIES_LABEL: '',
+        CONSTITUENCIES_LABEL: [constituencies
+                               for constituencies in location.children()],
+        COMMUNITIES_LABEL: [communities
+                            for constituencies in location.children()
+                            for communities in constituencies.children()],
         'projects': projects
     }
     level_map_constituency = {
         None: '',
-        'counties': '',
-        'sub_counties': '',
-        'constituencies': '',
-        'communities': [communities
-                        for communities in location.children()],
+        COUNTIES_LABEL: '',
+        SUB_COUNTIES_LABEL: '',
+        CONSTITUENCIES_LABEL: '',
+        COMMUNITIES_LABEL: [communities
+                            for communities in location.children()],
         'projects': projects
     }
 
     level_map_community = {
         None: '',
-        'counties': '',
-        'sub_counties': '',
-        'constituencies': '',
-        'communities': '',
+        COUNTIES_LABEL: '',
+        SUB_COUNTIES_LABEL: '',
+        CONSTITUENCIES_LABEL: '',
+        COMMUNITIES_LABEL: '',
         'projects': projects
     }
 
@@ -264,10 +268,10 @@ def generate_impact_indicators_for(location_map, level=None):
         # Default aggregation level is all counties
         level_map = {
             None: County.all(),
-            'counties': County.all(),
-            'sub_counties': SubCounty.all(),
-            'constituencies': Constituency.all(),
-            'communities': Community.all(),
+            COUNTIES_LABEL: County.all(),
+            SUB_COUNTIES_LABEL: SubCounty.all(),
+            CONSTITUENCIES_LABEL: Constituency.all(),
+            COMMUNITIES_LABEL: Community.all(),
             'projects': Project.all()
         }
         aggregate_list = level_map[level]
@@ -282,12 +286,6 @@ def generate_impact_indicators_for(location_map, level=None):
                 aggregate_list))
         aggregate_type = aggregate_list[0].location_type
 
-    elif location and type(location) is Community:
-            aggregate_list = location.projects
-            impact_indicators = Report.get_aggregated_impact_indicators(
-                aggregate_list)
-            aggregate_type = "Project"
-
     return {
         'aggregate_type': aggregate_type,
         'location': location,
@@ -300,10 +298,10 @@ def generate_performance_indicators_for(location_map,
                                         sector=None,
                                         level=None):
     level_to_location = {
-        'counties': County,
-        'sub_counties': SubCounty,
-        'constituencies': Constituency,
-        'communities': Community
+        COUNTIES_LABEL: County,
+        SUB_COUNTIES_LABEL: SubCounty,
+        CONSTITUENCIES_LABEL: Constituency,
+        COMMUNITIES_LABEL: Community
     }
     sector_indicator_mapping = {}
     sector_aggregated_indicators = {}
@@ -317,7 +315,7 @@ def generate_performance_indicators_for(location_map,
 
         level_map = {
             None: location.children(),
-            'counties': '',
+            COUNTIES_LABEL: '',
             'sub_county': '',
             'constituency': '',
             'community': ''
@@ -337,10 +335,10 @@ def generate_performance_indicators_for(location_map,
     else:
         level_map = {
             None: County.all(),
-            'counties': County.all(),
-            'sub_counties': SubCounty.all(),
-            'constituencies': Constituency.all(),
-            'communities': Community.all(),
+            COUNTIES_LABEL: County.all(),
+            SUB_COUNTIES_LABEL: SubCounty.all(),
+            CONSTITUENCIES_LABEL: Constituency.all(),
+            COMMUNITIES_LABEL: Community.all(),
             'projects': Project.all()
         }
         aggregate_list = level_map[level]
