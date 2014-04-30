@@ -227,8 +227,7 @@ Dropdown Menu Badges
 
 /***
 Forms
-***/
-/*
+***/*
 code {
   border: 1px solid #e1e1e1;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -315,7 +314,7 @@ textarea[readonly] {
 
 /* input  groups */
 
-/*
+
 .input-group.input-group-fixed {
   width: auto !important;
 }
@@ -332,7 +331,7 @@ textarea[readonly] {
 
 /* form control sizing */
 
-/*
+
 .form-control-inline {
   display: inline-block !important;
 }
