@@ -22,7 +22,7 @@
                         {% set actual = col[1] %}
                         {% set percentage = col[2] %}
                         <td>
-                            {{ value_or_default(percentage|format_value(request), '-') }}
+                            {{ value_or_default(percentage|format_value(request), '-') }}%
                             <span class="ratio">
                                 {{ value_or_default(actual|format_value(request), '-') }}
                                 /{{ value_or_default(target|format_value(request), '-') }}
@@ -40,7 +40,7 @@
                         {% set actual = col[1] %}
                         {% set percentage = col[2] %}
                         <td>
-                            {{ value_or_default(percentage|format_value(request), '-') }}
+                            {{ value_or_default(percentage|format_value(request), '-') }}%
                             <span class="ratio">
                                 {{ value_or_default(actual|format_value(request), '-') }}
                                 /{{ value_or_default(target|format_value(request), '-') }}
