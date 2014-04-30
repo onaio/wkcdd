@@ -80,7 +80,7 @@ var Map = (function(root){
                 mouseover: function (e) {
                     var layer = e.target;
                     layer.setStyle({
-                        fillOpacity: 0.5
+                        fillOpacity: 0.7
                     });
                     info.update(
                         layer.feature.properties.title,
@@ -90,7 +90,7 @@ var Map = (function(root){
                 mouseout: function (e) {
                     var layer = e.target;
                     layer.setStyle({
-                        fillOpacity: 0.2
+                        fillOpacity: 0.5
                     });
                     info.update();
                 }
@@ -116,7 +116,13 @@ var Map = (function(root){
             feature.properties.label = indicator.label;
             feature.properties.value = indicator.value;
             var intValue = parseInt(value);
-            return { color: getColor(intValue) };
+            return {
+                fillColor: getColor(intValue),
+                weight: 1,
+                color: '#fff',
+                opacity: 1,
+                fillOpacity: 0.5
+            };
         });
     };
 
