@@ -391,34 +391,36 @@ class TestPerformanceIndicatorGeneration(TestBase):
         self.assertFalse(results['sector_indicator_mapping'])
 
     def test_all_county_view_by_constituencies(self):
-        self.setup_community_test_data()
-        constituency = Constituency.get(Constituency.name == "sirisia")
+        self.setup_test_data()
+        constituency = Constituency.get(Constituency.name == 'Kakamega')
         location_map = self.setup_location_map()
 
         results = generate_performance_indicators_for(
             location_map,
             level='constituencies')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
         self.assertIsNotNone(results['project_types'])
-        sirisia_constituency_row = (
-            results['sector_aggregated_indicators']
-            [constants.DAIRY_COWS_PROJECT_REGISTRATION]
-            ['rows'][0])
-        self.assertEquals(sirisia_constituency_row[0].name, constituency.name)
+        constituencies_in_dataset = [row[0] for row in rows]
+        self.assertEquals(constituencies_in_dataset, [constituency])
 
     def test_all_county_view_by_communities(self):
-        self.setup_community_test_data()
-        community = Community.get(Community.name == "lutacho")
+        self.setup_test_data()
+        communities = Community.all(Community.name.in_(["Maragoli", "Bukusu"]))
         location_map = self.setup_location_map()
 
         results = generate_performance_indicators_for(
             location_map,
             level='communities')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
         self.assertIsNotNone(results['project_types'])
-        sirisia_community_row = (
-            results['sector_aggregated_indicators']
-            [constants.DAIRY_COWS_PROJECT_REGISTRATION]
-            ['rows'][0])
-        self.assertEquals(sirisia_community_row[0].name, community.name)
+        communities_in_dataset = [row[0] for row in rows]
+        self.assertEquals(communities_in_dataset, communities)
 
     def test_only_relevant_communities_display_for_sub_county(self):
         self.setup_test_data()
