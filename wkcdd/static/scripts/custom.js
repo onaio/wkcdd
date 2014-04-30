@@ -152,7 +152,7 @@ var LocationSelect = function() {
                 locations = this.data_map;
                 setViewByValue('counties');
             }
-            else setViewByValue('sub_counties');
+                else setViewByValue('sub_counties');
 
             $.each(locations, function(idx, elem){
 
@@ -224,7 +224,7 @@ var LocationSelect = function() {
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             update_select($('select[name=community]'), community_list, "--Community--");
-            setViewByValue('projects');
+            setViewByValue('communities  ');
         }
         level3ChangeListener = function(element) {
             //update level 0, 1 and 2
