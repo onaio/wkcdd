@@ -199,7 +199,6 @@ def get_lowest_location_value(location_map):
 
 
 def get_aggregate_list_for_location_by_level(location, level):
-    projects = Report.get_projects_from_location(location)
     level_map_county = {
         None: location.children(),
         COUNTIES_LABEL: '',
@@ -211,10 +210,10 @@ def get_aggregate_list_for_location_by_level(location, level):
                             for sub_counties in location.children()
                             for constituencies in sub_counties.children()
                             for communities in constituencies.children()],
-        'projects': projects
+        'projects': Report.get_projects_from_location(location)
     }
     level_map_sub_county = {
-        None: '',
+        None: location.children(),
         COUNTIES_LABEL: '',
         SUB_COUNTIES_LABEL: '',
         CONSTITUENCIES_LABEL: [constituencies
@@ -222,25 +221,25 @@ def get_aggregate_list_for_location_by_level(location, level):
         COMMUNITIES_LABEL: [communities
                             for constituencies in location.children()
                             for communities in constituencies.children()],
-        'projects': projects
+        'projects': Report.get_projects_from_location(location)
     }
     level_map_constituency = {
-        None: '',
+        None: location.children(),
         COUNTIES_LABEL: '',
         SUB_COUNTIES_LABEL: '',
         CONSTITUENCIES_LABEL: '',
         COMMUNITIES_LABEL: [communities
                             for communities in location.children()],
-        'projects': projects
+        'projects': Report.get_projects_from_location(location)
     }
 
     level_map_community = {
-        None: '',
+        None: Report.get_projects_from_location(location),
         COUNTIES_LABEL: '',
         SUB_COUNTIES_LABEL: '',
         CONSTITUENCIES_LABEL: '',
         COMMUNITIES_LABEL: '',
-        'projects': projects
+        'projects': Report.get_projects_from_location(location)
     }
 
     aggregate_list = {
@@ -313,21 +312,12 @@ def generate_performance_indicators_for(location_map,
     if location_id:
         location = Location.get(Location.id == location_id)
 
-        level_map = {
-            None: location.children(),
-            COUNTIES_LABEL: '',
-            'sub_county': '',
-            'constituency': '',
-            'community': ''
-        }
-
-        if isinstance(location, Community):
-            aggregate_list = location.projects
-            aggregate_type = PROJECT_LABEL
-            location_ids = [location.id]
-        else:
-            aggregate_list = level_map[level]
-            aggregate_type = aggregate_list[0].location_type
+        aggregate_list = \
+            get_aggregate_list_for_location_by_level(location, level)
+        aggregate_type = (
+            PROJECT_LABEL
+            if isinstance(aggregate_list[0], Project)
+            else aggregate_list[0].location_type)
 
         # fetch community ids for selected location type
         community_ids = get_community_ids_for(type(location), [location.id])
