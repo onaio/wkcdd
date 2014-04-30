@@ -148,7 +148,11 @@ var LocationSelect = function() {
                 constituency_list = [],
                 community_list = [];
 
-            if(locations.length == 0) locations = this.data_map;
+            if(locations.length == 0) {
+                locations = this.data_map;
+                setViewByValue('counties');
+            }
+            else setViewByValue('sub_counties');
 
             $.each(locations, function(idx, elem){
 
@@ -166,7 +170,6 @@ var LocationSelect = function() {
             update_select($('select[name=sub_county]'), sub_county_list, "--All Sub-Counties--");
             update_select($('select[name=constituency]'), constituency_list, "-- All Constituencies--");
             update_select($('select[name=community]'), community_list, "--All Communities--");
-            setViewByValue('sub_counties');
         },
         level1ChangeListener = function(element) {
             //update level 0,2 and 3
@@ -179,6 +182,7 @@ var LocationSelect = function() {
 
             if(locations.length == 0) {
                 //refresh filter based on parent
+                setViewByValue('sub_county');
                 return;
             }
 
@@ -208,6 +212,7 @@ var LocationSelect = function() {
 
             if(locations.length == 0) {
                 //refresh filter based on parent
+                setViewByValue('constituencies');
                 return;
             }
 
@@ -219,20 +224,25 @@ var LocationSelect = function() {
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             update_select($('select[name=community]'), community_list, "--Community--");
-            setViewByValue('communities');
+            setViewByValue('projects');
         }
         level3ChangeListener = function(element) {
             //update level 0, 1 and 2
             var 
                 community_id = $(element).val(),
                 locations = get_filtered_location_list(level3, community_id),
-                county = locations[0].county,
-                sub_county = locations[0].sub_county,
-                constituency = locations[0].constituency;
+                county = '',
+                sub_county = '',
+                constituency = '';
 
             if(locations.length == 0) {
                 //refresh filter based on parent
+                 setViewByValue('communities');
                 return;
+            }else{
+                county = locations[0].county,
+                sub_county = locations[0].sub_county,
+                constituency = locations[0].constituency
             }
 
             set_select_value($('select[name=county]'), county);
@@ -246,47 +256,47 @@ var LocationSelect = function() {
             var view_by = $('select[name=view_by]');
 
             view_by.val(value);
-            view_by.children().prop('disabled', false);
+            view_by.children().prop('hidden', false);
             switch (value)
             {
                 case "sub_counties":
                     if ($('select[name=county]').val() == '') {
-                        view_by.children('option[value=counties]').prop('disabled', false);
+                        view_by.children('option[value=counties]').prop('hidden', false);
                     }else{
-                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=counties]').attr('hidden', true);
                     }
                 break;
                 case "constituencies":
                     if ($('select[name=sub_county').val() == '') {
-                        view_by.children('option[value=counties]').attr('disabled', false);
-                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                        view_by.children('option[value=counties]').attr('hidden', false);
+                        view_by.children('option[value=sub_counties]').attr('hidden', false);
                     }else{
-                        view_by.children('option[value=counties]').attr('disabled', true);
-                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                        view_by.children('option[value=counties]').attr('hidden', true);
+                        view_by.children('option[value=sub_counties]').attr('hidden', true);
                     }
                 break;
                 case "communities":
                     if ($('select[name=constituency').val() == '') {
-                        view_by.children('option[value=counties]').attr('disabled', false);
-                        view_by.children('option[value=sub_counties]').attr('disabled', false);
-                        view_by.children('option[value=constituencies]').attr('disabled', false);
+                        view_by.children('option[value=counties]').attr('hidden', false);
+                        view_by.children('option[value=sub_counties]').attr('hidden', false);
+                        view_by.children('option[value=constituencies]').attr('hidden', false);
                     }else{
-                        view_by.children('option[value=counties]').attr('disabled', true);
-                        view_by.children('option[value=sub_counties]').attr('disabled', true);
-                        view_by.children('option[value=constituencies]').attr('disabled', true);
+                        view_by.children('option[value=counties]').attr('hidden', true);
+                        view_by.children('option[value=sub_counties]').attr('hidden', true);
+                        view_by.children('option[value=constituencies]').attr('hidden', true);
                     }
                 break;
                 case "projects":
                      if ($('select[name=constituency').val() == '') {
-                        view_by.children('option[value=counties]').attr('disabled', false);
-                        view_by.children('option[value=sub_counties]').attr('disabled', false);
-                        view_by.children('option[value=constituencies]').attr('disabled', false);
-                        view_by.children('option[value=communities]').attr('disabled', false);
+                        view_by.children('option[value=counties]').attr('hidden', false);
+                        view_by.children('option[value=sub_counties]').attr('hidden', false);
+                        view_by.children('option[value=constituencies]').attr('hidden', false);
+                        view_by.children('option[value=communities]').attr('hidden', false);
                     }else{
-                        view_by.children('option[value=counties]').attr('disabled', true);
-                        view_by.children('option[value=sub_counties]').attr('disabled', true);
-                        view_by.children('option[value=constituencies]').attr('disabled', true);
-                        view_by.children('option[value=communities]').attr('disabled', true);
+                        view_by.children('option[value=counties]').attr('hidden', true);
+                        view_by.children('option[value=sub_counties]').attr('hidden', true);
+                        view_by.children('option[value=constituencies]').attr('hidden', true);
+                        view_by.children('option[value=communities]').attr('hidden', true);
                     }
                 break;
             }
