@@ -161,12 +161,17 @@ class CountyView(object):
         sector_indicator_mapping = indicators['sector_indicator_mapping']
         filter_criteria = Project.generate_filter_criteria()
 
+        selected_project_label = [label
+                                  for sector, report, label in project_types
+                                  if sector == selected_project_type][0]
+
         return {
             'title': "Performance Indicators Report",
             'aggregate_type': aggregate_type,
             'location': location,
             'project_types': project_types,
             'selected_project_type': selected_project_type,
+            'selected_project_label': selected_project_label,
             'sector_aggregated_indicators': sector_aggregated_indicators,
             'sector_indicator_mapping': sector_indicator_mapping,
             'filter_criteria': filter_criteria,

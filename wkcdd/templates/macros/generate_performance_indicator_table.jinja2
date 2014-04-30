@@ -1,7 +1,7 @@
 {% from 'value_or_default.jinja2' import value_or_default %}
-{% macro generate_performance_indicator_table(request, location_type, dataset) %}
+{% macro generate_performance_indicator_table(request, location_type, dataset) %}  
   <div class="portlet-body">
-  {% if dataset['summary_row'] %}
+  {% if dataset['rows'] and dataset['summary_row'] %}
     <div class="table-responsive table-scrollable">
         <table class="table table-striped table-bordered table-hover data-table">
             <thead>

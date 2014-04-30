@@ -1,16 +1,12 @@
 {% from 'generate_project_type_dropdown_link.jinja2' import generate_project_type_dropdown_link %}
 
-{% macro generate_project_type_dropdown(request, selected_project_type, location_type, location, project_report_sectors, search_criteria) %}
+{% macro generate_project_type_dropdown(request, selected_project_label, location_type, location, project_report_sectors, search_criteria) %}
 <div class="btn-toolbar actions margin-bottom-10">
     <label class="pull-left margin-right-10"> Sector:</label>
       <div class="btn-group">
          <a class="btn btn-sm btn-success dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown">
           {% if selected_project_type %}
-              {% for reg_id, report_id, title in project_report_sectors %}
-                {% if reg_id == selected_project_type %}
-                  {{ title }}
-                {% endif %}
-              {% endfor %}
+            {{ selected_project_label }}
           {% else %}
             All Sectors
           {% endif %}

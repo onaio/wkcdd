@@ -35,14 +35,14 @@
 <!--END MAP-->
 
 <!--PROJECT TYPE DROP DOWN-->
-{{ generate_project_type_dropdown(request, selected_project_type, 'counties', '', project_types, search_criteria)}}
+{{ generate_project_type_dropdown(request, selected_project_label, 'counties', '', project_types, search_criteria)}}
 
 <!--PERFORMANCE INDICATOR TABLES-->
 {% if selected_project_type %}
   {% if location %}
-    {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[selected_project_type]) }}
+    {{ generate_performance_indicator_row(request, selected_project_label, location.url, sector_aggregated_indicators[selected_project_type]) }}
   {% else %}
-    {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[selected_project_type]) }}
+    {{ generate_performance_indicator_row(request, selected_project_label, 'counties', sector_aggregated_indicators[selected_project_type]) }}
   {% endif %}
 {% else %}
 
