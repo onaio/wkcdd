@@ -7,12 +7,14 @@
 {% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
 {% block title %} {{ title }}{% endblock %}
 {% block page_title %}
-  <h3 class="page-title">
+ <!-- <h3 class="page-title">
       {{ self.title() }}
     <small></small>
   </h3>
+-->
 {% endblock %}
 {% block filters %}
+<h4>Select Location</h4>
      {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block breadcrumbs %}

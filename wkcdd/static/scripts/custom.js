@@ -193,8 +193,8 @@ var LocationSelect = function() {
                 community_list.push(elem['community']);
             });
             set_select_value($('select[name=county]'), county);
-            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=constituency]'), constituency_list, "Constituency");
+            update_select($('select[name=community]'), community_list, "Community");
             setViewByValue('constituencies');
         },
         level2ChangeListener = function(element) {
