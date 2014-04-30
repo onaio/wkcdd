@@ -66,6 +66,9 @@ var Map = (function(root){
         GREEN: '#2ECC40'
     };
 
+    var histogramColors = ['#edf8fb', '#ccece6', '#99d8c9', '#66c2a4', '#2ca25f', '#006d2c'];
+    var isHistogram = false;
+
     var legend = new Legend();
     legend.addTo(map);
     legend.update([
@@ -99,8 +102,19 @@ var Map = (function(root){
         }
     }).addTo(map);
 
-    var setData = function (newData) {
+    var setData = function (newData, isImpactData) {
         data = newData;
+        isHistogram = isImpactData || false;
+
+        // get the min amd max values
+        /*console.log(data);
+        _.each(data, function (row) {
+            var values = _.map(row, function (indicator) {
+                return parseInt(indicator.value);
+            });
+            d3.max(values);
+            d3.min(values);
+        });*/
     };
 
     var setGeoJSON = function (geoJson) {
@@ -109,6 +123,27 @@ var Map = (function(root){
     };
 
     var setIndicator = function (indicator_id) {
+        var bins;
+
+        if (isHistogram) {
+            // get the max value for the indicator
+            var values = _.map(data, function (row) {
+                return parseInt(row[indicator_id].value);
+            });
+            var max = d3.max(values);
+
+            // bin me
+            bins = d3.layout.histogram().bins(6)(values);
+            var legendData = _.map(bins, function (bin, index) {
+                var label = Math.round(bin.x) + ' &ndash; ' + Math.round(bin.x + bin.dx)
+                if (index == bins.length - 1) {
+                    label = "> " + Math.round(bin.x);
+                }
+                return { color: histogramColors[index], label: label};
+            });
+            legend.update(legendData);
+        }
+
         shapeLayer.setStyle(function (feature) {
             var location = feature.properties[lookupProperty];
             var indicator = data[location][indicator_id];
@@ -117,14 +152,27 @@ var Map = (function(root){
             feature.properties.label = indicator.label;
             feature.properties.value = indicator.value;
             var intValue = parseInt(value);
+            var fillColor;
+            if (isHistogram) {
+                fillColor = getHistogramColor(intValue, bins);
+            } else {
+                fillColor = getColor(intValue);
+            }
             return {
-                fillColor: getColor(intValue),
+                fillColor: fillColor,
                 weight: 1,
                 color: '#fff',
                 opacity: 1,
                 fillOpacity: 0.5
             };
         });
+    };
+
+    var getHistogramColor = function(value, bins) {
+        var colorIndex = _.map(bins, function (item, index) {
+            return item.indexOf(value) > -1?0:-1;
+        }).indexOf(0);
+        return histogramColors[colorIndex];
     };
 
     var getColor = function (value) {

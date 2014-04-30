@@ -20,7 +20,7 @@
               </a>
               <ul class="dropdown-menu select-sector">
                 {% for indicator in sector_indicator_mapping%}
-                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.group[2] }}"> {{ indicator['title'] }}</a></li>
+                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{% if indicator.group is defined %}{{ indicator.group[2] }}{% else %}{{ indicator.name }}{% endif %}"> {{ indicator['title'] }}</a></li>
                 {% endfor %}
               </ul>
             </div>

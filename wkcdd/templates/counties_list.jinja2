@@ -24,7 +24,7 @@
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
 {% endblock %}
 {% block content %}
-{{ generate_map_chart(request) }}
+{{ generate_map_chart(request, impact_indicators) }}
 <div class="row">
 <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -67,13 +67,35 @@
 {% endblock content %}
 {% block page_scripts %}
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
-  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
-  LocationSelect.data_map = location_json_data;
+  //map = Custom.display_constituency_map();
+  //location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  //LocationSelect.data_map = location_json_data;
 
-  {{ update_selected_location_dropdowns(search_criteria) }}
-  
+  var data = {
+    {% for row in rows -%}
+      '{{ row[0].pretty }}': {
+        {% for impact_indicator in impact_indicators -%}
+          '{{ impact_indicator.name  }}': {
+            label: '{{ impact_indicator.title }}',
+            value: '{{ row[loop.index] }}'
+        },
+        {%  endfor %}
+      },
+    {% endfor %}
+  };
+
+  Map.setData(data, true);
+
+  // load json layer
+  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+    dataType: 'json'
+  }).done(function(data, status){
+    Map.setGeoJSON(data);
+  });
+
+  {{ update_selected_location_dropdowns(search_criteria['location_map']) }}
 {% endblock %}

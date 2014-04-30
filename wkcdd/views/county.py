@@ -71,7 +71,9 @@ class CountyView(object):
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
             'filter_criteria': filter_criteria,
-            'search_criteria': search_criteria
+            'search_criteria': search_criteria,
+            'impact_indicators': tuple_to_dict_list(
+                ('title', 'name'), constants.IMPACT_INDICATOR_REPORT)
         }
 
     @view_config(name='',
