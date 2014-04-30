@@ -25,6 +25,10 @@
 	padding-top:1em;
 }
 
+.dropdown-menu{
+	z-index:1001!important;
+}
+
 .breadcrumb>li, 
 .breadcrumb>li>a
 {
@@ -109,10 +113,11 @@ span.ratio {
 	border-radius: 2px;
 }
 
-.btn.download {
-    margin-top: 0.6em;
+.btn.download{
     font-size: 13px;
-    margin-right: 0.4em;
+    /*margin-right: 0.4em;*/
+    margin-top: -0.3em;
+    margin-bottom: 0.5em;
 }
 
 .filters{

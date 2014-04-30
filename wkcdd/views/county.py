@@ -182,7 +182,7 @@ class CountyView(object):
         filter_criteria = Project.generate_filter_criteria()
 
         return {
-            'title': "County Performance Indicators Report",
+            'title': "All Counties",
             'counties': counties,
             'project_types': project_types_mappings,
             'selected_project_types': selected_project_types,

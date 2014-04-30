@@ -30,13 +30,20 @@
     <!-- BEGIN SAMPLE TABLE PORTLET-->
     <div class="portlet">
       <div class="portlet-title">
+      
+	        <span class="pull-right">
+	            <a href="{{ request.route_url('counties', traverse=(),
+	                _query={'format':'xlsx'})}}" class="btn btn-success download" role="button">
+	                <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+	            </a>
+	        </span>
+      
         {% if location %}
           <div class="caption"><i class="icon-tasks"></i>{{location.pretty}} {{location.location_type|humanize()|title()}}</div>
         {% else %}
-          <div class="caption"><i class="icon-tasks"></i>{% trans %}All Counties {% endtrans %}</div>
+          <div class="caption"><i class=""></i>{% trans %}All Counties {% endtrans %}</div>
         {% endif %}
          <div class="tools">
-          <a href="" class="collapse"></a>
         </div>
       </div>
       <div class="portlet-body">

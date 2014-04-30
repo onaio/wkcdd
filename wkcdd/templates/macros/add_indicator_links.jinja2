@@ -51,13 +51,5 @@
         </li>
     {% endif %}
     </ul>
-    {% if page == 'impact' %}
-        <div class="pull-right">
-            <a href="{{ request.route_url(location_type, traverse=(location.id),
-                _query={'format':'xlsx'})}}" class="btn btn-default download" role="button">
-                Download XLS
-            </a>
-        </div>
-    {% endif %}
 </div>
 {% endmacro %}
