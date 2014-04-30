@@ -32,12 +32,14 @@ class SubCountyView(object):
         dataset = build_dataset(Location.CONSTITUENCY,
                                 constituencies,
                                 impact_indicators)
+        search_criteria = {'view_by': 'constituencies'}
         return {
             'title': sub_county.pretty,
             'headers': dataset['headers'],
             'rows': dataset['rows'],
             'summary_row': dataset['summary_row'],
-            'sub_county': sub_county
+            'sub_county': sub_county,
+            'search_criteria': search_criteria
         }
 
     @view_config(name='performance',

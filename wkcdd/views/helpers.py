@@ -29,11 +29,21 @@ def requested_xlsx_format(event):
         return True
 
 
-def build_dataset(location_type,
-                  locations,
-                  indicators,
-                  projects=None):
-    headers = [humanize(location_type).title()]
+def build_dataset(location_type, locations, impact_indicators, projects=None):
+
+    headers = {
+        'county': [humanize(location_type).title()],
+        'sub_county': ["County", humanize(location_type).title()],
+        'constituency': ["County", "Sub-County",
+                         humanize(location_type).title()],
+        'community': ["County", "Sub-County", "Constituency",
+                      humanize(location_type).title()],
+        'Project': ["Country",
+                    "Sub-County",
+                    "Constituency",
+                    "Community",
+                    location_type]
+    }[location_type]
     indicator_headers, indicator_keys = zip(*constants.IMPACT_INDICATOR_REPORT)
     headers.extend(indicator_headers)
     rows = []
@@ -43,7 +53,11 @@ def build_dataset(location_type,
         for project_indicator in indicators['indicator_list']:
             for project in projects:
                 if project.id == project_indicator['project_id']:
-                    row = [project]
+                    row = [project.community.constituency.sub_county.county,
+                           project.community.constituency.sub_county,
+                           project.community.constituency,
+                           project.community,
+                           project]
             for key in indicator_keys:
                 value = 0 if project_indicator['indicators'] is \
                     None else project_indicator['indicators'][key]
@@ -53,10 +67,26 @@ def build_dataset(location_type,
                             [key] for key in indicator_keys])
     else:
         for location in locations:
-            row = [location]
-            location_summary = (
-                indicators['aggregated_impact_indicators']
-                [location.id]['summary'])
+            if location_type == 'county':
+                row = [location]
+            elif location_type == 'sub_county':
+                row = [location.parent, location]
+            elif location_type == 'constituency':
+                row = [Location.get(
+                    Location.id == location.parent.id).parent,
+                    location.parent, location]
+            elif location_type == 'community':
+                row = [Location.get(Location.id ==
+                                    Location.get(Location.id ==
+                                                 location.parent.id)
+                                    .parent.id).parent,
+                       Location.get(Location.id == location.parent.id).parent,
+                       location.parent,
+                       location]
+
+            location_summary = \
+                (impact_indicators['aggregated_impact_indicators']
+                 [location.id]['summary'])
             row.extend([location_summary[key] for key in indicator_keys])
             rows.append(row)
 
@@ -164,6 +194,61 @@ def get_lowest_location_value(location_map):
         return value
 
 
+def get_aggregate_list_for_location_by_level(location, level):
+    projects = Report.get_projects_from_location(location)
+    level_map_county = {
+        None: location.children(),
+        'counties': '',
+        'sub_counties': location.children(),
+        'constituencies': [constituencies
+                           for sub_counties in location.children()
+                           for constituencies in sub_counties.children()],
+        'communities': [communities
+                        for sub_counties in location.children()
+                        for constituencies in sub_counties.children()
+                        for communities in constituencies.children()],
+        'projects': projects
+    }
+    level_map_sub_county = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': [constituencies
+                           for constituencies in location.children()],
+        'communities': [communities
+                        for constituencies in location.children()
+                        for communities in constituencies.children()],
+        'projects': projects
+    }
+    level_map_constituency = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': '',
+        'communities': [communities
+                        for communities in location.children()],
+        'projects': projects
+    }
+
+    level_map_community = {
+        None: '',
+        'counties': '',
+        'sub_counties': '',
+        'constituencies': '',
+        'communities': '',
+        'projects': projects
+    }
+
+    aggregate_list = {
+        County: level_map_county[level],
+        SubCounty: level_map_sub_county[level],
+        Constituency: level_map_constituency[level],
+        Community: level_map_community[level],
+    }[type(location)]
+
+    return aggregate_list
+
+
 def generate_impact_indicators_for(location_map, level=None):
     location_id = get_lowest_location_value(location_map)
     location = None
@@ -172,19 +257,26 @@ def generate_impact_indicators_for(location_map, level=None):
 
     if location_id:
         location = Location.get(Location.id == location_id)
-        level_map = {
-            None: location.children(),
-            'county': '',
-            'sub_county': '',
-            'constituency': '',
-            'community': ''
-        }
-        aggregate_list = level_map[level]
+        aggregate_list = \
+            get_aggregate_list_for_location_by_level(location, level)
+
     else:
         # Default aggregation level is all counties
-        aggregate_list = County.all()
+        level_map = {
+            None: County.all(),
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'constituencies': Constituency.all(),
+            'communities': Community.all(),
+            'projects': Project.all()
+        }
+        aggregate_list = level_map[level]
 
-    if aggregate_list:
+    if type(aggregate_list[0]) == Project:
+        impact_indicators = \
+            Report.get_aggregated_impact_indicators(aggregate_list)
+        aggregate_type = 'Project'
+    else:
         impact_indicators = (
             Report.get_impact_indicator_aggregation_for(
                 aggregate_list))

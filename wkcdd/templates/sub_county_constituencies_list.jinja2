@@ -1,6 +1,7 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
+{% from 'macros/generate_location_columns.jinja2' import generate_location_columns %}
 {% block title %}{{ title }} {% trans %}Sub County{% endtrans %}{% endblock %}
 {% block page_title %}
   <h3 class="page-title">
@@ -49,14 +50,7 @@
                   </tr>
                </thead>
                <tbody>
-               {% for row in rows %}
-                  <tr>
-                     <td><a href="{{ request.route_url('constituency', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
-                     {% for col in row[1:] %}
-                        <td>{{ value_or_default(col|format_value(request), '-') }}</td>
-                     {% endfor %}
-                  </tr>
-               {% endfor %}
+                {{generate_location_columns(request, rows, search_criteria)}}
                   <tr class="bold">
                      <td>
                         {% trans %} Total Summary {% endtrans %}

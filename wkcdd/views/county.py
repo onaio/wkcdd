@@ -44,7 +44,8 @@ class CountyView(object):
         view_by = self.request.GET.get('view_by')
         location_map = self.get_location_map()
 
-        impact_indicator_results = generate_impact_indicators_for(location_map)
+        impact_indicator_results = \
+            generate_impact_indicators_for(location_map, view_by)
         aggregate_type = impact_indicator_results['aggregate_type']
         location = impact_indicator_results['location']
 
