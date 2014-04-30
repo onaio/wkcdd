@@ -42,6 +42,12 @@ class Location(Base):
     def children(self):
         return Location.all(Location.parent_id == self.id)
 
+    def url(self):
+        if self.location_type == self.COUNTY:
+            return self.location_type[:-1] + 'ies'
+        else:
+            return self.location_type
+
     @classmethod
     def get_or_create(cls, name, parent, location_type):
 

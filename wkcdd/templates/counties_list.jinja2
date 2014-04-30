@@ -21,7 +21,7 @@
      {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'county', None, 'impact') }}
+  {{ add_indicator_links(request, 'counties', None, 'impact') }}
 {% endblock %}
 {% block content %}
 {{ generate_map_chart(request) }}

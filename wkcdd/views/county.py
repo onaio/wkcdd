@@ -19,7 +19,7 @@ from wkcdd.views.helpers import (
 )
 
 
-@view_defaults(route_name='county')
+@view_defaults(route_name='counties')
 class CountyView(object):
     DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REPORT
 

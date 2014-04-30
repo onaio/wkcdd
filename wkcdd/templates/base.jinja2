@@ -127,7 +127,7 @@
 	  <ul class="nav-side">
 		<li class="start">
 			<a class="
-			    {%if request.path_info_peek() == 'county' %}
+			    {%if request.path_info_peek() == 'counties' %}
                     selected
                 {%elif request.path_info_peek() == 'sub_county' %}
                     selected
@@ -136,7 +136,7 @@
                 {%elif request.path_info_peek() == 'community' %}
                     selected
                 {%endif%}"
-                href="{{ request.route_url('county', traverse=('')) }}">
+                href="{{ request.route_url('counties', traverse=('')) }}">
 			<img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
 			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
 			</a>

@@ -10,7 +10,7 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="{{ request.route_url('county', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
+      <a href="{{ request.route_url('counties', traverse=()) }}">{% trans %}County Indicators{% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
@@ -18,7 +18,7 @@
   </li>
 {% endblock %}
 {% block indicators %}
-  {{ add_indicator_links(request, 'county', county, 'impact') }}
+  {{ add_indicator_links(request, 'counties', county, 'impact') }}
 {% endblock %}
 {% block content %}
 <div class="row">

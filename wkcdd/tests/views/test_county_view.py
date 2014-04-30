@@ -43,7 +43,7 @@ class TestCountyViews(IntegrationTestBase):
 class TestCountyViewsFunctional(FunctionalTestBase):
     def test_show_all_view(self):
         self.setup_test_data()
-        url = self.request.route_path('county',  traverse='')
+        url = self.request.route_path('counties',  traverse='')
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -51,7 +51,7 @@ class TestCountyViewsFunctional(FunctionalTestBase):
             self.setup_test_data()
             county = Location.get(Location.name == 'Bungoma',
                                   Location.location_type == 'county')
-            url = self.request.route_path('county', traverse=county.id)
+            url = self.request.route_path('counties', traverse=county.id)
             response = self.testapp.get(url)
             self.assertEqual(response.status_code, 200)
 
@@ -59,14 +59,14 @@ class TestCountyViewsFunctional(FunctionalTestBase):
         self.setup_test_data()
         county = Location.get(Location.name == 'Bungoma',
                               Location.location_type == 'county')
-        url = self.request.route_path('county', traverse=(
+        url = self.request.route_path('counties', traverse=(
             county.id, 'performance'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_county_performance_summary_view(self):
         self.setup_test_data()
-        url = self.request.route_path('county', traverse=(
+        url = self.request.route_path('counties', traverse=(
             'performance_summary'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
