@@ -1,7 +1,8 @@
 var Map = (function(root){
     var map =  new L.Map('map', {
+        fullscreenControl: true,
         layers: [
-            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hg15g5/{z}/{x}/{y}.png', {
+            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i42dk97b/{z}/{x}/{y}.png', {
                 maxZoom: 13,
                 minZoom: 9,
                 attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
