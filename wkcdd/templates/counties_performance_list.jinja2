@@ -65,13 +65,21 @@
 {% endblock content %}
 {% block page_scripts %}
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
+  //map = Custom.display_constituency_map();
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
   {% for sector, report, label  in selected_project_types %}
-    Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
+    //2Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
   {% endfor %}
+
+  // load json layer
+  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+    dataType: 'json'
+  }).done(function(data, status){
+    Map.setGeoJSON(data);
+  });
 {% endblock %}

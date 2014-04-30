@@ -78,6 +78,10 @@ var Custom = function () {
 
         init = function(){
         };
+
+    $('.indicator-selector').click(function () {
+        Map.setIndicator($(this).data('indicator'));
+    });
     
     // public functions
     return {
