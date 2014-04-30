@@ -165,8 +165,10 @@ class TestBase(unittest.TestCase):
           ### Locations
           Bungoma county -> Bungoma Sub County -> Kakamega Const ->
             Maragoli Community, Bukusu Community
-          Busia County -> Teso Sub County -> Amagoro -> Rwatama
 
+          Busia County -> Teso Sub County -> Amagoro Const -> Rwatama
+
+          Siaya County
         """
         county = self._add_county(name="Bungoma")
         county3 = self._add_county(name="Siaya")  # noqa

@@ -18,7 +18,7 @@
    </li>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
 {% endblock %}
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'impact') }}
@@ -61,17 +61,7 @@
                   </tr>
                </thead>
                <tbody>
-                {{generate_location_columns(request, rows, search_criteria)}}
-                  <tr class="bold">
-                     <td>
-                        {% trans %} Total Summary {% endtrans %}
-                     </td>
-                     {% for value in summary_row%}
-                        <td>
-                           {{ value_or_default(value|format_value(request), '-') }}
-                        </td>
-                      {% endfor %}
-                  </tr>
+                {{ generate_location_columns(request, rows, summary_row, search_criteria, "impact") }}
                </tbody>
             </table>
          </div>

@@ -3,10 +3,6 @@ from collections import defaultdict
 from wkcdd import constants
 from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.project import Project
-from wkcdd.models.community import Community
-from wkcdd.models.county import County
-from wkcdd.models.sub_county import SubCounty
-from wkcdd.models.constituency import Constituency
 
 from wkcdd.models.base import (
     Base
@@ -20,9 +16,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSON
 from wkcdd.models.helpers import (
     get_project_list,
-    get_community_ids,
-    get_constituency_ids,
-    get_sub_county_ids
+    get_community_ids_for
 )
 
 
@@ -50,16 +44,19 @@ class Report(Base):
     # TODO rename to get_performance_indicators
     def calculate_performance_indicators(self):
         performance_indicators = defaultdict(int)
+        set_value = lambda value: (0 if value is None
+                                   or value == 'Infinity'
+                                   else value)
         for key, performance_indicator_key\
             in constants.PERFORMANCE_INDICATORS[self.report_data[
                 constants.XFORM_ID]]:
             if type(performance_indicator_key) == list:
                 for key_instance in performance_indicator_key:
                     if not performance_indicators[key]:
-                        performance_indicators[key] = (
+                        performance_indicators[key] = set_value(
                             self.report_data.get(key_instance))
             else:
-                performance_indicators[key] = (
+                performance_indicators[key] = set_value(
                     self.report_data.get(performance_indicator_key))
         return performance_indicators
 
@@ -113,10 +110,8 @@ class Report(Base):
 
     @classmethod
     def get_aggregated_performance_indicators(cls, project_list, project_type):
-        pass
-
-        indicator_list = None
-        summary = None
+        indicator_list = []
+        summary = defaultdict(int)
         summary_report_count = 0
         if project_list:
             indicator_list = []
@@ -177,15 +172,7 @@ class Report(Base):
     def get_projects_from_location(cls,
                                    location,
                                    *criteria):
-        community_ids = {
-            Community: [location.id],
-            Constituency: get_community_ids([location.id]),
-            SubCounty: get_community_ids(get_constituency_ids
-                                         ([location.id])),
-            County: get_community_ids(get_constituency_ids
-                                      (get_sub_county_ids
-                                       ([location.id])))
-        }[type(location)]
+        community_ids = get_community_ids_for(type(location), [location.id])
         projects = get_project_list(community_ids, *criteria)
         return projects
 

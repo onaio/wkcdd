@@ -43,7 +43,7 @@
 
 .data-header {
     font-size: 12px!important;
-    width 100px;
+    width: 100px;
     white-space: normal!important;
 }
 /*sidebar*/
@@ -211,4 +211,7 @@ table.dataTable{
 	background:#F7F9FA;
 	border:1px solid #DDDDDD;
 	/*border-bottom:2px solid #F7F9FA;*/
+}
+.float-left {
+    float: left;
 }

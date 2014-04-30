@@ -1,0 +1,16 @@
+{% macro generate_project_type_dropdown_link(request, location_type, name, type, search_criteria) %}
+{% set location_map = search_criteria['location_map']%}
+{% set view_by = search_criteria['view_by']%}
+    <li>
+         <a href="{{ request.route_url(location_type, traverse=('performance_summary'),
+                  _query={'type': type,
+                          'view_by': view_by,
+                          'county': location_map['county'],
+                          'sub_county': location_map['sub_county'],
+                          'constituency': location_map['constituency'],
+                          'community': location_map['community']
+                         }) }}">
+             {{name}}
+         </a>
+    </li>
+{% endmacro%}
