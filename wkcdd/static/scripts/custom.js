@@ -29,7 +29,7 @@ var Custom = function () {
 
             constituencies_map = new L.Map('map', {
                     layers: [
-                            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.snd5z5mi/{z}/{x}/{y}.png', {
+                            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hmlj38/{z}/{x}/{y}.png', {
                             maxZoom: 13,
                             minZoom: 9,
                             attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
@@ -78,6 +78,8 @@ var Custom = function () {
 
         init = function(){
         };
+
+        $('.selectpicker').selectpicker();
     
     // public functions
     return {
@@ -163,9 +165,10 @@ var LocationSelect = function() {
                 //Communities are all unique
                 community_list.push(elem['community']);
             });
-            update_select($('select[name=sub_county]'), sub_county_list, "--Sub-County--");
-            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=sub_county]'), sub_county_list, "--All Sub-Counties--");
+            update_select($('select[name=constituency]'), constituency_list, "-- All Constituencies--");
+            update_select($('select[name=community]'), community_list, "--All Communities--");
+            setViewByValue('sub_counties');
         },
         level1ChangeListener = function(element) {
             //update level 0,2 and 3
@@ -192,8 +195,9 @@ var LocationSelect = function() {
                 community_list.push(elem['community']);
             });
             set_select_value($('select[name=county]'), county);
-            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=constituency]'), constituency_list, "Constituency");
+            update_select($('select[name=community]'), community_list, "Community");
+            setViewByValue('constituencies');
         },
         level2ChangeListener = function(element) {
             //update level 0,1 and 3
@@ -217,6 +221,7 @@ var LocationSelect = function() {
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             update_select($('select[name=community]'), community_list, "--Community--");
+            setViewByValue('communities');
         }
         level3ChangeListener = function(element) {
             //update level 0, 1 and 2
@@ -235,6 +240,59 @@ var LocationSelect = function() {
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             set_select_value($('select[name=constituency]'), constituency);
+            setViewByValue('projects');
+        },
+        setViewByValue = function(value) {
+            //udate view_by dropdown based on selected location type
+
+            var view_by = $('select[name=view_by]');
+
+            view_by.val(value);
+            view_by.children().prop('disabled', false);
+            switch (value)
+            {
+                case "sub_counties":
+                    if ($('select[name=county]').val() == '') {
+                        view_by.children('option[value=counties]').prop('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                    }
+                break;
+                case "constituencies":
+                    if ($('select[name=sub_county').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                    }
+                break;
+                case "communities":
+                    if ($('select[name=constituency').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                        view_by.children('option[value=constituencies]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                        view_by.children('option[value=constituencies]').attr('disabled', true);
+                    }
+                break;
+                case "projects":
+                     if ($('select[name=constituency').val() == '') {
+                        view_by.children('option[value=counties]').attr('disabled', false);
+                        view_by.children('option[value=sub_counties]').attr('disabled', false);
+                        view_by.children('option[value=constituencies]').attr('disabled', false);
+                        view_by.children('option[value=communities]').attr('disabled', false);
+                    }else{
+                        view_by.children('option[value=counties]').attr('disabled', true);
+                        view_by.children('option[value=sub_counties]').attr('disabled', true);
+                        view_by.children('option[value=constituencies]').attr('disabled', true);
+                        view_by.children('option[value=communities]').attr('disabled', true);
+                    }
+                break;
+            }
+
         };
 
     this.data_map = {};

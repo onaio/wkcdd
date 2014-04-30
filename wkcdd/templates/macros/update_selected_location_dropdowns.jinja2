@@ -1,0 +1,16 @@
+{% macro update_selected_location_dropdowns(search_criteria) %}
+    {% set location_map = search_criteria['location_map']%}
+    {% if location_map['community'] %}
+        LocationSelect.level3ChangeListener($('select[name=community]'));
+    {% elif location_map['constituency'] %}
+        LocationSelect.level2ChangeListener($('select[name=constituency]'));
+    {% elif location_map['sub_county'] %}
+        LocationSelect.level1ChangeListener($('select[name=sub_county]'));
+    {% elif location_map['county'] %}
+        LocationSelect.level0ChangeListener($('select[name=county]'));
+    {% endif %}
+
+    {% if search_criteria['view_by'] %}
+        LocationSelect.setViewByValue('{{search_criteria['view_by']}}')
+    {% endif %}
+{% endmacro %}

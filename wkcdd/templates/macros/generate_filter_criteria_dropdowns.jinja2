@@ -1,41 +1,35 @@
-{% macro generate_filter_criteria_dropdowns(filter_criteria) %}
+{% from 'filter_criteria_options.jinja2' import filter_criteria_options %}
+{% macro generate_filter_criteria_dropdowns(filter_criteria, location_map) %}
 <div class="row filters">
   <form id="filter_criteria" class="form-inline" method="get">
     <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
-      <option value="">--All Counties--</option>
-      {% for county in filter_criteria["counties"] %}
-        <option value="{{ county.id }}">{{ county.pretty }}</option>
-      {% endfor %}
+      <option value="">All Counties</option>
+      {{ filter_criteria_options(filter_criteria, location_map, "counties", "county" ) }}
     </select>
     <select name="sub_county" class="form-control input-small select2me"  data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
-      <option value="">--All Sub-Counties--</option>
-      {% for sub_county in filter_criteria["sub_counties"] %}
-        <option value="{{ sub_county.id }}">{{ sub_county.pretty }}</option>
-      {% endfor %}
+      <option value="">All Sub-Counties</option>
+      {{ filter_criteria_options(filter_criteria, location_map, "sub_counties", "sub_county" ) }}
     </select>
     <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
-      <option value="">--All Constituencies--</option>
-      {% for constituency in filter_criteria["constituencies"] %}
-        <option value="{{ constituency.id }}">{{ constituency.pretty }}</option>
-      {% endfor %}
+      <option value="">All Constituencies</option>
+      {{ filter_criteria_options(filter_criteria, location_map, "constituencies", "constituency" ) }}
     </select>
-    <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
-      <option value="">--All Communities--</option>
-      {% for community in filter_criteria["communities"] %}
-        <option value="{{ community.id }}">{{ community.pretty }}</option>
-      {% endfor %}
+    <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);" >
+      <option value="">All Communities</option>
+       {{ filter_criteria_options(filter_criteria, location_map, "communities", "community" ) }}
     </select>
 
-    <button type="submit" class="filter-btn btn btn-info pull-right"> Go <i class="icon-filter"></i></button>
+    <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
     <div class="form-group pull-right">
-      <label> View by:</label>
-      <select  name="view_by" class="form-control input-small" data-placeholder="Select...">
-        <option value="">--View All--</option>
-        <option value="county">County</option>
-        <option value="sub_county">Sub-County</option>
-        <option value="constituency">Constituency</option>
-        <option value="community">Community</option>
-        <option value="project">Project</option>
+    
+      <label> Aggregate by:</label>
+  
+      <select name="view_by" class="btn btn-info" data-placeholder="Select...">
+        <option value="counties">Counties</option>
+        <option value="sub_counties">Sub-Counties</option>
+        <option value="constituencies">Constituencies</option>
+        <option value="communities">Communities</option>
+        <option value="projects">Projects</option>
       </select>
     </div>
   </form>

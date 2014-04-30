@@ -22,7 +22,7 @@ class TestCommunityView(IntegrationTestBase):
 
         self.assertEquals(response['title'], community.name)
         self.assertEquals(len(response['rows']), len(community.projects))
-        self.assertEquals(response['rows'][0][0].name,
+        self.assertEquals(response['rows'][0][4].name,
                           'Dairy Goat Project Center 1')
         self.assertEquals(response['summary_row'], [0, 0, 0, 0])
 
@@ -34,12 +34,12 @@ class TestCommunityView(IntegrationTestBase):
         response = self.community_view.show()
         self.assertEquals(response['title'], community.name)
         self.assertEquals(len(response['rows']), len(community.projects))
-        self.assertEquals(response['rows'][0][0].name,
+        self.assertEquals(response['rows'][0][4].name,
                           'Dairy Cow Project Center 1')
-        self.assertEquals(response['rows'][1][0].name,
+        self.assertEquals(response['rows'][1][4].name,
                           'Dairy Goat Project Center 2')
-        self.assertEquals(response['rows'][0][1:], ['1', '1', '3', '3'])
-        self.assertEquals(response['rows'][1][1:], ['15', None, None, '5'])
+        self.assertEquals(response['rows'][0][5:], ['1', '1', '3', '3'])
+        self.assertEquals(response['rows'][1][5:], ['15', None, None, '5'])
         self.assertEquals(response['summary_row'], [16, 1, 3, 8])
 
     def test_performance_indicator_aggregates_display_without_reports(self):
