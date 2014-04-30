@@ -12,6 +12,7 @@ var Custom = function () {
 
             if(map) map = null;
             county_map = new L.Map('map', {
+                fullscreenControl: true,
                 layers: [
                     L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.tk0jatt9/{z}/{x}/{y}.png', {
                             maxZoom: 12,
@@ -28,6 +29,7 @@ var Custom = function () {
             if(map) map = null;
 
             constituencies_map = new L.Map('map', {
+                fullscreenControl: true,
                     layers: [
                             L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hmlj38/{z}/{x}/{y}.png', {
                             maxZoom: 13,
