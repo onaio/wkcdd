@@ -5,6 +5,8 @@ from wkcdd import constants
 from wkcdd.libs.utils import humanize
 from wkcdd.models import (
     County,
+    SubCounty,
+    Constituency,
     Community,
     Project,
     Location,
@@ -205,6 +207,12 @@ def generate_impact_indicators_for(location_map, level=None):
 def generate_performance_indicators_for(location_map,
                                         sector=None,
                                         level=None):
+    level_to_location = {
+        'counties': County,
+        'sub_counties': SubCounty,
+        'constituencies': Constituency,
+        'communities': Community
+    }
     sector_indicator_mapping = {}
     sector_aggregated_indicators = {}
     project_type_geopoints = {}
@@ -217,7 +225,7 @@ def generate_performance_indicators_for(location_map,
 
         level_map = {
             None: location.children(),
-            'county': '',
+            'counties': '',
             'sub_county': '',
             'constituency': '',
             'community': ''
@@ -235,10 +243,20 @@ def generate_performance_indicators_for(location_map,
         community_ids = get_community_ids_for(type(location), [location.id])
 
     else:
-        aggregate_list = County.all()
+        level_map = {
+            None: County.all(),
+            'counties': County.all(),
+            'sub_counties': SubCounty.all(),
+            'constituencies': Constituency.all(),
+            'communities': Community.all(),
+            'projects': Project.all()
+        }
+        aggregate_list = level_map[level]
         aggregate_type = aggregate_list[0].location_type
         location_ids = [location.id for location in aggregate_list]
-        community_ids = get_community_ids_for(County, location_ids)
+        community_ids = get_community_ids_for(
+            level_to_location[level],
+            location_ids)
 
     project_types_mappings = get_project_types(community_ids)
 

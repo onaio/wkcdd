@@ -132,15 +132,17 @@ class CountyView(object):
                  renderer='counties_performance_list.jinja2',
                  request_method='GET')
     def performance_summary(self):
+        default_level = 'counties'
         location_map = self.get_location_map()
-        view_by = self.request.GET.get('view_by')
+        level = self.request.GET.get('view_by') or default_level
         selected_project_type = self.request.GET.get('type')
 
-        search_criteria = {'view_by': view_by,
+        search_criteria = {'view_by': level,
                            'location_map': location_map}
         indicators = generate_performance_indicators_for(
             location_map,
-            selected_project_type)
+            selected_project_type,
+            level)
 
         location = indicators['location']
         project_types = indicators['project_types']

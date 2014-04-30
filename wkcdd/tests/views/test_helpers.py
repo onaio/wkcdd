@@ -297,7 +297,7 @@ class TestPerformanceIndicatorGeneration(TestBase):
 
     def test_generate_performance_indicators_for_none(self):
         self.setup_test_data()
-        results = generate_performance_indicators_for(None)
+        results = generate_performance_indicators_for(None, level='county')
         self.assertIsNotNone(results['project_types'])
         self.assertEqual(results['aggregate_list'], County.all())
 
@@ -350,3 +350,33 @@ class TestPerformanceIndicatorGeneration(TestBase):
         )
         self.assertFalse(results['sector_aggregated_indicators'])
         self.assertFalse(results['sector_indicator_mapping'])
+
+    def test_all_county_view_by_constituencies(self):
+        self.setup_community_test_data()
+        constituency = Constituency.get(Constituency.name == "sirisia")
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='constituency')
+        self.assertIsNotNone(results['project_types'])
+        sirisia_constituency_row = (
+            results['sector_aggregated_indicators']
+            [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+            ['rows'][0])
+        self.assertEquals(sirisia_constituency_row[0].name, constituency.name)
+
+    def test_all_county_view_by_communities(self):
+        self.setup_community_test_data()
+        community = Community.get(Community.name == "lutacho")
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='community')
+        self.assertIsNotNone(results['project_types'])
+        sirisia_community_row = (
+            results['sector_aggregated_indicators']
+            [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+            ['rows'][0])
+        self.assertEquals(sirisia_community_row[0].name, community.name)
