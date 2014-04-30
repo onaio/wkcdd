@@ -70,18 +70,16 @@ def build_dataset(location_type, locations, impact_indicators, projects=None):
             if location_type == 'county':
                 row = [location]
             elif location_type == 'sub_county':
-                row = [location.parent, location]
+                row = [location.county,
+                       location]
             elif location_type == 'constituency':
-                row = [Location.get(
-                    Location.id == location.parent.id).parent,
-                    location.parent, location]
+                row = [location.sub_county.county,
+                       location.sub_county,
+                       location]
             elif location_type == 'community':
-                row = [Location.get(Location.id ==
-                                    Location.get(Location.id ==
-                                                 location.parent.id)
-                                    .parent.id).parent,
-                       Location.get(Location.id == location.parent.id).parent,
-                       location.parent,
+                row = [location.constituency.sub_county.county,
+                       location.constituency.sub_county,
+                       location.constituency,
                        location]
 
             location_summary = \

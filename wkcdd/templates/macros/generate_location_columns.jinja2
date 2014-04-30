@@ -1,32 +1,54 @@
 {% from 'value_or_default.jinja2' import value_or_default %}
-{% macro generate_location_columns(request, rows, search_criteria) %}
+{% macro generate_location_columns(request, rows, summary_row, search_criteria) %}
 {% for row in rows %}
-                  <tr>
-                     <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
-                     {% if search_criteria['view_by'] == "sub_counties" %}
-                        {% set level = 2 %}
-                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
-                     {% elif search_criteria['view_by'] == "constituencies"%}
-                        {% set level = 3 %}
-                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
-                      {% elif search_criteria['view_by'] == "communities"%}
-                        {% set level = 4 %}
-                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
-                      {% elif search_criteria['view_by'] == "projects"%}
-                        {% set level = 5 %}
-                        <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
-                        <td><a href="{{ request.route_url('projects', traverse=(row[4].id)) }}">{{ row[4] }}</a></td>
-                     {% else %}
-                        {% set level = 1 %}
-                     {% endif%}
-                     {% for col in row[level:] %}
-                        <td>{{ value_or_default(col|format_value(request), '-') }}</td>
-                     {% endfor %}
-                  </tr>
+<tr>
+  <td><a href="{{ request.route_url('counties', traverse=(row[0].id)) }}">{{ row[0].pretty }}</a></td>
+
+  {% if search_criteria['view_by'] == "sub_counties" %}
+      {% set level = 2 %}
+      <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+  {% elif search_criteria['view_by'] == "constituencies"%}
+      {% set level = 3 %}
+      <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+      <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+  {% elif search_criteria['view_by'] == "communities"%}
+      {% set level = 4 %}
+      <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+      <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+      <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
+  {% elif search_criteria['view_by'] == "projects"%}
+      {% set level = 5 %}
+      <td><a href="{{ request.route_url('sub_county', traverse=(row[1].id)) }}">{{ row[1].pretty }}</a></td>
+      <td><a href="{{ request.route_url('constituency', traverse=(row[2].id)) }}">{{ row[2].pretty }}</a></td>
+      <td><a href="{{ request.route_url('community', traverse=(row[3].id)) }}">{{ row[3].pretty }}</a></td>
+      <td><a href="{{ request.route_url('projects', traverse=(row[4].id)) }}">{{ row[4] }}</a></td>
+  {% else %}
+    {% set level = 1 %}
+  {% endif%}
+
+  {% for col in row[level:] %}
+    <td>{{ value_or_default(col|format_value(request), '-') }}</td>
+  {% endfor %}
+
+</tr>
 {% endfor %}
+<tr class="bold">
+  {% if search_criteria['view_by'] == "sub_counties" %}
+    <td></td>
+  {% elif search_criteria['view_by'] == "constituencies"%}
+    <td></td><td></td>
+  {% elif search_criteria['view_by'] == "communities"%}
+    <td></td><td></td><td></td>
+  {% elif search_criteria['view_by'] == "projects"%}
+    <td></td><td></td><td></td><td></td>
+  {% endif %}
+  <td>
+    {% trans %} Total Summary {% endtrans %}{{ level }}
+  </td>
+  {% for value in summary_row%}
+  <td>
+    {{ value_or_default(value|format_value(request), '-') }}
+  </td>
+  {% endfor %}
+</tr>
 {% endmacro %}
