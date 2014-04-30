@@ -387,8 +387,9 @@ class TestPerformanceIndicatorGeneration(TestBase):
             location_map,
             constants.DAIRY_COWS_PROJECT_REGISTRATION
         )
-        self.assertFalse(results['sector_aggregated_indicators'])
-        self.assertFalse(results['sector_indicator_mapping'])
+        self.assertIsNotNone(results['project_types'])
+        indicator_labels = results['sector_indicator_mapping']
+        self.assertNotIn('Dairy Cows', indicator_labels)
 
     def test_all_county_view_by_constituencies(self):
         self.setup_test_data()
