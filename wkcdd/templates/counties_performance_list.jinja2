@@ -27,6 +27,15 @@
 {% block indicators %}
   {{ add_indicator_links(request, 'counties', None, 'performance') }}
 {% endblock %}
+
+<!--PROJECT TYPE DROP DOWN-->
+{% if selected_project_types | length > 1 %}
+    {% set selected_name = 'All Sectors' %}
+{% else %}
+    {% set selected_name = selected_project_types[0][2] %}
+{% endif %}
+{{ generate_project_type_dropdown(request, selected_name, 'counties', '', project_types)}}
+
 {% block content %}
 <!--MAP-->
 {{ generate_map_chart(request, sector_indicator_mapping[selected_project_types[0][0]]) }}
