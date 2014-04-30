@@ -78,6 +78,8 @@ var Custom = function () {
 
         init = function(){
         };
+
+        $('.selectpicker').selectpicker();
     
     // public functions
     return {
