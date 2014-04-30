@@ -1,7 +1,7 @@
 var Map = (function(root){
     var map =  new L.Map('map', {
         layers: [
-            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hmlj38/{z}/{x}/{y}.png', {
+            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hg15g5/{z}/{x}/{y}.png', {
                 maxZoom: 13,
                 minZoom: 9,
                 attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
@@ -11,23 +11,23 @@ var Map = (function(root){
     // @todo: temporary
     var data = {
         'Bungoma': {
-            community_contribution: 69.8,
-            bb_harvested_percentage: 1.7
+            community_contribution: '69.8%',
+            bb_harvested_percentage: '1.7%'
         },
         'Kakamega': {
-            community_contribution: 100,
+            community_contribution: '100%',
             bb_harvested_percentage: null
         },
         Busia: {
-            community_contribution: 26,
-            bb_harvested_percentage: 8
+            community_contribution: '26%',
+            bb_harvested_percentage: '8%'
         },
         'Siaya': {
-            community_contribution: 132,
-            bb_harvested_percentage: 20
+            community_contribution: '132%',
+            bb_harvested_percentage: '20%'
         },
         'Vihiga': {
-            community_contribution: 75,
+            community_contribution: '75%',
             bb_harvested_percentage: null
         }
     };
@@ -37,20 +37,20 @@ var Map = (function(root){
 
     var InfoBox = L.Control.extend({
         template: _.template('<h4><%= title %></h4>' +
-            '<p><%= indicator %>: <%= value %></p>'),
+            '<p><%= label %>: <%= value %></p>'),
         onAdd: function (map) {
             return L.DomUtil.create('div', 'info');
         },
-        update: function (title, indicator, value) {
-            if (title && indicator && value) {
+        update: function (title, label, value) {
+            var container = this.getContainer();
+            if (title && label && value) {
                 container.style.display = 'block';
-                this.getContainer().innerHTML = this.template({
+                container.innerHTML = this.template({
                     title: title,
-                    indicator: indicator,
+                    label: label,
                     value: value
                 });
             } else {
-                var container = this.getContainer();
                 container.innerHTML = '';
                 container.style.display = 'none';
             }
@@ -91,9 +91,6 @@ var Map = (function(root){
     ]);
 
     var shapeLayer = L.geoJson(null, {
-        /*style: function () {
-            console.log("style: " + arguments);
-        }*/
         onEachFeature: function (feature, layer) {
             layer.on({
                 mouseover: function (e) {
@@ -101,12 +98,17 @@ var Map = (function(root){
                     layer.setStyle({
                         fillOpacity: 0.5
                     });
+                    info.update(
+                        layer.feature.properties[lookupProperty],
+                        layer.feature.properties.label,
+                        layer.feature.properties.value);
                 },
                 mouseout: function (e) {
                     var layer = e.target;
                     layer.setStyle({
                         fillOpacity: 0.2
                     });
+                    info.update();
                 }
             })
         }
@@ -119,14 +121,17 @@ var Map = (function(root){
 
     var setIndicator = function (indicator) {
         shapeLayer.setStyle(function (feature) {
-            var dataID = feature.properties[lookupProperty];
-            var value = data[dataID][indicator];
-            if (value === null) {
+            var location = feature.properties[lookupProperty];
+            var value = data[location][indicator];
+            feature.properties.label = indicator;
+            feature.properties.value = value;
+            var intValue = parseInt(value);
+            if (intValue === null) {
                 return { color: "#ccc" };
             }
-            else if (value < 60) {
+            else if (intValue < 60) {
                 return { color: "#FF4136" };
-            } else if (value > 60 && value < 80) {
+            } else if (intValue > 60 && intValue < 80) {
                 return { color: "#FFDC00" };
             } else {
                 return { color: "#2ECC40" };
