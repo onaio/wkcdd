@@ -419,3 +419,24 @@ class TestPerformanceIndicatorGeneration(TestBase):
             [constants.DAIRY_COWS_PROJECT_REGISTRATION]
             ['rows'][0])
         self.assertEquals(sirisia_community_row[0].name, community.name)
+
+    def test_only_relevant_communities_display_for_sub_county(self):
+        self.setup_test_data()
+        # Test for location filtering on dairy cow projects
+        counties = County.all(County.name == "Bungoma")
+
+        results = generate_performance_indicators_for(None, level='counties')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        counties_in_dataset = [row[0] for row in rows]
+        self.assertEqual(counties_in_dataset, counties)
+
+        # Test location filtering on dairy goat projects
+        counties = County.all(County.name != "Siaya")
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
+                ['rows'])
+        counties_in_dataset = [row[0] for row in rows]
+        self.assertEqual(counties_in_dataset, counties)

@@ -140,18 +140,19 @@ def build_performance_dataset(location_type,
                 for key in indicator_keys])
     else:
         for location in locations:
-            row = [location]
             location_summary = (
                 indicators['aggregated_performance_indicators']
                 [location.id]['summary'])
-            for group in indicator_keys:
-                item_group = []
-                for item in group:
-                    item_group.append(location_summary[item])
+            if location_summary:
+                row = [location]
+                for group in indicator_keys:
+                    item_group = []
+                    for item in group:
+                        item_group.append(location_summary[item])
 
-                row.append(item_group)
+                    row.append(item_group)
 
-            rows.append(row)
+                rows.append(row)
 
         summary_row.extend(
             [
