@@ -8,6 +8,7 @@ var Map = (function(root){
             })]
     }).setView([0.31, 34.5], 9);
 
+    // @todo: temporary
     var data = {
         'Bungoma': {
             community_contribution: 69.8,
@@ -31,12 +32,29 @@ var Map = (function(root){
         }
     };
 
+    // @todo: temporary
     var lookupProperty = 'COUNTY';
 
     var shapeLayer = L.geoJson(null, {
         /*style: function () {
             console.log("style: " + arguments);
         }*/
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                mouseover: function (e) {
+                    var layer = e.target;
+                    layer.setStyle({
+                        fillOpacity: 0.5
+                    });
+                },
+                mouseout: function (e) {
+                    var layer = e.target;
+                    layer.setStyle({
+                        fillOpacity: 0.2
+                    });
+                }
+            })
+        }
     }).addTo(map);
 
     var setGeoJSON = function (geojson) {
