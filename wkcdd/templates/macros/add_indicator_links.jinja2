@@ -1,6 +1,6 @@
 {% macro add_indicator_links(request, location_type, location, page) %}
 <div class="row nav-holder indicator_links">
-    <ul class="nav nav-tabs pull-left">
+    <ul class="nav navbar-nav pull-left">
     {% if location %}
         <li class="indicator_list">
             <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
