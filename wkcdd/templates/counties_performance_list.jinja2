@@ -1,11 +1,12 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
-{% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/generate_performance_indicator_row.jinja2' import generate_performance_indicator_row %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
 {% block title %} {{ title }}{% endblock %}
+{% set selected_project_type = search_criteria['selected_project_type']%}
 {% block page_title %}
   <h3 class="page-title">
       {{ self.title() }}
@@ -13,7 +14,7 @@
   </h3>
 {% endblock %}
 {% block filters %}
-     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
+     {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
 {% endblock %}
 {% block breadcrumbs %}
   <li>
@@ -29,38 +30,32 @@
 {% endblock %}
 {% block content %}
 <!--MAP-->
-{{ generate_map_chart(request, sector_indicator_mapping[selected_project_types[0][0]]) }}
+{% if selected_project_type %}
+  {{ generate_map_chart(request, sector_indicator_mapping[selected_project_type]) }}
+{% endif %}
 <!--END MAP-->
 
 <!--PROJECT TYPE DROP DOWN-->
-{% if selected_project_types | length > 1 %}
-    {% set selected_name = 'All Sectors' %}
-{% else %}
-    {% set selected_name = selected_project_types[0][2] %}
-{% endif %}
-{{ generate_project_type_dropdown(request, selected_name, 'counties', '', project_types)}}
+{{ generate_project_type_dropdown(request, search_criteria['selected_project_label'], 'counties', '', project_types, search_criteria)}}
 
 <!--PERFORMANCE INDICATOR TABLES-->
-{% for sector, report, label in selected_project_types %}
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN SAMPLE TABLE PORTLET-->
-            <div class="portlet">
-                <div class="portlet-title">
-                    <div class="caption">
-                    <i class="icon-tasks"></i>
-                    {{ gettext(label) }}
-                    {% trans %}Projects{% endtrans %}
-                    </div>
-                </div>
-                {{ generate_performance_indicator_table(request, 'counties',
-                counties,
-                sector_aggregated_indicators[sector], sector_indicator_mapping[sector]) }}
-            </div>
-            <!-- END SAMPLE TABLE PORTLET-->
-        </div>
+{% if selected_project_type %}
+  {% if location %}
+    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], location.url, sector_aggregated_indicators[selected_project_type], search_criteria) }}
+  {% else %}
+    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], 'counties', sector_aggregated_indicators[selected_project_type], search_criteria) }}
+  {% endif %}
+{% else %}
 
-{% endfor %}
+  {% for sector, report, label in project_types %}
+    {% if location %}
+      {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[sector], search_criteria) }}
+    {% else %}
+      {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[sector], search_criteria) }}
+    {% endif %}
+  {% endfor %}
+
+{% endif %}
 <!--PERFORMANCE INDICATOR TABLES END-->
 {% endblock content %}
 {% block page_scripts %}
@@ -69,16 +64,8 @@
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  //map = Custom.display_constituency_map();
-  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
-  LocationSelect.data_map = location_json_data;
-  {% for sector, report, label  in selected_project_types %}
-    //2Custom.process_raw_points({{ project_type_geopoints[sector]|safe() }}, map);
-  {% endfor %}
-
   // if we're viewing a single sector, get its indicator data
-  {% if selected_project_types|length == 1 %}
-    {% set sector, report, label = selected_project_types[0]  %}
+  {% if selected_project_type%}
     {% set aggregated_indicators = sector_aggregated_indicators[sector] %}
     var data = {
     {% for location in counties -%}
@@ -101,5 +88,13 @@
     }).done(function(data, status){
       Map.setGeoJSON(data);
     });
+  {% endif %}
+
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
+  {% if selected_project_type %}
+    //map = Custom.display_constituency_map();
+    //Custom.process_raw_points({{ project_type_geopoints[selected_project_type]|safe() }}, Map.map);
+    Map.displayMarkers({{ project_type_geopoints[selected_project_type]|safe() }})
   {% endif %}
 {% endblock %}

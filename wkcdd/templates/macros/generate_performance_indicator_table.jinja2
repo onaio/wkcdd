@@ -1,71 +1,21 @@
 {% from 'value_or_default.jinja2' import value_or_default %}
-{% macro generate_performance_indicator_table(request, location_type, entity_list, aggregated_indicators, indicator_mapping) %}
+{% from 'generate_location_columns.jinja2' import generate_location_columns %}
+{% macro generate_performance_indicator_table(request, location_type, dataset, search_criteria) %}
   <div class="portlet-body">
-  {% if aggregated_indicators['total_indicator_summary'] %}
+  {% if dataset['rows'] and dataset['summary_row'] %}
     <div class="table-responsive table-scrollable">
         <table class="table table-striped table-bordered table-hover data-table">
             <thead>
                 <tr>
-                    <th class="data-header">
-                        {{ location_type|replace('_',' ')|title() }}
-                        {% trans %} Name {% endtrans %}</th>
-                        {% for indicator in indicator_mapping%}
-                            <th class="data-header">
-                                {{ indicator['title'] }}
-                            </th>
-                        {% endfor %}
+                    {% for header in dataset['headers'] %}
+                        <th class="data-header">
+                        {{ header }}
+                        </th>
+                     {% endfor %}
                  </tr>
             </thead>
             <tbody>
-                {% for entity in entity_list %}
-                    <tr>
-                        <td>
-                            <a href="{{ request.route_url(location_type, traverse=(entity.id, 'performance')) }}">
-                          {{ entity.name  | capitalize | replace("_", " ") }}
-                            </a>
-                        </td>
-                        <div>
-                        </div>
-                        {% for indicator in indicator_mapping %}
-                            <td>
-                            {% set target, actual, percentage = indicator['group']%}
-                            {% set indicators = aggregated_indicators['aggregated_performance_indicators'][entity.id]['summary'] %}
-                            {% if indicators[target] and indicators[percentage] %}
-                                 {{
-                                 value_or_default(indicators[percentage]|format_percent(request),
-                                 '-')}}
-                            <span class="ratio">
-                                ({{value_or_default(indicators[actual]|format_value(request),'-')}}
-                                /{{value_or_default(indicators[target]|format_value(request),'-')}})
-                            </span>
-                            {% else %}
-                                {{ value_or_default(indicators[actual], '-')}}
-                            {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                <tr class="bold">
-                  <td>
-                    {% trans %}Total Average Summary{% endtrans %}
-                  </td>
-                  {% for indicator in indicator_mapping %}
-                        <td>
-                            {% set target, actual, percentage = indicator['group']%}
-                            {% set indicators = aggregated_indicators['total_indicator_summary'] %}
-                            {% if indicators[target] and indicators[percentage] %}
-                                {{
-                                value_or_default(indicators[percentage]|format_percent(request))}}
-                                <span class="ratio">
-                                    ({{value_or_default(indicators[actual]|format_value(request),'-')}}
-                                    /{{value_or_default(indicators[target]|format_value(request),'-')}})
-                                </span>
-                            {% else %}
-                                {{ value_or_default(indicators[actual])}}
-                            {% endif %}
-                             </td>
-                    {% endfor %}
-                </tr>
+              {{ generate_location_columns(request, dataset['rows'], dataset['summary_row'], search_criteria, "performance") }}
             </tbody>
         </table>
     </div>

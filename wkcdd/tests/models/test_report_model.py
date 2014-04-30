@@ -306,7 +306,7 @@ class TestReport(TestBase):
         county_2_summary_values = (results['aggregated_performance_indicators']
                                    [counties[1].id]['summary'])
         self.assertIsNotNone(county_1_summary_values)
-        self.assertIsNone(county_2_summary_values)
+        self.assertFalse(county_2_summary_values)
         # TODO Add checks for total indicator
 
     def test_performance_indicator_calculation_on_legacy_data(self):

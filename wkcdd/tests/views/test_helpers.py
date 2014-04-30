@@ -13,6 +13,7 @@ from wkcdd.tests.test_base import (
 from wkcdd.views.helpers import (
     requested_xlsx_format,
     build_dataset,
+    build_performance_dataset,
     filter_projects_by,
     generate_impact_indicators_for,
     generate_performance_indicators_for,
@@ -73,6 +74,50 @@ class TestBuildDatasetHelpers(TestBase):
         self.assertEquals(dataset['rows'][0][4].name,
                           "Dairy Goat Project Center 1")
         self.assertEquals(dataset['summary_row'], [20, 1, 3, 8])
+
+    def test_build_dataset_for_performance_indicators(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Busia")
+        sub_counties = county.children()
+        performance_indicators = (
+            Report.get_performance_indicator_aggregation_for(
+                county.children(), constants.DAIRY_GOAT_PROJECT_REPORT))
+        sector_report_map = (
+            constants.PERFORMANCE_INDICATOR_REPORTS
+            [constants.DAIRY_GOAT_PROJECT_REPORT])
+        dataset = build_performance_dataset(
+            Location.SUB_COUNTY,
+            sub_counties,
+            performance_indicators,
+            sector_report_map=sector_report_map)
+        self.assertEquals(dataset['headers'][1],
+                          humanize(Location.SUB_COUNTY).title())
+        self.assertEquals(dataset['rows'][0][1].name,
+                          sub_counties[0].name)
+
+    def test_build_dataset_for_performance_project_list(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        projects = community.projects
+        performance_indicators = (
+            Report.get_performance_indicator_aggregation_for(
+                [community], constants.DAIRY_GOAT_PROJECT_REPORT))
+
+        sector_report_map = (
+            constants.PERFORMANCE_INDICATOR_REPORTS
+            [constants.DAIRY_GOAT_PROJECT_REPORT])
+
+        dataset = build_performance_dataset(
+            Location.COMMUNITY,
+            [community],
+            performance_indicators,
+            projects=projects,
+            sector_report_map=sector_report_map)
+        self.assertEquals(dataset['headers'][3],
+                          humanize(Location.COMMUNITY).title())
+        self.assertEquals(dataset['rows'][0][4].name,
+                          projects[0].name)
+        self.assertEquals(dataset['summary_row'][0], [24000, 24000, 100.0])
 
 
 class TestProjectFilter(IntegrationTestBase):
@@ -277,27 +322,140 @@ class TestImpactIndicatorGeneration(TestBase):
 
 
 class TestPerformanceIndicatorGeneration(TestBase):
+    def setup_location_map(self,
+                           community='',
+                           constituency='',
+                           sub_county='',
+                           county=''):
+        return {
+            "community": community,
+            "constituency": constituency,
+            "sub_county": sub_county,
+            "county": county
+        }
+
     def test_generate_performance_indicators_for_none(self):
         self.setup_test_data()
-        results = generate_performance_indicators_for(None)
+        results = generate_performance_indicators_for(None, level='counties')
         self.assertIsNotNone(results['project_types'])
+        self.assertEqual(results['aggregate_list'], County.all())
 
     def test_generate_performance_indicators_for_county(self):
         self.setup_test_data()
         county = County.get(County.name == "Busia")
         sub_county = SubCounty.get(SubCounty.name == "Teso")
-        location_map = {
-            "community": '',
-            "constituency": '',
-            "sub_county": '',
-            "county": "{}".format(county.id)
-        }
+        location_map = self.setup_location_map(
+            county="{}".format(county.id))
+
         results = generate_performance_indicators_for(
             location_map)
         self.assertIsNotNone(results['project_types'])
-        teso_sub_county_indicators = (
+
+        teso_sub_county_row = (
             results['sector_aggregated_indicators']
             [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
-            ['aggregated_performance_indicators']
-            [sub_county.id]['summary'])
-        self.assertIsNotNone(teso_sub_county_indicators)
+            ['rows'][0])
+        self.assertEquals(teso_sub_county_row[1].name, sub_county.name)
+
+    def test_generate_performance_indicators_for_constituency(self):
+        self.setup_test_data()
+        constituency = Constituency.get(Constituency.name == "Amagoro")
+        location_map = self.setup_location_map(
+            constituency="{}".format(constituency.id))
+
+        results = generate_performance_indicators_for(
+            location_map)
+        self.assertEqual(results['aggregate_list'],
+                         constituency.children())
+
+    def test_generate_performance_indicators_for_community(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        location_map = self.setup_location_map(
+            community="{}".format(community.id))
+
+        results = generate_performance_indicators_for(location_map, "projects")
+        self.assertIsNotNone(results['project_types'])
+
+    def test_generate_performance_indicators_for_community_sector(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Rwatama")
+        location_map = self.setup_location_map(
+            community="{}".format(community.id))
+
+        results = generate_performance_indicators_for(
+            location_map,
+            constants.DAIRY_COWS_PROJECT_REGISTRATION
+        )
+        self.assertIsNotNone(results['project_types'])
+        indicator_labels = results['sector_indicator_mapping']
+        self.assertNotIn('Dairy Cows', indicator_labels)
+
+    def test_all_county_view_by_constituencies(self):
+        self.setup_test_data()
+        constituency = Constituency.get(Constituency.name == 'Kakamega')
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='constituencies')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        self.assertIsNotNone(results['project_types'])
+        constituencies_in_dataset = [row[2] for row in rows]
+        self.assertEquals(constituencies_in_dataset, [constituency])
+
+    def test_all_county_view_by_communities(self):
+        self.setup_test_data()
+        communities = Community.all(Community.name.in_(["Maragoli", "Bukusu"]))
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='communities')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        self.assertIsNotNone(results['project_types'])
+        communities_in_dataset = [row[3] for row in rows]
+        self.assertEquals(communities_in_dataset, communities)
+
+    def test_only_relevant_communities_display_for_sub_county(self):
+        self.setup_test_data()
+        # Test for location filtering on dairy cow projects
+        counties = County.all(County.name == "Bungoma")
+
+        results = generate_performance_indicators_for(None, level='counties')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        counties_in_dataset = [row[0] for row in rows]
+        self.assertEqual(counties_in_dataset, counties)
+
+        # Test location filtering on dairy goat projects
+        counties = County.all(County.name != "Siaya")
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_GOAT_PROJECT_REGISTRATION]
+                ['rows'])
+        counties_in_dataset = [row[0] for row in rows]
+        self.assertEqual(counties_in_dataset, counties)
+
+    def test_all_county_view_by_project(self):
+        self.setup_test_data()
+        projects = Project.all(Project.code.in_(["7CWA", "YH9T"]))
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='projects')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        self.assertIsNotNone(results['project_types'])
+        projects_in_dataset = [row[4] for row in rows]
+        self.assertEquals(projects_in_dataset, projects)

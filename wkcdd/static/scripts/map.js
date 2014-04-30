@@ -78,6 +78,9 @@ var Map = (function(root){
         {color: colors.GREY, label: 'No Reports'}
     ]);
 
+    var markerLayer = L.layerGroup()
+        .addTo(map);
+
     var shapeLayer = L.geoJson(null, {
         onEachFeature: function (feature, layer) {
             layer.on({
@@ -100,7 +103,7 @@ var Map = (function(root){
                 }
             })
         }
-    }).addTo(map);
+    });
 
     var setData = function (newData, isImpactData) {
         data = newData;
@@ -123,6 +126,8 @@ var Map = (function(root){
     };
 
     var setIndicator = function (indicator_id) {
+        map.removeLayer(markerLayer);
+        shapeLayer.addTo(map);
         var bins;
 
         if (isHistogram) {
@@ -188,10 +193,38 @@ var Map = (function(root){
         }
     };
 
+    displayMarkers = function(raw_data) {
+        var latlng, icon,
+            icon_sector_map = {
+                'Banana': {label: 'b', color: '#d8c22f'},
+                'Catering': {label: 'c', color: '#e8ffb9'},
+                'Dairy Cows': {label: 'slaughterhouse', color: '#a28245'},
+                'Dairy Goat': {label: 'g', color: '#f3c368'},
+                'Field Industrial Crops': {label: 'garden', color: '#21b01d'},
+                'Fish Farming': {label: 'wetland', color: '#2c34c7'},
+                'Motor Cycle': {label: 'm', color: '#000000'},
+                'Oxen Plough': {label: 'o', color: '#697690'},
+                'Piggery': {label: 'p', color: '#b54282'},
+                'Poultry': {label: 'p', color: '#ae241a'},
+                'Tailoring': {label: 't', color: '#3aa32a'}
+            };
+        $.each(raw_data, function (index, data) {
+            latlng = L.latLng(data.lat, data.lng);
+            icon = L.MakiMarkers.icon({
+                icon: icon_sector_map[data.sector].label,
+                color: icon_sector_map[data.sector].color,
+                size: 's'});
+            marker = L.marker(latlng, {icon: icon, title: data.name});
+            marker.bindPopup(data.name);
+            markerLayer.addLayer(marker);
+        });
+    };
+
     return {
         map: map,
         setData: setData,
         setGeoJSON: setGeoJSON,
-        setIndicator: setIndicator
+        setIndicator: setIndicator,
+        displayMarkers: displayMarkers
     }
 })(this);

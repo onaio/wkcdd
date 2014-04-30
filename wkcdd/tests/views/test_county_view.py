@@ -7,6 +7,7 @@ from wkcdd.views.county import CountyView
 from wkcdd.models.county import County
 from wkcdd.models.location import Location
 from webob.multidict import MultiDict
+from wkcdd import constants
 
 
 class TestCountyViews(IntegrationTestBase):
@@ -33,10 +34,20 @@ class TestCountyViews(IntegrationTestBase):
 
     def test_county_list_performance_indicators_with_selected_sector(self):
         self.setup_test_data()
-        params = MultiDict({'type': 'dairy_goat_project_registration'})
+        params = MultiDict({'type': constants.DAIRY_GOAT_PROJECT_REGISTRATION})
         self.request.GET = params
         response = self.county_view.performance_summary()
-        self.assertEquals(len(response['selected_project_types']), 1)
+        self.assertEquals(response['search_criteria']['selected_project_type'],
+                          constants.DAIRY_GOAT_PROJECT_REGISTRATION)
+
+    def test_county_performance_indicator_with_no_sector_projects(self):
+        self.setup_community_test_data()
+        params = MultiDict(
+            {'type': constants.FISH_FARMING_PROJECT_REGISTRATION})
+        self.request.GET = params
+        response = self.county_view.performance_summary()
+        self.assertEquals(response['search_criteria']['selected_project_type'],
+                          '')
 
 
 class TestCountyViewsFunctional(FunctionalTestBase):
@@ -67,5 +78,13 @@ class TestCountyViewsFunctional(FunctionalTestBase):
         self.setup_test_data()
         url = self.request.route_path('counties', traverse=(
             'performance_summary'))
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_county_performance_indicator_with_no_sector_projects(self):
+        self.setup_community_test_data()
+        url = self.request.route_path('counties', traverse=(
+            'performance_summary'),
+            _query={'type': constants.FISH_FARMING_PROJECT_REGISTRATION})
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)

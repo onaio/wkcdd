@@ -1,24 +1,21 @@
-{% macro generate_project_type_dropdown(request, selected_project_type, location_type, location, project_report_sectors) %}
+{% from 'generate_project_type_dropdown_link.jinja2' import generate_project_type_dropdown_link %}
 
+{% macro generate_project_type_dropdown(request, selected_project_label, location_type, location, project_report_sectors, search_criteria) %}
 <div class="btn-toolbar actions margin-bottom-10">
     <label class="pull-left margin-right-10"> Sector:</label>
       <div class="btn-group">
          <a class="btn btn-sm btn-success dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown">
-         {{ selected_project_type }}
-         <i class="icon-angle-down"></i>
+          {% if selected_project_label %}
+            {{ selected_project_label }}
+          {% else %}
+            All Sectors
+          {% endif %}
+           <i class="icon-angle-down"></i>
          </a>
-         <ul class="dropdown-menu">
-             <li>
-                 <a href="{{ request.route_url(location_type, traverse=('performance_summary'), _query={'type': ''}) }}">
-                     All Sectors
-                 </a>
-          </li>
+         <ul class="dropdown-menu"> 
+            {{ generate_project_type_dropdown_link(request, location_type, 'All sectors', 'default', search_criteria) }}
           {% for project_sector in project_report_sectors %}
-            <li>
-              <a href="{{ request.route_url(location_type, traverse=('performance_summary'), _query={'type': project_sector[0]}) }}">
-                {{ project_sector[2] }}
-              </a>
-            </li>
+            {{ generate_project_type_dropdown_link(request, location_type, project_sector[2], project_sector[0], search_criteria) }}
           {% endfor %}
          </ul>
       </div>
