@@ -41,9 +41,9 @@
 <!--PERFORMANCE INDICATOR TABLES-->
 {% if selected_project_type %}
   {% if location %}
-    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], location.url, sector_aggregated_indicators[selected_project_type]) }}
+    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], location.url, sector_aggregated_indicators[selected_project_type], search_criteria) }}
   {% else %}
-    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], 'counties', sector_aggregated_indicators[selected_project_type]) }}
+    {{ generate_performance_indicator_row(request, search_criteria['selected_project_label'], 'counties', sector_aggregated_indicators[selected_project_type], search_criteria) }}
   {% endif %}
 {% else %}
 
