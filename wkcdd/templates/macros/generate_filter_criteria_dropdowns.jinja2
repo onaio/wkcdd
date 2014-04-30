@@ -1,5 +1,6 @@
 {% from 'filter_criteria_options.jinja2' import filter_criteria_options %}
-{% macro generate_filter_criteria_dropdowns(filter_criteria, location_map) %}
+{% macro generate_filter_criteria_dropdowns(filter_criteria, search_criteria) %}
+{% set location_map = search_criteria['location_map'] %}
 <div class="row filters">
   <form id="filter_criteria" class="form-inline" method="get">
     <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
@@ -18,6 +19,7 @@
       <option value="">--All Communities--</option>
        {{ filter_criteria_options(filter_criteria, location_map, "communities", "community" ) }}
     </select>
+    <input type="hidden" name="type" value="{{search_criteria['selected_project_type']}}">
 
     <button type="submit" class="filter-btn btn btn-info pull-right"> Go <i class="icon-filter"></i></button>
     <div class="form-group pull-right">

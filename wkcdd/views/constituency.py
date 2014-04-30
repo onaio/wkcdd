@@ -3,14 +3,14 @@ from pyramid.view import (
     view_config
 )
 
-from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models import Location
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
 from wkcdd.models.report import Report
-from wkcdd.models import helpers
-from wkcdd.views.helpers import build_dataset
+from wkcdd.views.helpers import (
+    build_dataset,
+    generate_performance_indicators_for
+)
 
 
 @view_defaults(route_name='constituency')
@@ -48,25 +48,28 @@ class ConstituencyView(object):
                  request_method='GET')
     def performance(self):
         constituency = self.request.context
-        communities = Community.all(Community.parent_id == constituency.id)
-        community_ids = [community.id for community in communities]
-        project_types_mappings = helpers.get_project_types(community_ids)
-        sector_indicator_mapping = {}
-        sector_aggregated_indicators = {}
-        for reg_id, report_id, title in project_types_mappings:
-            aggregated_indicators = (
-                Report.get_performance_indicator_aggregation_for(
-                    communities, report_id))
-            indicator_mapping = tuple_to_dict_list(
-                ('title', 'group'),
-                constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
-            sector_indicator_mapping[reg_id] = indicator_mapping
-            sector_aggregated_indicators[reg_id] = aggregated_indicators
+        location_map = {
+            'community': '',
+            'constituency': constituency.id,
+            'sub_county': '',
+            'county': ''
+        }
+        default_level = 'communities'
+        level = self.request.GET.get('view_by') or default_level
+        selected_project_type = self.request.GET.get('type')
+        search_criteria = {'view_by': level,
+                           'location_map': location_map}
+        indicators = generate_performance_indicators_for(
+            location_map, selected_project_type, level)
+        project_types = indicators['project_types']
+        aggregate_type = indicators['aggregate_type']
+        sector_aggregated_indicators = (
+            indicators['sector_aggregated_indicators'])
         return {
             'title': constituency.pretty,
+            'aggregate_type': aggregate_type,
             'constituency': constituency,
-            'communities': communities,
-            'project_types': project_types_mappings,
+            'project_types': project_types,
             'sector_aggregated_indicators': sector_aggregated_indicators,
-            'sector_indicator_mapping': sector_indicator_mapping
+            'search_criteria': search_criteria
         }
