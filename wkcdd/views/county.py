@@ -21,7 +21,7 @@ from wkcdd.views.helpers import (
 
 @view_defaults(route_name='counties')
 class CountyView(object):
-    DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REPORT
+    DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REGISTRATION
 
     def __init__(self, request):
         self.request = request
@@ -136,7 +136,8 @@ class CountyView(object):
         default_level = 'counties'
         location_map = self.get_location_map()
         level = self.request.GET.get('view_by') or default_level
-        selected_project_type = self.request.GET.get('type')
+        selected_project_type = (
+            self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
 
         search_criteria = {'view_by': level,
                            'location_map': location_map}
