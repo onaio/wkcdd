@@ -17,7 +17,7 @@
            <i class="icon-angle-down"></i>
          </a>
          <ul class="dropdown-menu"> 
-            {{ generate_project_type_dropdown_link(request, location_type, 'All sectors', '', search_criteria) }}
+            {{ generate_project_type_dropdown_link(request, location_type, 'All sectors', 'default', search_criteria) }}
           {% for project_sector in project_report_sectors %}
             {{ generate_project_type_dropdown_link(request, location_type, project_sector[2], project_sector[0], search_criteria) }}
           {% endfor %}

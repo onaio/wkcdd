@@ -1,8 +1,8 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/value_or_default.jinja2' import value_or_default %}
 {% from 'macros/add_indicator_links.jinja2' import add_indicator_links %}
-{% from 'macros/generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/generate_performance_indicator_row.jinja2' import generate_performance_indicator_row %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
 {% block title %} {{ title }}{% endblock %}
@@ -39,40 +39,20 @@
 
 <!--PERFORMANCE INDICATOR TABLES-->
 {% if selected_project_type %}
-  <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN SAMPLE TABLE PORTLET-->
-            <div class="portlet">
-                <div class="portlet-title">
-                    <div class="caption">
-                    <i class="icon-tasks"></i>
-                    {{ gettext(label) }}
-                    {% trans %}Projects{% endtrans %}
-                    </div>
-                </div>
-                {{ generate_performance_indicator_table(request, location.url(), sector_aggregated_indicators[selected_project_type]) }}
-            </div>
-            <!-- END SAMPLE TABLE PORTLET-->
-        </div>
+  {% if location %}
+    {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[selected_project_type]) }}
+  {% else %}
+    {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[selected_project_type]) }}
+  {% endif %}
 {% else %}
-  {% for sector, report, label in project_types %}
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN SAMPLE TABLE PORTLET-->
-            <div class="portlet">
-                <div class="portlet-title">
-                    <div class="caption">
-                    <i class="icon-tasks"></i>
-                    {{ gettext(label) }}
-                    {% trans %}Projects{% endtrans %}
-                    </div>
-                </div>
-                {{ generate_performance_indicator_table(request, location.url(), sector_aggregated_indicators[sector]) }}
-            </div>
-            <!-- END SAMPLE TABLE PORTLET-->
-        </div>
 
-{% endfor %}
+  {% for sector, report, label in project_types %}
+    {% if location %}
+      {{ generate_performance_indicator_row(request, label, location.url, sector_aggregated_indicators[sector]) }}
+    {% else %}
+      {{ generate_performance_indicator_row(request, label, 'counties', sector_aggregated_indicators[sector]) }}
+    {% endif %}
+  {% endfor %}
 
 {% endif %}
 <!--PERFORMANCE INDICATOR TABLES END-->

@@ -1,0 +1,19 @@
+{% from 'generate_performance_indicator_table.jinja2' import generate_performance_indicator_table %}
+
+{% macro generate_performance_indicator_row(request, label, url, indicators) %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN SAMPLE TABLE PORTLET-->
+            <div class="portlet">
+                <div class="portlet-title">
+                    <div class="caption">
+                    <i class="icon-tasks"></i>
+                    {{ gettext(label) }}
+                    {% trans %}Projects{% endtrans %}
+                    </div>
+                </div>
+                {{ generate_performance_indicator_table(request, url, indicators) }}
+            </div>
+            <!-- END SAMPLE TABLE PORTLET-->
+        </div>
+{% endmacro %}

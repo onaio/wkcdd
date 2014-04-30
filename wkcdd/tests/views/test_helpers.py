@@ -442,3 +442,19 @@ class TestPerformanceIndicatorGeneration(TestBase):
                 ['rows'])
         counties_in_dataset = [row[0] for row in rows]
         self.assertEqual(counties_in_dataset, counties)
+
+    def test_all_county_view_by_project(self):
+        self.setup_test_data()
+        projects = Project.all(Project.code.in_(["7CWA", "YH9T"]))
+        location_map = self.setup_location_map()
+
+        results = generate_performance_indicators_for(
+            location_map,
+            level='projects')
+
+        rows = (results['sector_aggregated_indicators']
+                [constants.DAIRY_COWS_PROJECT_REGISTRATION]
+                ['rows'])
+        self.assertIsNotNone(results['project_types'])
+        projects_in_dataset = [row[0] for row in rows]
+        self.assertEquals(projects_in_dataset, projects)

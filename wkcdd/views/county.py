@@ -22,6 +22,7 @@ from wkcdd.views.helpers import (
 @view_defaults(route_name='counties')
 class CountyView(object):
     DEFAULT_PROJECT_TYPE = constants.DAIRY_GOAT_PROJECT_REGISTRATION
+    DEFAULT_LEVEL = 'counties'
 
     def __init__(self, request):
         self.request = request
@@ -41,11 +42,11 @@ class CountyView(object):
                  request_method='GET')
     def show_all(self):
         filter_criteria = Project.generate_filter_criteria()
-        view_by = self.request.GET.get('view_by')
+        level = self.request.GET.get('view_by') or self.DEFAULT_LEVEL
         location_map = self.get_location_map()
 
         impact_indicator_results = \
-            generate_impact_indicators_for(location_map, view_by)
+            generate_impact_indicators_for(location_map, level)
         aggregate_type = impact_indicator_results['aggregate_type']
         location = impact_indicator_results['location']
 
@@ -61,7 +62,7 @@ class CountyView(object):
                 impact_indicator_results['aggregate_list'],
                 impact_indicator_results['impact_indicators'])
 
-        search_criteria = {'view_by': view_by,
+        search_criteria = {'view_by': level,
                            'location_map': location_map}
         return {
             'title': "Impact Indicators Report",
@@ -106,8 +107,9 @@ class CountyView(object):
             'sub_county': '',
             'county': county.id
         }
-        view_by = self.request.GET.get('view_by')
-        search_criteria = {'view_by': view_by,
+        level = self.request.GET.get('view_by') or self.DEFAULT_LEVEL
+
+        search_criteria = {'view_by': level,
                            'location_map': location_map}
         indicators = generate_performance_indicators_for(
             location_map)
@@ -133,11 +135,14 @@ class CountyView(object):
                  renderer='counties_performance_list.jinja2',
                  request_method='GET')
     def performance_summary(self):
-        default_level = 'counties'
         location_map = self.get_location_map()
-        level = self.request.GET.get('view_by') or default_level
-        selected_project_type = (
-            self.request.GET.get('type') or self.DEFAULT_PROJECT_TYPE)
+        level = self.request.GET.get('view_by') or self.DEFAULT_LEVEL
+
+        selected_project_type = self.request.GET.get('type')
+        if selected_project_type == 'default':
+            selected_project_type = ''
+        elif selected_project_type == '':
+            selected_project_type = self.DEFAULT_PROJECT_TYPE
 
         search_criteria = {'view_by': level,
                            'location_map': location_map}

@@ -44,16 +44,19 @@ class Report(Base):
     # TODO rename to get_performance_indicators
     def calculate_performance_indicators(self):
         performance_indicators = defaultdict(int)
+        set_value = lambda value: (0 if value is None
+                                   or value == 'Infinity'
+                                   else value)
         for key, performance_indicator_key\
             in constants.PERFORMANCE_INDICATORS[self.report_data[
                 constants.XFORM_ID]]:
             if type(performance_indicator_key) == list:
                 for key_instance in performance_indicator_key:
                     if not performance_indicators[key]:
-                        performance_indicators[key] = (
+                        performance_indicators[key] = set_value(
                             self.report_data.get(key_instance))
             else:
-                performance_indicators[key] = (
+                performance_indicators[key] = set_value(
                     self.report_data.get(performance_indicator_key))
         return performance_indicators
 
