@@ -5,6 +5,7 @@
 {% from 'macros/generate_performance_indicator_row.jinja2' import generate_performance_indicator_row %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/generate_project_type_dropdown.jinja2' import  generate_project_type_dropdown %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import  update_selected_location_dropdowns %}
 {% block title %} {{ title }}{% endblock %}
 {% set selected_project_type = search_criteria['selected_project_type']%}
 {% block page_title %}
@@ -15,7 +16,7 @@
 -->
 {% endblock %}
 {% block filters %}
-  {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria) }}
+  {{ generate_filter_criteria_dropdowns(filter_criteria, search_criteria['location_map']) }}
 {% endblock %}
 {% block breadcrumbs %}
   <li>
@@ -71,4 +72,5 @@
     map = Custom.display_constituency_map();
     Custom.process_raw_points({{ project_type_geopoints[selected_project_type]|safe() }}, map);
   {% endif %}
+  {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}
