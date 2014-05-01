@@ -1,5 +1,6 @@
 {% from 'filter_criteria_options.jinja2' import filter_criteria_options %}
-{% macro generate_filter_criteria_dropdowns(filter_criteria, location_map) %}
+{% macro generate_filter_criteria_dropdowns(filter_criteria, search_criteria) %}
+{% set location_map = search_criteria['location_map']%}
 <div class="clearfix filters">
   <form id="filter_criteria" class="form-inline" method="get">
 	<div class="col-md-7">
@@ -21,6 +22,7 @@
 	      <option value="">All Communities</option>
 	       {{ filter_criteria_options(filter_criteria, location_map, "communities", "community" ) }}
 	    </select>
+	    <input type="hidden" name="type" value="{{search_criteria.get('selected_project_type')}}">
 	</div>
 	
 	<div class="col-md-4">
