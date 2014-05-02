@@ -37,11 +37,15 @@
             {% set actual = col[1] %}
             {% set percentage = col[2] %}
             <td>
+              {% if target and percentage %}
                 {{ value_or_default(percentage|format_value(request), '-') }}%
                 <span class="ratio">
                     {{ value_or_default(actual|format_value(request), '-') }}
                     /{{ value_or_default(target|format_value(request), '-') }}
                 </span>
+              {% else %}
+                {{ value_or_default(actual|format_value(request), '-') }}
+              {% endif %}
             </td>
       {% endfor %}
   {% endif %}
@@ -74,11 +78,15 @@
             {% set actual = col[1] %}
             {% set percentage = col[2] %}
             <td>
+              {% if target and percentage %}
                 {{ value_or_default(percentage|format_value(request), '-') }}%
                 <span class="ratio">
                     {{ value_or_default(actual|format_value(request), '-') }}
                     /{{ value_or_default(target|format_value(request), '-') }}
                 </span>
+              {% else %}
+                {{ value_or_default(actual|format_value(request), '-') }}
+              {% endif %}
             </td>
         {% endfor %}
     {% endif %}
