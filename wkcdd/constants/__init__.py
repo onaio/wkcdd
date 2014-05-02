@@ -899,7 +899,7 @@ PERFORMANCE_INDICATOR_REPORTS = {
              'cr_percentage')),
         (_('Dead birds'),
             ('',
-             'dbirds_#',
+             'dbirds_number',
              '')),
         (_('Birds sold'),
             ('bsold_target',
