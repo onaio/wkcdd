@@ -259,58 +259,36 @@ var LocationSelect = function() {
                 view_by = $('select[name=view_by]'),
                 sub_county = $('select[name=sub_county]').val(),
                 constituency = $('select[name=constituency]').val(),
-                community = $('select[name=constituency]').val()
+                community = $('select[name=constituency]').val();
 
-
+            view_by = this.view_by.clone();
             view_by.val(value);
-            view_by.children().prop('hidden', false);
             switch (value)
             {
                 case "sub_counties":
-                    if ($('select[name=county]').val() == '') {
-                        view_by.children('option[value=counties]').prop('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
                 break;
                 case "constituencies":
-                    if (sub_county == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
                 break;
                 case "communities":
-                    if (constituency == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                        view_by.children('option[value=constituencies]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                        view_by.children('option[value=constituencies]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
+                    view_by.children('option[value=constituencies]').remove();
                 break;
                 case "projects":
-                     if (community == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                        view_by.children('option[value=constituencies]').attr('hidden', false);
-                        view_by.children('option[value=communities]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                        view_by.children('option[value=constituencies]').attr('hidden', true);
-                        view_by.children('option[value=communities]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
+                    view_by.children('option[value=constituencies]').remove();
+                    view_by.children('option[value=communities]').remove();
                 break;
             }
-
+            $('select[name=view_by]').replaceWith(view_by);
         };
 
     this.data_map = {};
+    this.view_by = $('select[name=view_by]').clone();
     this.get_filtered_location_list = get_filtered_location_list;
     this.level0ChangeListener = level0ChangeListener;
     this.level1ChangeListener = level1ChangeListener;
