@@ -120,6 +120,10 @@ Getting Started
 
 - $venv/bin/python setup.py develop
 
+- alembic upgrade head
+
+- $venv/bin/python setup.py import_data development.ini
+
 - $venv/bin/initialize_wkcdd_db development.ini
 
 - $venv/bin/pserve development.ini
