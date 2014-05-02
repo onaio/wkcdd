@@ -13,6 +13,11 @@ from wkcdd.models.base import (
     Base,
 )
 
+from wkcdd.libs.import_project_data import (
+    fetch_project_registration_data,
+    fetch_report_form_data
+)
+
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -30,3 +35,9 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+
+
+def import_data(argv=sys.argv):
+    main(argv=sys.argv)
+    fetch_project_registration_data()
+    fetch_report_form_data()
