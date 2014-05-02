@@ -169,9 +169,9 @@ var LocationSelect = function() {
                 //Communities are all unique
                 community_list.push(elem['community']);
             });
-            update_select($('select[name=sub_county]'), sub_county_list, "--All Sub-Counties--");
-            update_select($('select[name=constituency]'), constituency_list, "-- All Constituencies--");
-            update_select($('select[name=community]'), community_list, "--All Communities--");
+            update_select($('select[name=sub_county]'), sub_county_list, "All Sub-Counties");
+            update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
+            update_select($('select[name=community]'), community_list, "All Communities");
         },
         level1ChangeListener = function(element) {
             //update level 0,2 and 3
@@ -199,8 +199,8 @@ var LocationSelect = function() {
                 community_list.push(elem['community']);
             });
             set_select_value($('select[name=county]'), county);
-            update_select($('select[name=constituency]'), constituency_list, "Constituency");
-            update_select($('select[name=community]'), community_list, "Community");
+            update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
+            update_select($('select[name=community]'), community_list, "All Communities");
             setViewByValue('constituencies');
         },
         level2ChangeListener = function(element) {
@@ -225,7 +225,7 @@ var LocationSelect = function() {
             });
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=community]'), community_list, "All Communities");
             setViewByValue('communities');
         }
         level3ChangeListener = function(element) {
@@ -255,7 +255,12 @@ var LocationSelect = function() {
         setViewByValue = function(value) {
             //udate view_by dropdown based on selected location type
 
-            var view_by = $('select[name=view_by]');
+            var
+                view_by = $('select[name=view_by]'),
+                sub_county = $('select[name=sub_county]').val(),
+                constituency = $('select[name=constituency]').val(),
+                community = $('select[name=constituency]').val()
+
 
             view_by.val(value);
             view_by.children().prop('hidden', false);
@@ -269,7 +274,7 @@ var LocationSelect = function() {
                     }
                 break;
                 case "constituencies":
-                    if ($('select[name=sub_county').val() == '') {
+                    if (sub_county == '') {
                         view_by.children('option[value=counties]').attr('hidden', false);
                         view_by.children('option[value=sub_counties]').attr('hidden', false);
                     }else{
@@ -278,7 +283,7 @@ var LocationSelect = function() {
                     }
                 break;
                 case "communities":
-                    if ($('select[name=constituency').val() == '') {
+                    if (constituency == '') {
                         view_by.children('option[value=counties]').attr('hidden', false);
                         view_by.children('option[value=sub_counties]').attr('hidden', false);
                         view_by.children('option[value=constituencies]').attr('hidden', false);
@@ -289,7 +294,7 @@ var LocationSelect = function() {
                     }
                 break;
                 case "projects":
-                     if ($('select[name=constituency').val() == '') {
+                     if (community == '') {
                         view_by.children('option[value=counties]').attr('hidden', false);
                         view_by.children('option[value=sub_counties]').attr('hidden', false);
                         view_by.children('option[value=constituencies]').attr('hidden', false);
