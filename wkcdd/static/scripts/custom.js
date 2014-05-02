@@ -83,6 +83,7 @@ var Custom = function () {
 
     $('.indicator-selector').click(function () {
         Map.setIndicator($(this).data('indicator'));
+       $('.selected-indicator').html($(this).html());
     });
     
     // public functions
