@@ -141,9 +141,10 @@ class CountyView(object):
         level = self.request.GET.get('view_by') or self.DEFAULT_LEVEL
 
         selected_project_type = self.request.GET.get('type')
-        if selected_project_type == 'default':
+        if selected_project_type == 'all':
+            # Display all sectors
             selected_project_type = ''
-        elif selected_project_type == '':
+        elif not selected_project_type:
             selected_project_type = self.DEFAULT_PROJECT_TYPE
 
         indicators = generate_performance_indicators_for(
