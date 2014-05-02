@@ -143,7 +143,7 @@ class CountyView(object):
         selected_project_type = self.request.GET.get('type')
         if selected_project_type == 'default':
             selected_project_type = ''
-        elif selected_project_type == '':
+        elif not selected_project_type:
             selected_project_type = self.DEFAULT_PROJECT_TYPE
 
         indicators = generate_performance_indicators_for(
