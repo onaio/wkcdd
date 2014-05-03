@@ -42,3 +42,24 @@ def humanize(value):
     Replace all special characters with spaces.
     """
     return humanize_re.sub(" ", value)
+
+
+def sum_reduce_func(current, value):
+    """
+    Reduce the supplied values by summing them and ignoring invalid values
+    """
+    try:
+        value = int(value)
+    except (ValueError, TypeError):
+        value = 0
+
+    try:
+        current = int(current)
+    except (ValueError, TypeError):
+        current = 0
+
+    return value + current
+
+
+def get_impact_indicator_list(indicators_tuple):
+    return tuple_to_dict_list(('name', 'key', 'label'), indicators_tuple)
