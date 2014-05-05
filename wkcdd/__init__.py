@@ -65,7 +65,8 @@ def includeme(config):
                      factory=LocationFactory)
     config.add_route('counties', '/counties/*traverse',
                      factory=LocationFactory)
-    config.add_route('impact_indicators', '/impact-indicators/*traverse')
+    config.add_route('impact_indicators', '/impact-indicators/*traverse',
+                     factory=LocationFactory)
     config.add_route('reporting_status', '/reporting_status')
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')

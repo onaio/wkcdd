@@ -253,7 +253,7 @@ class Report(Base):
         """
         Calculate the sum for the specified indicator from the reports
         """
-        values = [r.report_data.get(indicator_key, 0) for r in reports]
+        values = [r.report_data.get(indicator_key) for r in reports]
         return reduce(
             sum_reduce_func, values, 0)
 
@@ -266,10 +266,10 @@ class Report(Base):
                 'location': location,
                 'indicators': {}
             }
-            # get reports for this location, @todo: filtered by said period
+            # get reports for this location or project,
             projects = location.get_projects()
 
-            # get project reports
+            # get project reports @todo: filtered by said period
             reports = cls.get_reports_for_projects(projects)
 
             for indicator in indicators:

@@ -18,12 +18,12 @@ from wkcdd.models.helpers import (
     get_project_types
 )
 
-PROJECT_LABEL = 'projects'
-COUNTIES_LABEL = 'counties'
-SUB_COUNTIES_LABEL = 'sub_counties'
-CONSTITUENCIES_LABEL = 'constituencies'
-COMMUNITIES_LABEL = 'communities'
-PROJECTS_LABEL = 'projects'
+PROJECT_LEVEL = 'projects'
+COUNTIES_LEVEL = 'counties'
+SUB_COUNTIES_LEVEL = 'sub_counties'
+CONSTITUENCIES_LEVEL = 'constituencies'
+COMMUNITIES_LEVEL = 'communities'
+PROJECTS_LEVEL = 'projects'
 DEFAULT_OPTION = 'default'
 
 
@@ -222,45 +222,45 @@ def get_lowest_location_value(location_map):
 def get_aggregate_list_for_location_by_level(location, level):
     level_map_county = {
         DEFAULT_OPTION: location.children(),
-        COUNTIES_LABEL: '',
-        SUB_COUNTIES_LABEL: location.children(),
-        CONSTITUENCIES_LABEL: [constituencies
+        COUNTIES_LEVEL: '',
+        SUB_COUNTIES_LEVEL: location.children(),
+        CONSTITUENCIES_LEVEL: [constituencies
                                for sub_counties in location.children()
                                for constituencies in sub_counties.children()],
-        COMMUNITIES_LABEL: [communities
+        COMMUNITIES_LEVEL: [communities
                             for sub_counties in location.children()
                             for constituencies in sub_counties.children()
                             for communities in constituencies.children()],
-        PROJECTS_LABEL: Report.get_projects_from_location(location)
+        PROJECTS_LEVEL: Report.get_projects_from_location(location)
     }
     level_map_sub_county = {
         DEFAULT_OPTION: location.children(),
-        COUNTIES_LABEL: '',
-        SUB_COUNTIES_LABEL: '',
-        CONSTITUENCIES_LABEL: [constituencies
+        COUNTIES_LEVEL: '',
+        SUB_COUNTIES_LEVEL: '',
+        CONSTITUENCIES_LEVEL: [constituencies
                                for constituencies in location.children()],
-        COMMUNITIES_LABEL: [communities
+        COMMUNITIES_LEVEL: [communities
                             for constituencies in location.children()
                             for communities in constituencies.children()],
-        PROJECTS_LABEL: Report.get_projects_from_location(location)
+        PROJECTS_LEVEL: Report.get_projects_from_location(location)
     }
     level_map_constituency = {
         DEFAULT_OPTION: location.children(),
-        COUNTIES_LABEL: '',
-        SUB_COUNTIES_LABEL: '',
-        CONSTITUENCIES_LABEL: '',
-        COMMUNITIES_LABEL: [communities
+        COUNTIES_LEVEL: '',
+        SUB_COUNTIES_LEVEL: '',
+        CONSTITUENCIES_LEVEL: '',
+        COMMUNITIES_LEVEL: [communities
                             for communities in location.children()],
-        PROJECTS_LABEL: Report.get_projects_from_location(location)
+        PROJECTS_LEVEL: Report.get_projects_from_location(location)
     }
 
     level_map_community = {
         DEFAULT_OPTION: Report.get_projects_from_location(location),
-        COUNTIES_LABEL: '',
-        SUB_COUNTIES_LABEL: '',
-        CONSTITUENCIES_LABEL: '',
-        COMMUNITIES_LABEL: '',
-        PROJECTS_LABEL: Report.get_projects_from_location(location)
+        COUNTIES_LEVEL: '',
+        SUB_COUNTIES_LEVEL: '',
+        CONSTITUENCIES_LEVEL: '',
+        COMMUNITIES_LEVEL: '',
+        PROJECTS_LEVEL: Report.get_projects_from_location(location)
     }
 
     aggregate_list = {
@@ -289,11 +289,11 @@ def generate_impact_indicators_for(location_map,
         # Default aggregation level is all counties
         level_map = {
             DEFAULT_OPTION: County.all(),
-            COUNTIES_LABEL: County.all(),
-            SUB_COUNTIES_LABEL: SubCounty.all(),
-            CONSTITUENCIES_LABEL: Constituency.all(),
-            COMMUNITIES_LABEL: Community.all(),
-            PROJECTS_LABEL: Project.all()
+            COUNTIES_LEVEL: County.all(),
+            SUB_COUNTIES_LEVEL: SubCounty.all(),
+            CONSTITUENCIES_LEVEL: Constituency.all(),
+            COMMUNITIES_LEVEL: Community.all(),
+            PROJECTS_LEVEL: Project.all()
         }
         aggregate_list = level_map[level]
 
@@ -320,11 +320,11 @@ def generate_performance_indicators_for(location_map,
                                         level=DEFAULT_OPTION):
     # TODO Refactor into smaller pure functions
     level_to_location = {
-        COUNTIES_LABEL: County,
-        SUB_COUNTIES_LABEL: SubCounty,
-        CONSTITUENCIES_LABEL: Constituency,
-        COMMUNITIES_LABEL: Community,
-        PROJECTS_LABEL: Project
+        COUNTIES_LEVEL: County,
+        SUB_COUNTIES_LEVEL: SubCounty,
+        CONSTITUENCIES_LEVEL: Constituency,
+        COMMUNITIES_LEVEL: Community,
+        PROJECTS_LEVEL: Project
     }
     sector_indicator_mapping = {}
     sector_aggregated_indicators = {}
@@ -340,7 +340,7 @@ def generate_performance_indicators_for(location_map,
         aggregate_list = \
             get_aggregate_list_for_location_by_level(location, level)
         aggregate_type = (
-            PROJECT_LABEL
+            PROJECT_LEVEL
             if isinstance(aggregate_list[0], Project)
             else aggregate_list[0].location_type)
 
@@ -350,19 +350,19 @@ def generate_performance_indicators_for(location_map,
     else:
         level_map = {
             DEFAULT_OPTION: County.all(),
-            COUNTIES_LABEL: County.all(),
-            SUB_COUNTIES_LABEL: SubCounty.all(),
-            CONSTITUENCIES_LABEL: Constituency.all(),
-            COMMUNITIES_LABEL: Community.all(),
-            PROJECTS_LABEL: Project.all()
+            COUNTIES_LEVEL: County.all(),
+            SUB_COUNTIES_LEVEL: SubCounty.all(),
+            CONSTITUENCIES_LEVEL: Constituency.all(),
+            COMMUNITIES_LEVEL: Community.all(),
+            PROJECTS_LEVEL: Project.all()
         }
         aggregate_list = level_map[level]
         aggregate_type = (
-            PROJECT_LABEL
+            PROJECT_LEVEL
             if isinstance(aggregate_list[0], Project)
             else aggregate_list[0].location_type)
 
-        if aggregate_type is not PROJECT_LABEL:
+        if aggregate_type is not PROJECT_LEVEL:
             location_ids = [location.id for location in aggregate_list]
             community_ids = get_community_ids_for(
                 level_to_location[level],
@@ -383,7 +383,7 @@ def generate_performance_indicators_for(location_map,
             continue
         indicator_mapping = (
             constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
-        if aggregate_type == PROJECT_LABEL:
+        if aggregate_type == PROJECT_LEVEL:
             aggregate_for = [location] if location else County.all()
 
             aggregated_indicators = (
@@ -441,3 +441,32 @@ def get_project_geolocations(projects):
     project_geopoints = json.dumps(project_geopoints)
 
     return project_geopoints
+
+
+def name_to_location_type(level):
+    level_to_location_type_map = {
+        COUNTIES_LEVEL: County,
+        SUB_COUNTIES_LEVEL: SubCounty,
+        CONSTITUENCIES_LEVEL: Constituency,
+        COMMUNITIES_LEVEL: Community,
+        PROJECTS_LEVEL: Project
+    }
+    return level_to_location_type_map[level]
+
+
+def get_target_class_from_view_by(view_by, source_class=None):
+    """
+    Determine the target class based on the active/source class and view_by
+    value
+
+    If view_by is None, our target class is the child class of source e.g.
+     For County, the child class is SubCounty
+    """
+
+    if view_by is None:
+        if source_class is None:
+            raise ValueError(
+                "You must specify source_class if view_by is None")
+        return source_class.get_child_class()
+    else:
+        return name_to_location_type(view_by)

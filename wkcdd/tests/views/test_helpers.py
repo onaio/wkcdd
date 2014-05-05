@@ -17,7 +17,11 @@ from wkcdd.views.helpers import (
     filter_projects_by,
     generate_impact_indicators_for,
     generate_performance_indicators_for,
-    get_project_geolocations)
+    get_project_geolocations,
+    name_to_location_type,
+    get_target_class_from_view_by,
+    PROJECT_LEVEL, COUNTIES_LEVEL, SUB_COUNTIES_LEVEL, CONSTITUENCIES_LEVEL,
+    COMMUNITIES_LEVEL, PROJECTS_LEVEL)
 from wkcdd import constants
 from wkcdd.models import (
     Location,
@@ -43,6 +47,28 @@ class TestHelpers(unittest.TestCase):
         event = NewRequest(request)
         requested_xlsx_format(event)
         self.assertFalse(hasattr(request, 'override_renderer'))
+
+    def test_name_to_location_type(self):
+        self.assertEqual(name_to_location_type(PROJECT_LEVEL), Project)
+        self.assertEqual(name_to_location_type(COUNTIES_LEVEL), County)
+        self.assertEqual(name_to_location_type(SUB_COUNTIES_LEVEL), SubCounty)
+        self.assertEqual(
+            name_to_location_type(CONSTITUENCIES_LEVEL), Constituency)
+        self.assertEqual(
+            name_to_location_type(COMMUNITIES_LEVEL), Community)
+
+    def test_get_target_class_from_view_by_returns_child_class_if_none(self):
+        target_class = get_target_class_from_view_by(None, County)
+        self.assertEqual(target_class, SubCounty)
+
+    def test_get_target_class_from_view_by_raises_value_error_if_both_none(
+            self):
+        self.assertRaises(
+            ValueError, get_target_class_from_view_by, None)
+
+    def test_get_target_class_from_view_by_returns_class_from_name(self):
+        target_class = get_target_class_from_view_by(SUB_COUNTIES_LEVEL, None)
+        self.assertEqual(target_class, SubCounty)
 
 
 class TestBuildDatasetHelpers(TestBase):

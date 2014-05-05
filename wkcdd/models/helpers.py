@@ -67,3 +67,11 @@ def get_community_ids_for(location_type, location_ids):
                                    (location_ids)))
     }[location_type]
     return community_ids
+
+
+def get_children_by_level(location_ids, source_klass, target_klass):
+    children_klass, child_ids = source_klass.get_child_ids(location_ids)
+    if children_klass != target_klass:
+        child_ids = get_children_by_level(
+            child_ids, children_klass, target_klass)
+    return child_ids

@@ -359,6 +359,13 @@ class TestReport(TestBase):
             'impact_information/b_hh_assets', self.reports)
         self.assertEqual(indicator_sum, 230)
 
+    def test_sum_impact_indicator_values_returns_none_for_list_of_none(self):
+        indicator_sum = Report.sum_impact_indicator_values(
+            'impact_information/b_hh_assets', [
+                Report(report_data={})
+            ])
+        self.assertIsNone(indicator_sum, None)
+
     def test_generate_impact_indicators(self):
         self.setup_test_data()
         locations = County.all()

@@ -89,3 +89,14 @@ class TestHelpers(TestBase):
                                 constants.BODABODA_PROJECT_REGISTRATION]],
                                key=lambda x: x[0])
         self.assertListEqual(expected_list, project_types)
+
+    def test_get_children_by_level_for_counties_by_community(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Bungoma")
+        child_ids = helpers.get_children_by_level(
+            [county.id], County, Community)
+        child_names = [c.name for c in Community.all(
+            Community.id.in_(child_ids))]
+        self.assertEqual(
+            sorted([u'Maragoli', u'Bukusu']), sorted(child_names))
+

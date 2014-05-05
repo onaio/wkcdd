@@ -84,6 +84,10 @@ class Location(Base):
         """
         return humanize(self.name).title()
 
+    @classmethod
+    def get_child_ids(cls, parent_ids):
+        raise NotImplementedError
+
 
 class LocationFactory(BaseModelFactory):
     __acl__ = []
