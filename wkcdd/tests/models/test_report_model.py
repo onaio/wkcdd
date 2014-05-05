@@ -2,11 +2,12 @@ import datetime
 import json
 import os
 
-from wkcdd.tests.test_base import TestBase
+from wkcdd import constants
+from wkcdd.libs import utils
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency
-from wkcdd import constants
+from wkcdd.tests.test_base import TestBase
 
 
 class TestReport(TestBase):
@@ -332,3 +333,43 @@ class TestReport(TestBase):
             performance_indicators['vb_achievement'], '3')
         self.assertEquals(
             performance_indicators['milk_grp_sale_percentage'], '32')
+
+    reports = [
+        Report(
+            report_data={
+                'impact_information/b_income': '2060',
+                'impact_information/b_improved_houses': '1220',
+                # simulate missing report
+                #'impact_information/b_hh_assets':,
+                'impact_information/no_children': '1400'
+            }
+        ),
+        Report(
+            report_data={
+                'impact_information/b_income': '0',
+                'impact_information/b_improved_houses': '860',
+                'impact_information/b_hh_assets': '230',
+                'impact_information/no_children': '670'
+            }
+        )
+    ]
+
+    def test_sum_impact_indicator_values(self):
+        indicator_sum = Report.sum_impact_indicator_values(
+            'impact_information/b_hh_assets', self.reports)
+        self.assertEqual(indicator_sum, 230)
+
+    def test_generate_impact_indicators(self):
+        self.setup_test_data()
+        locations = County.all()
+        indicators = utils.get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
+        rows, summary_row = Report.generate_impact_indicators(
+            locations, indicators)
+        self.assertIsInstance(rows, list)
+        self.assertEqual(len(rows), 3)
+        self.assertEqual(summary_row['impact_information/b_income'], 20)
+        self.assertEqual(
+            summary_row['impact_information/b_improved_houses'], 1)
+        self.assertEqual(summary_row['impact_information/b_hh_assets'], 3)
+        self.assertEqual(summary_row['impact_information/no_children'], 8)

@@ -1211,10 +1211,14 @@ PERFORMANCE_INDICATOR_REPORTS = {
     )
 }
 IMPACT_INDICATOR_KEYS = (
-    ('no_of_b_increased_income', 'impact_information/b_income'),
-    ('no_of_b_improved_houses', 'impact_information/b_improved_houses'),
-    ('no_of_b_hh_assets', 'impact_information/b_hh_assets'),
-    ('no_of_children', 'impact_information/no_children')
+    ('no_of_b_increased_income', 'impact_information/b_income',
+     _('Beneficiaries with increased income')),
+    ('no_of_b_improved_houses', 'impact_information/b_improved_houses',
+     _('Beneficiaries with improved houses')),
+    ('no_of_b_hh_assets', 'impact_information/b_hh_assets',
+     _('Beneficiaries with increased household assets')),
+    ('no_of_children', 'impact_information/no_children',
+     _('Children in schools and other learning institutions'))
 )
 
 IMPACT_INDICATOR_REPORT = (

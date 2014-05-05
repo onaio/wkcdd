@@ -1,3 +1,4 @@
+
 from collections import defaultdict
 
 from wkcdd import constants
@@ -5,7 +6,8 @@ from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.project import Project
 
 from wkcdd.models.base import (
-    Base
+    Base,
+    DBSession
 )
 from sqlalchemy import (
     Column,
@@ -14,9 +16,11 @@ from sqlalchemy import (
     String
 )
 from sqlalchemy.dialects.postgresql import JSON
+
+from wkcdd.libs.utils import sum_reduce_func
 from wkcdd.models.helpers import (
     get_project_list,
-    get_community_ids_for
+    get_community_ids_for,
 )
 
 
@@ -233,3 +237,51 @@ class Report(Base):
             'total_indicator_summary': total_indicator_summary,
             'project_list': project_list
         }
+
+    @classmethod
+    def get_reports_for_projects(cls, projects):
+        """
+        Get the reports for the specified list of projects.
+        """
+        return DBSession.query(Report)\
+            .join(Project, Report.project_code == Project.code)\
+            .filter(Project.id.in_([p.id for p in projects]))\
+            .all()
+
+    @classmethod
+    def sum_impact_indicator_values(cls, indicator_key, reports):
+        """
+        Calculate the sum for the specified indicator from the reports
+        """
+        values = [r.report_data.get(indicator_key, 0) for r in reports]
+        return reduce(
+            sum_reduce_func, values, 0)
+
+    @classmethod
+    def generate_impact_indicators(cls, locations, indicators):
+        rows = []
+        summary_row = dict([(indicator['key'], 0) for indicator in indicators])
+        for location in locations:
+            row = {
+                'location': location,
+                'indicators': {}
+            }
+            # get reports for this location, @todo: filtered by said period
+            projects = location.get_projects()
+
+            # get project reports
+            reports = cls.get_reports_for_projects(projects)
+
+            for indicator in indicators:
+                indicator_key = indicator['key']
+                location_indicator_sum = cls.sum_impact_indicator_values(
+                    indicator_key, reports)
+                row['indicators'][indicator_key] = location_indicator_sum
+
+                # sum the summary
+                summary_row[indicator_key] += location_indicator_sum
+
+            # append row
+            rows.append(row)
+
+        return rows, summary_row
