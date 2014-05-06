@@ -16,7 +16,8 @@ class Community(Location):
 
     @classmethod
     def get_child_ids(cls, community_ids):
-        return cls.get_child_class(), community_ids
+        from wkcdd.models import helpers
+        return cls.get_child_class(), helpers.get_project_ids(community_ids)
 
     @classmethod
     def get_child_class(cls):
