@@ -180,6 +180,9 @@ class Project(Base):
 
         return filter_criteria
 
+    def get_projects(self):
+        return [self]
+
 
 class ProjectType(Base):
     __tablename__ = 'project_type'

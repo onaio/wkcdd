@@ -7,6 +7,7 @@ from wkcdd.tests.test_base import TestBase
 
 
 class TestHelpers(TestBase):
+
     def test_sub_county_ids_from_county_ids(self):
         self.setup_test_data()
         # get the county's id
@@ -100,3 +101,11 @@ class TestHelpers(TestBase):
         self.assertEqual(
             sorted([u'Maragoli', u'Bukusu']), sorted(child_names))
 
+    def test_get_children_by_level_for_communities(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        child_ids = helpers.get_children_by_level(
+            [community.id], Community, Project)
+        child_codes = [p.code for p in Project.all(
+            Project.id.in_(child_ids))]
+        self.assertEqual(sorted(["7CWA", "FR3A"]), sorted(child_codes))

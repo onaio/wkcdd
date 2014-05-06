@@ -6,11 +6,13 @@ from wkcdd import constants
 from wkcdd.libs import utils
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
-from wkcdd.models import County, Constituency
+from wkcdd.models import County, Constituency, Community
 from wkcdd.tests.test_base import TestBase
+from wkcdd.models.helpers import get_project_list
 
 
 class TestReport(TestBase):
+
     def test_setup_test_data(self):
         self.setup_test_data()
         report = Report.get(Report.project_code == "YH9T")
@@ -380,3 +382,21 @@ class TestReport(TestBase):
             summary_row['impact_information/b_improved_houses'], 1)
         self.assertEqual(summary_row['impact_information/b_hh_assets'], 3)
         self.assertEqual(summary_row['impact_information/no_children'], 8)
+
+    def test_generate_impact_indicators_for_community_projects(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        projects = get_project_list([community.id])
+
+        indicators = utils.get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
+        rows, summary_row = Report.generate_impact_indicators(
+            projects, indicators)
+
+        self.assertIsInstance(rows, list)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(summary_row['impact_information/b_income'], 0)
+        self.assertEqual(
+            summary_row['impact_information/b_improved_houses'], 0)
+        self.assertEqual(summary_row['impact_information/b_hh_assets'], 0)
+        self.assertEqual(summary_row['impact_information/no_children'], 0)
