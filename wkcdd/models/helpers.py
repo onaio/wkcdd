@@ -79,8 +79,13 @@ def get_community_ids_for(location_type, location_ids):
 
 
 def get_children_by_level(location_ids, source_klass, target_klass):
-    children_klass, child_ids = source_klass.get_child_ids(location_ids)
-    if children_klass != target_klass:
-        child_ids = get_children_by_level(
-            child_ids, children_klass, target_klass)
-    return child_ids
+    if source_klass.get_rank() < target_klass.get_rank():
+        children_klass, child_ids = source_klass.get_child_ids(location_ids)
+        if children_klass != target_klass:
+            child_ids = get_children_by_level(
+                child_ids, children_klass, target_klass)
+        return child_ids
+    else:
+        raise ValueError(
+            "The target class cannot be of a greater rank than the source\
+                class")

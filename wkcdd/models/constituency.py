@@ -32,3 +32,7 @@ class Constituency(Location):
             get_project_list, get_community_ids)
         return get_project_list(
             get_community_ids([self.id]))
+
+    @classmethod
+    def get_rank(cls):
+        return 3

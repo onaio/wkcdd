@@ -27,3 +27,7 @@ class County(Location):
     def get_child_class(cls):
         from sub_county import SubCounty
         return SubCounty
+
+    @classmethod
+    def get_rank(cls):
+        return 1

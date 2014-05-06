@@ -30,3 +30,7 @@ class Community(Location):
         """
         from wkcdd.models.helpers import get_project_list
         return get_project_list([self.id])
+
+    @classmethod
+    def get_rank(cls):
+        return 4

@@ -108,3 +108,10 @@ class TestHelpers(TestBase):
 
         project_ids = helpers.get_project_ids([community.id])
         self.assertEqual(project_ids, [p.id for p in projects])
+
+    def test_get_children_by_level_for_higher_rank(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        self.assertRaises(ValueError,
+                          helpers.get_children_by_level,
+                          [community.id], Community, County)

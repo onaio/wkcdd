@@ -76,6 +76,9 @@ class Project(Base):
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
         return sectors_dict[self.sector]
 
+    def get_projects(self):
+        return [self]
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(
@@ -180,8 +183,9 @@ class Project(Base):
 
         return filter_criteria
 
-    def get_projects(self):
-        return [self]
+    @classmethod
+    def get_rank(cls):
+        return 5
 
 
 class ProjectType(Base):

@@ -11,8 +11,7 @@ class SubCounty(Location):
         Get the list of projects associated with this county.
         """
         from wkcdd.models.helpers import (
-            get_project_list, get_community_ids, get_constituency_ids,
-            get_sub_county_ids)
+            get_project_list, get_community_ids, get_constituency_ids)
         return get_project_list(
             get_community_ids(
                 get_constituency_ids([self.id])))
@@ -34,3 +33,7 @@ class SubCounty(Location):
     def get_child_class(cls):
         from constituency import Constituency
         return Constituency
+
+    @classmethod
+    def get_rank(cls):
+        return 2
