@@ -22,3 +22,10 @@ class Community(Location):
     def get_child_class(cls):
         from project import Project
         return Project
+
+    def get_projects(self):
+        """
+        Get the list of projects associated with this Community.
+        """
+        from wkcdd.models.helpers import get_project_list
+        return get_project_list([self.id])

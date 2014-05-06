@@ -26,7 +26,7 @@ class Constituency(Location):
 
     def get_projects(self):
         """
-        Get the list of projects associated with this county.
+        Get the list of projects associated with this Constituency.
         """
         from wkcdd.models.helpers import (
             get_project_list, get_community_ids)
