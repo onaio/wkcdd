@@ -21,7 +21,11 @@
         <div class="portlet-title">
           <div class="caption">
             <i class="icon-tasks"></i>
-            {% trans %}Sub-Counties{% endtrans %}
+            {% if location %}
+              {{ location.pretty }} {{ location.location_type | humanize() | title()}}
+            {% else %}
+              {% trans %}All Counties{% endtrans %}
+            {% endif %}
           </div>
         </div>
         <div class="portlet-body">
@@ -29,7 +33,11 @@
             <table class="table table-striped table-bordered table-hover">
               <thead>
               <tr>
-                <th>{% trans %}Counties{% endtrans %}</th>
+              {% if target_class %}
+                <th>{{target_class.__name__}}</th>
+              {% else %}
+                <th>{% trans %}County{% endtrans %}</th>
+              {% endif %}
                 {% for indicator in indicators %}
                   <th>{{ indicator.label }}</th>
                 {% endfor %}

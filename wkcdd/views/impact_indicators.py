@@ -27,6 +27,7 @@ class ImpactIndicators(object):
     def index(self):
         view_by = self.request.GET.get('view_by')
         source_class = County
+        target_class = None
 
         if view_by is None:
             child_locations = County.all()
@@ -49,7 +50,8 @@ class ImpactIndicators(object):
         return {
             'indicators': indicators,
             'rows': rows,
-            'summary_row': summary_row
+            'summary_row': summary_row,
+            'target_class': target_class
         }
 
     @view_config(name='',
@@ -80,5 +82,6 @@ class ImpactIndicators(object):
             'location': location,
             'indicators': indicators,
             'rows': rows,
-            'summary_row': summary_row
+            'summary_row': summary_row,
+            'target_class': target_class
         }
