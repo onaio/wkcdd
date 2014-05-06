@@ -87,5 +87,4 @@ def get_children_by_level(location_ids, source_klass, target_klass):
         return child_ids
     else:
         raise ValueError(
-            "The target class cannot be of a greater rank than the source\
-                class")
+            "Target class cannot be of a greater rank than the source class")
