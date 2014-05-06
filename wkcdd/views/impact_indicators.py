@@ -4,14 +4,13 @@ from pyramid.view import (
 )
 
 from wkcdd import constants
-from wkcdd.models.helpers import get_children_by_level, get_project_list
+from wkcdd.models.helpers import get_children_by_level
 from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import get_target_class_from_view_by
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
     Report,
     County,
-    Project,
     Location)
 
 
@@ -38,10 +37,7 @@ class ImpactIndicators(object):
             child_ids = get_children_by_level(
                 location_ids, source_class, target_class)
 
-        if target_class == Project:
-            child_locations = get_project_list(child_ids)
-        else:
-            child_locations = Location.all(Location.id.in_(child_ids))
+            child_locations = target_class.all(target_class.id.in_(child_ids))
 
         # create a dict mapping to "name, key and label"
         indicators = get_impact_indicator_list(
@@ -72,10 +68,7 @@ class ImpactIndicators(object):
         child_ids = get_children_by_level(
             location_ids, source_class, target_class)
 
-        if target_class == Project:
-            child_locations = get_project_list(child_ids)
-        else:
-            child_locations = Location.all(Location.id.in_(child_ids))
+        child_locations = target_class.all(target_class.id.in_(child_ids))
         # create a dict mapping to "name, key and label"
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
@@ -84,6 +77,7 @@ class ImpactIndicators(object):
             child_locations, indicators)
 
         return {
+            'location': location,
             'indicators': indicators,
             'rows': rows,
             'summary_row': summary_row
