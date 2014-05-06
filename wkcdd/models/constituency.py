@@ -23,3 +23,12 @@ class Constituency(Location):
     def get_child_class(cls):
         from community import Community
         return Community
+
+    def get_projects(self):
+        """
+        Get the list of projects associated with this county.
+        """
+        from wkcdd.models.helpers import (
+            get_project_list, get_community_ids)
+        return get_project_list(
+            get_community_ids([self.id]))
