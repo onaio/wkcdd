@@ -48,7 +48,7 @@
               {% for row in rows %}
                 <tr>
                   <td>
-                    <a href="">{{ row.location.pretty }}</a>
+                    <a href="{{request.route_path('impact_indicators', traverse=(row.location.id))}}">{{ row.location.pretty }}</a>
                   </td>
                   {% for indicator in indicators %}
                     <td>{{ row.indicators[indicator.key] }}</td>
