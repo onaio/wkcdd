@@ -101,11 +101,10 @@ class TestHelpers(TestBase):
         self.assertEqual(
             sorted([u'Maragoli', u'Bukusu']), sorted(child_names))
 
-    def test_get_children_by_level_for_communities(self):
+    def test_get_project_ids(self):
         self.setup_test_data()
         community = Community.get(Community.name == "Maragoli")
-        child_ids = helpers.get_children_by_level(
-            [community.id], Community, Project)
-        child_codes = [p.code for p in Project.all(
-            Project.id.in_(child_ids))]
-        self.assertEqual(sorted(["7CWA", "FR3A"]), sorted(child_codes))
+        projects = Project.all(Project.code.in_(["7CWA", "FR3A"]))
+
+        project_ids = helpers.get_project_ids([community.id])
+        self.assertEqual(project_ids, [p.id for p in projects])
