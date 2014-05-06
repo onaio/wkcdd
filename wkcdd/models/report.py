@@ -258,16 +258,20 @@ class Report(Base):
             sum_reduce_func, values, 0)
 
     @classmethod
-    def generate_impact_indicators(cls, locations, indicators):
+    def generate_impact_indicators(cls, collection, indicators):
+        """
+        Generate impact indicators for a given collection where the
+        collection can either be a list of projects or a list of locations
+        """
         rows = []
         summary_row = dict([(indicator['key'], 0) for indicator in indicators])
-        for location in locations:
+        for item in collection:
             row = {
-                'location': location,
+                'location': item,
                 'indicators': {}
             }
             # get reports for this location or project,
-            projects = location.get_projects()
+            projects = item.get_projects()
 
             # get project reports @todo: filtered by said period
             reports = cls.get_reports_for_projects(projects)
