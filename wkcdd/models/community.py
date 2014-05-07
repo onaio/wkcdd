@@ -31,6 +31,10 @@ class Community(Location):
         from wkcdd.models.helpers import get_project_list
         return get_project_list([self.id])
 
+    def is_found_in(self, location):
+        return (self.id == location.id
+                or self.constituency.is_found_in(location))
+
     @classmethod
     def get_rank(cls):
         return 4

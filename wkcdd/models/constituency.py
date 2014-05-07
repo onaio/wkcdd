@@ -33,6 +33,9 @@ class Constituency(Location):
         return get_project_list(
             get_community_ids([self.id]))
 
+    def is_found_in(self, location):
+        return self.id == location.id or self.sub_county.is_found_in(location)
+
     @classmethod
     def get_rank(cls):
         return 3

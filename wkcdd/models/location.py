@@ -88,6 +88,10 @@ class Location(Base):
     def get_child_ids(cls, parent_ids):
         raise NotImplementedError
 
+    @classmethod
+    def get_rank(cls):
+        return 0
+
 
 class LocationFactory(BaseModelFactory):
     __acl__ = []

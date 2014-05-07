@@ -16,6 +16,9 @@ class SubCounty(Location):
             get_community_ids(
                 get_constituency_ids([self.id])))
 
+    def is_found_in(self, location):
+        return self.id == location.id or self.county.is_found_in(location)
+
     @property
     def county(self):
         return self.parent

@@ -18,6 +18,9 @@ class County(Location):
                 get_constituency_ids(
                     get_sub_county_ids([self.id]))))
 
+    def is_found_in(self, location):
+        return self.id == location.id or False
+
     @classmethod
     def get_child_ids(cls, parent_ids):
         from helpers import get_sub_county_ids
