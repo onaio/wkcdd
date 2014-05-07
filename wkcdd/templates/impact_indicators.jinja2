@@ -1,5 +1,7 @@
 {% extends 'base.jinja2' %}
-{% block title %}{% trans %} County Imapact Indicators {% endtrans %}{% endblock %}
+{% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
+{% block title %}{% trans %} County Impact Indicators {% endtrans %}{% endblock %}
 
 {% block page_title %}
   <h3 class="page-title">
@@ -14,6 +16,8 @@
 {% endblock %}
 
 {% block content %}
+  {{ generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) }}
+
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -74,7 +78,14 @@
     </div>
   </div>
 {% endblock %}
-
+{% block page_scripts %}
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+{% endblock %}
 {% block jquery_ready %}
   {{ super() }}
+
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
+
+  {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

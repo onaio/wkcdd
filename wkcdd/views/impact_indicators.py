@@ -11,6 +11,7 @@ from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
     Report,
     County,
+    Project,
     Location)
 
 
@@ -20,12 +21,23 @@ class ImpactIndicators(object):
     def __init__(self, request):
         self.request = request
 
+    def get_query_params(self):
+        view_by = self.request.GET.get('view_by')
+        location_map = {
+            'community': self.request.GET.get('community'),
+            'constituency': self.request.GET.get('constituency'),
+            'sub_county': self.request.GET.get('sub_county'),
+            'county': self.request.GET.get('county')
+        }
+        return view_by, location_map
+
     @view_config(name='',
                  context=LocationFactory,
                  renderer='impact_indicators.jinja2',
                  request_method='GET')
     def index(self):
         view_by = self.request.GET.get('view_by')
+
         source_class = County
         target_class = None
 
@@ -47,11 +59,17 @@ class ImpactIndicators(object):
         rows, summary_row = Report.generate_impact_indicators(
             child_locations, indicators)
 
+        search_criteria = {'view_by': view_by,
+                           'location': ''}
+        filter_criteria = Project.generate_filter_criteria()
+
         return {
             'indicators': indicators,
             'rows': rows,
             'summary_row': summary_row,
-            'target_class': target_class
+            'target_class': target_class,
+            'search_criteria': search_criteria,
+            'filter_criteria': filter_criteria
         }
 
     @view_config(name='',
@@ -60,6 +78,7 @@ class ImpactIndicators(object):
                  request_method='GET')
     def show(self):
         view_by = self.request.GET.get('view_by')
+
         location = self.request.context
         source_class = location.__class__
         location_ids = [location.id]
@@ -78,10 +97,15 @@ class ImpactIndicators(object):
         rows, summary_row = Report.generate_impact_indicators(
             child_locations, indicators)
 
+        search_criteria = {'view_by': view_by,
+                           'location': location}
+        filter_criteria = Project.generate_filter_criteria()
         return {
             'location': location,
             'indicators': indicators,
             'rows': rows,
             'summary_row': summary_row,
-            'target_class': target_class
+            'target_class': target_class,
+            'search_criteria': search_criteria,
+            'filter_criteria': filter_criteria
         }
