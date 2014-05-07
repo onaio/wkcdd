@@ -86,6 +86,7 @@
 
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
+  LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

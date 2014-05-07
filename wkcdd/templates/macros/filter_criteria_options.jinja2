@@ -6,7 +6,7 @@
         {%if selected_location and selected_location.is_found_in(location) %}
             selected
         {%endif%}
-        url="{{ request.route_url('impact_indicators', traverse=(location.id), _query={'view_by':view_by}) }}"
+        url="{{ request.route_url('impact_indicators', traverse=(location.id)) }}"
         >
         {{ location.pretty }}
     </option>

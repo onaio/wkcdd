@@ -1,7 +1,7 @@
 {% from 'filter_criteria_options.jinja2' import filter_criteria_options %}
 {% macro generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) %}
 <div class="clearfix filters">
-  <form id="filter_criteria" class="form-inline" method="get">
+  <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this)">
 	<div class="col-md-7">
 	    <label>Select Location: </label>
 		<select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
