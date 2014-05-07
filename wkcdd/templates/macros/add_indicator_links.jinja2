@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs indicator_tabs">
     {% if location %}
         <li class="indicator_list">
-            <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
+            <a href="{{ request.route_url('performance_indicators',traverse=(location.id,)) }}"
             {% if page == 'performance'%}
                     class="selected" >
             {% else %}
@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="indicator_list">
-            <a href="{{ request.route_url(location_type,traverse=(location.id)) }}"
+            <a href="{{ request.route_url('impact_indicators', traverse=(location.id)) }}"
             {% if page == 'impact' %}
                     class="selected" >
             {% else %}
@@ -21,13 +21,10 @@
             {% endif %}
             {% trans %} Impact {% endtrans %}
             </a>
-        </li>
-        <li class="indicator_list">
-            <a href="#">{% trans %} Result Framework {% endtrans %}</a>
         </li>
     {% else %}
         <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=('performance_summary')) }}"
+            <a href="{{ request.route_url('performance_indicators',traverse=()) }}"
             {% if page == 'performance'%}
                     class="selected" >
             {% else %}
@@ -37,7 +34,7 @@
             </a>
         </li>
         <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=()) }}"
+            <a href="{{ request.route_url('impact_indicators',traverse=()) }}"
             {% if page == 'impact' %}
                     class="selected" >
             {% else %}
@@ -46,10 +43,10 @@
             {% trans %} Impact {% endtrans %}
             </a>
         </li>
+    {% endif %}
         <li class="indicator_list">
             <a href="#">{% trans %} Result Framework {% endtrans %}</a>
         </li>
-    {% endif %}
     </ul>
 </div>
 {% endmacro %}

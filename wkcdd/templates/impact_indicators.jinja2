@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{% trans %} County Impact Indicators {% endtrans %}{% endblock %}
 
@@ -15,9 +16,12 @@
   <li><a href="#"> </a></li>
 {% endblock %}
 
-{% block content %}
-  {{ generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) }}
+{% block filters %}
+     {{ generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) }}
+{% endblock %}
 
+{% block content %}
+  {{ generate_map_chart(request) }}
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -83,7 +87,8 @@
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-
+  map = Custom.display_constituency_map();
+  
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
   LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
