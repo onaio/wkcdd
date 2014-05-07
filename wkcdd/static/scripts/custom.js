@@ -131,6 +131,8 @@ var LocationSelect = function() {
             return filtered_location_list;
         },
         update_select = function(select, options, default_value) {
+            // TODO Instead of creating new elements all the time, 
+            // Cache them and just loop over them
             var url_root = this.url,
                 optionList = [],
                 default_option = $('<option />', {
