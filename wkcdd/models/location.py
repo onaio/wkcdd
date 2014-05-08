@@ -42,12 +42,9 @@ class Location(Base):
     def children(self):
         return Location.all(Location.parent_id == self.id)
 
-    @property
-    def url(self):
-        if self.location_type == self.COUNTY:
-            return self.location_type[:-1] + 'ies'
-        else:
-            return self.location_type
+    def url(self, request, route_name, query_params):
+        return request.route_url(
+            route_name, traverse=(self.id), _query=query_params)
 
     @classmethod
     def get_or_create(cls, name, parent, location_type):

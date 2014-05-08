@@ -79,6 +79,10 @@ class Project(Base):
     def get_projects(self):
         return [self]
 
+    def url(self, request, route_name, query_params):
+        return request.route_url(
+            'projects', traverse=(self.id), _query=query_params)
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(
