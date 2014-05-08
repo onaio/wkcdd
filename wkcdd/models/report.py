@@ -17,7 +17,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSON
 
-from wkcdd.libs.utils import sum_reduce_func
+from wkcdd.libs.utils import (
+    get_impact_indicator_list,
+    sum_reduce_func)
 from wkcdd.models.helpers import (
     get_project_list,
     get_community_ids_for,
@@ -40,9 +42,11 @@ class Report(Base):
 
     # TODO rename to get_impact_indicators
     def calculate_impact_indicators(self):
-        impact_indicators = {}
-        for key, impact_indicator_key in constants.IMPACT_INDICATOR_KEYS:
-            impact_indicators[key] = self.report_data.get(impact_indicator_key)
+        indicators = get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
+        impact_indicators = {
+            item['key']: self.report_data.get(item['key'])
+            for item in indicators}
         return impact_indicators
 
     # TODO rename to get_performance_indicators
