@@ -26,7 +26,7 @@ class ImpactIndicators(object):
                  renderer='impact_indicators.jinja2',
                  request_method='GET')
     def index(self):
-        view_by = self.request.GET.get('view_by')
+        view_by = self.request.GET.get('view_by') or None
 
         source_class = County
         target_class = None
@@ -68,7 +68,7 @@ class ImpactIndicators(object):
                  renderer='impact_indicators.jinja2',
                  request_method='GET')
     def show(self):
-        view_by = self.request.GET.get('view_by')
+        view_by = self.request.GET.get('view_by') or None
 
         location = self.request.context
         source_class = location.__class__

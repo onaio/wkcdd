@@ -9,23 +9,23 @@
 {% endblock %}
 {% block breadcrumbs %}
   <li>
-      <a href="{{ request.route_url('county', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
+      <a href="{{ request.route_url('impact_indicators', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('county',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
+      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('sub_county',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
+      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('constituency',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
+      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>
-      <a href="{{ request.route_url('community',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
+      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
       <i class="icon-angle-right"></i>
   </li>
   <li>

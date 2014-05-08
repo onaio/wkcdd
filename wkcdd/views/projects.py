@@ -20,6 +20,7 @@ from wkcdd.views.helpers import filter_projects_by
 
 @view_defaults(route_name='projects')
 class ProjectViews(object):
+
     def __init__(self, request):
         self.request = request
 
@@ -72,7 +73,7 @@ class ProjectViews(object):
             'search_criteria': search_criteria
         }
 
-    @view_config(name='show',
+    @view_config(name='',
                  context=Project,
                  renderer='projects_show.jinja2',
                  request_method='GET')
