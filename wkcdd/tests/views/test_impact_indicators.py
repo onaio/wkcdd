@@ -33,3 +33,20 @@ class TestImpactIndicatorsFunctional(FunctionalTestBase):
                                       traverse=(constituency.id))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_view_all_with_empty_view_by(self):
+        self.setup_test_data()
+        url = self.request.route_path('impact_indicators',
+                                      traverse=(),
+                                      _query={'view_by': ''})
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_county_with_empty_view_by(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Bungoma")
+        url = self.request.route_path('impact_indicators',
+                                      traverse=(county.id),
+                                      _query={'view_by': ''})
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
