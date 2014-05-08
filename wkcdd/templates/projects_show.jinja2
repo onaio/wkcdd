@@ -90,7 +90,7 @@
                {% for indicator in impact_indicator_mapping %}
                 <tr>
                   <td>
-                    {{ indicator.title }}
+                    {{ indicator.label }}
                   </td>
                     <td>{{ value_or_default(impact_indicators[indicator.key],'-') }}</td>
                 </tr>

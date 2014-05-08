@@ -14,7 +14,9 @@ from wkcdd.models.project import (
 
 from wkcdd import constants
 
-from wkcdd.libs.utils import tuple_to_dict_list
+from wkcdd.libs.utils import (
+    tuple_to_dict_list,
+    get_impact_indicator_list)
 from wkcdd.views.helpers import filter_projects_by
 
 
@@ -85,6 +87,8 @@ class ProjectViews(object):
         if report:
             performance_indicators = report.calculate_performance_indicators()
             impact_indicators = report.calculate_impact_indicators()
+            impact_indicator_mapping = get_impact_indicator_list(
+                constants.IMPACT_INDICATOR_KEYS)
             return {
                 'project': project,
                 'performance_indicators': performance_indicators,
@@ -93,9 +97,7 @@ class ProjectViews(object):
                     ('title', 'group'),
                     constants.PERFORMANCE_INDICATOR_REPORTS[
                         report.report_data[constants.XFORM_ID]]),
-                'impact_indicator_mapping': tuple_to_dict_list(
-                    ('title', 'key'),
-                    constants.IMPACT_INDICATOR_REPORT),
+                'impact_indicator_mapping': impact_indicator_mapping
             }
         else:
             return {
