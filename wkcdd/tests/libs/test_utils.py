@@ -1,9 +1,11 @@
 import unittest
 
 from wkcdd.libs import utils
+from wkcdd import constants
 
 
 class TestUtils(unittest.TestCase):
+
     def test_humanize_replaces_special_characters(self):
         value = "The_quick-brown*fox@jumped&over$the#moon"
         humanized = utils.humanize(value)
@@ -26,3 +28,12 @@ class TestUtils(unittest.TestCase):
         values = [u'1', u'15', 0, 0, 0, 0]
         result = reduce(utils.sum_reduce_func, values)
         self.assertEqual(result, 16)
+
+    def test_get_performance_indicator_list(self):
+        project_sectors = [sector
+                           for reg, sector, label
+                           in constants.PROJECT_TYPE_MAPPING]
+        for sector in project_sectors:
+            self.assertIsNotNone(
+                utils.get_performance_indicator_list(
+                    constants.PERFORMANCE_INDICATORS[sector]))

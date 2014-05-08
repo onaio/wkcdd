@@ -63,3 +63,7 @@ def sum_reduce_func(current, value):
 
 def get_impact_indicator_list(indicators_tuple):
     return tuple_to_dict_list(('name', 'key', 'label'), indicators_tuple)
+
+
+def get_performance_indicator_list(indicators_tuple):
+    return tuple_to_dict_list(('property', 'key', 'type'), indicators_tuple)
