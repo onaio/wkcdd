@@ -35,6 +35,12 @@
               {% trans %}All Counties{% endtrans %}
             {% endif %}
           </div>
+          <span class="pull-right">
+              <a href="{{ request.route_url('impact_indicators', traverse=(location.id),
+                  _query={'format':'xlsx'})}}" class="btn btn-success download" role="button">
+                  <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+              </a>
+          </span>
         </div>
         <div class="portlet-body">
           <div class="table-responsive">

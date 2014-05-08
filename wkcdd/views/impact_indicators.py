@@ -69,7 +69,8 @@ class ImpactIndicators(object):
             'summary_row': summary_row,
             'target_class': target_class,
             'search_criteria': search_criteria,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'is_impact': True
         }
 
     @view_config(name='',
@@ -100,6 +101,7 @@ class ImpactIndicators(object):
         search_criteria = {'view_by': view_by,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
+
         return {
             'location': location,
             'indicators': indicators,
@@ -107,5 +109,6 @@ class ImpactIndicators(object):
             'summary_row': summary_row,
             'target_class': target_class,
             'search_criteria': search_criteria,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'is_impact': True
         }
