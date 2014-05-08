@@ -293,3 +293,55 @@ class Report(Base):
             rows.append(row)
 
         return rows, summary_row
+
+    @classmethod
+    def sum_performance_indicator_values(cls,
+                                         indicator_key,
+                                         indicator_type,
+                                         reports):
+        """
+        Calculate the sum and average for the specified indicator from the
+        reports
+        """
+        # add handling for keys which are lists
+        values = [r.report_data.get(indicator_key) for r in reports]
+        if indicator_type == 'ratio':
+            return reduce(
+                sum_reduce_func, values, 0) / len(reports)
+        else:
+            return reduce(
+                sum_reduce_func, values, 0)
+
+    @classmethod
+    def generate_performance_indicators(cls, collection, indicators):
+        """
+        Generate performance indicators for a given sector whose values are
+        determined from the provided set of indicators
+        """
+        rows = []
+        summary_row = dict([(indicator['key'], 0) for indicator in indicators])
+        for item in collection:
+            row = {
+                'location': item,
+                'indicators': {}
+            }
+            # get reports for this location or project,
+            projects = item.get_projects()
+
+            # get project reports @todo: filtered by said period
+            reports = cls.get_reports_for_projects(projects)
+
+            for indicator in indicators:
+                indicator_key = indicator['key']
+                indicator_type = indicator['type']
+                location_indicator_sum = cls.sum_performance_indicator_values(
+                    indicator_key, indicator_type, reports)
+                row['indicators'][indicator_key] = location_indicator_sum
+
+                # sum the summary
+                summary_row[indicator_key] += location_indicator_sum
+
+            # append row
+            rows.append(row)
+
+        return rows, summary_row

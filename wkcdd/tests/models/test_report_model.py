@@ -400,3 +400,52 @@ class TestReport(TestBase):
             summary_row['impact_information/b_improved_houses'], 0)
         self.assertEqual(summary_row['impact_information/b_hh_assets'], 0)
         self.assertEqual(summary_row['impact_information/no_children'], 0)
+
+    performance_reports = [
+        Report(
+            report_data={
+                'perfomance_summary/exp_contribution': '123',
+                'perfomance_summary/actual_contribution': '120',
+                'perfomance_summary/community_contribution': '98',
+                'mproject_performance/dbirds_number': '15'
+            }
+        ),
+        Report(
+            report_data={
+                'perfomance_summary/exp_contribution': '100',
+                'perfomance_summary/actual_contribution': '200',
+                'perfomance_summary/community_contribution': '100',
+                'mproject_performance/dbirds_number': '30'
+            }
+        )
+    ]
+
+    def test_sum_performance_indicator_values(self):
+        indicator_sum_target = Report.sum_performance_indicator_values(
+            'perfomance_summary/exp_contribution',
+            'target',
+            self.performance_reports)
+
+        indicator_ratio = Report.sum_performance_indicator_values(
+            'perfomance_summary/community_contribution',
+            'ratio',
+            self.performance_reports)
+
+        self.assertEqual(indicator_sum_target, 223)
+        self.assertEqual(indicator_ratio, 99)
+
+    def test_generate_performance_indicators(self):
+        self.setup_test_data()
+        locations = County.all()
+        indicators = utils.get_performance_indicator_list(
+            constants.DAIRY_COWS_PROJECT_REPORT)
+        rows, summary_row = Report.generate_performance_indicators(
+            locations, indicators)
+        self.assertEqual(len(rows), 3)
+
+        import ipdb
+        ipdb.set_trace()
+
+        self.assertEqual(summary_row['exp_contribution'], 0)
+        self.assertEqual(summary_row['actual_contribution'], 0)
+        self.assertEqual(summary_row['community_contribution'], 0)
