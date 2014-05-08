@@ -36,10 +36,17 @@
             {% endif %}
           </div>
           <span class="pull-right">
+            {% if location %}
               <a href="{{ request.route_url('impact_indicators', traverse=(location.id),
-                  _query={'format':'xlsx'})}}" class="btn btn-success download" role="button">
+                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
                   <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
               </a>
+            {% else %}
+              <a href="{{ request.route_url('impact_indicators', traverse=(),
+                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                  <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+              </a>
+            {% endif %}
           </span>
         </div>
         <div class="portlet-body">
@@ -62,7 +69,7 @@
               {% for row in rows %}
                 <tr>
                   <td>
-                    <a href="{{request.route_path('impact_indicators', traverse=(row.location.id))}}">{{ row.location.pretty }}</a>
+                    <a href="{{row.location.url(request, 'impact_indicators', {'view_by': search_criteria.view_by }) }}">{{ row.location.pretty }}</a>
                   </td>
                   {% for indicator in indicators %}
                     <td>{{ row.indicators[indicator.key] }}</td>
