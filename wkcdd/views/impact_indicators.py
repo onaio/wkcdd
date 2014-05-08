@@ -21,16 +21,6 @@ class ImpactIndicators(object):
     def __init__(self, request):
         self.request = request
 
-    def get_query_params(self):
-        view_by = self.request.GET.get('view_by')
-        location_map = {
-            'community': self.request.GET.get('community'),
-            'constituency': self.request.GET.get('constituency'),
-            'sub_county': self.request.GET.get('sub_county'),
-            'county': self.request.GET.get('county')
-        }
-        return view_by, location_map
-
     @view_config(name='',
                  context=LocationFactory,
                  renderer='impact_indicators.jinja2',
