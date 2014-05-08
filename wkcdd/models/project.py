@@ -79,7 +79,7 @@ class Project(Base):
     def get_projects(self):
         return [self]
 
-    def url(self, request, route_name, query_params):
+    def url(self, request, route_name, query_params=None):
         return request.route_url(
             'projects', traverse=(self.id), _query=query_params)
 

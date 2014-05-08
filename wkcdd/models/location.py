@@ -42,7 +42,7 @@ class Location(Base):
     def children(self):
         return Location.all(Location.parent_id == self.id)
 
-    def url(self, request, route_name, query_params):
+    def url(self, request, route_name, query_params=None):
         return request.route_url(
             route_name, traverse=(self.id), _query=query_params)
 
