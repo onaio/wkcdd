@@ -327,7 +327,10 @@ class Report(Base):
             raise ValueError("No reports provided")
 
     @classmethod
-    def generate_performance_indicators(cls, collection, indicators):
+    def generate_performance_indicators(cls,
+                                        collection,
+                                        indicators,
+                                        *criteria):
         """
         Generate performance indicators for a given sector whose values are
         determined from the provided set of indicators
@@ -341,7 +344,7 @@ class Report(Base):
                 'indicators': {}
             }
             # get reports for this location or project,
-            projects = item.get_projects()
+            projects = item.get_projects(*criteria)
 
             # get project reports @todo: filtered by said period
             reports = cls.get_reports_for_projects(projects)

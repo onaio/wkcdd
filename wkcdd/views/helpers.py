@@ -2,7 +2,9 @@ import json
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
-from wkcdd.libs.utils import humanize
+from wkcdd.libs.utils import (
+    get_performance_indicator_list,
+    humanize)
 from wkcdd.models import (
     County,
     SubCounty,
@@ -193,10 +195,10 @@ def filter_projects_by(criteria):
     community_ids = []
     if "name" in criteria:
         project_criteria.append(
-            Project.name.ilike("%"+criteria['name']+"%"))
+            Project.name.ilike("%" + criteria['name'] + "%"))
     if "sector" in criteria:
         project_criteria.append(
-            Project.sector.like("%"+criteria['sector']+"%"))
+            Project.sector.like("%" + criteria['sector'] + "%"))
     if "location_map" in criteria:
         value = get_lowest_location_value(criteria['location_map'])
         if value:
@@ -470,3 +472,33 @@ def get_target_class_from_view_by(view_by, source_class=None):
         return source_class.get_child_class()
     else:
         return name_to_location_type(view_by)
+
+
+def get_performance_sector_mapping(sector=None):
+    """
+    Returns sector mapping containing the registration id, report_id
+    and label for display purposes
+    """
+    if sector:
+        return (
+            [(reg_id, report_id, label)
+             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING
+             if reg_id == sector])
+    else:
+        return (
+            [(reg_id, report_id, label)
+             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING])
+
+
+def get_sector_data(sector_id, report_id, child_locations):
+    indicators = get_performance_indicator_list(
+        constants.PERFORMANCE_INDICATORS[report_id])
+    # child locations should filter project by sector
+    project_filter_criteria = Project.sector == sector_id
+    rows, summary_row = Report.generate_performance_indicators(
+        child_locations, indicators, project_filter_criteria)
+
+    return {
+        'rows': rows,
+        'summary_row': summary_row
+    }

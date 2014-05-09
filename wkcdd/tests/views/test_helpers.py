@@ -20,8 +20,10 @@ from wkcdd.views.helpers import (
     get_project_geolocations,
     name_to_location_type,
     get_target_class_from_view_by,
+    get_sector_data,
+    get_performance_sector_mapping,
     PROJECT_LEVEL, COUNTIES_LEVEL, SUB_COUNTIES_LEVEL, CONSTITUENCIES_LEVEL,
-    COMMUNITIES_LEVEL, PROJECTS_LEVEL)
+    COMMUNITIES_LEVEL)
 from wkcdd import constants
 from wkcdd.models import (
     Location,
@@ -35,6 +37,7 @@ from wkcdd.models import (
 
 
 class TestHelpers(unittest.TestCase):
+
     def test_requested_xlsx_format(self):
         request = testing.DummyRequest()
         request.GET['format'] = 'xlsx'
@@ -72,6 +75,7 @@ class TestHelpers(unittest.TestCase):
 
 
 class TestBuildDatasetHelpers(TestBase):
+
     def test_build_dataset(self):
         self.setup_test_data()
         counties = County.all()
@@ -147,6 +151,7 @@ class TestBuildDatasetHelpers(TestBase):
 
 
 class TestProjectFilter(IntegrationTestBase):
+
     def test_filter_projects_by_name(self):
         self.setup_community_test_data()
         search_value = "Cow project 1"
@@ -261,6 +266,7 @@ class TestProjectFilter(IntegrationTestBase):
 
 
 class TestImpactIndicatorGeneration(TestBase):
+
     def test_generate_impact_indicators_for_none(self):
         self.setup_test_data()
         results = generate_impact_indicators_for(None)
@@ -348,6 +354,7 @@ class TestImpactIndicatorGeneration(TestBase):
 
 
 class TestPerformanceIndicatorGeneration(TestBase):
+
     def setup_location_map(self,
                            community='',
                            constituency='',
@@ -485,3 +492,23 @@ class TestPerformanceIndicatorGeneration(TestBase):
         self.assertIsNotNone(results['project_types'])
         projects_in_dataset = [row[4] for row in rows]
         self.assertEquals(projects_in_dataset, projects)
+
+    def test_get_sector_data_for_community_cow_projects(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        sector = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        reg_id, report_id, label = get_performance_sector_mapping(sector)[0]
+        results = get_sector_data(sector, report_id, [community])
+
+        self.assertEqual(len(results['rows']), 1)
+
+    def test_get_sector_data_for_cow_project(self):
+        self.setup_test_data()
+        project = Project.get(Project.code == "7CWA")
+        sector = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        reg_id, report_id, label = get_performance_sector_mapping(sector)[0]
+        results = get_sector_data(sector, report_id, [project])
+
+        self.assertEqual(len(results['rows']), 1)
+        summary_row = results['summary_row']
+        self.assertEqual(summary_row['exp_contribution'], 624800)

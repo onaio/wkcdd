@@ -76,8 +76,12 @@ class Project(Base):
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
         return sectors_dict[self.sector]
 
-    def get_projects(self):
-        return [self]
+    def get_projects(self, *criterion):
+        if criterion is not None:
+            project = Project.get(Project.id == self.id, *criterion)
+            return [project]
+        else:
+            return [self]
 
     def url(self, request, route_name, query_params=None):
         return request.route_url(

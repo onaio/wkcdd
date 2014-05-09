@@ -450,15 +450,16 @@ class TestReport(TestBase):
         indicators = utils.get_performance_indicator_list(
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
+        criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         rows, summary_row = Report.generate_performance_indicators(
-            locations, indicators)
+            locations, indicators, criteria)
         self.assertEqual(len(rows), 3)
 
-        self.assertEqual(summary_row['exp_contribution'], 859075)
+        self.assertEqual(summary_row['exp_contribution'], 680800)
         self.assertEqual(
-            summary_row['actual_contribution'], 944100)
+            summary_row['actual_contribution'], 721600)
         self.assertEqual(
-            summary_row['community_contribution'], 97.55555555555554)
+            summary_row['community_contribution'], 45.5)
 
     def test_generate_performance_indicators_for_legacy_data(self):
         self.setup_test_data()
@@ -466,8 +467,9 @@ class TestReport(TestBase):
         indicators = utils.get_performance_indicator_list(
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
+        criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         rows, summary_row = Report.generate_performance_indicators(
-            [community], indicators)
+            [community], indicators, criteria)
         self.assertEqual(len(rows), 1)
 
         self.assertEquals(

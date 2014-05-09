@@ -24,14 +24,14 @@ class Constituency(Location):
         from community import Community
         return Community
 
-    def get_projects(self):
+    def get_projects(self, *criterion):
         """
         Get the list of projects associated with this Constituency.
         """
         from wkcdd.models.helpers import (
             get_project_list, get_community_ids)
         return get_project_list(
-            get_community_ids([self.id]))
+            get_community_ids([self.id]), *criterion)
 
     def is_found_in(self, location):
         return self.id == location.id or self.sub_county.is_found_in(location)

@@ -24,12 +24,12 @@ class Community(Location):
         from project import Project
         return Project
 
-    def get_projects(self):
+    def get_projects(self, *criterion):
         """
         Get the list of projects associated with this Community.
         """
         from wkcdd.models.helpers import get_project_list
-        return get_project_list([self.id])
+        return get_project_list([self.id], *criterion)
 
     def is_found_in(self, location):
         return (self.id == location.id

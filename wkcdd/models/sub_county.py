@@ -6,7 +6,7 @@ class SubCounty(Location):
         'polymorphic_identity': Location.SUB_COUNTY
     }
 
-    def get_projects(self):
+    def get_projects(self, *criterion):
         """
         Get the list of projects associated with this county.
         """
@@ -14,7 +14,7 @@ class SubCounty(Location):
             get_project_list, get_community_ids, get_constituency_ids)
         return get_project_list(
             get_community_ids(
-                get_constituency_ids([self.id])))
+                get_constituency_ids([self.id])), *criterion)
 
     def is_found_in(self, location):
         return self.id == location.id or self.county.is_found_in(location)
