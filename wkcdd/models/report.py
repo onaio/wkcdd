@@ -348,11 +348,14 @@ class Report(Base):
 
             # get project reports @todo: filtered by said period
             reports = cls.get_reports_for_projects(projects)
-
             for indicator in indicators:
                 indicator_key = indicator['key']
                 indicator_property = indicator['property']
-                indicator_type = indicator['type']
+                try:
+                    indicator_type = indicator['type']
+                except Exception, e:
+                    import ipdb
+                    ipdb.set_trace()
                 try:
                     location_indicator_sum = (
                         cls.sum_performance_indicator_values(

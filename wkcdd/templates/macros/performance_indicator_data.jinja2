@@ -1,0 +1,12 @@
+{% macro performance_indicator_data(request, target, actual, percentage) %}
+    <td>
+    {% if target and percentage %}
+        {{ percentage | format_percent(request) }}
+        <span class="ratio">
+          {{ actual | format_value(request) }}/{{ target | format_value(request) }}
+        </span>
+    {% else %}
+        {{ actual }}
+    {% endif %}
+    </td>
+{% endmacro %}
