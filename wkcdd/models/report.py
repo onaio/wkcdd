@@ -303,14 +303,28 @@ class Report(Base):
         Calculate the sum and average for the specified indicator from the
         reports
         """
-        # add handling for keys which are lists
-        values = [r.report_data.get(indicator_key) for r in reports]
-        if indicator_type == 'ratio':
-            return reduce(
-                sum_reduce_func, values, 0) / len(reports)
+        values = []
+        # handle keys which are lists due to legacy form submissions
+        if reports:
+            try:
+                values = [r.report_data.get(indicator_key) for r in reports]
+            except TypeError:
+                for key in indicator_key:
+                    values.extend(
+                        [r.report_data.get(key) for r in reports])
+            finally:
+                if indicator_type == 'ratio':
+                    return (float(
+                            reduce(
+                                sum_reduce_func, values, 0))
+                            /
+                            float(
+                                len(reports)))
+                else:
+                    return reduce(
+                        sum_reduce_func, values, 0)
         else:
-            return reduce(
-                sum_reduce_func, values, 0)
+            raise ValueError("No reports provided")
 
     @classmethod
     def generate_performance_indicators(cls, collection, indicators):
@@ -319,7 +333,8 @@ class Report(Base):
         determined from the provided set of indicators
         """
         rows = []
-        summary_row = dict([(indicator['key'], 0) for indicator in indicators])
+        summary_row = dict([(indicator['property'], 0)
+                           for indicator in indicators])
         for item in collection:
             row = {
                 'location': item,
@@ -333,15 +348,30 @@ class Report(Base):
 
             for indicator in indicators:
                 indicator_key = indicator['key']
+                indicator_property = indicator['property']
                 indicator_type = indicator['type']
-                location_indicator_sum = cls.sum_performance_indicator_values(
-                    indicator_key, indicator_type, reports)
-                row['indicators'][indicator_key] = location_indicator_sum
+                try:
+                    location_indicator_sum = (
+                        cls.sum_performance_indicator_values(
+                            indicator_key, indicator_type, reports))
+                except ValueError:
+                    location_indicator_sum = 0
+
+                row['indicators'][indicator_property] = location_indicator_sum
 
                 # sum the summary
-                summary_row[indicator_key] += location_indicator_sum
+                summary_row[indicator_property] += location_indicator_sum
 
             # append row
             rows.append(row)
+
+        # get summary row averages for ratio fields
+        for indicator in indicators:
+            indicator_type = indicator['type']
+            indicator_property = indicator['property']
+
+            if indicator_type == 'ratio':
+                summary_row[indicator_property] = (
+                    summary_row[indicator_property] / len(collection))
 
         return rows, summary_row

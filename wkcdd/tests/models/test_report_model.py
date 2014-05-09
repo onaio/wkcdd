@@ -407,7 +407,8 @@ class TestReport(TestBase):
                 'perfomance_summary/exp_contribution': '123',
                 'perfomance_summary/actual_contribution': '120',
                 'perfomance_summary/community_contribution': '98',
-                'mproject_performance/dbirds_number': '15'
+                'mproject_performance/dbirds_number': '15',
+                'impact_information/db_percentage': '20'
             }
         ),
         Report(
@@ -415,7 +416,8 @@ class TestReport(TestBase):
                 'perfomance_summary/exp_contribution': '100',
                 'perfomance_summary/actual_contribution': '200',
                 'perfomance_summary/community_contribution': '100',
-                'mproject_performance/dbirds_number': '30'
+                'mproject_performance/dbirds_number': '30',
+                'mproject_performance/db_percentage': '18'
             }
         )
     ]
@@ -434,18 +436,45 @@ class TestReport(TestBase):
         self.assertEqual(indicator_sum_target, 223)
         self.assertEqual(indicator_ratio, 99)
 
+    def test_sum_performance_indicators_for_legacy_values(self):
+        indicator_ratio = Report.sum_performance_indicator_values(
+            ['impact_information/db_percentage',
+             'mproject_performance/db_percentage'],
+            'ratio',
+            self.performance_reports)
+        self.assertEqual(indicator_ratio, 19)
+
     def test_generate_performance_indicators(self):
         self.setup_test_data()
         locations = County.all()
         indicators = utils.get_performance_indicator_list(
-            constants.DAIRY_COWS_PROJECT_REPORT)
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
         rows, summary_row = Report.generate_performance_indicators(
             locations, indicators)
         self.assertEqual(len(rows), 3)
 
-        import ipdb
-        ipdb.set_trace()
+        self.assertEqual(summary_row['exp_contribution'], 859075)
+        self.assertEqual(
+            summary_row['actual_contribution'], 944100)
+        self.assertEqual(
+            summary_row['community_contribution'], 97.55555555555554)
 
-        self.assertEqual(summary_row['exp_contribution'], 0)
-        self.assertEqual(summary_row['actual_contribution'], 0)
-        self.assertEqual(summary_row['community_contribution'], 0)
+    def test_generate_performance_indicators_for_legacy_data(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        indicators = utils.get_performance_indicator_list(
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
+        rows, summary_row = Report.generate_performance_indicators(
+            [community], indicators)
+        self.assertEqual(len(rows), 1)
+
+        self.assertEquals(
+            summary_row['db_achievement'], 13)
+        self.assertEquals(
+            summary_row['mb_achievement'], 7)
+        self.assertEquals(
+            summary_row['fb_achievement'], 6)
+        self.assertEquals(
+            summary_row['vb_achievement'], 3)
