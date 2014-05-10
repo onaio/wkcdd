@@ -6,7 +6,7 @@
           {{ actual | format_value(request) }}/{{ target | format_value(request) }}
         </span>
     {% else %}
-        {{ actual }}
+        {{ actual | format_value(request) }}
     {% endif %}
     </td>
 {% endmacro %}
