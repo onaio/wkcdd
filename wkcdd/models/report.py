@@ -2,7 +2,6 @@
 from collections import defaultdict
 
 from wkcdd import constants
-from wkcdd.libs.utils import tuple_to_dict_list
 from wkcdd.models.project import Project
 
 from wkcdd.models.base import (
@@ -20,10 +19,6 @@ from sqlalchemy.dialects.postgresql import JSON
 from wkcdd.libs.utils import (
     get_impact_indicator_list,
     sum_reduce_func)
-from wkcdd.models.helpers import (
-    get_project_list,
-    get_community_ids_for,
-)
 
 
 class Report(Base):
@@ -69,180 +64,6 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_aggregated_impact_indicators(cls, project_list):
-        """
-        Returns a compiled list of impact or performance indicators from
-        the supplied project list.
-        returns {
-            'indicator_list': [
-                {
-                    'project_name': project_name_a,
-                    'project_code': project_code,
-                    'indicators': indicators_for_project_a
-                },
-                {
-                    'name': project_name_b
-                    'indicators': indicators_for_project_b
-                }
-            ],
-            'summary': {sum_of_all_individual_indicators}
-        }
-        """
-
-        indicator_list = []
-        summary = defaultdict(lambda: 0)
-        for project in project_list:
-            report = project.get_latest_report()
-            if report:
-                p_impact_indicators = (
-                    report.calculate_impact_indicators())
-                for key, value in p_impact_indicators.items():
-                    value = 0 if value is None else value
-                    summary[key] += int(value)
-                project_indicators_map = {
-                    'project_name': project.name,
-                    'project_id': project.id,
-                    'indicators': p_impact_indicators
-                }
-            else:
-                project_indicators_map = {
-                    'project_name': project.name,
-                    'project_id': project.id,
-                    'indicators': None
-                }
-            indicator_list.append(project_indicators_map)
-        return {
-            'indicator_list': indicator_list,
-            'summary': summary
-        }
-
-    @classmethod
-    def get_aggregated_performance_indicators(cls, project_list, project_type):
-        indicator_list = []
-        summary = defaultdict(int)
-        summary_report_count = 0
-        if project_list:
-            indicator_list = []
-            summary = defaultdict(int)
-            for project in project_list:
-                report = project.get_latest_report()
-                if report:
-                    p_impact_indicators = (
-                        report.calculate_performance_indicators())
-                    for key, value in p_impact_indicators.items():
-                        value = (0 if value is None or value == 'Infinity'
-                                 else value)
-                        summary[key] += int(value)
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': p_impact_indicators
-                    }
-                    summary_report_count += 1
-                else:
-                    project_indicators_map = {
-                        'project_name': project.name,
-                        'project_id': project.id,
-                        'indicators': None
-                    }
-                indicator_list.append(project_indicators_map)
-        if summary:
-            Report.average_performance_ratios(project_type,
-                                              summary,
-                                              summary_report_count)
-        return {
-            'indicator_list': indicator_list,
-            'summary': summary
-        }
-
-    @classmethod
-    def get_impact_indicator_aggregation_for(cls, child_locations):
-        impact_indicator_mapping = tuple_to_dict_list(
-            ('title', 'key'), constants.IMPACT_INDICATOR_REPORT)
-
-        impact_indicators = {}
-        total_indicator_summary = defaultdict(int)
-        for child_location in child_locations:
-            projects = Report.get_projects_from_location(child_location)
-            indicators = Report.get_aggregated_impact_indicators(projects)
-            impact_indicators[child_location.id] = indicators
-            for indicator in impact_indicator_mapping:
-                total_indicator_summary[indicator['key']] += (
-                    impact_indicators[child_location.id]
-                    ['summary'][indicator['key']])
-
-        return {
-            'aggregated_impact_indicators': impact_indicators,
-            'total_indicator_summary': total_indicator_summary
-        }
-
-    @classmethod
-    def get_projects_from_location(cls,
-                                   location,
-                                   *criteria):
-        community_ids = get_community_ids_for(type(location), [location.id])
-        projects = get_project_list(community_ids, *criteria)
-        return projects
-
-    @classmethod
-    def average_performance_ratios(cls,
-                                   report_type,
-                                   summary,
-                                   summary_report_count):
-        mapping = tuple_to_dict_list(
-            ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[report_type])
-        percentage_mapping = [indicator['group'][2]
-                              for indicator in mapping
-                              if indicator['group'][2]]
-        for field in percentage_mapping:
-            percent = (float(summary[field]) /
-                       float(summary_report_count))
-            summary[field] = percent
-
-    @classmethod
-    def get_performance_indicator_aggregation_for(cls,
-                                                  child_locations,
-                                                  report_type,
-                                                  location_type="All"):
-        mapping = tuple_to_dict_list(
-            ('title', 'group'),
-            constants.PERFORMANCE_INDICATOR_REPORTS[report_type])
-        project_type = [project_type for project_type, report_id, label in
-                        constants.PROJECT_TYPE_MAPPING
-                        if report_id == report_type][0]
-        performance_indicators = {}
-        total_indicator_summary = defaultdict(int)
-        location_count = len(child_locations)
-        project_list = []
-        for child_location in child_locations:
-            projects = Report.get_projects_from_location(
-                child_location,
-                (Project.sector == project_type))
-            project_list = project_list + projects
-            indicators = Report.get_aggregated_performance_indicators(
-                projects, report_type)
-            performance_indicators[child_location.id] = indicators
-            for indicator in mapping:
-                for field in indicator['group']:
-                    summary = (performance_indicators[child_location.id]
-                               ['summary'])
-                    if summary:
-                        value = summary.get(field) or 0
-                        total_indicator_summary[field] += value
-
-        if total_indicator_summary:
-            Report.average_performance_ratios(report_type,
-                                              total_indicator_summary,
-                                              location_count)
-
-        return {
-            'aggregated_performance_indicators': performance_indicators,
-            'total_indicator_summary': total_indicator_summary,
-            'project_list': project_list
-        }
-
-    @classmethod
     def get_reports_for_projects(cls, projects):
         """
         Get the reports for the specified list of projects.
@@ -281,17 +102,19 @@ class Report(Base):
             projects = item.get_projects()
 
             # get project reports @todo: filtered by said period
-            reports = cls.get_reports_for_projects(projects)
+            try:
+                reports = cls.get_reports_for_projects(projects)
 
-            for indicator in indicators:
-                indicator_key = indicator['key']
-                location_indicator_sum = cls.sum_impact_indicator_values(
-                    indicator_key, reports)
-                row['indicators'][indicator_key] = location_indicator_sum
+                for indicator in indicators:
+                    indicator_key = indicator['key']
+                    location_indicator_sum = cls.sum_impact_indicator_values(
+                        indicator_key, reports)
+                    row['indicators'][indicator_key] = location_indicator_sum
 
-                # sum the summary
-                summary_row[indicator_key] += location_indicator_sum
-
+                    # sum the summary
+                    summary_row[indicator_key] += location_indicator_sum
+            except ReportError:
+                pass
             # append row
             rows.append(row)
 
