@@ -57,14 +57,6 @@ def includeme(config):
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',
                      factory=ProjectFactory)
-    config.add_route('community', '/community/*traverse',
-                     factory=LocationFactory)
-    config.add_route('constituency', '/constituency/*traverse',
-                     factory=LocationFactory)
-    config.add_route('sub_county', '/sub_county/*traverse',
-                     factory=LocationFactory)
-    config.add_route('counties', '/counties/*traverse',
-                     factory=LocationFactory)
     config.add_route('impact_indicators', '/impact-indicators/*traverse',
                      factory=LocationFactory)
     config.add_route('performance_indicators',
