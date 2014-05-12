@@ -10,12 +10,12 @@
                 {{ label }} {% trans %}Projects{% endtrans %}
               </div>
               <span class="pull-right">
-                {% if location %}
+                {% if rows and location %}
                   <a href="{{ request.route_url('performance_indicators', traverse=(location.id),
                       _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
                       <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
                   </a>
-                {% else %}
+                {% elif rows %}
                   <a href="{{ request.route_url('performance_indicators', traverse=(),
                       _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
                       <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
@@ -23,55 +23,59 @@
                 {% endif %}
               </span>
             </div>
-            <div class="portlet-body">
-              <div class="table-responsive table-scrollable">
-                <table class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                  {% if target_class %}
-                    <th>{{target_class.__name__}}</th>
-                  {% else %}
-                    <th>{% trans %}County{% endtrans %}</th>
-                  {% endif %}
-                    {% for label, key_group in indicators %}
-                      <th class="data-header">{{ label }}</th>
-                    {% endfor %}
-                  </tr>
-                  </thead>
-
-                  <tbody>
-                  {% for row in rows %}
+            {% if rows %}
+              <div class="portlet-body">
+                <div class="table-responsive table-scrollable">
+                  <table class="table table-striped table-bordered table-hover">
+                    <thead>
                     <tr>
+                    {% if target_class %}
+                      <th>{{target_class.__name__}}</th>
+                    {% else %}
+                      <th>{% trans %}County{% endtrans %}</th>
+                    {% endif %}
+                      {% for label, key_group in indicators %}
+                        <th class="data-header">{{ label }}</th>
+                      {% endfor %}
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for row in rows %}
+                      <tr>
+                        <td>
+                          <a href="{{row.location.url(request, 'performance_indicators', {'sector': sector}) }}">{{ row.location.pretty }}</a>
+                        </td>
+                        {% for label, key_group in indicators %}
+
+                          {{ performance_indicator_data(request, row.indicators[key_group[0]],
+                                                        row.indicators[key_group[1]],
+                                                        row.indicators[key_group[2]]) }}
+
+                        {% endfor %}
+                      </tr>
+                    {% endfor %}
+
+                    <tr class="bold">
                       <td>
-                        <a href="{{row.location.url(request, 'performance_indicators', {'sector': sector}) }}">{{ row.location.pretty }}</a>
+                        {% trans %} Total Summary {% endtrans %}
                       </td>
                       {% for label, key_group in indicators %}
 
-                        {{ performance_indicator_data(request, row.indicators[key_group[0]],
-                                                      row.indicators[key_group[1]],
-                                                      row.indicators[key_group[2]]) }}
+                          {{ performance_indicator_data(request, summary_row[key_group[0]],
+                                                        summary_row[key_group[1]],
+                                                        summary_row[key_group[2]]) }}
 
                       {% endfor %}
                     </tr>
-                  {% endfor %}
 
-                  <tr class="bold">
-                    <td>
-                      {% trans %} Total Summary {% endtrans %}
-                    </td>
-                    {% for label, key_group in indicators %}
-
-                        {{ performance_indicator_data(request, summary_row[key_group[0]],
-                                                      summary_row[key_group[1]],
-                                                      summary_row[key_group[2]]) }}
-
-                    {% endfor %}
-                  </tr>
-
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            {% else %}
+              <div class="portlet-body"> {% trans %} No {{ label }} projects found {% endtrans %}</div>
+            {% endif %}
           </div>
           <!-- END SAMPLE TABLE PORTLET-->
         </div>
