@@ -50,7 +50,7 @@ class Report(Base):
         set_value = lambda value: (0 if value is None
                                    or value == 'Infinity'
                                    else value)
-        for key, performance_indicator_key\
+        for key, performance_indicator_key, indicator_type\
             in constants.PERFORMANCE_INDICATORS[self.report_data[
                 constants.XFORM_ID]]:
             if type(performance_indicator_key) == list:
