@@ -25,13 +25,6 @@
 
 {% block content %}
     <!-- Loop though the different sectors -->
-    <div>
-      {% if location %}
-        {{ location.pretty }} {{ location.location_type | humanize() | title()}}
-      {% else %}
-        {% trans %}All Counties{% endtrans %}
-      {% endif %}
-    </div>
     {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
     
     {% set selected_sector = search_criteria.selected_sector %}
