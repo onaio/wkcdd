@@ -336,8 +336,7 @@ class Report(Base):
         determined from the provided set of indicators
         """
         rows = []
-        summary_row = dict([(indicator['property'], 0)
-                           for indicator in indicators])
+        summary_row = defaultdict(int)
         for item in collection:
             row = {
                 'location': item,
@@ -353,9 +352,10 @@ class Report(Base):
                 indicator_property = indicator['property']
                 try:
                     indicator_type = indicator['type']
-                except Exception, e:
+                except Exception:
                     import ipdb
                     ipdb.set_trace()
+
                 try:
                     location_indicator_sum = (
                         cls.sum_performance_indicator_values(

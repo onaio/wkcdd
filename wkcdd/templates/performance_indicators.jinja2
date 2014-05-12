@@ -1,7 +1,8 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
-{% from 'macros/performance_indicator_data.jinja2' import  performance_indicator_data %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
+{% from 'macros/performance_indicator_table.jinja2' import performance_indicator_table %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 
 {% block title %}{% trans %}Performance Indicators{% endtrans %}{% endblock %}
@@ -23,7 +24,6 @@
 {% endblock %}
 
 {% block content %}
-    {{ generate_map_chart(request) }}
     <!-- Loop though the different sectors -->
     <div>
       {% if location %}
@@ -32,87 +32,29 @@
         {% trans %}All Counties{% endtrans %}
       {% endif %}
     </div>
-    {% for sector, report, label in sectors %}
+    {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
+    
+    {{ generate_map_chart(request) }}
+    
+    {% set selected_sector = search_criteria.selected_sector %}
+    
+    {% if selected_sector %}
+      {% set sector, label = selected_sector.sector, selected_sector.label %}
       {% set rows = sector_data[sector].rows %}
       {% set summary_row = sector_data[sector].summary_row %}
       {% set indicators = sector_indicators[sector] %}
-      <div class="row">
-        <div class="col-md-12">
-          <!-- BEGIN SAMPLE TABLE PORTLET-->
-          <div class="portlet">
-            <div class="portlet-title">
-              <div class="caption">
-                <i class="icon-tasks"></i>
-                {{ label }}
-              </div>
-              <span class="pull-right">
-                {% if location %}
-                  <a href="{{ request.route_url('performance_indicators', traverse=(location.id),
-                      _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
-                      <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
-                  </a>
-                {% else %}
-                  <a href="{{ request.route_url('performance_indicators', traverse=(),
-                      _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
-                      <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
-                  </a>
-                {% endif %}
-              </span>
-            </div>
-            <div class="portlet-body">
-              <div class="table-responsive table-scrollable">
-                <table class="table table-striped table-bordered table-hover">
-                  <thead>
-                  <tr>
-                  {% if target_class %}
-                    <th>{{target_class.__name__}}</th>
-                  {% else %}
-                    <th>{% trans %}County{% endtrans %}</th>
-                  {% endif %}
-                    {% for label, key_group in indicators %}
-                      <th class="data-header">{{ label }}</th>
-                    {% endfor %}
-                  </tr>
-                  </thead>
+      {{ performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria )}}
+    {% else %}
 
-                  <tbody>
-                  {% for row in rows %}
-                    <tr>
-                      <td>
-                        <a href="{{row.location.url(request, 'performance_indicators') }}">{{ row.location.pretty }}</a>
-                      </td>
-                      {% for label, key_group in indicators %}
+      {% for sector, report, label in sectors %}
 
-                        {{ performance_indicator_data(request, row.indicators[key_group[0]],
-                                                      row.indicators[key_group[1]],
-                                                      row.indicators[key_group[2]]) }}
+        {% set rows = sector_data[sector].rows %}
+        {% set summary_row = sector_data[sector].summary_row %}
+        {% set indicators = sector_indicators[sector] %}
+        {{ performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria )}}
 
-                      {% endfor %}
-                    </tr>
-                  {% endfor %}
-
-                  <tr class="bold">
-                    <td>
-                      {% trans %} Total Summary {% endtrans %}
-                    </td>
-                    {% for label, key_group in indicators %}
-
-                        {{ performance_indicator_data(request, summary_row[key_group[0]],
-                                                      summary_row[key_group[1]],
-                                                      summary_row[key_group[2]]) }}
-
-                    {% endfor %}
-                  </tr>
-
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- END SAMPLE TABLE PORTLET-->
-        </div>
-    </div>
-    {% endfor %}
+      {% endfor %}
+    {% endif%}
 
 {% endblock %}
 {% block page_scripts %}
