@@ -119,7 +119,7 @@ class TestReport(TestBase):
                 'impact_information/b_income': '2060',
                 'impact_information/b_improved_houses': '1220',
                 # simulate missing report
-                #'impact_information/b_hh_assets':,
+                # 'impact_information/b_hh_assets':,
                 'impact_information/no_children': '1400'
             }
         ),
