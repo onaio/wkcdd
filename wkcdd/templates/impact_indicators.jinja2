@@ -1,6 +1,7 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{% trans %}Impact Indicators{% endtrans %}{% endblock %}
 
@@ -21,6 +22,8 @@
 {% endblock %}
 
 {% block content %}
+  {{ add_indicator_links(request, location, search_criteria) }}
+
   {{ generate_map_chart(request) }}
   <div class="row">
     <div class="col-md-12">

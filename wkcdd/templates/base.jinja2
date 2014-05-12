@@ -130,9 +130,9 @@
 	  <ul class="nav-side">
 		<li class="start">
 			<a class="
-			    {%if request.path_info_peek() == 'performance_indicators' %}
+			    {%if request.matched_route.name == 'performance_indicators' %}
                     selected
-                {%elif request.path_info_peek() == 'impact_indicators' %}
+                {%elif request.matched_route.name == 'impact_indicators' %}
                     selected
                 {%endif%}"
                 href="{{ request.route_url('performance_indicators', traverse=('')) }}">

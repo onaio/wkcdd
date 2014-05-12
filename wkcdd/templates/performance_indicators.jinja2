@@ -1,6 +1,7 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
 {% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
 {% from 'macros/performance_indicator_table.jinja2' import performance_indicator_table %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
@@ -25,6 +26,8 @@
 
 {% block content %}
     <!-- Loop though the different sectors -->
+    {{ add_indicator_links(request, location, search_criteria) }}
+
     {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
     
     {% set selected_sector = search_criteria.selected_sector %}
