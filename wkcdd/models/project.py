@@ -78,8 +78,12 @@ class Project(Base):
 
     def get_projects(self, *criterion):
         if criterion is not None:
-            project = Project.get(Project.id == self.id, *criterion)
-            return [project]
+            try:
+                project = Project.get(Project.id == self.id, *criterion)
+                return [project]
+            except NoResultFound:
+                return None
+
         else:
             return [self]
 

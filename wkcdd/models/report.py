@@ -247,10 +247,13 @@ class Report(Base):
         """
         Get the reports for the specified list of projects.
         """
-        return DBSession.query(Report)\
-            .join(Project, Report.project_code == Project.code)\
-            .filter(Project.id.in_([p.id for p in projects]))\
-            .all()
+        if projects:
+            return DBSession.query(Report)\
+                .join(Project, Report.project_code == Project.code)\
+                .filter(Project.id.in_([p.id for p in projects]))\
+                .all()
+        else:
+            raise ReportError("No projects provided")
 
     @classmethod
     def sum_impact_indicator_values(cls, indicator_key, reports):
@@ -338,38 +341,39 @@ class Report(Base):
         rows = []
         summary_row = defaultdict(int)
         for item in collection:
-            row = {
-                'location': item,
-                'indicators': {}
-            }
-            # get reports for this location or project,
-            projects = item.get_projects(*criteria)
+            try:
+                row = {
+                    'location': item,
+                    'indicators': {}
+                }
+                # get reports for this location or project,
+                projects = item.get_projects(*criteria)
+                # get project reports @todo: filtered by said period
+                reports = cls.get_reports_for_projects(projects)
 
-            # get project reports @todo: filtered by said period
-            reports = cls.get_reports_for_projects(projects)
-            for indicator in indicators:
-                indicator_key = indicator['key']
-                indicator_property = indicator['property']
-                try:
+                for indicator in indicators:
+                    indicator_key = indicator['key']
+                    indicator_property = indicator['property']
                     indicator_type = indicator['type']
-                except Exception:
-                    import ipdb
-                    ipdb.set_trace()
 
-                try:
-                    location_indicator_sum = (
-                        cls.sum_performance_indicator_values(
-                            indicator_key, indicator_type, reports))
-                except ValueError:
-                    location_indicator_sum = 0
+                    try:
+                        location_indicator_sum = (
+                            cls.sum_performance_indicator_values(
+                                indicator_key, indicator_type, reports))
+                    except ValueError:
+                        location_indicator_sum = 0
 
-                row['indicators'][indicator_property] = location_indicator_sum
+                    row['indicators'][
+                        indicator_property] = location_indicator_sum
 
-                # sum the summary
-                summary_row[indicator_property] += location_indicator_sum
+                    # sum the summary
+                    summary_row[indicator_property] += location_indicator_sum
 
-            # append row
-            rows.append(row)
+                # append row
+                rows.append(row)
+            except ReportError:
+                # Catch case where there are no projects matching the criteria
+                pass
 
         # get summary row averages for ratio fields
         for indicator in indicators:
@@ -381,3 +385,7 @@ class Report(Base):
                     summary_row[indicator_property] / len(collection))
 
         return rows, summary_row
+
+
+class ReportError(Exception):
+    pass

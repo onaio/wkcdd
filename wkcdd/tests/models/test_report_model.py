@@ -453,7 +453,7 @@ class TestReport(TestBase):
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         rows, summary_row = Report.generate_performance_indicators(
             locations, indicators, criteria)
-        self.assertEqual(len(rows), 3)
+        self.assertEqual(len(rows), 1)
 
         self.assertEqual(summary_row['exp_contribution'], 680800)
         self.assertEqual(

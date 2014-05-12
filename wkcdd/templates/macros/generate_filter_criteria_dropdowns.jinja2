@@ -20,7 +20,7 @@
 	      <option value="">All Communities</option>
 	       {{ filter_criteria_options(request, filter_criteria, search_criteria, "communities", "community" ) }}
 	    </select>
-	    <input type="hidden" name="sector" value="{{search_criteria.selected_sector.sector}}">
+	    <input type="hidden" name="sector" value="{{ search_criteria.selected_sector.sector if search_criteria.selected_sector else '' }}">
 	</div>
 	
 	<div class="col-md-4">
