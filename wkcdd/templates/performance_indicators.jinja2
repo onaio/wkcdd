@@ -34,11 +34,12 @@
     </div>
     {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
     
-    {{ generate_map_chart(request) }}
-    
     {% set selected_sector = search_criteria.selected_sector %}
     
     {% if selected_sector %}
+      <!-- Show map chart if only one sector is selected -->
+      {{ generate_map_chart(request) }}
+
       {% set sector, label = selected_sector.sector, selected_sector.label %}
       {% set rows = sector_data[sector].rows %}
       {% set summary_row = sector_data[sector].summary_row %}
