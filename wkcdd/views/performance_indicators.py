@@ -37,7 +37,7 @@ class PerformanceIndicators(object):
         sector_indicators = {}
         selected_sector = {}
 
-        if view_by is None:
+        if view_by is None or 'counties':
             child_locations = County.all()
         else:
             location_ids = [c.id for c in County.all()]

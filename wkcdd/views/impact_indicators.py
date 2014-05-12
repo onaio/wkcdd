@@ -31,7 +31,7 @@ class ImpactIndicators(object):
         source_class = County
         target_class = None
 
-        if view_by is None:
+        if view_by is None or 'counties':
             child_locations = County.all()
         else:
             location_ids = [c.id for c in County.all()]

@@ -76,7 +76,7 @@ var Custom = function () {
             });
         },
 
-        addFilterFormAction = function(form) {
+        addFilterFormAction = function(form, default_url) {
             form_action = null
             county_url = $('select[name=county]').find(":selected").attr('url');
             sub_county_url = $('select[name=sub_county]').find(":selected").attr('url');
@@ -92,7 +92,10 @@ var Custom = function () {
                 form_action = sub_county_url;
             } else if (county_url !== undefined) {
                 form_action = county_url;
-            };
+            }else {
+                form_action = default_url
+            }
+
             //load the form action
             $(form).attr('action', form_action);
             $(form).submit();

@@ -6,7 +6,7 @@
         {%if selected_location and selected_location.is_found_in(location) %}
             selected
         {%endif%}
-        url="{{ request.current_route_url(traverse=(location.id)) }}"
+        url="{{ request.route_url(request.matched_route.name, traverse=(location.id)) }}"
         >
         {{ location.pretty }}
     </option>
