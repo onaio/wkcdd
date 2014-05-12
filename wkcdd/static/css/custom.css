@@ -29,6 +29,10 @@
 	z-index:1001!important;
 }
 
+.dropdown-menu li > a {
+    padding-right: 10px;
+}
+
 .breadcrumb>li, 
 .breadcrumb>li>a
 {
