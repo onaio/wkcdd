@@ -132,10 +132,11 @@ def get_sector_data(sector_id, report_id, child_locations):
         constants.PERFORMANCE_INDICATORS[report_id])
     # child locations should filter project by sector
     project_filter_criteria = Project.sector == sector_id
-    rows, summary_row = Report.generate_performance_indicators(
+    rows, summary_row, projects = Report.generate_performance_indicators(
         child_locations, indicators, project_filter_criteria)
 
     return {
         'rows': rows,
-        'summary_row': summary_row
+        'summary_row': summary_row,
+        'projects': projects
     }

@@ -62,8 +62,10 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
-        rows, summary_row = Report.generate_performance_indicators(
+        rows, summary_row, projects = Report.generate_performance_indicators(
             [project], indicators, criteria)
+
+        self.assertIn(project, projects)
         self.assertEquals(
             summary_row['exp_contribution'], 56000)
         self.assertEquals(
@@ -90,8 +92,10 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_GOAT_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION
-        rows, summary_row = Report.generate_performance_indicators(
+        rows, summary_row, projects = Report.generate_performance_indicators(
             [project], indicators, criteria)
+
+        self.assertIn(project, projects)
         self.assertEquals(
             summary_row['exp_contribution'], 136275)
         self.assertEquals(
@@ -228,7 +232,7 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
-        rows, summary_row = Report.generate_performance_indicators(
+        rows, summary_row, projects = Report.generate_performance_indicators(
             locations, indicators, criteria)
         self.assertEqual(len(rows), 1)
 
@@ -245,7 +249,7 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
-        rows, summary_row = Report.generate_performance_indicators(
+        rows, summary_row, projects = Report.generate_performance_indicators(
             [community], indicators, criteria)
         self.assertEqual(len(rows), 1)
 
