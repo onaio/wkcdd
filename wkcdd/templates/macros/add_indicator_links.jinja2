@@ -1,55 +1,30 @@
-{% macro add_indicator_links(request, location_type, location, page) %}
-<div class="row nav-holder indicator_links">
-    <ul class="nav nav-tabs indicator_tabs">
-    {% if location %}
-        <li class="indicator_list">
-            <a href="{{ request.route_url(location_type,traverse=(location.id, 'performance')) }}"
-            {% if page == 'performance'%}
-                    class="selected" >
-            {% else %}
-                    >
-            {% endif %}
-            {% trans %} Performance {% endtrans %}
-            </a>
-        </li>
-        <li class="indicator_list">
-            <a href="{{ request.route_url(location_type,traverse=(location.id)) }}"
-            {% if page == 'impact' %}
-                    class="selected" >
-            {% else %}
-                    >
-            {% endif %}
-            {% trans %} Impact {% endtrans %}
-            </a>
-        </li>
-        <li class="indicator_list">
-            <a href="#">{% trans %} Result Framework {% endtrans %}</a>
-        </li>
-    {% else %}
-        <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=('performance_summary')) }}"
-            {% if page == 'performance'%}
-                    class="selected" >
-            {% else %}
-                    >
-            {% endif %}
-            {% trans %} Performance {% endtrans %}
-            </a>
-        </li>
-        <li class="indicator_list">
-            <a href="{{ request.route_url('counties',traverse=()) }}"
-            {% if page == 'impact' %}
-                    class="selected" >
-            {% else %}
-                    >
-            {% endif %}
-            {% trans %} Impact {% endtrans %}
-            </a>
-        </li>
-        <li class="indicator_list">
-            <a href="#">{% trans %} Result Framework {% endtrans %}</a>
-        </li>
-    {% endif %}
-    </ul>
-</div>
+{% macro add_indicator_links(request, location, search_criteria) %}
+    <div class="row nav-holder indicator_links">
+        <ul class="nav nav-tabs indicator_tabs">
+            {% set id = location.id if location else '' %}
+            <li class="indicator_list">
+                <a href="{{ request.route_url('performance_indicators',traverse=(id), _query={'view_by': search_criteria.view_by}) }}"
+                {% if request.matched_route.name == 'performance_indicators'%}
+                        class="selected" >
+                {% else %}
+                        >
+                {% endif %}
+                {% trans %} Performance {% endtrans %}
+                </a>
+            </li>
+            <li class="indicator_list">
+                <a href="{{ request.route_url('impact_indicators',traverse=(id), _query={'view_by': search_criteria.view_by}) }}"
+                {% if request.matched_route.name == 'impact_indicators' %}
+                        class="selected" >
+                {% else %}
+                        >
+                {% endif %}
+                {% trans %} Impact {% endtrans %}
+                </a>
+            </li>
+            <li class="indicator_list">
+                <a href="#">{% trans %} Result Framework {% endtrans %}</a>
+            </li>
+        </ul>
+    </div>
 {% endmacro %}

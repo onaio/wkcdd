@@ -1,0 +1,113 @@
+{% extends 'base.jinja2' %}
+{% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
+{% block title %}{% trans %}Impact Indicators{% endtrans %}{% endblock %}
+
+{% block page_title %}
+  <h3 class="page-title">
+    {{ self.title() }}
+    <small></small>
+  </h3>
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li>{{ self.title() }}</li>
+  <li><a href="#"> </a></li>
+{% endblock %}
+
+{% block filters %}
+     {{ generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) }}
+{% endblock %}
+
+{% block content %}
+  {{ add_indicator_links(request, location, search_criteria) }}
+
+  {{ generate_map_chart(request) }}
+  <div class="row">
+    <div class="col-md-12">
+      <!-- BEGIN SAMPLE TABLE PORTLET-->
+      <div class="portlet">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="icon-tasks"></i>
+            {% if location %}
+              {{ location.pretty }} {{ location.location_type | humanize() | title()}}
+            {% else %}
+              {% trans %}All Counties{% endtrans %}
+            {% endif %}
+          </div>
+          <span class="pull-right">
+            {% if location %}
+              <a href="{{ request.route_url('impact_indicators', traverse=(location.id),
+                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                  <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+              </a>
+            {% else %}
+              <a href="{{ request.route_url('impact_indicators', traverse=(),
+                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                  <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+              </a>
+            {% endif %}
+          </span>
+        </div>
+        <div class="portlet-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+              <tr>
+              {% if target_class %}
+                <th>{{target_class.__name__}}</th>
+              {% else %}
+                <th>{% trans %}County{% endtrans %}</th>
+              {% endif %}
+                {% for indicator in indicators %}
+                  <th>{{ indicator.label }}</th>
+                {% endfor %}
+              </tr>
+              </thead>
+
+              <tbody>
+              {% for row in rows %}
+                <tr>
+                  <td>
+                    <a href="{{row.location.url(request, 'impact_indicators') }}">{{ row.location.pretty }}</a>
+                  </td>
+                  {% for indicator in indicators %}
+                    <td>{{ row.indicators[indicator.key] }}</td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+
+              <tr class="bold">
+                <td>
+                  {% trans %} Total Summary {% endtrans %}
+                </td>
+                {% for indicator in indicators %}
+                  <td>{{ summary_row[indicator.key] }}</td>
+                {% endfor %}
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END SAMPLE TABLE PORTLET-->
+    </div>
+  </div>
+{% endblock %}
+{% block page_scripts %}
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+  {{ super() }}
+  map = Custom.display_constituency_map();
+  
+  location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+  LocationSelect.data_map = location_json_data;
+  LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
+
+  {{ update_selected_location_dropdowns(search_criteria) }}
+{% endblock %}

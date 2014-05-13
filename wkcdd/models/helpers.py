@@ -40,6 +40,15 @@ def get_project_list(community_ids, *criterion):
         .all()
 
 
+def get_project_ids(community_ids, *criterion):
+    projects = DBSession.query(Project)\
+        .filter(and_(Project.community_id.in_(community_ids),
+                *criterion))\
+        .all()
+    return [] \
+        if not community_ids else [p.id for p in projects]
+
+
 def get_project_types(community_ids, *criterion):
     if community_ids:
         registration_ids = [p.sector for p in
@@ -47,7 +56,7 @@ def get_project_types(community_ids, *criterion):
                                 and_(
                                     Project.community_id.in_(community_ids),
                                     *criterion)).group_by(
-                                        Project.sector).all()]
+                                Project.sector).all()]
         return [(reg_id, report_id, label)
                 for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING
                 if reg_id in registration_ids]
@@ -67,3 +76,15 @@ def get_community_ids_for(location_type, location_ids):
                                    (location_ids)))
     }[location_type]
     return community_ids
+
+
+def get_children_by_level(location_ids, source_klass, target_klass):
+    if source_klass.get_rank() < target_klass.get_rank():
+        children_klass, child_ids = source_klass.get_child_ids(location_ids)
+        if children_klass != target_klass:
+            child_ids = get_children_by_level(
+                child_ids, children_klass, target_klass)
+        return child_ids
+    else:
+        raise ValueError(
+            "Target class cannot be of a greater rank than the source class")

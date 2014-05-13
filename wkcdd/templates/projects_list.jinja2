@@ -86,7 +86,7 @@
                <tbody>
                {% for project in projects %}
                   <tr>
-                     <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
+                     <td><a href="{{ request.route_url('projects', traverse=(project.id)) }}">{{ project.name }}</a></td>
                      <td>{{ project.sector_name }}</td>
                      <td>{{ locations[project.id][0].pretty}}</td>
                      <td>{{ locations[project.id][1].pretty}}</td>

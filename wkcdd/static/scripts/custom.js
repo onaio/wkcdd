@@ -76,6 +76,31 @@ var Custom = function () {
             });
         },
 
+        addFilterFormAction = function(form, default_url) {
+            form_action = null
+            county_url = $('select[name=county]').find(":selected").attr('url');
+            sub_county_url = $('select[name=sub_county]').find(":selected").attr('url');
+            constituency_url = $('select[name=constituency]').find(":selected").attr('url');
+            community_url = $('select[name=community]').find(":selected").attr('url');
+            view_by = $('select[name=view_by]').val()
+
+            if(community_url !== undefined) {
+                form_action = community_url;
+            } else if(constituency_url !== undefined) {
+                form_action = constituency_url;
+            } else if (sub_county_url !== undefined) {
+                form_action = sub_county_url;
+            } else if (county_url !== undefined) {
+                form_action = county_url;
+            }else {
+                form_action = default_url
+            }
+
+            //load the form action
+            $(form).attr('action', form_action);
+            $(form).submit();
+        },
+
         init = function(){
         };
 
@@ -87,7 +112,8 @@ var Custom = function () {
         display_constituency_map: display_constituency_map,
         display_county_map: display_county_map,
         searchProjectsTable: searchProjectsTable,
-        process_raw_points: process_raw_points
+        process_raw_points: process_raw_points,
+        addFilterFormAction: addFilterFormAction
     };
 
 }();
@@ -108,17 +134,21 @@ var LocationSelect = function() {
             return filtered_location_list;
         },
         update_select = function(select, options, default_value) {
-            optionList = [];
-            default_option = $('<option />', {
-                text: default_value,
-                value: ""
-            });
+            // TODO Instead of creating new elements all the time, 
+            // Cache them and just loop over them
+            var url_root = this.url,
+                optionList = [],
+                default_option = $('<option />', {
+                    text: default_value,
+                    value: ""
+                });
             optionList.push(default_option);
 
             $.each(options, function(idx, elem){
                 option = $('<option />', {
                     text: elem.name,
-                    value: elem.id
+                    value: elem.id,
+                    url: url_root + elem.id
                 });
                 optionList.push(option);
             });
@@ -288,6 +318,7 @@ var LocationSelect = function() {
         };
 
     this.data_map = {};
+    this.url = '';
     this.view_by = $('select[name=view_by]').clone();
     this.get_filtered_location_list = get_filtered_location_list;
     this.level0ChangeListener = level0ChangeListener;
