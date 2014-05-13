@@ -261,3 +261,60 @@ class TestReport(TestBase):
             summary_row['fb_achievement'], 6)
         self.assertEquals(
             summary_row['vb_achievement'], 3)
+
+    def test_get_reports_for_projects_with_period_and_quarter(self):
+        self.setup_report_period_test_data()
+        project = Project.get(Project.code == "7CWA")
+        period = '2013_14'
+        quarter = 'q_4'
+        report = Report.get(
+            Report.period == period,
+            Report.quarter == quarter)
+
+        # Test when quarter is q_4 2013_14
+        period_criteria = Report.period == period
+        quarter_criteria = Report.quarter == quarter
+        criteria = [period_criteria, quarter_criteria]
+
+        reports = Report.get_reports_for_projects([project], *criteria)
+
+        self.assertEqual(len(reports), 1)
+        self.assertIn(report, reports)
+
+        # Test when quarter is q_1 2013_14
+        quarter = 'q_1'
+        period_criteria = Report.period == period
+        quarter_criteria = Report.quarter == quarter
+        criteria = [period_criteria, quarter_criteria]
+        reports = Report.get_reports_for_projects([project], *criteria)
+
+        self.assertEqual(len(reports), 0)
+
+    def test_get_reports_for_projects_with_period_and_year(self):
+        self.setup_report_period_test_data()
+        project = Project.get(Project.code == "7CWA")
+        period = '2013_14'
+        month = '8'
+        report = Report.get(
+            Report.period == period,
+            Report.month == month)
+
+        # Test when month is Aug(8) 2013_14
+
+        period_criteria = Report.period == period
+        quarter_criteria = Report.month == month
+        criteria = [period_criteria, quarter_criteria]
+
+        reports = Report.get_reports_for_projects([project], *criteria)
+
+        self.assertEqual(len(reports), 1)
+        self.assertIn(report, reports)
+
+        # Test when month is Jan(1) 2013_14
+
+        month = '1'
+        period_criteria = Report.period == period
+        quarter_criteria = Report.month == month
+        criteria = [period_criteria, quarter_criteria]
+        reports = Report.get_reports_for_projects([project], *criteria)
+        self.assertEqual(len(reports), 0)

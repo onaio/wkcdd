@@ -64,14 +64,16 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_reports_for_projects(cls, projects):
+    def get_reports_for_projects(cls, projects, *criteria):
         """
-        Get the reports for the specified list of projects.
+        Get the reports for the specified list of projects based on the
+        specified time period
         """
         if projects:
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
                 .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(*criteria)\
                 .all()
         else:
             raise ReportError("No projects provided")
