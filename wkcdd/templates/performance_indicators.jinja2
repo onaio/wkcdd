@@ -6,6 +6,8 @@
 {% from 'macros/performance_indicator_table.jinja2' import performance_indicator_table %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 
+{% set selected_sector = search_criteria.selected_sector %}
+
 {% block title %}{% trans %}Performance Indicators{% endtrans %}{% endblock %}
 
 {% block page_title %}
@@ -29,8 +31,6 @@
     {{ add_indicator_links(request, location, search_criteria) }}
 
     {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
-    
-    {% set selected_sector = search_criteria.selected_sector %}
     
     {% if selected_sector %}
       <!-- Show map chart if only one sector is selected -->
@@ -63,7 +63,12 @@
   
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
-  LocationSelect.url = '{{ request.route_path('performance_indicators', traverse=()) }}'
+  LocationSelect.url = '{{ request.route_path('performance_indicators', traverse=()) }}';
+
+  {% if selected_sector %}
+    {% set sector = selected_sector.sector %}
+    Custom.process_raw_points({{ sector_data[sector].project_geopoints|safe() }}, map);
+  {% endif %}
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}    
