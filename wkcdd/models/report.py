@@ -162,6 +162,7 @@ class Report(Base):
         determined from the provided set of indicators
         """
         rows = []
+        sector_projects = []
         summary_row = defaultdict(int)
         for item in collection:
             try:
@@ -173,6 +174,9 @@ class Report(Base):
                 projects = item.get_projects(*criteria)
                 # get project reports @todo: filtered by said period
                 reports = cls.get_reports_for_projects(projects)
+
+                # populate project's list for rendering on map
+                sector_projects.extend(projects)
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
@@ -207,7 +211,7 @@ class Report(Base):
                 summary_row[indicator_property] = (
                     summary_row[indicator_property] / len(collection))
 
-        return rows, summary_row
+        return rows, summary_row, sector_projects
 
 
 class ReportError(Exception):

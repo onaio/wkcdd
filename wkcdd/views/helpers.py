@@ -71,7 +71,7 @@ def get_project_geolocations(projects):
     """
     project_geopoints = [
         {'id': project.id,
-         'name': project.name,
+         'name': project.name.title(),
          'sector': project.sector_name,
          'lat': str(project.latlong[0]),
          'lng': str(project.latlong[1])}
@@ -132,10 +132,13 @@ def get_sector_data(sector_id, report_id, child_locations):
         constants.PERFORMANCE_INDICATORS[report_id])
     # child locations should filter project by sector
     project_filter_criteria = Project.sector == sector_id
-    rows, summary_row = Report.generate_performance_indicators(
+    rows, summary_row, projects = Report.generate_performance_indicators(
         child_locations, indicators, project_filter_criteria)
 
+    # generate project_geopoints from project list
+    project_geopoints = get_project_geolocations(projects)
     return {
         'rows': rows,
-        'summary_row': summary_row
+        'summary_row': summary_row,
+        'project_geopoints': project_geopoints
     }

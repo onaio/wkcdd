@@ -1,4 +1,3 @@
-import json
 from collections import defaultdict
 from pyramid.view import (
     view_config,
@@ -17,7 +16,9 @@ from wkcdd import constants
 from wkcdd.libs.utils import (
     tuple_to_dict_list,
     get_impact_indicator_list)
-from wkcdd.views.helpers import filter_projects_by
+from wkcdd.views.helpers import (
+    filter_projects_by,
+    get_project_geolocations)
 
 
 @view_defaults(route_name='projects')
@@ -57,15 +58,7 @@ class ProjectViews(object):
         locations = Project.get_locations(projects)
         # get filter criteria
         filter_criteria = Project.generate_filter_criteria()
-        project_geopoints = [
-            {'id': project.id,
-             'name': project.name,
-             'sector': project.sector_name,
-             'lat': str(project.latlong[0]),
-             'lng': str(project.latlong[1])}
-            for project in projects
-            if project.latlong]
-        project_geopoints = json.dumps(project_geopoints)
+        project_geopoints = get_project_geolocations(projects)
         return {
             'project_types': project_types,
             'projects': projects,
