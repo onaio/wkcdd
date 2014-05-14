@@ -64,6 +64,15 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
+    def get_year_periods(cls):
+        results = DBSession.query(Report)\
+            .distinct(Report.period)\
+            .order_by(Report.period)\
+            .all()
+        year_periods = [r.period for r in results]
+        return year_periods
+
+    @classmethod
     def get_reports_for_projects(cls, projects, *criteria):
         """
         Get the reports for the specified list of projects based on the
