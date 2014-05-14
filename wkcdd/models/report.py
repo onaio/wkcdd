@@ -159,7 +159,7 @@ class Report(Base):
     def generate_performance_indicators(cls,
                                         collection,
                                         indicators,
-                                        *criteria):
+                                        **kwargs):
         """
         Generate performance indicators for a given sector whose values are
         determined from the provided set of indicators
@@ -174,9 +174,15 @@ class Report(Base):
                     'indicators': {}
                 }
                 # get reports for this location or project,
-                projects = item.get_projects(*criteria)
-                # get project reports @todo: filtered by said period
-                reports = cls.get_reports_for_projects(projects)
+                project_filter_criteria = kwargs.get(
+                    'project_filter_criteria', [])
+                projects = item.get_projects(project_filter_criteria)
+
+                # filter reports by period
+                period_criteria = kwargs.get('period_criteria', [])
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    *period_criteria)
 
                 # populate project's list for rendering on map
                 sector_projects.extend(projects)

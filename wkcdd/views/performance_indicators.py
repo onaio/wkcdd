@@ -9,7 +9,8 @@ from wkcdd.models.helpers import get_children_by_level
 from wkcdd.views.helpers import (
     get_sector_data,
     get_performance_sector_mapping,
-    get_target_class_from_view_by)
+    get_target_class_from_view_by,
+    build_report_period_criteria)
 from wkcdd.models import (
     County,
     Project,
@@ -29,6 +30,9 @@ class PerformanceIndicators(object):
     def index(self):
         view_by = self.request.GET.get('view_by') or None
         sector = self.request.GET.get('sector') or None
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
+
         source_class = County
         target_class = None
         sectors = get_performance_sector_mapping()
@@ -48,10 +52,12 @@ class PerformanceIndicators(object):
 
             child_locations = target_class.all(target_class.id.in_(child_ids))
 
-        # retrieve list of project sectors for the list of locations
+        # generate report period criteria
+        criteria = build_report_period_criteria(month_or_quarter, period)
 
         # create a dict mapping to "property, key and type" based on
         # a selected sector or the first sector on the list
+
         if sector:
             # if the specified sector is not in location sector types
             # load all sectors
@@ -59,7 +65,8 @@ class PerformanceIndicators(object):
                 sector)[0]
             sector_data[sector] = get_sector_data(reg_id,
                                                   report_id,
-                                                  child_locations)
+                                                  child_locations,
+                                                  *criteria)
             sector_indicators[reg_id] = (
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
             selected_sector['sector'] = reg_id
@@ -70,7 +77,8 @@ class PerformanceIndicators(object):
             for reg_id, report_id, title in sectors:
                 sector_data[reg_id] = get_sector_data(reg_id,
                                                       report_id,
-                                                      child_locations)
+                                                      child_locations,
+                                                      *criteria)
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
@@ -97,6 +105,9 @@ class PerformanceIndicators(object):
     def show(self):
         view_by = self.request.GET.get('view_by') or None
         sector = self.request.GET.get('sector') or None
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
+
         location = self.request.context
         source_class = location.__class__
         location_ids = [location.id]
@@ -114,6 +125,9 @@ class PerformanceIndicators(object):
 
         child_locations = target_class.all(target_class.id.in_(child_ids))
 
+        # generate report period criteria
+        criteria = build_report_period_criteria(month_or_quarter, period)
+
         # create a dict mapping to "property, key and type" based on
         # a selected sector or the first sector on the list
         if sector:
@@ -123,7 +137,8 @@ class PerformanceIndicators(object):
                 sector)[0]
             sector_data[sector] = get_sector_data(reg_id,
                                                   report_id,
-                                                  child_locations)
+                                                  child_locations,
+                                                  *criteria)
             sector_indicators[reg_id] = (
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
@@ -135,7 +150,8 @@ class PerformanceIndicators(object):
             for reg_id, report_id, title in sectors:
                 sector_data[reg_id] = get_sector_data(reg_id,
                                                       report_id,
-                                                      child_locations)
+                                                      child_locations,
+                                                      *criteria)
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 

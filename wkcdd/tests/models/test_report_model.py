@@ -62,8 +62,9 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
+        kwargs = {'project_filter_criteria': criteria}
         rows, summary_row, projects = Report.generate_performance_indicators(
-            [project], indicators, criteria)
+            [project], indicators, **kwargs)
 
         self.assertIn(project, projects)
         self.assertEquals(
@@ -92,8 +93,9 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_GOAT_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION
+        kwargs = {'project_filter_criteria': criteria}
         rows, summary_row, projects = Report.generate_performance_indicators(
-            [project], indicators, criteria)
+            [project], indicators, **kwargs)
 
         self.assertIn(project, projects)
         self.assertEquals(
@@ -232,8 +234,9 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
+        kwargs = {'project_filter_criteria': criteria}
         rows, summary_row, projects = Report.generate_performance_indicators(
-            locations, indicators, criteria)
+            locations, indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
         self.assertEqual(summary_row['exp_contribution'], 680800)
@@ -249,8 +252,9 @@ class TestReport(TestBase):
             constants.PERFORMANCE_INDICATORS[
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
+        kwargs = {'project_filter_criteria': criteria}
         rows, summary_row, projects = Report.generate_performance_indicators(
-            [community], indicators, criteria)
+            [community], indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
         self.assertEquals(
@@ -318,3 +322,34 @@ class TestReport(TestBase):
         criteria = [period_criteria, quarter_criteria]
         reports = Report.get_reports_for_projects([project], *criteria)
         self.assertEqual(len(reports), 0)
+
+    def test_generate_performance_indicators_with_period(self):
+        self.setup_report_period_test_data()
+        project = Project.get(Project.code == "7CWA")
+        period = '2013_14'
+        month = '8'
+
+        period_criteria = Report.period == period
+        quarter_criteria = Report.month == month
+        period_criteria = [period_criteria, quarter_criteria]
+
+        indicators = utils.get_performance_indicator_list(
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
+
+        project_sector_criteria = (
+            Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION)
+
+        kwargs = {'project_filter_criteria': project_sector_criteria,
+                  'period_criteria': period_criteria}
+
+        rows, summary_row, projects = Report.generate_performance_indicators(
+            [project], indicators, **kwargs)
+
+        self.assertIn(project, projects)
+        self.assertEquals(
+            summary_row['exp_contribution'], 624800)
+        self.assertEquals(
+            summary_row['actual_contribution'], 624800)
+        self.assertEquals(
+            summary_row['community_contribution'], 100)

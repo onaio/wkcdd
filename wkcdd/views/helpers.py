@@ -128,13 +128,17 @@ def get_performance_sector_mapping(sector=None):
              for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING])
 
 
-def get_sector_data(sector_id, report_id, child_locations):
+def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
     indicators = get_performance_indicator_list(
         constants.PERFORMANCE_INDICATORS[report_id])
     # child locations should filter project by sector
     project_filter_criteria = Project.sector == sector_id
+
+    kwargs = {'project_filter_criteria': project_filter_criteria,
+              'period_criteria': period_criteria}
+
     rows, summary_row, projects = Report.generate_performance_indicators(
-        child_locations, indicators, project_filter_criteria)
+        child_locations, indicators, **kwargs)
 
     # generate project_geopoints from project list
     project_geopoints = get_project_geolocations(projects)
