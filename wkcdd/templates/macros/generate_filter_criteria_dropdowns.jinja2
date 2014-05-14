@@ -2,7 +2,7 @@
 {% macro generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) %}
 <div class="clearfix filters">
   <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=()) }}')">
-	<div class="col-md-7">
+	<div class="col-md-6">
 	    <label>Select Location: </label>
 		<select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
 	      <option value="">All Counties</option>
@@ -22,8 +22,14 @@
 	    </select>
 	    <input type="hidden" name="sector" value="{{ search_criteria.selected_sector.sector if search_criteria.selected_sector else '' }}">
 	</div>
+
+	<div class="col-md-3">
+		{% with years = filter_criteria.get('year_periods')%}	 
+			{% include '/period_selector.jinja2' %}
+		{% endwith %}
+	</div>
 	
-	<div class="col-md-4">
+	<div class="col-md-3">
 	    <div class="form-group">
 	      <label>Aggregate by: </label>
 	  
