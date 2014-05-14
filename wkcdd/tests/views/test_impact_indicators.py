@@ -50,3 +50,23 @@ class TestImpactIndicatorsFunctional(FunctionalTestBase):
                                       _query={'view_by': ''})
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_indicator_filtering_by_month(self):
+        self.setup_report_period_test_data()
+        county = County.get(County.name == "Bungoma")
+        url = self.request.route_path('impact_indicators',
+                                      traverse=(county.id),
+                                      _query={'month_or_quarter': '1',
+                                              'period': '2012_13'})
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_indicator_filtering_by_quarter(self):
+        self.setup_report_period_test_data()
+        county = County.get(County.name == "Bungoma")
+        url = self.request.route_path('impact_indicators',
+                                      traverse=(county.id),
+                                      _query={'month_or_quarter': 'q_3',
+                                              'period': '2013_14'})
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)

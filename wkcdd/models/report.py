@@ -89,7 +89,7 @@ class Report(Base):
             sum_reduce_func, values, 0)
 
     @classmethod
-    def generate_impact_indicators(cls, collection, indicators):
+    def generate_impact_indicators(cls, collection, indicators, *criteria):
         """
         Generate impact indicators for a given collection where the
         collection can either be a list of projects or a list of locations
@@ -106,7 +106,7 @@ class Report(Base):
 
             # get project reports @todo: filtered by said period
             try:
-                reports = cls.get_reports_for_projects(projects)
+                reports = cls.get_reports_for_projects(projects, *criteria)
 
                 for indicator in indicators:
                     indicator_key = indicator['key']

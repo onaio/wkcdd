@@ -6,7 +6,9 @@ from pyramid.view import (
 from wkcdd import constants
 from wkcdd.models.helpers import get_children_by_level
 from wkcdd.libs.utils import get_impact_indicator_list
-from wkcdd.views.helpers import get_target_class_from_view_by
+from wkcdd.views.helpers import (
+    get_target_class_from_view_by,
+    build_report_period_criteria)
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
     Report,
@@ -27,6 +29,8 @@ class ImpactIndicators(object):
                  request_method='GET')
     def index(self):
         view_by = self.request.GET.get('view_by') or None
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
 
         source_class = County
         target_class = None
@@ -46,8 +50,11 @@ class ImpactIndicators(object):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
 
+        # generate report period criteria
+        criteria = build_report_period_criteria(month_or_quarter, period)
+
         rows, summary_row = Report.generate_impact_indicators(
-            child_locations, indicators)
+            child_locations, indicators, *criteria)
 
         search_criteria = {'view_by': view_by,
                            'location': ''}
@@ -69,6 +76,8 @@ class ImpactIndicators(object):
                  request_method='GET')
     def show(self):
         view_by = self.request.GET.get('view_by') or None
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
 
         location = self.request.context
         source_class = location.__class__
@@ -85,8 +94,11 @@ class ImpactIndicators(object):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
 
+        # generate report period criteria
+        criteria = build_report_period_criteria(month_or_quarter, period)
+
         rows, summary_row = Report.generate_impact_indicators(
-            child_locations, indicators)
+            child_locations, indicators, *criteria)
 
         search_criteria = {'view_by': view_by,
                            'location': location}
