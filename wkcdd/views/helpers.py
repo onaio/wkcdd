@@ -16,7 +16,6 @@ from wkcdd.models.helpers import (
     get_community_ids_for,
     get_project_list
 )
-from sqlalchemy import or_
 
 
 PROJECT_LEVEL = 'projects'
@@ -150,9 +149,12 @@ def build_report_period_criteria(month_or_quarter, period):
     criteria = []
     if month_or_quarter:
         # months and quarters are related even though they are different values
-        criteria.extend([or_(
-            Report.month == month_or_quarter,
-            Report.quarter == month_or_quarter)])
+        try:
+            month = int(month_or_quarter)
+            criteria.extend([Report.month == month])
+        except ValueError:
+            quarter = month_or_quarter
+            criteria.extend([Report.quarter == quarter])
 
     if period:
         criteria.extend([Report.period == period])
