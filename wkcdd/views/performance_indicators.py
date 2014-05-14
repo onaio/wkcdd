@@ -172,5 +172,6 @@ class PerformanceIndicators(object):
             'target_class': target_class,
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
+            'location': location,
             'is_impact': False
         }
