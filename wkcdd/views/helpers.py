@@ -16,6 +16,8 @@ from wkcdd.models.helpers import (
     get_community_ids_for,
     get_project_list
 )
+from sqlalchemy import or_
+
 
 PROJECT_LEVEL = 'projects'
 COUNTIES_LEVEL = 'counties'
@@ -142,3 +144,17 @@ def get_sector_data(sector_id, report_id, child_locations):
         'summary_row': summary_row,
         'project_geopoints': project_geopoints
     }
+
+
+def build_report_period_criteria(month_or_quarter, period):
+    criteria = []
+    if month_or_quarter:
+        # months and quarters are related even though they are different values
+        criteria.extend([or_(
+            Report.month == month_or_quarter,
+            Report.quarter == month_or_quarter)])
+
+    if period:
+        criteria.extend([Report.period == period])
+
+    return criteria
