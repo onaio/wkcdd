@@ -1,9 +1,13 @@
 {% macro add_indicator_links(request, location, search_criteria) %}
+{% set view_by = search_criteria['view_by']%}
+{% set period = search_criteria['period']%}
+{% set month_or_quarter = search_criteria['month_or_quarter']%}
+
     <div class="row nav-holder indicator_links">
         <ul class="nav nav-tabs indicator_tabs">
             {% set id = location.id if location else '' %}
             <li class="indicator_list">
-                <a href="{{ request.route_url('performance_indicators',traverse=(id), _query={'view_by': search_criteria.view_by}) }}"
+                <a href="{{ request.route_url('performance_indicators',traverse=(id), _query={'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period}) }}"
                 {% if request.matched_route.name == 'performance_indicators'%}
                         class="selected" >
                 {% else %}
@@ -13,7 +17,7 @@
                 </a>
             </li>
             <li class="indicator_list">
-                <a href="{{ request.route_url('impact_indicators',traverse=(id), _query={'view_by': search_criteria.view_by}) }}"
+                <a href="{{ request.route_url('impact_indicators',traverse=(id), _query={'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period}) }}"
                 {% if request.matched_route.name == 'impact_indicators' %}
                         class="selected" >
                 {% else %}
