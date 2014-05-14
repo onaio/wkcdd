@@ -24,7 +24,7 @@
 	</div>
 
 	<div class="col-md-3">
-		{% with years = filter_criteria.get('year_periods')%}	 
+		{% with month_or_quarter=search_criteria.get('month_or_quarter'), period=search_criteria.get('period') , years = filter_criteria.get('year_periods')%}	 
 			{% include '/period_selector.jinja2' %}
 		{% endwith %}
 	</div>

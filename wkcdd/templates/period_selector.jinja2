@@ -4,13 +4,21 @@
    <select name="month_or_quarter" class="form-control input-small select2me">
       <option>{% trans %}Month/Quarter{% endtrans %}</option>
       {% for item in range(1, 5)%}
-         <option value="{{'q_{}'.format(item) }}">
+         <option value="{{'q_{}'.format(item) }}"
+            {% if month_or_quarter == 'q_{}'.format(item) %}
+               selected
+            {% endif %} 
+         >
             {% trans %}Quarter {{item}}{% endtrans %}
          </option>
       {% endfor %}
       <option>-------</option>
       {% for month in months %}
-         <option value="{{loop.index}}">
+         <option value="{{loop.index}}"
+            {% if month_or_quarter == loop.index | string %}
+               selected
+            {% endif %}
+         >
             {% trans %}{{month}}{% endtrans %}
          </option>
       {% endfor %}
@@ -18,7 +26,11 @@
    <select name="period" class="form-control input-small select2me">
       <option>{% trans %} Year {% endtrans %}</option>
       {% for year in years %}
-         <option value="{{year}}">
+         <option value="{{year}}"
+            {% if period == year %}
+               selected
+            {% endif %}
+         >
             {{ year | replace("_", " to 20") | replace("-", " to 20") }}
          </option>
       {% endfor %}

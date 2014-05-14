@@ -84,6 +84,8 @@ class PerformanceIndicators(object):
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
+                           'month_or_quarter': month_or_quarter,
+                           'period': period,
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
 
@@ -157,6 +159,8 @@ class PerformanceIndicators(object):
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
+                           'month_or_quarter': month_or_quarter,
+                           'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
 

@@ -57,6 +57,8 @@ class ImpactIndicators(object):
             child_locations, indicators, *criteria)
 
         search_criteria = {'view_by': view_by,
+                           'month_or_quarter': month_or_quarter,
+                           'period': period,
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
 
@@ -101,6 +103,8 @@ class ImpactIndicators(object):
             child_locations, indicators, *criteria)
 
         search_criteria = {'view_by': view_by,
+                           'month_or_quarter': month_or_quarter,
+                           'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
 
