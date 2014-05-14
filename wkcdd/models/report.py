@@ -74,6 +74,7 @@ class Report(Base):
                 .join(Project, Report.project_code == Project.code)\
                 .filter(Project.id.in_([p.id for p in projects]))\
                 .filter(*criteria)\
+                .order_by(Report.submission_time)\
                 .all()
         else:
             raise ReportError("No projects provided")
