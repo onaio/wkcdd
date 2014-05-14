@@ -5,6 +5,10 @@
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{% trans %}Impact Indicators{% endtrans %}{% endblock %}
 
+{% set view_by = search_criteria['view_by']%}
+{% set period = search_criteria['period']%}
+{% set month_or_quarter = search_criteria['month_or_quarter']%}
+
 {% block page_title %}
   <h3 class="page-title">
     {{ self.title() }}
@@ -41,12 +45,12 @@
           <span class="pull-right">
             {% if location %}
               <a href="{{ request.route_url('impact_indicators', traverse=(location.id),
-                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                  _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
                   <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
               </a>
             {% else %}
               <a href="{{ request.route_url('impact_indicators', traverse=(),
-                  _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                  _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
                   <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
               </a>
             {% endif %}
@@ -72,7 +76,7 @@
               {% for row in rows %}
                 <tr>
                   <td>
-                    <a href="{{row.location.url(request, 'impact_indicators') }}">{{ row.location.pretty }}</a>
+                    <a href="{{row.location.url(request, 'impact_indicators', {'month_or_quarter': month_or_quarter, 'period': period}) }}">{{ row.location.pretty }}</a>
                   </td>
                   {% for indicator in indicators %}
                     <td>{{ row.indicators[indicator.key] }}</td>
