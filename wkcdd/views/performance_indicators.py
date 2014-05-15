@@ -10,7 +10,8 @@ from wkcdd.views.helpers import (
     get_sector_data,
     get_performance_sector_mapping,
     get_target_class_from_view_by,
-    build_report_period_criteria)
+    build_report_period_criteria,
+    build_performance_indicator_chart_dataset)
 from wkcdd.models import (
     County,
     Project,
@@ -40,6 +41,7 @@ class PerformanceIndicators(object):
         sector_data = {}
         sector_indicators = {}
         selected_sector = {}
+        chart_dataset = None
 
         if view_by is None or view_by == 'counties':
             child_locations = County.all()
@@ -72,6 +74,12 @@ class PerformanceIndicators(object):
             selected_sector['sector'] = reg_id
             selected_sector['report'] = report_id
             selected_sector['label'] = label
+
+            # generate chart_dataset
+            chart_dataset = (
+                build_performance_indicator_chart_dataset(
+                    sector_indicators[reg_id], sector_data[sector]['rows']))
+
         else:
             # load first sector for the location list
             for reg_id, report_id, title in sectors:
@@ -97,6 +105,7 @@ class PerformanceIndicators(object):
             'target_class': target_class,
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
+            'chart_dataset': chart_dataset,
             'is_impact': False
         }
 
@@ -118,6 +127,7 @@ class PerformanceIndicators(object):
         sector_data = {}
         sector_indicators = {}
         selected_sector = {}
+        chart_dataset = None
 
         target_class = get_target_class_from_view_by(
             view_by, source_class)
@@ -147,6 +157,11 @@ class PerformanceIndicators(object):
             selected_sector['sector'] = reg_id
             selected_sector['report'] = report_id
             selected_sector['label'] = label
+
+            # generate chart_dataset
+            chart_dataset = (
+                build_performance_indicator_chart_dataset(
+                    sector_indicators[reg_id], sector_data[sector]['rows']))
         else:
             # load first sector for the location list
             for reg_id, report_id, title in sectors:
@@ -173,5 +188,6 @@ class PerformanceIndicators(object):
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
             'location': location,
+            'chart_dataset': chart_dataset,
             'is_impact': False
         }

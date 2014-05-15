@@ -142,6 +142,7 @@ def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
 
     # generate project_geopoints from project list
     project_geopoints = get_project_geolocations(projects)
+
     return {
         'rows': rows,
         'summary_row': summary_row,
@@ -178,6 +179,41 @@ def build_impact_indicator_chart_dataset(indicators, rows):
     dataset = {}
     series_labels = [item['label'] for item in indicators]
     indicator_keys = [item['key'] for item in indicators]
+    labels = [row['location'].pretty for row in rows]
+    series = []
+
+    for key in indicator_keys:
+        indicator_series = []
+
+        for row in rows:
+            if row['indicators']:
+                indicator_series.append(row['indicators'][key])
+
+        series.append(indicator_series)
+
+    dataset['labels'] = labels
+    dataset['series'] = series
+    dataset['series_labels'] = series_labels
+
+    return json.dumps(dataset)
+
+
+def build_performance_indicator_chart_dataset(indicators, rows):
+    """
+    Generate JSON dataset
+        {
+            labels: ['location a', 'location b', 'location c'],
+            series: [[1%,2%,3%,4%], [5%,6%,7%,8%], [9%,10%,11%,12%]],
+            series_labels: ['sector label a', 'sector label b']
+        }
+    """
+    dataset = {}
+
+    # Exclude labels that have no ratio field
+    series_labels = [label
+                     for label, key_group in indicators if key_group[2]]
+    indicator_keys = [key_group[2]
+                      for label, key_group in indicators if key_group[2]]
     labels = [row['location'].pretty for row in rows]
     series = []
 
