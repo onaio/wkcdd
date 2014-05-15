@@ -185,7 +185,8 @@ def build_impact_indicator_chart_dataset(indicators, rows):
         indicator_series = []
 
         for row in rows:
-            indicator_series.append(row['indicators'][key])
+            if row['indicators']:
+                indicator_series.append(row['indicators'][key])
 
         series.append(indicator_series)
 
