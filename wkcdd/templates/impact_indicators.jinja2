@@ -27,8 +27,21 @@
 
 {% block content %}
   {{ add_indicator_links(request, location, search_criteria) }}
+  
+  <!-- <div class="row"> -->
+  <!-- Render map -->
+    <!-- <div class="col-md-5">
+      
+    </div> -->
 
+  <!-- Render chart view -->
+    <!-- <div class="col-md-7">
+      
+    </div>
+  </div> -->
   {{ generate_map_chart(request) }}
+  
+  {% include 'chart.jinja2' %}
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -103,6 +116,12 @@
   </div>
 {% endblock %}
 {% block page_scripts %}
+    <link href="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.css') }}" rel="stylesheet" type="text/css"/>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.barRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.categoryAxisRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.cursor.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
@@ -112,6 +131,9 @@
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
   LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
+
+  // Draw bar chart
+  Custom.drawImpactIndicatorChart({{ chart_dataset | safe() }})
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

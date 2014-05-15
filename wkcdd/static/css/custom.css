@@ -109,7 +109,7 @@ span.ratio {
     font-size: 11px;
 }
 
-#map {
+#map, #chart {
     height: 400px;
 }
 

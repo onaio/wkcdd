@@ -100,6 +100,59 @@ var Custom = function () {
             $(form).attr('action', form_action);
             $(form).submit();
         },
+        drawImpactIndicatorChart = function(dataset) {
+
+            // Can specify a custom tick Array.
+            // Ticks should match up one for each y value (category) in the series.
+            var 
+                ticks = dataset.labels,
+                series_labels = function(labels) {
+                    var series = []
+                    $.each(labels, function(idx, label){
+                        series.push({label:label, highlighter: { formatString: '%s'}})
+                    });
+                    return series;
+                },
+                plot1 = $.jqplot('chart', dataset.series, {
+                // The "seriesDefaults" option is an options object that will
+                // be applied to all series in the chart.
+                stackSeries: true,
+                seriesDefaults:{
+                    renderer:$.jqplot.BarRenderer,
+                    rendererOptions: {
+                        fillToZero: true,
+                        barDirection: 'horizontal'
+                    },
+                    pointLabels: {show: true, formatString: '%d'}
+                },
+                highlighter: {show: true},
+                // Custom labels for the series are specified with the "label"
+                // option on the series option.  Here a series option object
+                // is specified for each series.
+                series:series_labels(dataset.series_labels),
+                // Show the legend and put it outside the grid, but inside the
+                // plot container, shrinking the grid to accomodate the legend.
+                // A value of "outside" would not shrink the grid and allow
+                // the legend to overflow the container.
+                legend: {
+                    show: true,
+                    placement: 'outsideGrid'
+                },
+                axes: {
+                    xaxis: {
+                        pad: 1.05,
+                        tickOptions: {formatString: '%d'}
+                    },
+                    yaxis: {
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        ticks: ticks,
+                        tickOptions:{
+                            formatString:'%b&nbsp;%d'
+                        } 
+                    }
+                },
+            });
+        }
 
         init = function(){
         };
@@ -113,7 +166,8 @@ var Custom = function () {
         display_county_map: display_county_map,
         searchProjectsTable: searchProjectsTable,
         process_raw_points: process_raw_points,
-        addFilterFormAction: addFilterFormAction
+        addFilterFormAction: addFilterFormAction,
+        drawImpactIndicatorChart: drawImpactIndicatorChart
     };
 
 }();

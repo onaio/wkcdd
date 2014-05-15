@@ -8,7 +8,8 @@ from wkcdd.models.helpers import get_children_by_level
 from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import (
     get_target_class_from_view_by,
-    build_report_period_criteria)
+    build_report_period_criteria,
+    build_impact_indicator_chart_dataset)
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
     Report,
@@ -56,6 +57,7 @@ class ImpactIndicators(object):
         rows, summary_row = Report.generate_impact_indicators(
             child_locations, indicators, *criteria)
 
+        chart_dataset = build_impact_indicator_chart_dataset(indicators, rows)
         search_criteria = {'view_by': view_by,
                            'month_or_quarter': month_or_quarter,
                            'period': period,
@@ -69,6 +71,7 @@ class ImpactIndicators(object):
             'target_class': target_class,
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
+            'chart_dataset': chart_dataset,
             'is_impact': True
         }
 
@@ -102,6 +105,7 @@ class ImpactIndicators(object):
         rows, summary_row = Report.generate_impact_indicators(
             child_locations, indicators, *criteria)
 
+        chart_dataset = build_impact_indicator_chart_dataset(indicators, rows)
         search_criteria = {'view_by': view_by,
                            'month_or_quarter': month_or_quarter,
                            'period': period,
@@ -116,5 +120,6 @@ class ImpactIndicators(object):
             'target_class': target_class,
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
+            'chart_dataset': chart_dataset,
             'is_impact': True
         }
