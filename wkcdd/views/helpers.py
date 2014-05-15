@@ -164,3 +164,33 @@ def build_report_period_criteria(month_or_quarter, period):
         criteria.extend([Report.period == period])
 
     return criteria
+
+
+def build_impact_indicator_chart_dataset(indicators, rows):
+    """
+    Generate JSON dataset
+        {
+            labels: ['location a', 'location b', 'location c'],
+            series: [[1,2,3,4], [5,6,7,8], [9,10,11,12]],
+            series_labels: ['Increased income', 'Improved households']
+        }
+    """
+    dataset = {}
+    series_labels = [item['label'] for item in indicators]
+    indicator_keys = [item['key'] for item in indicators]
+    labels = [row['location'].pretty for row in rows]
+    series = []
+
+    for key in indicator_keys:
+        indicator_series = []
+
+        for row in rows:
+            indicator_series.append(row['indicators'][key])
+
+        series.append(indicator_series)
+
+    dataset['labels'] = labels
+    dataset['series'] = series
+    dataset['series_labels'] = series_labels
+
+    return json.dumps(dataset)
