@@ -9,6 +9,7 @@ from wkcdd.libs.utils import (
     humanize
 )
 
+from jinja2.ext import with_
 from wkcdd.security import group_finder, pwd_context
 
 from wkcdd.models.base import (
@@ -48,6 +49,7 @@ def includeme(config):
     # commit config to ensure config.get_jinja2_environment() is not None
     config.commit()
     config.add_jinja2_search_path("wkcdd:templates")
+    config.add_jinja2_extension(with_, ".jinja2")
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value
     config.get_jinja2_environment().filters['humanize'] = humanize

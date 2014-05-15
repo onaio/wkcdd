@@ -1,5 +1,7 @@
 {% macro generate_project_type_dropdown(request, sectors, search_criteria) %}
 {% set view_by = search_criteria['view_by']%}
+{% set period = search_criteria['period']%}
+{% set month_or_quarter = search_criteria['month_or_quarter']%}
 {% set location = search_criteria['location']%}
 {% if location %}
   {% set id = location.id %}
@@ -17,7 +19,7 @@
          <ul class="dropdown-menu">
           <li>
                <a href="{{ request.route_url('performance_indicators', traverse=(id),
-                        _query={'view_by': view_by}) }}">
+                        _query={'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period}) }}">
                    {% trans %}All sectors{% endtrans %}
                </a>
           </li>
@@ -25,7 +27,7 @@
             <li>
                <a href="{{ request.route_url('performance_indicators', traverse=(id),
                         _query={'sector': sector,
-                                'view_by': view_by}) }}">
+                                'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period}) }}">
                    {{ label }}
                </a>
             </li>

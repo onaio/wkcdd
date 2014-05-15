@@ -59,7 +59,6 @@
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
   
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
@@ -67,6 +66,7 @@
 
   {% if selected_sector %}
     {% set sector = selected_sector.sector %}
+    map = Custom.display_constituency_map();
     Custom.process_raw_points({{ sector_data[sector].project_geopoints|safe() }}, map);
   {% endif %}
 

@@ -13,13 +13,16 @@ from wkcdd.views.helpers import (
     get_project_geolocations,
     get_target_class_from_view_by,
     get_sector_data,
-    get_performance_sector_mapping)
+    get_performance_sector_mapping,
+    build_report_period_criteria)
 from wkcdd import constants
 from wkcdd.models import (
     County,
     Project,
     SubCounty,
-    Community
+    Community,
+    Report
+
 )
 
 
@@ -78,3 +81,20 @@ class TestHelpers(TestBase):
         self.assertEqual(len(results['rows']), 1)
         summary_row = results['summary_row']
         self.assertEqual(summary_row['exp_contribution'], 624800)
+
+    def test_build_report_period_criteria(self):
+        self.setup_report_period_test_data()
+        period = '2013_14'
+        month = '8'
+        project = Project.get(Project.code == "7CWA")
+
+        # Test when month is Aug(8) 2013_14
+        report = Report.get(
+            Report.period == period,
+            Report.month == month)
+
+        criteria = build_report_period_criteria(month, period)
+
+        reports = Report.get_reports_for_projects([project], *criteria)
+        self.assertEqual(len(reports), 1)
+        self.assertIn(report, reports)

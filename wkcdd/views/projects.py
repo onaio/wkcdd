@@ -9,16 +9,15 @@ from wkcdd.models.project import (
     Project,
     ProjectFactory
 )
-
-
+from wkcdd.models import Report
 from wkcdd import constants
-
 from wkcdd.libs.utils import (
     tuple_to_dict_list,
     get_impact_indicator_list)
 from wkcdd.views.helpers import (
     filter_projects_by,
-    get_project_geolocations)
+    get_project_geolocations,
+    build_report_period_criteria)
 
 
 @view_defaults(route_name='projects')
@@ -37,8 +36,8 @@ class ProjectViews(object):
         # Filter
         filter_projects = self.request.GET.get('filter')
         if filter_projects is not None:
-            search = self.request.GET.get('search') or ''
-            sector = self.request.GET.get('sector') or ''
+            search = self.request.GET.get('search', '')
+            sector = self.request.GET.get('sector', '')
             location_map = {
                 'community': self.request.GET.get('community'),
                 'constituency': self.request.GET.get('constituency'),
@@ -74,10 +73,21 @@ class ProjectViews(object):
                  request_method='GET')
     def show(self):
         project = self.request.context
-        report = project.get_latest_report()
-        # TODO filter by periods
+
+        # define criteria
+
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
+
+        # filter by period
+        criteria = build_report_period_criteria(month_or_quarter, period)
+
+        reports = Report.get_reports_for_projects([project], *criteria)
+
         # periods = [report.period for report in reports]
-        if report:
+        if reports:
+            # limit report to the latest report within the period
+            report = reports[0]
             performance_indicators = report.calculate_performance_indicators()
             impact_indicators = report.calculate_impact_indicators()
             impact_indicator_mapping = get_impact_indicator_list(

@@ -1,5 +1,10 @@
 {% from 'performance_indicator_data.jinja2' import  performance_indicator_data %}
 {% macro performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria) %}
+
+{% set view_by = search_criteria['view_by']%}
+{% set period = search_criteria['period']%}
+{% set month_or_quarter = search_criteria['month_or_quarter']%}
+
     <div class="row">
         <div class="col-md-12">
           <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -12,12 +17,12 @@
               <span class="pull-right">
                 {% if rows and location %}
                   <a href="{{ request.route_url('performance_indicators', traverse=(location.id),
-                      _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                      _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
                       <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
                   </a>
                 {% elif rows %}
                   <a href="{{ request.route_url('performance_indicators', traverse=(),
-                      _query={'format':'xlsx', 'view_by': search_criteria.get('view_by')})}}" class="btn btn-success download" role="button">
+                      _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
                       <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
                   </a>
                 {% endif %}
@@ -44,7 +49,10 @@
                     {% for row in rows %}
                       <tr>
                         <td>
-                          <a href="{{row.location.url(request, 'performance_indicators', {'sector': sector}) }}">{{ row.location.pretty }}</a>
+                          <a href="{{row.location.url(request, 'performance_indicators', 
+                                            {'sector': sector, 'month_or_quarter': month_or_quarter, 'period': period}) }}">
+                                            {{ row.location.pretty }}
+                          </a>
                         </td>
                         {% for label, key_group in indicators %}
 

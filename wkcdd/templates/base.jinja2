@@ -51,71 +51,6 @@
          <img src="img/menu-toggler.png" alt="" />
          </a> 
          <!-- END RESPONSIVE MENU TOGGLER -->
-         <!-- BEGIN TOP NAVIGATION MENU -->
-         <ul class="nav navbar-nav pull-right">
-            <!-- BEGIN TODO DROPDOWN -->
-            <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                <i class="icon-calendar"></i>
-				<span class="month-drop">March 2014</span>
-				<span class="caret"></span>
-               </a>
-               <ul class="dropdown-menu extended tasks">
-                  <li>
-                     <ul class="dropdown-menu-list scroller" style="height:auto;">
-                        <li>  
-                           <a href="#">
-                           <span class="task">
-                           <span class="desc">New release v1.2</span>
-                           <span class="percent">30%</span>
-                           </span>
-                           <span class="progress">
-                           <span style="width: 40%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                           <span class="sr-only">40% Complete</span>
-                           </span>
-                           </span>
-                           </a>
-                        </li>
-                        <li>  
-                           <a href="#">
-                           <span class="task">
-                           <span class="desc">Application deployment</span>
-                           <span class="percent">65%</span>
-                           </span>
-                           <span class="progress progress-striped">
-                           <span style="width: 65%;" class="progress-bar progress-bar-danger" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                           <span class="sr-only">65% Complete</span>
-                           </span>
-                           </span>
-                           </a>
-                        </li>
-                        <li>  
-                           <a href="#">
-                           <span class="task">
-                           <span class="desc">Mobile app release</span>
-                           <span class="percent">98%</span>
-                           </span>
-                           <span class="progress">
-                           <span style="width: 98%;" class="progress-bar progress-bar-success" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100">
-                           <span class="sr-only">98% Complete</span>
-                           </span>
-                           </span>
-                           </a>
-                        </li>
-                     </ul>
-                  </li>
-               </ul>
-            </li>
-            <!-- END TODO DROPDOWN -->
-            <li class="devider"></li>
-            <!-- BEGIN USER LOGIN DROPDOWN -->
-            <li class=" user">
-               <a href="{{ request.route_url('auth', action='logout') }}">
-               <span class="username">Logout</span>
-               </a>
-            </li>
-            <!-- END USER LOGIN DROPDOWN -->
-         </ul>
          <!-- END TOP NAVIGATION MENU -->
       </div>
       <!-- END TOP NAVIGATION BAR -->
@@ -166,28 +101,6 @@
       <!-- END SIDEBAR -->
       <!-- BEGIN PAGE -->
       <div class="page-content">
-         <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->         
-         <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                     <h4 class="modal-title">Modal title</h4>
-                  </div>
-                  <div class="modal-body">
-                     Widget settings form goes here
-                  </div>
-                  <div class="modal-footer">
-                     <button type="button" class="btn btn-success">Save changes</button>
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-               </div>
-               <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-         </div>
-         <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-                    
          <!-- BEGIN PAGE HEADER-->
          <div class="row">
             <div class="col-md-12">

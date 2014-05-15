@@ -64,14 +64,26 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_reports_for_projects(cls, projects):
+    def get_year_periods(cls):
+        results = DBSession.query(Report)\
+            .distinct(Report.period)\
+            .order_by(Report.period)\
+            .all()
+        year_periods = [r.period for r in results]
+        return year_periods
+
+    @classmethod
+    def get_reports_for_projects(cls, projects, *criteria):
         """
-        Get the reports for the specified list of projects.
+        Get the reports for the specified list of projects based on the
+        specified time period
         """
         if projects:
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
                 .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(*criteria)\
+                .order_by(Report.submission_time)\
                 .all()
         else:
             raise ReportError("No projects provided")
@@ -86,7 +98,7 @@ class Report(Base):
             sum_reduce_func, values, 0)
 
     @classmethod
-    def generate_impact_indicators(cls, collection, indicators):
+    def generate_impact_indicators(cls, collection, indicators, *criteria):
         """
         Generate impact indicators for a given collection where the
         collection can either be a list of projects or a list of locations
@@ -103,7 +115,7 @@ class Report(Base):
 
             # get project reports @todo: filtered by said period
             try:
-                reports = cls.get_reports_for_projects(projects)
+                reports = cls.get_reports_for_projects(projects, *criteria)
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
@@ -156,7 +168,7 @@ class Report(Base):
     def generate_performance_indicators(cls,
                                         collection,
                                         indicators,
-                                        *criteria):
+                                        **kwargs):
         """
         Generate performance indicators for a given sector whose values are
         determined from the provided set of indicators
@@ -171,9 +183,15 @@ class Report(Base):
                     'indicators': {}
                 }
                 # get reports for this location or project,
-                projects = item.get_projects(*criteria)
-                # get project reports @todo: filtered by said period
-                reports = cls.get_reports_for_projects(projects)
+                project_filter_criteria = kwargs.get(
+                    'project_filter_criteria', [])
+                projects = item.get_projects(project_filter_criteria)
+
+                # filter reports by period
+                period_criteria = kwargs.get('period_criteria', [])
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    *period_criteria)
 
                 # populate project's list for rendering on map
                 sector_projects.extend(projects)
