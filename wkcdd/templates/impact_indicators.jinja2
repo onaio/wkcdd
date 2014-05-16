@@ -134,7 +134,7 @@
   LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
 
   // Draw bar chart
-  Custom.drawImpactIndicatorChart({{ chart_dataset | safe() }})
+  Custom.drawIndicatorChart({{ chart_dataset | safe() }})
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

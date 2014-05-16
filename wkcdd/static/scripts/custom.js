@@ -100,7 +100,7 @@ var Custom = function () {
             $(form).attr('action', form_action);
             $(form).submit();
         },
-        drawImpactIndicatorChart = function(dataset) {
+        drawIndicatorChart = function(dataset) {
 
             // Can specify a custom tick Array.
             // Ticks should match up one for each y value (category) in the series.
@@ -167,7 +167,7 @@ var Custom = function () {
         searchProjectsTable: searchProjectsTable,
         process_raw_points: process_raw_points,
         addFilterFormAction: addFilterFormAction,
-        drawImpactIndicatorChart: drawImpactIndicatorChart
+        drawIndicatorChart: drawIndicatorChart
     };
 
 }();
