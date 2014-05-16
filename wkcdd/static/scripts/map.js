@@ -154,29 +154,46 @@ var Map = (function(root){
                 return { color: histogramColors[index], label: label};
             });
             legend.update(legendData);
+        } else {
+            legend.update([
+                {color: colors.GREEN, label: '&gt; 80%'},
+                {color: colors.AMBER, label: '60&ndash;80%'},
+                {color: colors.RED, label: '&lt; 60%'},
+                {color: colors.GREY, label: 'No Reports'}
+            ]);
         }
 
         shapeLayer.setStyle(function (feature) {
             var location = feature.properties[lookupProperty];
-            var indicator = data[location][indicator_id];
-            var value = indicator.value;
-            feature.properties.title = location;
-            feature.properties.label = indicator.label;
-            feature.properties.value = indicator.value;
-            var intValue = parseInt(value);
-            var fillColor;
-            if (isHistogram) {
-                fillColor = getHistogramColor(intValue, bins);
+            if(data[location] && data[location][indicator_id]){
+                var indicator = data[location][indicator_id];
+                var value = indicator.value;
+                feature.properties.title = location;
+                feature.properties.label = indicator.label;
+                feature.properties.value = indicator.value;
+                var intValue = parseInt(value);
+                var fillColor;
+                if (isHistogram) {
+                    fillColor = getHistogramColor(intValue, bins);
+                } else {
+                    fillColor = getColor(intValue);
+                }
+                return {
+                    fillColor: fillColor,
+                    weight: 1,
+                    color: '#fff',
+                    opacity: 1,
+                    fillOpacity: 0.5
+                };
             } else {
-                fillColor = getColor(intValue);
+                return {
+                    fillColor: colors.GREY,
+                    weight: 1,
+                    color: '#fff',
+                    opacity: 1,
+                    fillOpacity: 0.2
+                };
             }
-            return {
-                fillColor: fillColor,
-                weight: 1,
-                color: '#fff',
-                opacity: 1,
-                fillOpacity: 0.5
-            };
         });
     };
 
