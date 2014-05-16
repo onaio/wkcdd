@@ -100,7 +100,7 @@ var Custom = function () {
             $(form).attr('action', form_action);
             $(form).submit();
         },
-        drawImpactIndicatorChart = function(dataset) {
+        drawIndicatorChart = function(dataset) {
 
             // Can specify a custom tick Array.
             // Ticks should match up one for each y value (category) in the series.
@@ -109,7 +109,7 @@ var Custom = function () {
                 series_labels = function(labels) {
                     var series = []
                     $.each(labels, function(idx, label){
-                        series.push({label:label, highlighter: { formatString: '%s'}})
+                        series.push({label:label})
                     });
                     return series;
                 },
@@ -125,7 +125,6 @@ var Custom = function () {
                     },
                     pointLabels: {show: true, formatString: '%d'}
                 },
-                highlighter: {show: true},
                 // Custom labels for the series are specified with the "label"
                 // option on the series option.  Here a series option object
                 // is specified for each series.
@@ -135,6 +134,7 @@ var Custom = function () {
                 // A value of "outside" would not shrink the grid and allow
                 // the legend to overflow the container.
                 legend: {
+                    renderer: $.jqplot.EnhancedLegendRenderer,
                     show: true,
                     placement: 'outsideGrid'
                 },
@@ -167,7 +167,7 @@ var Custom = function () {
         searchProjectsTable: searchProjectsTable,
         process_raw_points: process_raw_points,
         addFilterFormAction: addFilterFormAction,
-        drawImpactIndicatorChart: drawImpactIndicatorChart
+        drawIndicatorChart: drawIndicatorChart
     };
 
 }();
