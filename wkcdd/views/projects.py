@@ -1,4 +1,3 @@
-import json
 from collections import defaultdict
 from pyramid.view import (
     view_config,
@@ -10,16 +9,20 @@ from wkcdd.models.project import (
     Project,
     ProjectFactory
 )
-
-
+from wkcdd.models import Report
 from wkcdd import constants
-
-from wkcdd.libs.utils import tuple_to_dict_list
-from wkcdd.views.helpers import filter_projects_by
+from wkcdd.libs.utils import (
+    tuple_to_dict_list,
+    get_impact_indicator_list)
+from wkcdd.views.helpers import (
+    filter_projects_by,
+    get_project_geolocations,
+    build_report_period_criteria)
 
 
 @view_defaults(route_name='projects')
 class ProjectViews(object):
+
     def __init__(self, request):
         self.request = request
 
@@ -33,8 +36,8 @@ class ProjectViews(object):
         # Filter
         filter_projects = self.request.GET.get('filter')
         if filter_projects is not None:
-            search = self.request.GET.get('search') or ''
-            sector = self.request.GET.get('sector') or ''
+            search = self.request.GET.get('search', '')
+            sector = self.request.GET.get('sector', '')
             location_map = {
                 'community': self.request.GET.get('community'),
                 'constituency': self.request.GET.get('constituency'),
@@ -54,15 +57,7 @@ class ProjectViews(object):
         locations = Project.get_locations(projects)
         # get filter criteria
         filter_criteria = Project.generate_filter_criteria()
-        project_geopoints = [
-            {'id': project.id,
-             'name': project.name,
-             'sector': project.sector_name,
-             'lat': str(project.latlong[0]),
-             'lng': str(project.latlong[1])}
-            for project in projects
-            if project.latlong]
-        project_geopoints = json.dumps(project_geopoints)
+        project_geopoints = get_project_geolocations(projects)
         return {
             'project_types': project_types,
             'projects': projects,
@@ -72,18 +67,31 @@ class ProjectViews(object):
             'search_criteria': search_criteria
         }
 
-    @view_config(name='show',
+    @view_config(name='',
                  context=Project,
                  renderer='projects_show.jinja2',
                  request_method='GET')
     def show(self):
         project = self.request.context
-        report = project.get_latest_report()
-        # TODO filter by periods
+
+        # define criteria
+
+        month_or_quarter = self.request.GET.get('month_or_quarter', '')
+        period = self.request.GET.get('period', '')
+
+        # filter by period
+        criteria = build_report_period_criteria(month_or_quarter, period)
+
+        reports = Report.get_reports_for_projects([project], *criteria)
+
         # periods = [report.period for report in reports]
-        if report:
+        if reports:
+            # limit report to the latest report within the period
+            report = reports[0]
             performance_indicators = report.calculate_performance_indicators()
             impact_indicators = report.calculate_impact_indicators()
+            impact_indicator_mapping = get_impact_indicator_list(
+                constants.IMPACT_INDICATOR_KEYS)
             return {
                 'project': project,
                 'performance_indicators': performance_indicators,
@@ -92,9 +100,7 @@ class ProjectViews(object):
                     ('title', 'group'),
                     constants.PERFORMANCE_INDICATOR_REPORTS[
                         report.report_data[constants.XFORM_ID]]),
-                'impact_indicator_mapping': tuple_to_dict_list(
-                    ('title', 'key'),
-                    constants.IMPACT_INDICATOR_REPORT),
+                'impact_indicator_mapping': impact_indicator_mapping
             }
         else:
             return {

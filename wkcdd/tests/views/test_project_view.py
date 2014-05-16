@@ -12,6 +12,7 @@ from wkcdd.views.projects import ProjectViews
 
 
 class TestProjectViews(IntegrationTestBase):
+
     def setUp(self):
         super(TestProjectViews, self).setUp()
         self.request = testing.DummyRequest()
@@ -44,9 +45,6 @@ class TestProjectViews(IntegrationTestBase):
         self.assertEqual(response['impact_indicators'],
                          project.reports[0].calculate_impact_indicators())
 
-    def test_project_report_trend_over_time(self):
-        pass
-
     def test_search_project_list(self):
         self.setup_test_data()
         params = MultiDict({'filter': '1',
@@ -60,8 +58,39 @@ class TestProjectViews(IntegrationTestBase):
     def test_filter_project_list(self):
         self.setup_test_data()
 
+    def test_show_project_with_period_and_quarter(self):
+        """
+        Test filter with quarter specified
+        """
+        self.setup_report_period_test_data()
+        project = Project.get(Project.code == '7CWA')
+        self.request.context = project
+
+        params = MultiDict({'period': '2013_14',
+                            'month_or_quarter': 'q_3'})
+        self.request.GET = params
+
+        response = self.project_views.show()
+        self.assertIsNotNone(response['performance_indicators'])
+
+    def test_show_project_with_period_and_month(self):
+        """
+        Test filter with month specified
+        """
+        self.setup_report_period_test_data()
+        project = Project.get(Project.code == '7CWA')
+        self.request.context = project
+
+        params = MultiDict({'period': '2012_13',
+                            'month_or_quarter': '1'})
+        self.request.GET = params
+
+        response = self.project_views.show()
+        self.assertIsNotNone(response['performance_indicators'])
+
 
 class TestProjectViewsFunctional(FunctionalTestBase):
+
     def test_project_list_return_all_projects_views(self):
         self.setup_test_data()
         url = self.request.route_path('projects', traverse=())

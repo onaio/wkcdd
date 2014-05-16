@@ -1,10 +1,13 @@
-{% macro filter_criteria_options (filter_criteria, location_map, filter_location_type, location_type) %}
+{% macro filter_criteria_options (request, filter_criteria, search_criteria, filter_location_type, location_type) %}
+    {% set view_by = search_criteria['view_by']%}
+    {% set selected_location = search_criteria['location']%}
     {% for location in filter_criteria[filter_location_type] %}
     <option value="{{ location.id }}"
-        {%if location_map[location_type] == (location.id | string)%}
+        {%if selected_location and selected_location.is_found_in(location) %}
             selected
         {%endif%}
-    >
+        url="{{ request.route_url(request.matched_route.name, traverse=(location.id)) }}"
+        >
         {{ location.pretty }}
     </option>
     {% endfor %}

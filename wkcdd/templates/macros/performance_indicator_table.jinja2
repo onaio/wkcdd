@@ -1,0 +1,91 @@
+{% from 'performance_indicator_data.jinja2' import  performance_indicator_data %}
+{% macro performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria) %}
+
+{% set view_by = search_criteria['view_by']%}
+{% set period = search_criteria['period']%}
+{% set month_or_quarter = search_criteria['month_or_quarter']%}
+
+    <div class="row">
+        <div class="col-md-12">
+          <!-- BEGIN SAMPLE TABLE PORTLET-->
+          <div class="portlet">
+            <div class="portlet-title">
+              <div class="caption">
+                <i class="icon-tasks"></i>
+                {{ label }} {% trans %}Projects{% endtrans %}
+              </div>
+              <span class="pull-right">
+                {% if rows and location %}
+                  <a href="{{ request.route_url('performance_indicators', traverse=(location.id),
+                      _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
+                      <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+                  </a>
+                {% elif rows %}
+                  <a href="{{ request.route_url('performance_indicators', traverse=(),
+                      _query={'format':'xlsx', 'view_by': view_by, 'month_or_quarter': month_or_quarter, 'period': period} )}}" class="btn btn-success download" role="button">
+                      <i class="glyphicon glyphicon-download"></i> &nbsp;Download XLS 
+                  </a>
+                {% endif %}
+              </span>
+            </div>
+            {% if rows %}
+              <div class="portlet-body">
+                <div class="table-responsive table-scrollable">
+                  <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                    {% if target_class %}
+                      <th>{{target_class.__name__}}</th>
+                    {% else %}
+                      <th>{% trans %}County{% endtrans %}</th>
+                    {% endif %}
+                      {% for label, key_group in indicators %}
+                        <th class="data-header">{{ label }}</th>
+                      {% endfor %}
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for row in rows %}
+                      <tr>
+                        <td>
+                          <a href="{{row.location.url(request, 'performance_indicators', 
+                                            {'sector': sector, 'month_or_quarter': month_or_quarter, 'period': period}) }}">
+                                            {{ row.location.pretty }}
+                          </a>
+                        </td>
+                        {% for label, key_group in indicators %}
+
+                          {{ performance_indicator_data(request, row.indicators[key_group[0]],
+                                                        row.indicators[key_group[1]],
+                                                        row.indicators[key_group[2]]) }}
+
+                        {% endfor %}
+                      </tr>
+                    {% endfor %}
+
+                    <tr class="bold">
+                      <td>
+                        {% trans %} Total Summary {% endtrans %}
+                      </td>
+                      {% for label, key_group in indicators %}
+
+                          {{ performance_indicator_data(request, summary_row[key_group[0]],
+                                                        summary_row[key_group[1]],
+                                                        summary_row[key_group[2]]) }}
+
+                      {% endfor %}
+                    </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            {% else %}
+              <div class="portlet-body"> {% trans %} No {{ label }} projects found {% endtrans %}</div>
+            {% endif %}
+          </div>
+          <!-- END SAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+{% endmacro %}

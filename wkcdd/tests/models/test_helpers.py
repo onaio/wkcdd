@@ -7,6 +7,7 @@ from wkcdd.tests.test_base import TestBase
 
 
 class TestHelpers(TestBase):
+
     def test_sub_county_ids_from_county_ids(self):
         self.setup_test_data()
         # get the county's id
@@ -89,3 +90,28 @@ class TestHelpers(TestBase):
                                 constants.BODABODA_PROJECT_REGISTRATION]],
                                key=lambda x: x[0])
         self.assertListEqual(expected_list, project_types)
+
+    def test_get_children_by_level_for_counties_by_community(self):
+        self.setup_test_data()
+        county = County.get(County.name == "Bungoma")
+        child_ids = helpers.get_children_by_level(
+            [county.id], County, Community)
+        child_names = [c.name for c in Community.all(
+            Community.id.in_(child_ids))]
+        self.assertEqual(
+            sorted([u'Maragoli', u'Bukusu']), sorted(child_names))
+
+    def test_get_project_ids(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        projects = Project.all(Project.code.in_(["7CWA", "FR3A"]))
+
+        project_ids = helpers.get_project_ids([community.id])
+        self.assertEqual(project_ids, [p.id for p in projects])
+
+    def test_get_children_by_level_for_higher_rank(self):
+        self.setup_test_data()
+        community = Community.get(Community.name == "Maragoli")
+        self.assertRaises(ValueError,
+                          helpers.get_children_by_level,
+                          [community.id], Community, County)

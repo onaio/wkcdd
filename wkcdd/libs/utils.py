@@ -16,8 +16,6 @@ def format_percent(value, request):
     """
     Format 123.54 to a pretty percentage value i.e. 123.5%
     """
-    if value is None:
-        return 0
     value = float(value)
     localizer = get_localizer(request)
     return format_number(round(value, 1), locale=localizer.locale_name) + '%'
@@ -28,9 +26,11 @@ def format_value(value, request):
     Format large values by adding a comma
     e.g. 1000 => 1,000
     """
-    if value is None:
-        return 0
-    value = float(value)
+    try:
+        value = float(value)
+    except Exception:
+        value = 0
+
     localizer = get_localizer(request)
     return format_number(value, locale=localizer.locale_name)
 
@@ -42,3 +42,28 @@ def humanize(value):
     Replace all special characters with spaces.
     """
     return humanize_re.sub(" ", value)
+
+
+def sum_reduce_func(current, value):
+    """
+    Reduce the supplied values by summing them and ignoring invalid values
+    """
+    try:
+        value = int(value)
+    except (ValueError, TypeError):
+        value = 0
+
+    try:
+        current = int(current)
+    except (ValueError, TypeError):
+        current = 0
+
+    return abs(value) + abs(current)
+
+
+def get_impact_indicator_list(indicators_tuple):
+    return tuple_to_dict_list(('name', 'key', 'label'), indicators_tuple)
+
+
+def get_performance_indicator_list(indicators_tuple):
+    return tuple_to_dict_list(('property', 'key', 'type'), indicators_tuple)

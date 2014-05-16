@@ -1,0 +1,38 @@
+{% set months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']%}
+<div class="form-group">
+   <label>Select Period: </label>
+   <select name="month_or_quarter" class="form-control input-small select2me">
+      <option value="">{% trans %}Month/Quarter{% endtrans %}</option>
+      {% for item in range(1, 5)%}
+         <option value="{{'q_{}'.format(item) }}"
+            {% if month_or_quarter == 'q_{}'.format(item) %}
+               selected
+            {% endif %} 
+         >
+            {% trans %}Quarter {{item}}{% endtrans %}
+         </option>
+      {% endfor %}
+      <option value="">-------</option>
+      {% for month in months %}
+         <option value="{{loop.index}}"
+            {% if month_or_quarter == loop.index | string %}
+               selected
+            {% endif %}
+         >
+            {% trans %}{{month}}{% endtrans %}
+         </option>
+      {% endfor %}
+   </select>
+   <select name="period" class="form-control input-small select2me">
+      <option value="">{% trans %} Year {% endtrans %}</option>
+      {% for year in years %}
+         <option value="{{year}}"
+            {% if period == year %}
+               selected
+            {% endif %}
+         >
+            {{ year | replace("_", " to 20") | replace("-", " to 20") }}
+         </option>
+      {% endfor %}
+   </select>
+</div>

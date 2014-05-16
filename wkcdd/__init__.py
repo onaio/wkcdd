@@ -9,6 +9,7 @@ from wkcdd.libs.utils import (
     humanize
 )
 
+from jinja2.ext import with_
 from wkcdd.security import group_finder, pwd_context
 
 from wkcdd.models.base import (
@@ -48,6 +49,7 @@ def includeme(config):
     # commit config to ensure config.get_jinja2_environment() is not None
     config.commit()
     config.add_jinja2_search_path("wkcdd:templates")
+    config.add_jinja2_extension(with_, ".jinja2")
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value
     config.get_jinja2_environment().filters['humanize'] = humanize
@@ -57,13 +59,10 @@ def includeme(config):
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',
                      factory=ProjectFactory)
-    config.add_route('community', '/community/*traverse',
+    config.add_route('impact_indicators', '/impact-indicators/*traverse',
                      factory=LocationFactory)
-    config.add_route('constituency', '/constituency/*traverse',
-                     factory=LocationFactory)
-    config.add_route('sub_county', '/sub_county/*traverse',
-                     factory=LocationFactory)
-    config.add_route('counties', '/counties/*traverse',
+    config.add_route('performance_indicators',
+                     '/performance-indicators/*traverse',
                      factory=LocationFactory)
     config.add_route('reporting_status', '/reporting_status')
     config.add_route('private', '/private')

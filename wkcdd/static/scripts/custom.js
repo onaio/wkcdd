@@ -53,12 +53,91 @@ var Custom = function () {
             });
         },
 
+        addFilterFormAction = function(form, default_url) {
+            form_action = null
+            county_url = $('select[name=county]').find(":selected").attr('url');
+            sub_county_url = $('select[name=sub_county]').find(":selected").attr('url');
+            constituency_url = $('select[name=constituency]').find(":selected").attr('url');
+            community_url = $('select[name=community]').find(":selected").attr('url');
+            view_by = $('select[name=view_by]').val()
+
+            if(community_url !== undefined) {
+                form_action = community_url;
+            } else if(constituency_url !== undefined) {
+                form_action = constituency_url;
+            } else if (sub_county_url !== undefined) {
+                form_action = sub_county_url;
+            } else if (county_url !== undefined) {
+                form_action = county_url;
+            }else {
+                form_action = default_url
+            }
+
+            //load the form action
+            $(form).attr('action', form_action);
+            $(form).submit();
+        },
+        drawIndicatorChart = function(dataset) {
+
+            // Can specify a custom tick Array.
+            // Ticks should match up one for each y value (category) in the series.
+            var 
+                ticks = dataset.labels,
+                series_labels = function(labels) {
+                    var series = []
+                    $.each(labels, function(idx, label){
+                        series.push({label:label})
+                    });
+                    return series;
+                },
+                plot1 = $.jqplot('chart', dataset.series, {
+                // The "seriesDefaults" option is an options object that will
+                // be applied to all series in the chart.
+                stackSeries: true,
+                seriesDefaults:{
+                    renderer:$.jqplot.BarRenderer,
+                    rendererOptions: {
+                        fillToZero: true,
+                        barDirection: 'horizontal'
+                    },
+                    pointLabels: {show: true, formatString: '%d'}
+                },
+                // Custom labels for the series are specified with the "label"
+                // option on the series option.  Here a series option object
+                // is specified for each series.
+                series:series_labels(dataset.series_labels),
+                // Show the legend and put it outside the grid, but inside the
+                // plot container, shrinking the grid to accomodate the legend.
+                // A value of "outside" would not shrink the grid and allow
+                // the legend to overflow the container.
+                legend: {
+                    renderer: $.jqplot.EnhancedLegendRenderer,
+                    show: true,
+                    placement: 'outsideGrid'
+                },
+                axes: {
+                    xaxis: {
+                        pad: 1.05,
+                        tickOptions: {formatString: '%d'}
+                    },
+                    yaxis: {
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        ticks: ticks,
+                        tickOptions:{
+                            formatString:'%b&nbsp;%d'
+                        } 
+                    }
+                },
+            });
+        }
+
         init = function(){
         };
 
     $('.indicator-selector').click(function () {
         Map.setIndicator($(this).data('indicator'));
     });
+    $('.selectpicker').selectpicker();
     
     // public functions
     return {
@@ -66,6 +145,10 @@ var Custom = function () {
         display_constituency_map: display_constituency_map,
         display_county_map: display_county_map,
         searchProjectsTable: searchProjectsTable
+        searchProjectsTable: searchProjectsTable,
+        process_raw_points: process_raw_points,
+        addFilterFormAction: addFilterFormAction,
+        drawIndicatorChart: drawIndicatorChart
     };
 
 }();
@@ -86,17 +169,21 @@ var LocationSelect = function() {
             return filtered_location_list;
         },
         update_select = function(select, options, default_value) {
-            optionList = [];
-            default_option = $('<option />', {
-                text: default_value,
-                value: ""
-            });
+            // TODO Instead of creating new elements all the time, 
+            // Cache them and just loop over them
+            var url_root = this.url,
+                optionList = [],
+                default_option = $('<option />', {
+                    text: default_value,
+                    value: ""
+                });
             optionList.push(default_option);
 
             $.each(options, function(idx, elem){
                 option = $('<option />', {
                     text: elem.name,
-                    value: elem.id
+                    value: elem.id,
+                    url: url_root + elem.id
                 });
                 optionList.push(option);
             });
@@ -147,9 +234,9 @@ var LocationSelect = function() {
                 //Communities are all unique
                 community_list.push(elem['community']);
             });
-            update_select($('select[name=sub_county]'), sub_county_list, "--All Sub-Counties--");
-            update_select($('select[name=constituency]'), constituency_list, "-- All Constituencies--");
-            update_select($('select[name=community]'), community_list, "--All Communities--");
+            update_select($('select[name=sub_county]'), sub_county_list, "All Sub-Counties");
+            update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
+            update_select($('select[name=community]'), community_list, "All Communities");
         },
         level1ChangeListener = function(element) {
             //update level 0,2 and 3
@@ -177,8 +264,8 @@ var LocationSelect = function() {
                 community_list.push(elem['community']);
             });
             set_select_value($('select[name=county]'), county);
-            update_select($('select[name=constituency]'), constituency_list, "--Constituency--");
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
+            update_select($('select[name=community]'), community_list, "All Communities");
             setViewByValue('constituencies');
         },
         level2ChangeListener = function(element) {
@@ -203,7 +290,7 @@ var LocationSelect = function() {
             });
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
-            update_select($('select[name=community]'), community_list, "--Community--");
+            update_select($('select[name=community]'), community_list, "All Communities");
             setViewByValue('communities');
         }
         level3ChangeListener = function(element) {
@@ -233,57 +320,41 @@ var LocationSelect = function() {
         setViewByValue = function(value) {
             //udate view_by dropdown based on selected location type
 
-            var view_by = $('select[name=view_by]');
+            var
+                view_by = $('select[name=view_by]'),
+                sub_county = $('select[name=sub_county]').val(),
+                constituency = $('select[name=constituency]').val(),
+                community = $('select[name=constituency]').val();
 
+            view_by = this.view_by.clone();
             view_by.val(value);
-            view_by.children().prop('hidden', false);
             switch (value)
             {
                 case "sub_counties":
-                    if ($('select[name=county]').val() == '') {
-                        view_by.children('option[value=counties]').prop('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
                 break;
                 case "constituencies":
-                    if ($('select[name=sub_county').val() == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
                 break;
                 case "communities":
-                    if ($('select[name=constituency').val() == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                        view_by.children('option[value=constituencies]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                        view_by.children('option[value=constituencies]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
+                    view_by.children('option[value=constituencies]').remove();
                 break;
                 case "projects":
-                     if ($('select[name=constituency').val() == '') {
-                        view_by.children('option[value=counties]').attr('hidden', false);
-                        view_by.children('option[value=sub_counties]').attr('hidden', false);
-                        view_by.children('option[value=constituencies]').attr('hidden', false);
-                        view_by.children('option[value=communities]').attr('hidden', false);
-                    }else{
-                        view_by.children('option[value=counties]').attr('hidden', true);
-                        view_by.children('option[value=sub_counties]').attr('hidden', true);
-                        view_by.children('option[value=constituencies]').attr('hidden', true);
-                        view_by.children('option[value=communities]').attr('hidden', true);
-                    }
+                    view_by.children('option[value=counties]').remove();
+                    view_by.children('option[value=sub_counties]').remove();
+                    view_by.children('option[value=constituencies]').remove();
+                    view_by.children('option[value=communities]').remove();
                 break;
             }
-
+            $('select[name=view_by]').replaceWith(view_by);
         };
 
     this.data_map = {};
+    this.url = '';
+    this.view_by = $('select[name=view_by]').clone();
     this.get_filtered_location_list = get_filtered_location_list;
     this.level0ChangeListener = level0ChangeListener;
     this.level1ChangeListener = level1ChangeListener;

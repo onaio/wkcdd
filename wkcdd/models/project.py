@@ -76,6 +76,21 @@ class Project(Base):
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
         return sectors_dict[self.sector]
 
+    def get_projects(self, *criterion):
+        if criterion is not None:
+            try:
+                project = Project.get(Project.id == self.id, *criterion)
+                return [project]
+            except NoResultFound:
+                return None
+
+        else:
+            return [self]
+
+    def url(self, request, route_name, query_params=None):
+        return request.route_url(
+            'projects', traverse=(self.id), _query=query_params)
+
     @classmethod
     def create(cls, **kwargs):
         county = County.get_or_create(
@@ -146,6 +161,8 @@ class Project(Base):
 
     @classmethod
     def generate_filter_criteria(cls):
+        from wkcdd.models.report import Report
+
         sector_filter = [
             (reg_id, label)
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING]
@@ -175,10 +192,15 @@ class Project(Base):
             'sub_counties': sub_counties,
             'constituencies': constituencies,
             'communities': communities,
+            'year_periods': Report.get_year_periods(),
             'location_json_data': json.dumps(location_json_data)
         }
 
         return filter_criteria
+
+    @classmethod
+    def get_rank(cls):
+        return 5
 
 
 class ProjectType(Base):

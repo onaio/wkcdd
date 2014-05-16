@@ -21,11 +21,11 @@
 <div class="row">
   <div class="col-md-12">
     <!-- BEGIN SAMPLE TABLE PORTLET-->
-    <div class="portlet">
+    <div class="portlet clearfix">
       <div class="portlet-title">
          <div class="caption"><i class="icon-tasks"></i>Projects</div>
       </div>
-      <div class="portlet-body">
+      <div class="portlet-body clearfix">
          <div class="row">
              <div class="col-md-4">
                 <div class="input-icon right">
@@ -72,7 +72,7 @@
              </div>
          </div>
          <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
+            <table id="prjDatatable" class="table table-striped table-bordered table-hover">
                <thead>
                   <tr>
                      <th>{% trans %} Name {% endtrans %}</th>
@@ -86,7 +86,7 @@
                <tbody>
                {% for project in projects %}
                   <tr>
-                     <td><a href="{{ request.route_url('projects', traverse=(project.id, 'show')) }}">{{ project.name }}</a></td>
+                     <td><a href="{{ request.route_url('projects', traverse=(project.id)) }}">{{ project.name }}</a></td>
                      <td>{{ project.sector_name }}</td>
                      <td>{{ locations[project.id][0].pretty}}</td>
                      <td>{{ locations[project.id][1].pretty}}</td>
