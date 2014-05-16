@@ -80,7 +80,7 @@
     Custom.process_raw_points({{ sector_data[sector].project_geopoints|safe() }}, map);
     
     // Draw bar chart
-    Custom.drawImpactIndicatorChart({{ chart_dataset | safe() }})
+    Custom.drawIndicatorChart({{ chart_dataset | safe() }})
   {% endif %}
 
   {{ update_selected_location_dropdowns(search_criteria) }}
