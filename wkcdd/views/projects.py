@@ -1,3 +1,4 @@
+import json
 from collections import defaultdict
 from pyramid.view import (
     view_config,
@@ -57,7 +58,7 @@ class ProjectViews(object):
         locations = Project.get_locations(projects)
         # get filter criteria
         filter_criteria = Project.generate_filter_criteria()
-        project_geopoints = get_project_geolocations(projects)
+        project_geopoints = json.dumps(get_project_geolocations(projects))
         return {
             'project_types': project_types,
             'projects': projects,

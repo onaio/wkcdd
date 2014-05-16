@@ -66,6 +66,9 @@
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    {% if selected_sector %}
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
+    {% endif %}
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
@@ -76,8 +79,8 @@
 
   {% if selected_sector %}
     {% set sector = selected_sector.sector %}
-    map = Custom.display_constituency_map();
-    Custom.process_raw_points({{ sector_data[sector].project_geopoints|safe() }}, map);
+    var point_data = {{ sector_data[sector].project_geopoints|safe() }};
+    Map.displayMarkers(point_data);
     
     // Draw bar chart
     Custom.drawIndicatorChart({{ chart_dataset | safe() }})

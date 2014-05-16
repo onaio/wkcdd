@@ -15,7 +15,8 @@ var Map = (function(root){
     var lookupProperty = 'COUNTY';
 
     var InfoBox = L.Control.extend({
-        template: _.template('<h4><%= title %></h4>' +
+        template: _.template('' +
+            '<h4><%= title %></h4>' +
             '<p><%= label %>: <%= value %></p>'),
         onAdd: function (map) {
             return L.DomUtil.create('div', 'info');
@@ -70,13 +71,13 @@ var Map = (function(root){
     var isHistogram = false;
 
     var legend = new Legend();
-    legend.addTo(map);
-    legend.update([
+    //legend.addTo(map);
+    /*legend.update([
         {color: colors.GREEN, label: '&gt; 80%'},
         {color: colors.AMBER, label: '60&ndash;80%'},
         {color: colors.RED, label: '&lt; 60%'},
         {color: colors.GREY, label: 'No Reports'}
-    ]);
+    ]);*/
 
     var markerLayer = L.layerGroup()
         .addTo(map);
@@ -126,9 +127,15 @@ var Map = (function(root){
     };
 
     var setIndicator = function (indicator_id) {
-        map.removeLayer(markerLayer);
-        shapeLayer.addTo(map);
         var bins;
+        map.removeLayer(markerLayer);
+        map.removeLayer(shapeLayer);
+        if(legend._map)
+            map.removeControl(legend);
+
+        // add them back
+        shapeLayer.addTo(map);
+        legend.addTo(map);
 
         if (isHistogram) {
             // get the max value for the indicator
@@ -193,7 +200,7 @@ var Map = (function(root){
         }
     };
 
-    displayMarkers = function(raw_data) {
+    var displayMarkers = function(raw_data) {
         var latlng, icon,
             icon_sector_map = {
                 'Banana': {label: 'b', color: '#d8c22f'},
@@ -209,6 +216,7 @@ var Map = (function(root){
                 'Tailoring': {label: 't', color: '#3aa32a'}
             };
         $.each(raw_data, function (index, data) {
+            var marker;
             latlng = L.latLng(data.lat, data.lng);
             icon = L.MakiMarkers.icon({
                 icon: icon_sector_map[data.sector].label,

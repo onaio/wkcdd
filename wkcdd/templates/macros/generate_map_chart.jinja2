@@ -1,4 +1,4 @@
-{% macro generate_map_chart(request, sector_indicator_mapping) %}
+{% macro generate_map_chart(request, indicators) %}
 <div class="row">
   <div class="col-md-12">
     <div class="portlet">
@@ -19,9 +19,8 @@
                 Select Indicator <span class="icon-angle-down"></span>
               </a>
               <ul class="dropdown-menu select-sector">
-                {% for indicator in sector_indicator_mapping%}
-                  {% set title, group = indicator %}
-                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{% if group is defined %}{{ group[2] }}{% else %}{{ indicator.name }}{% endif %}"> {{ title }}</a></li>
+                {% for indicator in indicators %}
+                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
                 {% endfor %}
               </ul>
             </div>
