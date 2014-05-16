@@ -58,7 +58,7 @@ def sum_reduce_func(current, value):
     except (ValueError, TypeError):
         current = 0
 
-    return value + current
+    return abs(value) + abs(current)
 
 
 def get_impact_indicator_list(indicators_tuple):
