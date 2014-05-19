@@ -28,20 +28,30 @@
 {% block content %}
   {{ add_indicator_links(request, location, search_criteria) }}
   
-  <!-- <div class="row"> -->
-  <!-- Render map -->
-    <!-- <div class="col-md-5">
-      
-    </div> -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet">
+        <div class="portlet-title">
+          <div class="tools pull-left">
+              <a href="" class="collapse"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+          <div class="row">
+            <!-- Render map -->
+            <div class="col-md-6">
+            {{ generate_map_chart(request, indicators) }}
+            </div>
 
-  <!-- Render chart view -->
-    <!-- <div class="col-md-7">
-      
+            <!-- Render chart view -->
+            <div class="col-md-6">
+              {% include 'chart.jinja2' %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div> -->
-  {{ generate_map_chart(request, indicators) }}
-  
-  {% include 'chart.jinja2' %}
+  </div>  
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -155,7 +165,7 @@
   });
 
   // Draw bar chart
-  Custom.drawIndicatorChart({{ chart_dataset | safe() }})
+  Custom.setChartDataset({{ chart_dataset | safe() }})
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

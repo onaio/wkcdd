@@ -109,8 +109,12 @@ span.ratio {
     font-size: 11px;
 }
 
-#map, #chart {
+#map {
     height: 400px;
+}
+
+#chart {
+    height: 440px;
 }
 
 .btn {

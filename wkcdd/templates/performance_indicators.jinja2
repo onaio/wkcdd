@@ -37,12 +37,30 @@
       {% set rows = sector_data[sector].rows %}
       {% set summary_row = sector_data[sector].summary_row %}
       {% set indicators = sector_indicators[sector] %}
-      <!-- Show map chart if only one sector is selected -->
-      {{ generate_map_chart_pf(request, indicators) }}
-      
-      <!-- Show performance indicator chart for selected sector -->
-      {% include 'chart.jinja2' %}
+        <div class="row">
+          <div class="col-md-12">
+            <div class="portlet">
+              <div class="portlet-title">
+                <div class="tools pull-left">
+                    <a href="" class="collapse"></a>
+                  </div>
+              </div>
+              <div class="portlet-body">
+                <div class="row">
+                  <!-- Show map chart if only one sector is selected -->
+                  <div class="col-md-6">
+                  {{ generate_map_chart_pf(request, indicators) }}
+                  </div>
 
+                  <!-- Show performance indicator chart for selected sector -->
+                  <div class="col-md-6">
+                    {% include 'chart.jinja2' %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       {{ performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria )}}
     {% else %}
@@ -101,17 +119,18 @@
       },
     {%- endfor %}
   };
-  Map.setData(data, false);
+  
+   Map.setData(data, false);
 
-  // load json layer
-  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
-    dataType: 'json'
-  }).done(function(data, status){
-    Map.setGeoJSON(data);
-  });
-    
-    // Draw bar chart
-    Custom.drawIndicatorChart({{ chart_dataset | safe() }})
+   // load json layer
+   $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+     dataType: 'json'
+   }).done(function(data, status){
+     Map.setGeoJSON(data);
+   });
+      
+   // Draw bar chart
+   Custom.setChartDataset({{ chart_dataset | safe() }})
   {% endif %}
 
   {{ update_selected_location_dropdowns(search_criteria) }}
