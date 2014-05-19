@@ -1,4 +1,4 @@
-{% macro generate_map_chart(request, indicators) %}
+{% macro generate_map_chart_pf(request, indicators) %}
 <div class="row">
   <div class="col-md-12">
     <div class="portlet">
@@ -20,7 +20,9 @@
               </a>
               <ul class="dropdown-menu select-sector">
                 {% for indicator in indicators %}
-                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
+                  {% set label = indicator[0] -%}
+                  {% set key = indicator[1][2] -%}
+                  <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ key }}"> {{ label }}</a></li>
                 {% endfor %}
               </ul>
             </div>

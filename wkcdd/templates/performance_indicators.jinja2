@@ -1,6 +1,6 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
-{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
+{% from 'macros/generate_map_chart_pf.jinja2' import  generate_map_chart_pf %}
 {% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
 {% from 'macros/performance_indicator_table.jinja2' import performance_indicator_table %}
@@ -33,16 +33,17 @@
     {{ generate_project_type_dropdown(request, sectors, search_criteria) }}
     
     {% if selected_sector %}
-      <!-- Show map chart if only one sector is selected -->
-      {{ generate_map_chart(request) }}
-      
-      <!-- Show performance indicator chart for selected sector -->
-      {% include 'chart.jinja2' %}
-
       {% set sector, label = selected_sector.sector, selected_sector.label %}
       {% set rows = sector_data[sector].rows %}
       {% set summary_row = sector_data[sector].summary_row %}
       {% set indicators = sector_indicators[sector] %}
+      <!-- Show map chart if only one sector is selected -->
+      {{ generate_map_chart_pf(request, indicators) }}
+      
+      <!-- Show performance indicator chart for selected sector -->
+      {% include 'chart.jinja2' %}
+
+
       {{ performance_indicator_table(request, location, target_class, sector, label, rows, summary_row, indicators, search_criteria )}}
     {% else %}
 
@@ -64,8 +65,11 @@
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.categoryAxisRenderer.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.cursor.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
-    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    {% if selected_sector %}
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
+    {% endif %}
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
@@ -76,8 +80,36 @@
 
   {% if selected_sector %}
     {% set sector = selected_sector.sector %}
-    map = Custom.display_constituency_map();
-    Custom.process_raw_points({{ sector_data[sector].project_geopoints|safe() }}, map);
+    {% set rows = sector_data[sector].rows %}
+    {% set indicators = sector_indicators[sector] %}
+    var point_data = {{ sector_data[sector].project_geopoints|safe() }};
+    Map.displayMarkers(point_data);
+
+    var data = {
+    {% for row in rows -%}
+      '{{ row.location.pretty }}': {
+        {% for indicator in indicators -%}
+          {% set label = indicator[0] -%}
+          {% set key = indicator[1][2] -%}
+          {% set value = row.indicators[key] -%}
+          {% if value %}
+          '{{ key }}': {
+            label: '{{ label }}',
+            value: '{{ value }}'
+          },
+          {%- endif %}
+        {%- endfor %}
+      },
+    {%- endfor %}
+  };
+  Map.setData(data, false);
+
+  // load json layer
+  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+    dataType: 'json'
+  }).done(function(data, status){
+    Map.setGeoJSON(data);
+  });
     
     // Draw bar chart
     Custom.drawIndicatorChart({{ chart_dataset | safe() }})

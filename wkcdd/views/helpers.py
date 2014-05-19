@@ -78,9 +78,18 @@ def get_project_geolocations(projects):
          'lng': str(project.latlong[1])}
         for project in projects if project.latlong]
 
-    project_geopoints = json.dumps(project_geopoints)
-
     return project_geopoints
+
+
+def get_geolocations_from_items(items):
+    # generate project_geopoints from project list
+    geolocations = []
+    for item in items:
+        # get reports for this location or project,
+        projects = item.get_projects()
+        geolocations.extend(
+            get_project_geolocations(projects))
+    return geolocations
 
 
 def name_to_location_type(level):
@@ -141,7 +150,7 @@ def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
         child_locations, indicators, **kwargs)
 
     # generate project_geopoints from project list
-    project_geopoints = get_project_geolocations(projects)
+    project_geopoints = json.dumps(get_project_geolocations(projects))
 
     return {
         'rows': rows,
