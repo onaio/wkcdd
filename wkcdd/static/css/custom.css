@@ -219,3 +219,7 @@ table.dataTable{
 .float-left {
     float: left;
 }
+
+div#chart.jqplot-target {
+    color: #000 !important;
+}

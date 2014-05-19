@@ -125,6 +125,9 @@ var Custom = function () {
                     },
                     pointLabels: {show: true, formatString: '%d'}
                 },
+                grid: {
+                    background:'#ffffff'
+                },
                 // Custom labels for the series are specified with the "label"
                 // option on the series option.  Here a series option object
                 // is specified for each series.
