@@ -12,6 +12,7 @@ var Custom = function () {
 
             if(map) map = null;
             county_map = new L.Map('map', {
+                fullscreenControl: true,
                 layers: [
                     L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.tk0jatt9/{z}/{x}/{y}.png', {
                             maxZoom: 12,
@@ -28,6 +29,7 @@ var Custom = function () {
             if(map) map = null;
 
             constituencies_map = new L.Map('map', {
+                fullscreenControl: true,
                     layers: [
                             L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i3hmlj38/{z}/{x}/{y}.png', {
                             maxZoom: 13,
@@ -39,27 +41,27 @@ var Custom = function () {
 
             return map;
         },
-        process_raw_points = function(raw_data, map) {
+        process_raw_points = function (raw_data, map) {
             var latlng, icon,
                 icon_sector_map = {
-                    'Banana': {label:'b', color:'#d8c22f'},
-                    'Catering': {label:'c', color:'#e8ffb9'},
-                    'Dairy Cows': {label: 'slaughterhouse', color:'#a28245'},
-                    'Dairy Goat': {label:'g', color:'#f3c368'},
-                    'Field Industrial Crops': {label:'garden', color:'#21b01d'},
-                    'Fish Farming': {label:'wetland', color:'#2c34c7'},
-                    'Motor Cycle': {label:'m', color:'#000000'},
-                    'Oxen Plough': {label:'o', color:'#697690'},
-                    'Piggery': {label:'p', color:'#b54282'},
-                    'Poultry': {label:'p', color:'#ae241a'},
-                    'Tailoring': {label:'t', color:'#3aa32a'}
+                    'Banana': {label: 'b', color: '#d8c22f'},
+                    'Catering': {label: 'c', color: '#e8ffb9'},
+                    'Dairy Cows': {label: 'slaughterhouse', color: '#a28245'},
+                    'Dairy Goat': {label: 'g', color: '#f3c368'},
+                    'Field Industrial Crops': {label: 'garden', color: '#21b01d'},
+                    'Fish Farming': {label: 'wetland', color: '#2c34c7'},
+                    'Motor Cycle': {label: 'm', color: '#000000'},
+                    'Oxen Plough': {label: 'o', color: '#697690'},
+                    'Piggery': {label: 'p', color: '#b54282'},
+                    'Poultry': {label: 'p', color: '#ae241a'},
+                    'Tailoring': {label: 't', color: '#3aa32a'}
                 };
-            $.each(raw_data, function(index, data){
+            $.each(raw_data, function (index, data) {
                 latlng = L.latLng(data.lat, data.lng);
                 icon = L.MakiMarkers.icon({
-                    icon:icon_sector_map[data.sector].label,
-                    color:icon_sector_map[data.sector].color,
-                    size:'s'});
+                    icon: icon_sector_map[data.sector].label,
+                    color: icon_sector_map[data.sector].color,
+                    size: 's'});
                 marker = L.marker(latlng, {icon: icon, title: data.name}).addTo(map);
                 marker.bindPopup(data.name);
             });
@@ -160,7 +162,11 @@ var Custom = function () {
         init = function(){
         };
 
-        $('.selectpicker').selectpicker();
+    $('.indicator-selector').click(function () {
+        Map.setIndicator($(this).data('indicator'));
+       $('.selected-indicator').html($(this).html());
+    });
+    $('.selectpicker').selectpicker();
     
     // public functions
     return {

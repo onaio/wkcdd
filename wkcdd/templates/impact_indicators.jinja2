@@ -39,7 +39,7 @@
       
     </div>
   </div> -->
-  {{ generate_map_chart(request) }}
+  {{ generate_map_chart(request, indicators) }}
   
   {% include 'chart.jinja2' %}
   <div class="row">
@@ -123,14 +123,36 @@
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
-  
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
-  LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}'
+  LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}';
+  var geo_locations = {{ geo_locations|safe() }};
+  Map.displayMarkers(geo_locations);
+
+  var data = {
+    {% for row in rows -%}
+      '{{ row.location.pretty }}': {
+        {% for indicator in indicators -%}
+          '{{ indicator.key  }}': {
+            label: '{{ indicator.label }}',
+            value: '{{ row.indicators[indicator.key] }}'
+        },
+        {%  endfor %}
+      },
+    {% endfor %}
+  };
+  Map.setData(data, true);
+
+  // load json layer
+  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
+    dataType: 'json'
+  }).done(function(data, status){
+    Map.setGeoJSON(data);
+  });
 
   // Draw bar chart
   Custom.drawIndicatorChart({{ chart_dataset | safe() }})
