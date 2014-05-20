@@ -85,6 +85,10 @@ class ProjectViews(object):
 
         reports = Report.get_reports_for_projects([project], *criteria)
 
+        filter_criteria = Project.generate_filter_criteria()
+        search_criteria = {'month_or_quarter': month_or_quarter,
+                           'period': period}
+
         # periods = [report.period for report in reports]
         if reports:
             # limit report to the latest report within the period
@@ -101,7 +105,9 @@ class ProjectViews(object):
                     ('title', 'group'),
                     constants.PERFORMANCE_INDICATOR_REPORTS[
                         report.report_data[constants.XFORM_ID]]),
-                'impact_indicator_mapping': impact_indicator_mapping
+                'impact_indicator_mapping': impact_indicator_mapping,
+                'filter_criteria': filter_criteria,
+                'search_criteria': search_criteria
             }
         else:
             return {
@@ -109,4 +115,6 @@ class ProjectViews(object):
                 'performance_indicators': None,
                 'performance_indicator_mapping': None,
                 'impact_indicators': None,
+                'filter_criteria': filter_criteria,
+                'search_criteria': search_criteria
             }
