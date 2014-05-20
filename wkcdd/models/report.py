@@ -12,7 +12,8 @@ from sqlalchemy import (
     Column,
     Integer,
     DateTime,
-    String
+    String,
+    Enum
 )
 from sqlalchemy.dialects.postgresql import JSON
 
@@ -23,13 +24,29 @@ from wkcdd.libs.utils import (
 
 class Report(Base):
     __tablename__ = 'reports'
+
+    PENDING = 'pending'
+    APPROVED = 'approved'
+    REJECTED = 'rejected'
+
     id = Column(Integer, primary_key=True, nullable=False)
     project_code = Column(String, nullable=False, index=True)
     submission_time = Column(DateTime(timezone=True), nullable=False)
     month = Column(Integer, nullable=False)
     quarter = Column(String, nullable=False)
     period = Column(String, nullable=False)
+
     report_data = Column(JSON, nullable=False)
+
+    status = Column(
+        Enum(PENDING, APPROVED, REJECTED, name='SUBMISSION_STATUS'),
+        nullable=False, index=True, default=PENDING)
+
+    StatusLabels = (
+        (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+    )
 
     @classmethod
     def add_report_submission(cls, report):
