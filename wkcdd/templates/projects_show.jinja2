@@ -7,32 +7,60 @@
     <small></small>
   </h3>
 {% endblock %}
-{% block breadcrumbs %}
-  <li>
-      <a href="{{ request.route_url('impact_indicators', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      {{ project.pretty }}
-  </li>
-{% endblock %}
 {% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+      <li>
+          <a href="{{ request.route_url('performance_indicators', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          {{ project.pretty }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Project Details</div>
+      </div>
+      <div class="portlet-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover">
+            <tbody>
+              {% for label, value in project.description %}
+                <tr>
+                  <td class="bold">{{ label }}</td>
+                  <td>{{ value }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
 <div class="col-md-12">
     <div class="portlet">

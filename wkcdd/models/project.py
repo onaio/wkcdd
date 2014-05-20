@@ -79,6 +79,12 @@ class Project(Base):
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
         return sectors_dict[self.sector]
 
+    @property
+    def description(self):
+        description_list = [(label, self.project_data.get(key))
+                            for key, label in constants.PROJECT_DETAILS_KEYS]
+        return description_list
+
     def get_projects(self, *criterion):
         if criterion is not None:
             try:
