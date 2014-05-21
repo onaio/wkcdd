@@ -58,5 +58,6 @@ setup(name='wkcdd',
       main = wkcdd:main
       [console_scripts]
       initialize_wkcdd_db = wkcdd.scripts.initializedb:main
+      import_data = wkcdd.scripts.initializedb:import_data
       """,
       )

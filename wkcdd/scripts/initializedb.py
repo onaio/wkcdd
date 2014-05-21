@@ -13,6 +13,11 @@ from wkcdd.models.base import (
     Base,
 )
 
+from wkcdd.libs.import_project_data import (
+    fetch_project_registration_data,
+    fetch_report_form_data
+)
+
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -21,12 +26,30 @@ def usage(argv):
     sys.exit(1)
 
 
-def main(argv=sys.argv):
+def setup_database_engine(settings):
+    engine = engine_from_config(settings, 'sqlalchemy.')
+    DBSession.configure(bind=engine)
+    return engine
+
+
+def get_settings(argv):
     if len(argv) != 2:
         usage(argv)
     config_uri = argv[1]
     setup_logging(config_uri)
-    settings = get_appsettings(config_uri)
-    engine = engine_from_config(settings, 'sqlalchemy.')
+    return get_appsettings(config_uri)
+
+
+def main(argv=sys.argv):
+    settings = get_settings(argv)
+    engine = setup_database_engine(settings)
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+
+
+def import_data(argv=sys.argv):
+    settings = get_settings(argv)
+    engine = setup_database_engine(settings)
+    DBSession.configure(bind=engine)
+    fetch_project_registration_data()
+    fetch_report_form_data()
