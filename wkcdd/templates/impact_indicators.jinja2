@@ -1,6 +1,5 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
-{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{% trans %}Impact Indicators{% endtrans %}{% endblock %}
@@ -37,10 +36,28 @@
             </div>
         </div>
         <div class="portlet-body">
+          <div class="row map_chart">
+            <div class="md-col-12">
+              <div class="btn-toolbar margin-bottom-10">
+                <div class="btn-group pull-right">
+                  <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu select-sector">
+                    {% for indicator in indicators %}
+                      <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <!-- Render map -->
             <div class="col-md-6">
-            {{ generate_map_chart(request, indicators) }}
+              <div id="maps-content" class="display-none" style="display: block;">
+                <div id="map"></div>
+              </div>
             </div>
 
             <!-- Render chart view -->

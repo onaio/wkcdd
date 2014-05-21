@@ -260,3 +260,7 @@ table.dataTable{
 div#chart.jqplot-target {
     color: #000 !important;
 }
+
+div.row.map_chart {
+    margin: 0;
+}
