@@ -6,8 +6,11 @@ from wkcdd.models.project import Project
 
 from wkcdd.models.base import (
     Base,
-    DBSession
+    DBSession,
+    BaseModelFactory
 )
+from sqlalchemy.orm.exc import NoResultFound
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -42,11 +45,15 @@ class Report(Base):
         Enum(PENDING, APPROVED, REJECTED, name='SUBMISSION_STATUS'),
         nullable=False, index=True, default=PENDING)
 
-    StatusLabels = (
+    status_labels = (
         (PENDING, 'Pending'),
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected'),
     )
+
+    @property
+    def form_id(self):
+        return self.report_data[constants.XFORM_ID]
 
     @classmethod
     def add_report_submission(cls, report):
@@ -251,3 +258,19 @@ class Report(Base):
 
 class ReportError(Exception):
     pass
+
+
+class ReportFactory(BaseModelFactory):
+    __acl__ = []
+
+    def __getitem__(self, item):
+        # try to retrieve the report whose id matches item
+        try:
+            report_id = int(item)
+            report = DBSession.query(Report).filter_by(id=report_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            report.__parent__ = self
+            report.__name__ = item
+            return report
