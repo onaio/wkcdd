@@ -189,9 +189,9 @@ span.ratio {
 }
 /*datatables*/
 .dataTables_wrapper {
-    border-top: 1px dashed #dedede;
+    /*border-top: 1px dashed #dedede;*/
     font-size:12px;
-    margin-top: 1.6em;
+    /*margin-top: 1.6em;*/
     padding-top: 1.6em;
 }
 table.dataTable{
@@ -222,6 +222,11 @@ table.dataTable{
 .dataTables_filter, dataTables_length{
     margin-bottom:0.8em;
 }
+
+.dataTables_info{
+	margin-bottom:1em;
+}
+
 /*Indicator-link tabs*/
 .indicator_tabs{
 	border-bottom:1px solid #DDDDDD;
