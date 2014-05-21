@@ -7,103 +7,142 @@
     <small></small>
   </h3>
 {% endblock %}
-{% block breadcrumbs %}
-  <li>
-      <a href="{{ request.route_url('impact_indicators', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      <a href="{{ request.route_url('impact_indicators',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
-      <i class="icon-angle-right"></i>
-  </li>
-  <li>
-      {{ project.pretty }}
-  </li>
-{% endblock %}
 {% block content %}
 <div class="row">
-<div class="col-md-12">
-    <div class="portlet">
-      <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Performance Indicators</div>
-      </div>
-      <div class="portlet-body">
-        {% if performance_indicator_mapping %}
-         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-               <thead>
-                  <tr>
-                     <th>{% trans %} Outputs/ Outcomes/Indicators {% endtrans %}</th>
-                     <th>{% trans %} Target {% endtrans %}</th>
-                     <th>{% trans %} Cumulative achieved {% endtrans %}</th>
-                     <th>{% trans %} % achieved {% endtrans %}</th>
-                  </tr>
-               </thead>
-               <tbody>
-               {% for indicator in performance_indicator_mapping %}
-                <tr>
-                  <td>
-                    {{ indicator.title }}
-                  </td>
-                   {% for key in indicator.group %}
-                      <td>
-                        {{ value_or_default(performance_indicators[key], '-') }}
-                      </td>
-                   {% endfor %}
-                </tr>
-                {% endfor %}
-               </tbody>
-            </table>
-         </div>
-        {% else %}
-          <div> {% trans %} No reports found {% endtrans %}</div>
-        {% endif %}
-      </div>
-    </div>
-    <div class="portlet">
-      <div class="portlet-title">
-         <div class="caption"><i class="icon-tasks"></i>Impact Indicators</div>
-      </div>
-      <div class="portlet-body">
-        {% if performance_indicator_mapping %}
-         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-               <thead>
-                  <tr>
-                     <th>{% trans %} Outputs/ Outcomes/Impact Indicators {% endtrans %}</th>
-                     <th>{% trans %} Amount {% endtrans %}</th>
-                  </tr>
-               </thead>
-               <tbody>
-               {% for indicator in impact_indicator_mapping %}
-                <tr>
-                  <td>
-                    {{ indicator.label }}
-                  </td>
-                    <td>{{ value_or_default(impact_indicators[indicator.key],'-') }}</td>
-                </tr>
-                {% endfor %}
-               </tbody>
-            </table>
-         </div>
-        {% else %}
-          <div> {% trans %} No reports found {% endtrans %}</div>
-        {% endif %}
-      </div>
-    </div>
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+      <li>
+          <a href="{{ request.route_url('performance_indicators', traverse=()) }}">{% trans %} County Indicators {% endtrans %}</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.sub_county.county.id)) }}">{{ project.community.constituency.sub_county.county.pretty }} County</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.sub_county.id)) }}">{{ project.community.constituency.sub_county.pretty }} Sub County</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.constituency.id)) }}">{{ project.community.constituency.name | capitalize }} Constituency</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          <a href="{{ request.route_url('performance_indicators',traverse=(project.community.id)) }}">{{ project.community.pretty }} Community</a>
+          <i class="icon-angle-right"></i>
+      </li>
+      <li>
+          {{ project.pretty }} {% trans %}Project{% endtrans %}
+      </li>
+    </ul>
+  </div>
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet">
+      <div class="portlet-title">
+         <div class="caption"><i class="icon-tasks"></i>Project Details</div>
+      </div>
+      <div class="portlet-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover">
+            <tbody>
+              {% for label, value in project.description %}
+                <tr>
+                  <td class="bold">{{ label }}</td>
+                  <td>{{ value }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <form id="filter_criteria" class="form-inline" method="get">
+            {% with month_or_quarter=search_criteria.get('month_or_quarter'), period=search_criteria.get('period') , years = filter_criteria.get('year_periods')%}   
+              {% include '/period_selector.jinja2' %}
+            {% endwith %}
+
+            <button type="submit" class="filter-btn btn btn-info">Apply</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+      <div class="portlet">
+        <div class="portlet-title">
+           <div class="caption"><i class="icon-tasks"></i>Performance Indicators</div>
+        </div>
+        <div class="portlet-body">
+          {% if performance_indicator_mapping %}
+           <div class="table-responsive">
+              <table class="table table-striped table-bordered table-hover">
+                 <thead>
+                    <tr>
+                       <th>{% trans %} Outputs/ Outcomes/Indicators {% endtrans %}</th>
+                       <th>{% trans %} Target {% endtrans %}</th>
+                       <th>{% trans %} Cumulative achieved {% endtrans %}</th>
+                       <th>{% trans %} % achieved {% endtrans %}</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                 {% for indicator in performance_indicator_mapping %}
+                  <tr>
+                    <td>
+                      {{ indicator.title }}
+                    </td>
+                     {% for key in indicator.group %}
+                        <td>
+                          {{ value_or_default(performance_indicators[key], '-') }}
+                        </td>
+                     {% endfor %}
+                  </tr>
+                  {% endfor %}
+                 </tbody>
+              </table>
+           </div>
+          {% else %}
+            <div> {% trans %} No reports found {% endtrans %}</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="portlet">
+        <div class="portlet-title">
+           <div class="caption"><i class="icon-tasks"></i>Impact Indicators</div>
+        </div>
+        <div class="portlet-body">
+          {% if performance_indicator_mapping %}
+           <div class="table-responsive">
+              <table class="table table-striped table-bordered table-hover">
+                 <thead>
+                    <tr>
+                       <th>{% trans %} Outputs/ Outcomes/Impact Indicators {% endtrans %}</th>
+                       <th>{% trans %} Amount {% endtrans %}</th>
+                    </tr>
+                 </thead>
+                 <tbody>
+                 {% for indicator in impact_indicator_mapping %}
+                  <tr>
+                    <td>
+                      {{ indicator.label }}
+                    </td>
+                      <td>{{ value_or_default(impact_indicators[indicator.key],'-') }}</td>
+                  </tr>
+                  {% endfor %}
+                 </tbody>
+              </table>
+           </div>
+          {% else %}
+            <div> {% trans %} No reports found {% endtrans %}</div>
+          {% endif %}
+        </div>
+      </div>
+  </div>
 {{response}}
 </div>
 {% endblock content %}
