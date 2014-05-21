@@ -5,11 +5,13 @@ DEPLOYMENTS = {
     'prod': {
         'virtual_env': '/home/ubuntu/.virtualenvs/wkcdd_prod',
         'project_dir': '/home/ubuntu/wkcdd',
+        'host_string': 'ubuntu@wkcdd.ona.io',
         'alembic_section': 'production'
     },
     'dev': {
         'virtual_env': '/home/vagrant/.virtualenvs/wkcdd_dev',
-        'project_dir': '/home/vagrant/wkcdd'
+        'project_dir': '/home/vagrant/wkcdd',
+        'host_string': 'vagrant@192.168.33.14',
     }
 }
 
