@@ -1327,3 +1327,13 @@ PROJECT_TYPE_MAPPING = [
     (TAILORING_PROJECT_REGISTRATION, TAILORING_PROJECT_REPORT,
      _("Tailoring")),
 ]
+
+PROJECT_DETAILS_KEYS = (
+    ('start_date', _('Project Start Date')),
+    ('chair', _('Chairperson')),
+    ('cp_phone', _('Chairperson Phone Number')),
+    ('secretary', _('Secretary')),
+    ('sec_phone', _('Secretary Phone Number')),
+    ('treasurer', _('Treasurer')),
+    ('number_treas', _('Treasurer Phone Number'))
+)

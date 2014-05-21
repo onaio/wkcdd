@@ -36,6 +36,7 @@ def add_project(project_data, project_code):
         community_name=project_data.get(constants.COMMUNITY_NAME),
         geolocation=project_data.get(constants.GEOLOCATION),
         project_type=project_data.get(constants.PROJECT_TYPE),
+        project_data=project_data,
         sector=project_data.get(constants.XFORM_ID)
     )
 

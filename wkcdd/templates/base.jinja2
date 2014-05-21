@@ -11,7 +11,7 @@
    <meta content="" name="description" />
    <meta content="" name="author" />
    <meta name="MobileOptimized" content="320">
-   <!-- BEGIN GLOBAL MANDATORY STYLES -->          
+   <!-- BEGIN GLOBAL MANDATORY STYLES -->
    <link href="{{ request.static_url('wkcdd:static/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/plugins/uniform/css/uniform.default.css') }}" rel="stylesheet" type="text/css"/>
@@ -19,38 +19,39 @@
    <!-- BEGIN PAGE LEVEL STYLES -->
    <link href="{{ request.static_url('wkcdd:static/plugins/jqvmap/jqvmap/jqvmap.css') }}" media="screen" rel="stylesheet" type="text/css" />
    <!-- END PAGE LEVEL STYLES -->
-   <!-- BEGIN THEME STYLES --> 
+   <!-- BEGIN THEME STYLES -->
    <link href="{{ request.static_url('wkcdd:static/css/style-conquer.css') }}" rel="stylesheet" type="text/css"/>
 
    <link href="{{ request.static_url('wkcdd:static/css/style.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/style-responsive.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/plugins.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/themes/default.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
-   <link href="{{ request.static_url('wkcdd:static/css/custom.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/leaflet/leaflet.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
    <link href="{{ request.static_url('wkcdd:static/leaflet/leaflet.fullscreen.css') }}" rel='stylesheet' />
    <link href="{{ request.static_url('wkcdd:static/css/jquery.dataTables.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css"/>
+   <link href="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.css') }}" rel="stylesheet" type="text/css"/>
+   <link href="{{ request.static_url('wkcdd:static/css/custom.css') }}" rel="stylesheet" type="text/css"/>
    <!-- END THEME STYLES -->
    <link rel="shortcut icon" href="favicon.ico" />
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed">
-   <!-- BEGIN HEADER -->   
+   <!-- BEGIN HEADER -->
    <div class="header navbar navbar-inverse navbar-fixed-top">
       <!-- BEGIN TOP NAVIGATION BAR -->
       <div class="header-inner">
-         <!-- BEGIN LOGO -->  
+         <!-- BEGIN LOGO -->
          <a class="navbar-brand" href="{{ request.route_url('default') }}">
          <img src="{{ request.static_url('wkcdd:static/img/wkcdd-logo.png') }}" alt="logo" class="img-responsive"/>
          </a>
-         
+
          <!-- END LOGO -->
-         <!-- BEGIN RESPONSIVE MENU TOGGLER --> 
+         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
          <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
          <img src="img/menu-toggler.png" alt="" />
-         </a> 
+         </a>
          <!-- END RESPONSIVE MENU TOGGLER -->
          <!-- END TOP NAVIGATION MENU -->
       </div>
@@ -58,7 +59,7 @@
    </div>
    <!-- END HEADER -->
    <div class="clearfix"></div>
-   <!-- BEGIN CONTAINER -->      
+   <!-- BEGIN CONTAINER -->
    <div class="page-container">
       <!-- BEGIN SIDEBAR -->
       <div class="page-sidebar navbar-collapse collapse">
@@ -86,16 +87,6 @@
 			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
 			</a>
 		</li>
-		<li class="last">
-			<a class="
-			    {%if request.path_info_peek() == 'reporting_status' %}
-                    selected
-                {%endif%}"
-                    href="{{ request.route_url('reporting_status', traverse=('')) }}">
-			<img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
-			<span class="title">{% trans %} REPORTING <br/>STATUS {% endtrans %}</span>
-			</a>
-		</li>
 	  </ul>
          <!-- END SIDEBAR MENU -->
       </div>
@@ -115,7 +106,7 @@
                <ul class="page-breadcrumb breadcrumb">
                   <li>
                      <i class="icon-home"> </i>
-                     <a href="{{ request.route_url('default') }}">{% trans %}Home{% endtrans %}</a> 
+                     <a href="{{ request.route_url('default') }}">{% trans %}Home{% endtrans %}</a>
                      <i class="icon-angle-right"> </i>
                   </li>
                    {% block breadcrumbs %}{% endblock %}
@@ -129,7 +120,7 @@
 		 {% block indicators %}{% endblock %}
          <!-- BEGIN PAGE CONTENT-->
 	{% block content %}{% endblock %}
-         <!-- END PAGE CONTENT-->     
+         <!-- END PAGE CONTENT-->
       </div>
       <!-- END PAGE -->
    </div>
@@ -147,7 +138,7 @@
    </div>
    <!-- END FOOTER -->
    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-   <!-- BEGIN CORE PLUGINS -->   
+   <!-- BEGIN CORE PLUGINS -->
    <!--[if lt IE 9]>
    <script src="{{ request.static_url('wkcdd:static/plugins/respond.min.js') }}"></script>
    <script src="{{ request.static_url('wkcdd:static/plugins/excanvas.min.js') }}"></script>

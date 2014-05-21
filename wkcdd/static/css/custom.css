@@ -109,8 +109,12 @@ span.ratio {
     font-size: 11px;
 }
 
-#map, #chart {
+#map {
     height: 400px;
+}
+
+#chart {
+    height: 440px;
 }
 
 .btn {
@@ -256,4 +260,12 @@ table.dataTable{
 }
 .float-left {
     float: left;
+}
+
+div#chart.jqplot-target {
+    color: #000 !important;
+}
+
+div.row.map_chart {
+    margin: 0;
 }

@@ -18,6 +18,8 @@ from sqlalchemy.orm import (
     sessionmaker
 )
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.dialects.postgresql import JSON
+
 from zope.sqlalchemy import ZopeTransactionExtension
 
 from wkcdd.libs.utils import humanize
@@ -56,6 +58,7 @@ class Project(Base):
                            primaryjoin="Project.code == \
                            foreign(Report.project_code)",
                            order_by='desc(Report.submission_time)')
+    project_data = Column(JSON, nullable=False)
 
     def __str__(self):
         return self.name
@@ -75,6 +78,12 @@ class Project(Base):
             reg_id: label
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
         return sectors_dict[self.sector]
+
+    @property
+    def description(self):
+        description_list = [(label, self.project_data.get(key))
+                            for key, label in constants.PROJECT_DETAILS_KEYS]
+        return description_list
 
     def get_projects(self, *criterion):
         if criterion is not None:
@@ -108,7 +117,8 @@ class Project(Base):
                           community_id=community.id,
                           project_type_id=project_type.id,
                           sector=kwargs['sector'],
-                          geolocation=kwargs['geolocation'])
+                          geolocation=kwargs['geolocation'],
+                          project_data=kwargs['project_data'])
         project.save()
 
     @classmethod
