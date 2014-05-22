@@ -3,13 +3,20 @@ from pyramid.view import (
     view_defaults,
 )
 
+from pyramid.response import Response
 from pyramid.httpexceptions import (
-    HTTPFound
+    HTTPFound,
+    HTTPBadRequest
 )
 
 from wkcdd import constants
+from wkcdd.views.helpers import report_submission_handler
+from wkcdd.models.report import (
+    Report,
+    ReportFactory,
+    ReportHandlerError
 
-from wkcdd.models.report import Report, ReportFactory
+)
 from wkcdd.libs.utils import get_impact_indicator_list
 
 
@@ -54,3 +61,19 @@ class ReportViews(object):
         url = self.request.route_url('reports', traverse=(''))
 
         return HTTPFound(location=url)
+
+    @view_config(
+        name='sumbissions',
+        request_method='POST',
+        context=ReportFactory)
+    def json_post(self):
+        payload = self.request.body
+        if not payload:
+            return HTTPBadRequest(comment='Missing JSON Payload')
+        try:
+            report_submission_handler(payload)
+        except ReportHandlerError:
+            return Response(
+                'Accepted pending manual matching process', status=202)
+        else:
+            return Response('Saved', status=201)

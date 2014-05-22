@@ -1,4 +1,6 @@
 import json
+import datetime
+
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
@@ -12,6 +14,9 @@ from wkcdd.models import (
     Location,
     Report
 )
+
+from wkcdd.models.report import ReportHandlerError
+
 from wkcdd.models.helpers import (
     get_community_ids_for,
     get_project_list
@@ -240,3 +245,26 @@ def build_performance_indicator_chart_dataset(indicators, rows):
     dataset['series_labels'] = series_labels
 
     return json.dumps(dataset)
+
+
+def report_submission_handler(payload):
+    try:
+        xform_id = payload[constants.XFORM_ID]
+        project_report_code = [project_report_code
+                               for project_report_form, project_report_code
+                               in constants.PROJECT_REPORT_FORMS
+                               if project_report_form == xform_id][0]
+        report_submission = Report(
+            project_code=payload.get(project_report_code),
+            submission_time=datetime.datetime.strptime(
+                payload.get(constants.REPORT_SUBMISSION_TIME),
+                "%Y-%m-%dT%H:%M:%S"),
+            month=payload.get(constants.REPORT_MONTH),
+            quarter=payload.get(constants.REPORT_QUARTER),
+            period=payload.get(constants.REPORT_PERIOD),
+            report_data=payload
+        )
+        Report.add_report_submission(report_submission)
+    except (KeyError, IndexError):
+        raise ReportHandlerError(
+            "'{}' not found in json".format(constants.XFORM_ID))

@@ -266,6 +266,10 @@ class ReportError(Exception):
     pass
 
 
+class ReportHandlerError(Exception):
+    pass
+
+
 class ReportFactory(BaseModelFactory):
     __acl__ = []
 
