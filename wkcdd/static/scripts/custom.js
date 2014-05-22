@@ -142,7 +142,8 @@ var Custom = function () {
         },
         init = function(){
             $('.indicator-selector').click(function () {
-                Map.setIndicator($(this).data('indicator'));
+                var indicator = $(this).data('indicator');
+                Map.setIndicator(indicator);
                $('.selected-indicator').html($(this).html());
                //redraw chart for the selected indicator
                 $('#chart').empty();
