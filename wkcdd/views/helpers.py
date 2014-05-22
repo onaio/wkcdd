@@ -248,8 +248,9 @@ def build_performance_indicator_chart_dataset(indicators, rows):
 
 
 def report_submission_handler(payload):
+    payload = json.loads(payload)
     try:
-        xform_id = payload[constants.XFORM_ID]
+        xform_id = payload.get(constants.XFORM_ID)
         project_report_code = [project_report_code
                                for project_report_form, project_report_code
                                in constants.PROJECT_REPORT_FORMS

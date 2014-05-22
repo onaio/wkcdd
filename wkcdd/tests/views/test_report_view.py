@@ -2,7 +2,6 @@ import os
 
 from pyramid import testing
 from wkcdd.tests.test_base import (
-    _load_json_fixture,
     IntegrationTestBase,
     FunctionalTestBase)
 
@@ -35,13 +34,21 @@ class TestReportViews(IntegrationTestBase):
 
     def test_json_post(self):
         count = Report.count()
-        report_data_1 = _load_json_fixture(os.path.join(
-            self.test_dir, 'fixtures', 'YH9T.json'))
-        response = self.post_json(report_data_1)
+        report_data = open(os.path.join(
+            self.test_dir, 'fixtures', 'YH9T.json'), 'r').read()
+        response = self.post_json(report_data)
 
         self.assertEqual(Report.count(), (count + 1))
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.body, 'Saved')
+
+    def test_json_post_with_bad_json(self):
+        count = Report.count()
+        report_data = '{"data":"bad json"}'
+        response = self.post_json(report_data)
+
+        self.assertEqual(Report.count(), count)
+        self.assertEqual(response.status_code, 202)
 
 
 class TestReportViewsFunctional(FunctionalTestBase):
