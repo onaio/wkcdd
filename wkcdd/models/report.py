@@ -111,6 +111,7 @@ class Report(Base):
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
                 .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(Report.status == Report.APPROVED)\
                 .filter(*criteria)\
                 .order_by(Report.submission_time)\
                 .all()
