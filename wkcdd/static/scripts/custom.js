@@ -156,13 +156,25 @@ var Custom = function () {
             });
         },
         init = function(){
-        };
+            $('.indicator-selector').click(function () {
+                Map.setIndicator($(this).data('indicator'));
+               $('.selected-indicator').html($(this).html());
+            });
+            $('.selectpicker').selectpicker();
 
-    $('.indicator-selector').click(function () {
-        Map.setIndicator($(this).data('indicator'));
-       $('.selected-indicator').html($(this).html());
-    });
-    $('.selectpicker').selectpicker();
+            $("input[name=update_report]").click(function(){
+                var 
+                    reports = $("input[name=reports]"),
+                    report_ids = reports.val(),
+                    value = $(this).val();
+                    if(this.checked) {
+                        reports.val(report_ids + value + ",");
+                    } else {
+                        reports.val(report_ids.replace(value + ",", ""));
+                    }
+            });
+        };
+        init();
     
     // public functions
     return {

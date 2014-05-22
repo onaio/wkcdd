@@ -26,7 +26,19 @@ class TestReportViews(IntegrationTestBase):
 
 class TestReportViewsFunctional(FunctionalTestBase):
 
-    def test_report_submission_approval_view(self):
+    def test_report_submission_list(self):
+        self.setup_test_data()
         url = self.request.route_path('reports', traverse=())
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_report_submission_approval(self):
+        self.setup_test_data()
+        report = Report.get(Report.status == Report.PENDING)
+        url = self.request.route_path(
+            'reports',
+            traverse=('update'))
+        response = self.testapp.post(
+            url,
+            params={'reports': '{},'.format(report.id)})
+        self.assertEqual(response.status_code, 302)

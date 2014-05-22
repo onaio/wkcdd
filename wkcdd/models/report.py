@@ -55,6 +55,11 @@ class Report(Base):
     def form_id(self):
         return self.report_data[constants.XFORM_ID]
 
+    @property
+    def project(self):
+        # since projects can have the same code, return the first one
+        return Project.all(Project.code == self.project_code)[0]
+
     @classmethod
     def add_report_submission(cls, report):
         report.save()

@@ -3,6 +3,10 @@ from pyramid.view import (
     view_defaults,
 )
 
+from pyramid.httpexceptions import (
+    HTTPFound
+)
+
 from wkcdd import constants
 
 from wkcdd.models.report import Report, ReportFactory
@@ -33,15 +37,20 @@ class ReportViews(object):
         }
 
     @view_config(name='update',
-                 context=Report,
-                 renderer='reports_list.jinja2',
+                 context=ReportFactory,
+                 check_csrf=False,
                  request_method='POST')
     def update(self):
-        report = self.request.context
-        status = self.request.GET.get('status', '')
-        if status:
-            report.status = status
-            report.save()
-        return {
-            'report': report
-        }
+        status = self.request.POST.get('new_status', 'pending')
+        report_ids = self.request.POST.get('reports', '').split(",")
+        # remove all null ids
+        report_ids = filter(None, report_ids)
+        reports = Report.all(Report.id.in_(report_ids))
+        if reports and status:
+            for report in reports:
+                report.status = status
+                report.save()
+
+        url = self.request.route_url('reports', traverse=(''))
+
+        return HTTPFound(location=url)
