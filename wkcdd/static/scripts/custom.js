@@ -233,8 +233,9 @@ var LocationSelect = function() {
             if(locations.length == 0) {
                 locations = this.data_map;
                 setViewByValue('counties');
+            } else {
+                setViewByValue('sub_counties');
             }
-                else setViewByValue('sub_counties');
 
             $.each(locations, function(idx, elem){
 
