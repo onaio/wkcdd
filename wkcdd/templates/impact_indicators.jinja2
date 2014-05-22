@@ -1,6 +1,5 @@
 {% extends 'base.jinja2' %}
 {% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
-{% from 'macros/generate_map_chart.jinja2' import  generate_map_chart %}
 {% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 {% block title %}{% trans %}Impact Indicators{% endtrans %}{% endblock %}
@@ -28,20 +27,48 @@
 {% block content %}
   {{ add_indicator_links(request, location, search_criteria) }}
   
-  <!-- <div class="row"> -->
-  <!-- Render map -->
-    <!-- <div class="col-md-5">
-      
-    </div> -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet">
+        <div class="portlet-title">
+          <div class="tools pull-left">
+              <a href="" class="collapse"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+          <div class="row map_chart">
+            <div class="md-col-12">
+              <div class="btn-toolbar margin-bottom-10">
+                <div class="btn-group pull-right">
+                  <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu select-sector">
+                    {% for indicator in indicators %}
+                      <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Render map -->
+            <div class="col-md-6">
+              <div id="maps-content" class="display-none" style="display: block;">
+                <div id="map"></div>
+              </div>
+            </div>
 
-  <!-- Render chart view -->
-    <!-- <div class="col-md-7">
-      
+            <!-- Render chart view -->
+            <div class="col-md-6">
+              {% include 'chart.jinja2' %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div> -->
-  {{ generate_map_chart(request, indicators) }}
-  
-  {% include 'chart.jinja2' %}
+  </div>  
   <div class="row">
     <div class="col-md-12">
       <!-- BEGIN SAMPLE TABLE PORTLET-->
@@ -116,7 +143,6 @@
   </div>
 {% endblock %}
 {% block page_scripts %}
-    <link href="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.css') }}" rel="stylesheet" type="text/css"/>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.barRenderer.min.js') }}"></script>
     <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.categoryAxisRenderer.min.js') }}"></script>
@@ -156,7 +182,7 @@
   });
 
   // Draw bar chart
-  Custom.drawIndicatorChart({{ chart_dataset | safe() }})
+  Custom.setChartDataset({{ chart_dataset | safe() }})
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

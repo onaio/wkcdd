@@ -6,7 +6,8 @@ var Custom = function () {
     // private functions & variables
 
     var 
-        map;
+        map,
+        chartDataSet,
         ENTER_KEY_CODE = 13,
         display_county_map = function() {
 
@@ -77,7 +78,9 @@ var Custom = function () {
                 }
             });
         },
-
+        setChartDataset = function(dataset) {
+            chartDataSet = dataset;
+        },
         addFilterFormAction = function(form, default_url) {
             form_action = null;
             county_url = $('select[name=county]').find(":selected").attr('url');
@@ -102,43 +105,25 @@ var Custom = function () {
             $(form).attr('action', form_action);
             $(form).submit();
         },
-        drawIndicatorChart = function(dataset) {
+        drawIndicatorChart = function(labels, series) {
 
             // Can specify a custom tick Array.
             // Ticks should match up one for each y value (category) in the series.
             var 
-                ticks = dataset.labels,
-                series_labels = function(labels) {
-                    var series = [];
-                    $.each(labels, function(idx, label){
-                        series.push({label:label});
-                    });
-                    return series;
-                },
-                plot1 = $.jqplot('chart', dataset.series, {
+                ticks = labels,
+                plot1 = $.jqplot('chart', [series], {
                 // The "seriesDefaults" option is an options object that will
                 // be applied to all series in the chart.
-                stackSeries: true,
                 seriesDefaults:{
                     renderer:$.jqplot.BarRenderer,
                     rendererOptions: {
                         fillToZero: true,
                         barDirection: 'horizontal'
                     },
-                    pointLabels: {show: true, formatString: '%d'}
+                    pointLabels: {show: true, formatString: '%.2f'}
                 },
-                // Custom labels for the series are specified with the "label"
-                // option on the series option.  Here a series option object
-                // is specified for each series.
-                series:series_labels(dataset.series_labels),
-                // Show the legend and put it outside the grid, but inside the
-                // plot container, shrinking the grid to accomodate the legend.
-                // A value of "outside" would not shrink the grid and allow
-                // the legend to overflow the container.
-                legend: {
-                    renderer: $.jqplot.EnhancedLegendRenderer,
-                    show: true,
-                    placement: 'outsideGrid'
+                grid: {
+                    background:'#ffffff'
                 },
                 axes: {
                     xaxis: {
@@ -159,6 +144,9 @@ var Custom = function () {
             $('.indicator-selector').click(function () {
                 Map.setIndicator($(this).data('indicator'));
                $('.selected-indicator').html($(this).html());
+               //redraw chart for the selected indicator
+                $('#chart').empty();
+                drawIndicatorChart(chartDataSet.labels, chartDataSet.series[indicator]);
             });
             $('.selectpicker').selectpicker();
 
@@ -184,7 +172,8 @@ var Custom = function () {
         searchProjectsTable: searchProjectsTable,
         process_raw_points: process_raw_points,
         addFilterFormAction: addFilterFormAction,
-        drawIndicatorChart: drawIndicatorChart
+        drawIndicatorChart: drawIndicatorChart,
+        setChartDataset: setChartDataset
     };
 
 }();
