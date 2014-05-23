@@ -17,6 +17,7 @@ from wkcdd.models.base import (
     Base)
 from wkcdd.models.project import ProjectFactory
 from wkcdd.models.location import LocationFactory
+from wkcdd.models.report import ReportFactory
 
 
 def main(global_config, **settings):
@@ -64,6 +65,8 @@ def includeme(config):
     config.add_route('performance_indicators',
                      '/performance-indicators/*traverse',
                      factory=LocationFactory)
+    config.add_route('reports', '/reports/*traverse',
+                     factory=ReportFactory)
     config.add_route('reporting_status', '/reporting_status')
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')

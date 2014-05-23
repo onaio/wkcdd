@@ -87,6 +87,17 @@
 			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
 			</a>
 		</li>
+    <li>
+            <a class="
+                {%if request.path_info_peek() == 'reports' %}
+                    selected
+                {%endif%}"
+               href="{{ request.route_url('reports', traverse=('')) }}">
+      <img src="{{ request.static_url('wkcdd:static/img/status.png') }}"/><br/>
+      <span class="title unapproved">{% trans %}UNAPPROVED<br/>REPORTS {% endtrans %}</span>
+      </a>
+    </li>
+
 	  </ul>
          <!-- END SIDEBAR MENU -->
       </div>

@@ -147,10 +147,11 @@ class TestBase(unittest.TestCase):
     def _add_report(self, project_code="FR3A",
                     submission_time=datetime.datetime(2014, 3, 1),
                     month=3, quarter='q_2', period='2013_14',
+                    status=Report.APPROVED,
                     report_data="{'data':test_report}"):
         report = Report(project_code=project_code, report_data=report_data,
                         submission_time=submission_time, month=month,
-                        quarter=quarter, period=period)
+                        quarter=quarter, period=period, status=status)
         report.save()
 
         return report
@@ -272,6 +273,7 @@ class TestBase(unittest.TestCase):
                          submission_time=datetime.datetime(2014, 3, 10))
         self._add_report(project_code='WRXT',
                          report_data=report_data_4,
+                         status=Report.PENDING,
                          submission_time=datetime.datetime(2014, 3, 10))
         transaction.commit()
 
