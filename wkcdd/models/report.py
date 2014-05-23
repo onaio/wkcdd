@@ -150,7 +150,7 @@ class Report(Base):
 
                 periods['years'].update({report.period for report in reports})
                 periods['months'].update({report.month for report in reports})
-                periods['quarter'].update(
+                periods['quarters'].update(
                     {report.quarter for report in reports})
 
                 for indicator in indicators:

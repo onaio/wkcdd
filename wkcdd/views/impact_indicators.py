@@ -56,7 +56,7 @@ class ImpactIndicators(object):
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
 
-        rows, summary_row = Report.generate_impact_indicators(
+        rows, summary_row, periods = Report.generate_impact_indicators(
             child_locations, indicators, *criteria)
         geo_locations = json.dumps(
             get_geolocations_from_items(child_locations))
@@ -67,6 +67,9 @@ class ImpactIndicators(object):
                            'period': period,
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
+        filter_criteria['year_periods'] = periods['years']
+        filter_criteria['quarters'] = periods['quarters']
+        filter_criteria['months'] = periods['months']
 
         return {
             'indicators': indicators,
@@ -107,7 +110,7 @@ class ImpactIndicators(object):
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
 
-        rows, summary_row = Report.generate_impact_indicators(
+        rows, summary_row, periods = Report.generate_impact_indicators(
             child_locations, indicators, *criteria)
         geo_locations = json.dumps(
             get_geolocations_from_items(child_locations))
@@ -118,6 +121,9 @@ class ImpactIndicators(object):
                            'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
+        filter_criteria['year_periods'] = periods['years']
+        filter_criteria['quarters'] = periods['quarters']
+        filter_criteria['months'] = periods['months']
 
         return {
             'location': location,
