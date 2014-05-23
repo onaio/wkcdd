@@ -134,6 +134,7 @@ class Report(Base):
         collection can either be a list of projects or a list of locations
         """
         rows = []
+        periods = defaultdict(set)
         summary_row = dict([(indicator['key'], 0) for indicator in indicators])
         for item in collection:
             row = {
@@ -146,6 +147,11 @@ class Report(Base):
             # get project reports @todo: filtered by said period
             try:
                 reports = cls.get_reports_for_projects(projects, *criteria)
+
+                periods['years'].update({report.period for report in reports})
+                periods['months'].update({report.month for report in reports})
+                periods['quarter'].update(
+                    {report.quarter for report in reports})
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
@@ -160,7 +166,7 @@ class Report(Base):
             # append row
             rows.append(row)
 
-        return rows, summary_row
+        return rows, summary_row, periods
 
     @classmethod
     def sum_performance_indicator_values(cls,

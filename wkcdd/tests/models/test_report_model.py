@@ -156,7 +156,7 @@ class TestReport(TestBase):
         locations = County.all()
         indicators = utils.get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
-        rows, summary_row = Report.generate_impact_indicators(
+        rows, summary_row, periods = Report.generate_impact_indicators(
             locations, indicators)
         self.assertIsInstance(rows, list)
         self.assertEqual(len(rows), 3)
@@ -175,7 +175,7 @@ class TestReport(TestBase):
 
         indicators = utils.get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
-        rows, summary_row = Report.generate_impact_indicators(
+        rows, summary_row, periods = Report.generate_impact_indicators(
             projects, indicators)
 
         self.assertIsInstance(rows, list)
