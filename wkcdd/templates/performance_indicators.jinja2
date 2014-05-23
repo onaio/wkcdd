@@ -118,7 +118,7 @@
     {% set sector = selected_sector.sector %}
     {% set rows = sector_data[sector].rows %}
     {% set indicators = sector_indicators[sector] %}
-    var point_data = {{ sector_data[sector].project_geopoints|safe() }};
+    var point_data = {{ geo_locations|safe() }};
     Map.displayMarkers(point_data);
 
     var data = {

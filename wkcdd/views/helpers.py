@@ -151,16 +151,13 @@ def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
     kwargs = {'project_filter_criteria': project_filter_criteria,
               'period_criteria': period_criteria}
 
-    rows, summary_row, projects = Report.generate_performance_indicators(
+    rows, summary_row, periods = Report.generate_performance_indicators(
         child_locations, indicators, **kwargs)
-
-    # generate project_geopoints from project list
-    project_geopoints = json.dumps(get_project_geolocations(projects))
 
     return {
         'rows': rows,
         'summary_row': summary_row,
-        'project_geopoints': project_geopoints
+        'periods': periods
     }
 
 

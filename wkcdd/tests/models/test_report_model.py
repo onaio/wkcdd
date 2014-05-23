@@ -63,10 +63,10 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row, periods = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
+        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 56000)
         self.assertEquals(
@@ -94,10 +94,10 @@ class TestReport(TestBase):
                 constants.DAIRY_GOAT_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row, periods = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
+        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 136275)
         self.assertEquals(
@@ -238,7 +238,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row, periods = Report.generate_performance_indicators(
             locations, indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -256,7 +256,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row, periods = Report.generate_performance_indicators(
             [community], indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -346,10 +346,10 @@ class TestReport(TestBase):
         kwargs = {'project_filter_criteria': project_sector_criteria,
                   'period_criteria': period_criteria}
 
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row, periods = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
+        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 624800)
         self.assertEquals(
