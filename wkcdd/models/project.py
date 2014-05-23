@@ -81,7 +81,7 @@ class Project(Base):
 
     @property
     def description(self):
-        description_list = [(label, self.project_data.get(key))
+        description_list = [(label, self.project_data.get(key).title())
                             for key, label in constants.PROJECT_DETAILS_KEYS]
         return description_list
 
