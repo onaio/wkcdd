@@ -116,9 +116,7 @@ class PerformanceIndicators(object):
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
 
-        filter_criteria['year_periods'] = periods['years']
-        filter_criteria['quarters'] = periods['quarters']
-        filter_criteria['months'] = periods['months']
+        filter_criteria.update(periods)
 
         # return sectors, sector indicator list, sector indicator data.
         return {
@@ -220,10 +218,7 @@ class PerformanceIndicators(object):
                            'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
-
-        filter_criteria['year_periods'] = periods['years']
-        filter_criteria['quarters'] = periods['quarters']
-        filter_criteria['months'] = periods['months']
+        filter_criteria.update(periods)
 
         # return sectors, sector indicator list, sector indicator data.
         return {

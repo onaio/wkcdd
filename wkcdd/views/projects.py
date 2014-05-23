@@ -1,4 +1,5 @@
 import json
+
 from collections import defaultdict
 from pyramid.view import (
     view_config,
@@ -85,7 +86,12 @@ class ProjectViews(object):
 
         reports = Report.get_reports_for_projects([project], *criteria)
 
+        periods = defaultdict(set)
+        Report.generate_periods_from_reports(periods, reports)
+
         filter_criteria = Project.generate_filter_criteria()
+        filter_criteria.update(periods)
+
         search_criteria = {'month_or_quarter': month_or_quarter,
                            'period': period}
 

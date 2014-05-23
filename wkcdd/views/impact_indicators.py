@@ -67,9 +67,7 @@ class ImpactIndicators(object):
                            'period': period,
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
-        filter_criteria['year_periods'] = periods['years']
-        filter_criteria['quarters'] = periods['quarters']
-        filter_criteria['months'] = periods['months']
+        filter_criteria.update(periods)
 
         return {
             'indicators': indicators,
@@ -121,9 +119,7 @@ class ImpactIndicators(object):
                            'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
-        filter_criteria['year_periods'] = periods['years']
-        filter_criteria['quarters'] = periods['quarters']
-        filter_criteria['months'] = periods['months']
+        filter_criteria.update(periods)
 
         return {
             'location': location,

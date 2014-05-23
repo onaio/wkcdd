@@ -3,35 +3,41 @@
    <label>Select Report Period: </label>
    <select name="month_or_quarter" class="form-control input-small select2me">
       <option value="">{% trans %}Month/Quarter{% endtrans %}</option>
-      {% for quarter in quarters|sort %}
-         <option value="{{ quarter }}"
-            {% if month_or_quarter == '{}'.format(quarter) %}
-               selected
-            {% endif %} 
-         >
-            {{ quarter | replace("q_", "Quarter ") }}
-      {% endfor %}
-      <option value="">-------</option>
-      {% for key, month in months.iteritems() if key in months_present %}
-         <option value="{{loop.index}}"
-            {% if month_or_quarter == loop.index | string %}
-               selected
-            {% endif %}
-         >
-            {% trans %}{{month}}{% endtrans %}
-         </option>
-      {% endfor %}
+      {% if quarters %}
+         {% for quarter in quarters|sort %}
+            <option value="{{ quarter }}"
+               {% if month_or_quarter == '{}'.format(quarter) %}
+                  selected
+               {% endif %} 
+            >
+               {{ quarter | replace("q_", "Quarter ") }}
+         {% endfor %}
+      {% endif %}
+      {% if months_present %}
+         <option value="">-------</option>
+         {% for key, month in months.iteritems() if key in months_present %}
+            <option value="{{loop.index}}"
+               {% if month_or_quarter == loop.index | string %}
+                  selected
+               {% endif %}
+            >
+               {% trans %}{{month}}{% endtrans %}
+            </option>
+         {% endfor %}
+      {% endif %}
    </select>
    <select name="period" class="form-control input-small select2me">
       <option value="">{% trans %} Year {% endtrans %}</option>
-      {% for year in years|sort %}
-         <option value="{{year}}"
-            {% if period == year %}
-               selected
-            {% endif %}
-         >
-            {{ year | replace("_", " to 20") | replace("-", " to 20") }}
-         </option>
-      {% endfor %}
+      {% if years %}
+         {% for year in years|sort %}
+            <option value="{{year}}"
+               {% if period == year %}
+                  selected
+               {% endif %}
+            >
+               {{ year | replace("_", " to 20") | replace("-", " to 20") }}
+            </option>
+         {% endfor %}
+      {% endif %}
    </select>
 </div>
