@@ -11,8 +11,8 @@
     {% endif %}
 
     {% if location and search_criteria['view_by'] %}
-        LocationSelect.setViewByValue('{{search_criteria['view_by']}}')
+        LocationSelect.setViewByValue('{{search_criteria['view_by']}}');
     {% else %}
-        $('select[name=view_by]').val('{{search_criteria['view_by']}}')
+        $('select[name=view_by]').val('{{search_criteria['view_by']}}');
     {% endif %}
 {% endmacro %}

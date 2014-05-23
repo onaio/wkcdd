@@ -79,6 +79,7 @@ def get_project_geolocations(projects):
         {'id': project.id,
          'name': project.name.title(),
          'sector': project.sector_name,
+         'description': project.description,
          'lat': str(project.latlong[0]),
          'lng': str(project.latlong[1])}
         for project in projects if project.latlong]
