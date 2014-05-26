@@ -128,20 +128,12 @@ class Report(Base):
             sum_reduce_func, values, 0)
 
     @classmethod
-    def generate_periods_from_reports(cls, periods, reports):
-        periods['years'].update({report.period for report in reports})
-        periods['months'].update({report.month for report in reports})
-        periods['quarters'].update(
-            {report.quarter for report in reports})
-
-    @classmethod
     def generate_impact_indicators(cls, collection, indicators, *criteria):
         """
         Generate impact indicators for a given collection where the
         collection can either be a list of projects or a list of locations
         """
         rows = []
-        periods = defaultdict(set)
         summary_row = dict([(indicator['key'], 0) for indicator in indicators])
         for item in collection:
             row = {
@@ -154,9 +146,6 @@ class Report(Base):
             # get project reports @todo: filtered by said period
             try:
                 reports = cls.get_reports_for_projects(projects, *criteria)
-
-                # retrieve periods based on the reports available
-                cls.generate_periods_from_reports(periods, reports)
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
@@ -171,7 +160,7 @@ class Report(Base):
             # append row
             rows.append(row)
 
-        return rows, summary_row, periods
+        return rows, summary_row
 
     @classmethod
     def sum_performance_indicator_values(cls,
@@ -215,8 +204,6 @@ class Report(Base):
         determined from the provided set of indicators
         """
         rows = []
-        periods = []
-        periods = defaultdict(set)
         summary_row = defaultdict(int)
         for item in collection:
             try:
@@ -234,9 +221,6 @@ class Report(Base):
                 reports = cls.get_reports_for_projects(
                     projects,
                     *period_criteria)
-
-                # retrieve periods based on the reports available
-                cls.generate_periods_from_reports(periods, reports)
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
@@ -271,7 +255,36 @@ class Report(Base):
                 summary_row[indicator_property] = (
                     summary_row[indicator_property] / len(collection))
 
-        return rows, summary_row, periods
+        return rows, summary_row
+
+    @classmethod
+    def get_report_periods(cls, collection, **kwargs):
+        periods = defaultdict(set)
+
+        for item in collection:
+            try:
+                project_filter_criteria = kwargs.get(
+                    'project_filter_criteria', [])
+                if project_filter_criteria:
+                    projects = item.get_projects(project_filter_criteria)
+                else:
+                    projects = item.get_projects()
+
+                reports = cls.get_reports_for_projects(projects)
+                # retrieve periods based on the reports available
+                cls.generate_periods_from_reports(periods, reports)
+
+            except ReportError:
+                pass
+
+        return periods
+
+    @classmethod
+    def generate_periods_from_reports(cls, periods, reports):
+        periods['years'].update({report.period for report in reports})
+        periods['months'].update({report.month for report in reports})
+        periods['quarters'].update(
+            {report.quarter for report in reports})
 
 
 class ReportError(Exception):

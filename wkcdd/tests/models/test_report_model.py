@@ -63,10 +63,9 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, periods = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 56000)
         self.assertEquals(
@@ -94,10 +93,9 @@ class TestReport(TestBase):
                 constants.DAIRY_GOAT_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, periods = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 136275)
         self.assertEquals(
@@ -156,11 +154,10 @@ class TestReport(TestBase):
         locations = County.all()
         indicators = utils.get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
-        rows, summary_row, periods = Report.generate_impact_indicators(
+        rows, summary_row = Report.generate_impact_indicators(
             locations, indicators)
         self.assertIsInstance(rows, list)
         self.assertEqual(len(rows), 3)
-        self.assertEqual(periods['years'], {'2013_14'})
         # pending reports are not included in the calculation of this sum
 
         self.assertEqual(summary_row['impact_information/b_income'], 16)
@@ -176,7 +173,7 @@ class TestReport(TestBase):
 
         indicators = utils.get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
-        rows, summary_row, periods = Report.generate_impact_indicators(
+        rows, summary_row = Report.generate_impact_indicators(
             projects, indicators)
 
         self.assertIsInstance(rows, list)
@@ -238,7 +235,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, periods = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             locations, indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -256,7 +253,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, periods = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [community], indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -346,13 +343,21 @@ class TestReport(TestBase):
         kwargs = {'project_filter_criteria': project_sector_criteria,
                   'period_criteria': period_criteria}
 
-        rows, summary_row, periods = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertEqual(periods['years'], {'2013_14'})
         self.assertEquals(
             summary_row['exp_contribution'], 624800)
         self.assertEquals(
             summary_row['actual_contribution'], 624800)
         self.assertEquals(
             summary_row['community_contribution'], 100)
+
+    def test_get_report_periods_for_impact_indicators(self):
+        self.setup_test_data()
+        locations = County.all()
+        periods = Report.get_report_periods(locations)
+
+        self.assertEqual(periods['months'], set([3]))
+        self.assertEqual(periods['years'], set(['2013_14']))
+        self.assertEqual(periods['quarters'], set(['q_2']))
