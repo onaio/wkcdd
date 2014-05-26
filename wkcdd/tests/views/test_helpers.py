@@ -60,7 +60,8 @@ class TestHelpers(TestBase):
             self.test_dir, 'fixtures', 'geopoints.json')))
         projects = Project.all()
         project_geopoints = get_project_geolocations(projects)
-        self.assertEquals(project_geopoints, json.loads(geopoints))
+
+        self.assertEquals(json.dumps(project_geopoints), geopoints)
 
     def test_get_sector_data_for_community_cow_projects(self):
         self.setup_test_data()

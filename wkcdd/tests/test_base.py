@@ -75,7 +75,15 @@ class TestBase(unittest.TestCase):
                      community=None,
                      sector=constants.DAIRY_GOAT_PROJECT_REGISTRATION,
                      project_type=None,
-                     project_data='{code:"FR3A"}',
+                     project_data={
+                         "start_date": '2009-08-10',
+                         "chair": "Chairperson",
+                         "cp_phone": "Phone number",
+                         "secretary": "Secretary",
+                         "sec_phone": "Secretary Phone",
+                         "treasurer": "Treasurer",
+                         "number_treas": "Treasurer Phone"
+                     },
                      geolocation="0.0 0.0 0 0"):
         project = Project(
             code=project_code,
@@ -83,6 +91,7 @@ class TestBase(unittest.TestCase):
             community=community,
             project_type=project_type,
             sector=sector,
+            project_data=project_data,
             geolocation=geolocation
         )
 
