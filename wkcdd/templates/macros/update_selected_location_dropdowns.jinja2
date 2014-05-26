@@ -10,7 +10,9 @@
         LocationSelect.level0ChangeListener($('select[name=county]'));
     {% endif %}
 
-    {% if search_criteria['view_by'] %}
+    {% if location and search_criteria['view_by'] %}
         LocationSelect.setViewByValue('{{search_criteria['view_by']}}')
+    {% else %}
+        $('select[name=view_by]').val('{{search_criteria['view_by']}}')
     {% endif %}
 {% endmacro %}

@@ -160,7 +160,9 @@ class TestReport(TestBase):
             locations, indicators)
         self.assertIsInstance(rows, list)
         self.assertEqual(len(rows), 3)
-        self.assertEqual(summary_row['impact_information/b_income'], 20)
+        # pending reports are not included in the calculation of this sum
+
+        self.assertEqual(summary_row['impact_information/b_income'], 16)
         self.assertEqual(
             summary_row['impact_information/b_improved_houses'], 1)
         self.assertEqual(summary_row['impact_information/b_hh_assets'], 3)

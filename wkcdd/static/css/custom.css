@@ -269,3 +269,7 @@ div#chart.jqplot-target {
 div.row.map_chart {
     margin: 0;
 }
+
+span.title.unapproved {
+    margin-left: -7px;
+}

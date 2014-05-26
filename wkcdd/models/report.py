@@ -6,13 +6,17 @@ from wkcdd.models.project import Project
 
 from wkcdd.models.base import (
     Base,
-    DBSession
+    DBSession,
+    BaseModelFactory
 )
+from sqlalchemy.orm.exc import NoResultFound
+
 from sqlalchemy import (
     Column,
     Integer,
     DateTime,
-    String
+    String,
+    Enum
 )
 from sqlalchemy.dialects.postgresql import JSON
 
@@ -23,13 +27,38 @@ from wkcdd.libs.utils import (
 
 class Report(Base):
     __tablename__ = 'reports'
+
+    PENDING = 'pending'
+    APPROVED = 'approved'
+    REJECTED = 'rejected'
+
     id = Column(Integer, primary_key=True, nullable=False)
     project_code = Column(String, nullable=False, index=True)
     submission_time = Column(DateTime(timezone=True), nullable=False)
     month = Column(Integer, nullable=False)
     quarter = Column(String, nullable=False)
     period = Column(String, nullable=False)
+
     report_data = Column(JSON, nullable=False)
+
+    status = Column(
+        Enum(PENDING, APPROVED, REJECTED, name='SUBMISSION_STATUS'),
+        nullable=False, index=True, default=PENDING)
+
+    status_labels = (
+        (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+    )
+
+    @property
+    def form_id(self):
+        return self.report_data[constants.XFORM_ID]
+
+    @property
+    def project(self):
+        # since projects can have the same code, return the first one
+        return Project.all(Project.code == self.project_code)[0]
 
     @classmethod
     def add_report_submission(cls, report):
@@ -82,6 +111,7 @@ class Report(Base):
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
                 .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(Report.status == Report.APPROVED)\
                 .filter(*criteria)\
                 .order_by(Report.submission_time)\
                 .all()
@@ -234,3 +264,23 @@ class Report(Base):
 
 class ReportError(Exception):
     pass
+
+
+class ReportHandlerError(Exception):
+    pass
+
+
+class ReportFactory(BaseModelFactory):
+    __acl__ = []
+
+    def __getitem__(self, item):
+        # try to retrieve the report whose id matches item
+        try:
+            report_id = int(item)
+            report = DBSession.query(Report).filter_by(id=report_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            report.__parent__ = self
+            report.__name__ = item
+            return report

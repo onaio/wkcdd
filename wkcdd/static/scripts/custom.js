@@ -24,7 +24,7 @@ var Custom = function () {
 
             map = county_map;
 
-            return map
+            return map;
         },
         display_constituency_map = function() {
             if(map) map = null;
@@ -73,7 +73,7 @@ var Custom = function () {
 
                 if (e.which == ENTER_KEY_CODE) {
                     search_term = $("#search_term").val();
-                    filter_url = "?filter=1&search="+search_term
+                    filter_url = "?filter=1&search="+search_term;
                     window.location = filter_url;
                 }
             });
@@ -82,12 +82,12 @@ var Custom = function () {
             chartDataSet = dataset;
         },
         addFilterFormAction = function(form, default_url) {
-            form_action = null
+            form_action = null;
             county_url = $('select[name=county]').find(":selected").attr('url');
             sub_county_url = $('select[name=sub_county]').find(":selected").attr('url');
             constituency_url = $('select[name=constituency]').find(":selected").attr('url');
             community_url = $('select[name=community]').find(":selected").attr('url');
-            view_by = $('select[name=view_by]').val()
+            view_by = $('select[name=view_by]').val();
 
             if(community_url !== undefined) {
                 form_action = community_url;
@@ -98,7 +98,7 @@ var Custom = function () {
             } else if (county_url !== undefined) {
                 form_action = county_url;
             }else {
-                form_action = default_url
+                form_action = default_url;
             }
 
             //load the form action
@@ -139,20 +139,31 @@ var Custom = function () {
                     }
                 },
             });
-        }
-
+        },
         init = function(){
-        };
+            $('.indicator-selector').click(function () {
+                var indicator = $(this).data('indicator');
+                Map.setIndicator(indicator);
+               $('.selected-indicator').html($(this).html());
+               //redraw chart for the selected indicator
+                $('#chart').empty();
+                drawIndicatorChart(chartDataSet.labels, chartDataSet.series[indicator]);
+            });
+            $('.selectpicker').selectpicker();
 
-    $('.indicator-selector').click(function () {
-        var indicator = $(this).data('indicator');
-        Map.setIndicator(indicator);
-        $('.selected-indicator').html($(this).html());
-        $('#chart').empty();
-        drawIndicatorChart(chartDataSet.labels, chartDataSet.series[indicator]);
-        //redraw chart for the selected indicator
-    });
-    $('.selectpicker').selectpicker();
+            $("input[name=update_report]").click(function(){
+                var 
+                    reports = $("input[name=reports]"),
+                    report_ids = reports.val(),
+                    value = $(this).val();
+                    if(this.checked) {
+                        reports.val(report_ids + value + ",");
+                    } else {
+                        reports.val(report_ids.replace(value + ",", ""));
+                    }
+            });
+        };
+        init();
     
     // public functions
     return {
@@ -178,7 +189,7 @@ var LocationSelect = function() {
             filtered_location_list = [];
             $.each(this.data_map, function(idx, elem){
                 if(elem[location_type].id == location_id) {
-                    filtered_location_list.push(elem)
+                    filtered_location_list.push(elem);
                 }
             });
             return filtered_location_list;
@@ -206,14 +217,14 @@ var LocationSelect = function() {
         },
         set_select_value = function(select, option) {
             select.val(option.id);
-        }
+        },
         contains = function(object, list) {
             var contains = false;
 
             $.each(list, function(idx, elem){
                 if(elem.id == object.id) {
                     contains = true;
-                    return false
+                    return false;
                 }
                 else {
                     contains = false;
@@ -230,24 +241,25 @@ var LocationSelect = function() {
                 constituency_list = [],
                 community_list = [];
 
-            if(locations.length == 0) {
+            if(locations.length === 0) {
                 locations = this.data_map;
                 setViewByValue('counties');
+            } else {
+                setViewByValue('sub_counties');
             }
-                else setViewByValue('sub_counties');
 
             $.each(locations, function(idx, elem){
 
-                if(!contains(elem['sub_county'], sub_county_list)) {
-                    sub_county_list.push(elem['sub_county']);
+                if(!contains(elem.sub_county, sub_county_list)) {
+                    sub_county_list.push(elem.sub_county);
                 }
 
-                if(!contains(elem['constituency'], constituency_list)) {
-                    constituency_list.push(elem['constituency']);
+                if(!contains(elem.constituency, constituency_list)) {
+                    constituency_list.push(elem.constituency);
                 }
 
                 //Communities are all unique
-                community_list.push(elem['community']);
+                community_list.push(elem.community);
             });
             update_select($('select[name=sub_county]'), sub_county_list, "All Sub-Counties");
             update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
@@ -262,21 +274,21 @@ var LocationSelect = function() {
                 constituency_list = [],
                 community_list = [];
 
-            if(locations.length == 0) {
+            if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('sub_counties');
                 return;
             }
 
             $.each(locations, function(idx, elem){
-                county = elem['county'];
+                county = elem.county;
 
-                if(!contains(elem['constituency'], constituency_list)) {
-                    constituency_list.push(elem['constituency']);
+                if(!contains(elem.constituency, constituency_list)) {
+                    constituency_list.push(elem.constituency);
                 }
 
                 //Communities are all unique
-                community_list.push(elem['community']);
+                community_list.push(elem.community);
             });
             set_select_value($('select[name=county]'), county);
             update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
@@ -292,22 +304,22 @@ var LocationSelect = function() {
                 sub_county = null,
                 community_list = [];
 
-            if(locations.length == 0) {
+            if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('constituencies');
                 return;
             }
 
             $.each(locations, function(idx, elem){
-                county = elem['county'];
-                sub_county = elem['sub_county'];
-                community_list.push(elem['community']);
+                county = elem.county;
+                sub_county = elem.sub_county;
+                community_list.push(elem.community);
             });
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             update_select($('select[name=community]'), community_list, "All Communities");
             setViewByValue('communities');
-        }
+        },
         level3ChangeListener = function(element) {
             //update level 0, 1 and 2
             var 
@@ -317,14 +329,14 @@ var LocationSelect = function() {
                 sub_county = '',
                 constituency = '';
 
-            if(locations.length == 0) {
+            if(locations.length === 0) {
                 //refresh filter based on parent
                  setViewByValue('communities');
                 return;
             }else{
-                county = locations[0].county,
-                sub_county = locations[0].sub_county,
-                constituency = locations[0].constituency
+                county = locations[0].county;
+                sub_county = locations[0].sub_county;
+                constituency = locations[0].constituency;
             }
 
             set_select_value($('select[name=county]'), county);
