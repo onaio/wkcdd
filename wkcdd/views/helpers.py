@@ -79,6 +79,7 @@ def get_project_geolocations(projects):
         {'id': project.id,
          'name': project.name.title(),
          'sector': project.sector_name,
+         'description': project.description,
          'lat': str(project.latlong[0]),
          'lng': str(project.latlong[1])}
         for project in projects if project.latlong]
@@ -86,12 +87,16 @@ def get_project_geolocations(projects):
     return project_geopoints
 
 
-def get_geolocations_from_items(items):
+def get_geolocations_from_items(items, sector_id=None):
     # generate project_geopoints from project list
     geolocations = []
     for item in items:
         # get reports for this location or project,
-        projects = item.get_projects()
+        if sector_id:
+            project_filter_criteria = Project.sector == sector_id
+            projects = item.get_projects(project_filter_criteria)
+        else:
+            projects = item.get_projects()
         geolocations.extend(
             get_project_geolocations(projects))
     return geolocations
@@ -151,17 +156,20 @@ def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
     kwargs = {'project_filter_criteria': project_filter_criteria,
               'period_criteria': period_criteria}
 
-    rows, summary_row, projects = Report.generate_performance_indicators(
+    rows, summary_row = Report.generate_performance_indicators(
         child_locations, indicators, **kwargs)
-
-    # generate project_geopoints from project list
-    project_geopoints = json.dumps(get_project_geolocations(projects))
 
     return {
         'rows': rows,
-        'summary_row': summary_row,
-        'project_geopoints': project_geopoints
+        'summary_row': summary_row
     }
+
+
+def get_sector_periods(sector_id, child_locations):
+    project_filter_criteria = Project.sector == sector_id
+    periods = Report.get_periods_for(
+        child_locations, project_filter_criteria)
+    return periods
 
 
 def build_report_period_criteria(month_or_quarter, period):

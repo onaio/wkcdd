@@ -38,35 +38,35 @@
              </div>
              <div class="col-md-8">
                 <form id="filter_criteria" class="form-inline" method="get">
-                <input hidden name="filter" value="1" type="text"/>
-                <select  name="sector" class="form-control input-small select2me" data-placeholder="Select...">
-                    <option value="">--Sector--</option>
-                    {% for key, value in filter_criteria["sectors"] %}
-                        <option value="{{ key }}"
-                        {%if search_criteria["sector"] == key%}
-                            selected
-                        {%endif%}
-                        >
-                    {{ value }}</option>
-                    {% endfor %}
-                </select>
-                <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
-                    <option value="">--County--</option>
-                    {{ filter_criteria_options(filter_criteria, search_criteria['location_map'], "counties", "county" ) }}
-                </select>
-                <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
-                    <option value="">--Sub-County--</option>
-                     {{ filter_criteria_options(filter_criteria, search_criteria['location_map'], "sub_counties", "sub_county" ) }}
-                </select>
-                <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
-                    <option value="">--Constituency--</option>
-                     {{ filter_criteria_options(filter_criteria, search_criteria['location_map'], "constituencies", "constituency" ) }}
-                </select>
-                <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
-                    <option value="">--Community--</option>
-                      {{ filter_criteria_options(filter_criteria, search_criteria['location_map'], "communities", "community" ) }}
-                </select>
-                <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
+                  <input hidden name="filter" value="1" type="text"/>
+                  <select  name="sector" class="form-control input-small select2me" data-placeholder="Select...">
+                      <option value="">--Sector--</option>
+                      {% for key, value in filter_criteria["sectors"] %}
+                          <option value="{{ key }}"
+                          {%if search_criteria["sector"] == key%}
+                              selected
+                          {%endif%}
+                          >
+                      {{ value }}</option>
+                      {% endfor %}
+                  </select>
+                  <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
+                      <option value="">--County--</option>
+                      {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "counties", "county" ) }}
+                  </select>
+                  <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
+                      <option value="">--Sub-County--</option>
+                       {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "sub_counties", "sub_county" ) }}
+                  </select>
+                  <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
+                      <option value="">--Constituency--</option>
+                       {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "constituencies", "constituency" ) }}
+                  </select>
+                  <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
+                      <option value="">--Community--</option>
+                        {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "communities", "community" ) }}
+                  </select>
+                  <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
                 </form>
              </div>
          </div>
@@ -104,14 +104,18 @@
 {% endblock content %}
 {% block page_scripts %}
     <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/map.js') }}"></script>
 {% endblock %}
 {% block jquery_ready %}
   {{ super() }}
-  map = Custom.display_constituency_map();
+
+  var geo_locations = {{ project_geopoints|safe() }};
+  Map.displayMarkers(geo_locations);
+
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
+
   Custom.searchProjectsTable();
-  Custom.process_raw_points({{ project_geopoints|safe() }}, map);
 
   {{ update_selected_location_dropdowns(search_criteria) }}
 {% endblock %}

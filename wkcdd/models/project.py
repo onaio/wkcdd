@@ -81,7 +81,7 @@ class Project(Base):
 
     @property
     def description(self):
-        description_list = [(label, self.project_data.get(key))
+        description_list = [(label, self.project_data.get(key).title())
                             for key, label in constants.PROJECT_DETAILS_KEYS]
         return description_list
 
@@ -171,8 +171,6 @@ class Project(Base):
 
     @classmethod
     def generate_filter_criteria(cls):
-        from wkcdd.models.report import Report
-
         sector_filter = [
             (reg_id, label)
             for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING]
@@ -202,7 +200,6 @@ class Project(Base):
             'sub_counties': sub_counties,
             'constituencies': constituencies,
             'communities': communities,
-            'year_periods': Report.get_year_periods(),
             'location_json_data': json.dumps(location_json_data)
         }
 

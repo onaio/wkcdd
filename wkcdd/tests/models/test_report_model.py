@@ -63,10 +63,9 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
         self.assertEquals(
             summary_row['exp_contribution'], 56000)
         self.assertEquals(
@@ -94,10 +93,9 @@ class TestReport(TestBase):
                 constants.DAIRY_GOAT_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
         self.assertEquals(
             summary_row['exp_contribution'], 136275)
         self.assertEquals(
@@ -237,7 +235,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             locations, indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -255,7 +253,7 @@ class TestReport(TestBase):
                 constants.DAIRY_COWS_PROJECT_REPORT])
         criteria = Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION
         kwargs = {'project_filter_criteria': criteria}
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [community], indicators, **kwargs)
         self.assertEqual(len(rows), 1)
 
@@ -345,13 +343,48 @@ class TestReport(TestBase):
         kwargs = {'project_filter_criteria': project_sector_criteria,
                   'period_criteria': period_criteria}
 
-        rows, summary_row, projects = Report.generate_performance_indicators(
+        rows, summary_row = Report.generate_performance_indicators(
             [project], indicators, **kwargs)
 
-        self.assertIn(project, projects)
         self.assertEquals(
             summary_row['exp_contribution'], 624800)
         self.assertEquals(
             summary_row['actual_contribution'], 624800)
         self.assertEquals(
             summary_row['community_contribution'], 100)
+
+    def test_get_periods_for_impact_indicators(self):
+        self.setup_test_data()
+        locations = County.all()
+        periods = Report.get_periods_for(locations)
+
+        self.assertEqual(periods['months'], set([3]))
+        self.assertEqual(periods['years'], set(['2013_14']))
+        self.assertEqual(periods['quarters'], set(['q_2']))
+
+    def test_get_periods_for_performance_indicators(self):
+        self.setup_report_period_test_data()
+        locations = County.all()
+
+        # test with preset sector
+        project_sector_criteria = (
+            Project.sector == constants.DAIRY_COWS_PROJECT_REGISTRATION)
+        periods = Report.get_periods_for(locations, project_sector_criteria)
+
+        self.assertEqual(periods['months'], set([1, 5, 8, 12]))
+        self.assertEqual(periods['years'], set(['2012_13', '2013_14']))
+        self.assertEqual(periods['quarters'],
+                         set(['q_1', 'q_2', 'q_3', 'q_4']))
+
+    def test_get_periods_without_sector_reports(self):
+        self.setup_report_period_test_data()
+        locations = County.all()
+
+        # test with preset sector
+        project_sector_criteria = (
+            Project.sector == constants.DAIRY_GOAT_PROJECT_REGISTRATION)
+        periods = Report.get_periods_for(locations, project_sector_criteria)
+
+        self.assertFalse(periods['months'])
+        self.assertFalse(periods['years'])
+        self.assertFalse(periods['quarters'])

@@ -1,3 +1,5 @@
+import json
+from collections import defaultdict
 from pyramid.view import (
     view_defaults,
     view_config
@@ -8,9 +10,11 @@ from wkcdd.models.location import LocationFactory
 from wkcdd.models.helpers import get_children_by_level
 from wkcdd.views.helpers import (
     get_sector_data,
+    get_geolocations_from_items,
     get_performance_sector_mapping,
     get_target_class_from_view_by,
     build_report_period_criteria,
+    get_sector_periods,
     build_performance_indicator_chart_dataset)
 from wkcdd.models import (
     County,
@@ -41,7 +45,9 @@ class PerformanceIndicators(object):
         sector_data = {}
         sector_indicators = {}
         selected_sector = {}
+        geo_locations = None
         chart_dataset = None
+        periods = defaultdict(set)
 
         if view_by is None or view_by == 'counties':
             child_locations = County.all()
@@ -75,10 +81,17 @@ class PerformanceIndicators(object):
             selected_sector['report'] = report_id
             selected_sector['label'] = label
 
+            # retrieve project sector project geolocations
+            geo_locations = json.dumps(
+                get_geolocations_from_items(child_locations, reg_id))
+
             # generate chart_dataset
             chart_dataset = (
                 build_performance_indicator_chart_dataset(
                     sector_indicators[reg_id], sector_data[sector]['rows']))
+
+            # retrieve sector periods
+            periods = get_sector_periods(reg_id, child_locations)
 
         else:
             # load first sector for the location list
@@ -90,12 +103,20 @@ class PerformanceIndicators(object):
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
+                sector_periods = get_sector_periods(reg_id, child_locations)
+
+                periods['years'].update(sector_periods['years'])
+                periods['months'].update(sector_periods['months'])
+                periods['quarters'].update(sector_periods['quarters'])
+
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
                            'month_or_quarter': month_or_quarter,
                            'period': period,
                            'location': ''}
         filter_criteria = Project.generate_filter_criteria()
+
+        filter_criteria.update(periods)
 
         # return sectors, sector indicator list, sector indicator data.
         return {
@@ -106,6 +127,7 @@ class PerformanceIndicators(object):
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
             'chart_dataset': chart_dataset,
+            'geo_locations': geo_locations,
             'is_impact': False
         }
 
@@ -128,6 +150,8 @@ class PerformanceIndicators(object):
         sector_indicators = {}
         selected_sector = {}
         chart_dataset = None
+        geo_locations = None
+        periods = defaultdict(set)
 
         target_class = get_target_class_from_view_by(
             view_by, source_class)
@@ -154,14 +178,23 @@ class PerformanceIndicators(object):
             sector_indicators[reg_id] = (
                 constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
+            # populate selected sector variables
             selected_sector['sector'] = reg_id
             selected_sector['report'] = report_id
             selected_sector['label'] = label
+
+            # retrieve project sector project geolocations
+            geo_locations = json.dumps(
+                get_geolocations_from_items(child_locations, reg_id))
 
             # generate chart_dataset
             chart_dataset = (
                 build_performance_indicator_chart_dataset(
                     sector_indicators[reg_id], sector_data[sector]['rows']))
+
+            # retrieve sector periods
+            periods = get_sector_periods(reg_id, child_locations)
+
         else:
             # load first sector for the location list
             for reg_id, report_id, title in sectors:
@@ -172,12 +205,19 @@ class PerformanceIndicators(object):
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
+                sector_periods = get_sector_periods(reg_id, child_locations)
+
+                periods['years'].update(sector_periods['years'])
+                periods['months'].update(sector_periods['months'])
+                periods['quarters'].update(sector_periods['quarters'])
+
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
                            'month_or_quarter': month_or_quarter,
                            'period': period,
                            'location': location}
         filter_criteria = Project.generate_filter_criteria()
+        filter_criteria.update(periods)
 
         # return sectors, sector indicator list, sector indicator data.
         return {
@@ -189,5 +229,6 @@ class PerformanceIndicators(object):
             'filter_criteria': filter_criteria,
             'location': location,
             'chart_dataset': chart_dataset,
+            'geo_locations': geo_locations,
             'is_impact': False
         }

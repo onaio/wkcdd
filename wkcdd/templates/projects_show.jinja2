@@ -60,7 +60,11 @@
 
         <div>
           <form id="filter_criteria" class="form-inline" method="get">
-            {% with month_or_quarter=search_criteria.get('month_or_quarter'), period=search_criteria.get('period') , years = filter_criteria.get('year_periods')%}   
+            {% with month_or_quarter=search_criteria.get('month_or_quarter'),
+                    period=search_criteria.get('period'),
+                    quarters = filter_criteria.get('quarters'), 
+                    months_present = filter_criteria.get('months'),
+                    years = filter_criteria.get('years')%}   
               {% include '/period_selector.jinja2' %}
             {% endwith %}
 
