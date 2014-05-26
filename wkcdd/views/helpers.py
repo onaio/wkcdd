@@ -156,9 +156,15 @@ def get_sector_data(sector_id, report_id, child_locations, *period_criteria):
 
     return {
         'rows': rows,
-        'summary_row': summary_row,
-        'periods': periods
+        'summary_row': summary_row
     }
+
+
+def get_sector_periods(sector_id, child_locations):
+    project_filter_criteria = Project.sector == sector_id
+    periods = Report.get_periods_for(
+        child_locations, project_filter_criteria)
+    return periods
 
 
 def build_report_period_criteria(month_or_quarter, period):

@@ -14,6 +14,7 @@ from wkcdd.views.helpers import (
     get_performance_sector_mapping,
     get_target_class_from_view_by,
     build_report_period_criteria,
+    get_sector_periods,
     build_performance_indicator_chart_dataset)
 from wkcdd.models import (
     County,
@@ -89,8 +90,8 @@ class PerformanceIndicators(object):
                 build_performance_indicator_chart_dataset(
                     sector_indicators[reg_id], sector_data[sector]['rows']))
 
-            # retrieve period information
-            periods = sector_data[sector]['periods']
+            # retrieve sector periods
+            periods = get_sector_periods(reg_id, child_locations)
 
         else:
             # load first sector for the location list
@@ -102,12 +103,11 @@ class PerformanceIndicators(object):
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
-                periods['years'].update(
-                    sector_data[reg_id]['periods']['years'])
-                periods['months'].update(
-                    sector_data[reg_id]['periods']['months'])
-                periods['quarters'].update(
-                    sector_data[reg_id]['periods']['quarters'])
+                sector_periods = get_sector_periods(reg_id, child_locations)
+
+                periods['years'].update(sector_periods['years'])
+                periods['months'].update(sector_periods['months'])
+                periods['quarters'].update(sector_periods['quarters'])
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
@@ -192,8 +192,8 @@ class PerformanceIndicators(object):
                 build_performance_indicator_chart_dataset(
                     sector_indicators[reg_id], sector_data[sector]['rows']))
 
-            # retrieve periods variable
-            periods = sector_data[sector]['periods']
+            # retrieve sector periods
+            periods = get_sector_periods(reg_id, child_locations)
 
         else:
             # load first sector for the location list
@@ -205,12 +205,11 @@ class PerformanceIndicators(object):
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
 
-                periods['years'].update(
-                    sector_data[reg_id]['periods']['years'])
-                periods['months'].update(
-                    sector_data[reg_id]['periods']['months'])
-                periods['quarters'].update(
-                    sector_data[reg_id]['periods']['quarters'])
+                sector_periods = get_sector_periods(reg_id, child_locations)
+
+                periods['years'].update(sector_periods['years'])
+                periods['months'].update(sector_periods['months'])
+                periods['quarters'].update(sector_periods['quarters'])
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,

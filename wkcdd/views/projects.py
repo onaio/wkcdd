@@ -86,8 +86,7 @@ class ProjectViews(object):
 
         reports = Report.get_reports_for_projects([project], *criteria)
 
-        periods = defaultdict(set)
-        Report.generate_periods_from_reports(periods, reports)
+        periods = Report.get_periods_for([project])
 
         filter_criteria = Project.generate_filter_criteria()
         filter_criteria.update(periods)

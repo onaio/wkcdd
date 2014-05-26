@@ -258,15 +258,13 @@ class Report(Base):
         return rows, summary_row
 
     @classmethod
-    def get_report_periods(cls, collection, **kwargs):
+    def get_periods_for(cls, collection, *project_filter_criteria):
         periods = defaultdict(set)
 
         for item in collection:
             try:
-                project_filter_criteria = kwargs.get(
-                    'project_filter_criteria', [])
                 if project_filter_criteria:
-                    projects = item.get_projects(project_filter_criteria)
+                    projects = item.get_projects(*project_filter_criteria)
                 else:
                     projects = item.get_projects()
 
