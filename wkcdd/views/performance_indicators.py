@@ -83,7 +83,7 @@ class PerformanceIndicators(object):
 
             # retrieve project sector project geolocations
             geo_locations = json.dumps(
-                get_geolocations_from_items(child_locations))
+                get_geolocations_from_items(child_locations, reg_id))
 
             # generate chart_dataset
             chart_dataset = (
@@ -185,7 +185,7 @@ class PerformanceIndicators(object):
 
             # retrieve project sector project geolocations
             geo_locations = json.dumps(
-                get_geolocations_from_items(child_locations))
+                get_geolocations_from_items(child_locations, reg_id))
 
             # generate chart_dataset
             chart_dataset = (

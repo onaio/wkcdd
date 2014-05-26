@@ -86,12 +86,16 @@ def get_project_geolocations(projects):
     return project_geopoints
 
 
-def get_geolocations_from_items(items):
+def get_geolocations_from_items(items, sector_id=None):
     # generate project_geopoints from project list
     geolocations = []
     for item in items:
         # get reports for this location or project,
-        projects = item.get_projects()
+        if sector_id:
+            project_filter_criteria = Project.sector == sector_id
+            projects = item.get_projects(project_filter_criteria)
+        else:
+            projects = item.get_projects()
         geolocations.extend(
             get_project_geolocations(projects))
     return geolocations

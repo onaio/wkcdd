@@ -38,11 +38,14 @@
 	      <label>Aggregate by: </label>
 	  
 	      <select name="view_by" class="form-control float-left" data-placeholder="Select...">
-	        <option value="counties">Counties</option>
-	        <option value="sub_counties">Sub-Counties</option>
-	        <option value="constituencies">Constituencies</option>
-	        <option value="communities">Communities</option>
-	        <option value="projects">Projects</option>
+	       	{% set location_types = ["counties", "sub_counties", "constituencies", "communities", "projects"]%}
+	      	{% for location_type in location_types %}
+		        <option value="{{location_type}}"
+				 {% if search_criteria['view_by'] == location_type %}
+				 	selected
+				 {% endif %} 
+		        >{{ location_type.title() | replace("_", "-")}}</option>
+		    {% endfor %}
 	      </select>
 	      
 		  <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
