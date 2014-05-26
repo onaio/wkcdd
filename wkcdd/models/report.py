@@ -263,11 +263,7 @@ class Report(Base):
 
         for item in collection:
             try:
-                if project_filter_criteria:
-                    projects = item.get_projects(*project_filter_criteria)
-                else:
-                    projects = item.get_projects()
-
+                projects = item.get_projects(*project_filter_criteria)
                 reports = cls.get_reports_for_projects(projects)
                 # retrieve periods based on the reports available
                 cls.generate_periods_from_reports(periods, reports)
