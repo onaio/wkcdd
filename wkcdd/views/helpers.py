@@ -75,16 +75,19 @@ def get_project_geolocations(projects):
     """
     Get project geopoints for a list of projects
     """
-    project_geopoints = [
-        {'id': project.id,
-         'name': project.name.title(),
-         'sector': project.sector_name,
-         'description': project.description,
-         'lat': str(project.latlong[0]),
-         'lng': str(project.latlong[1])}
-        for project in projects if project.latlong]
+    if projects:
+        project_geopoints = [
+            {'id': project.id,
+             'name': project.name.title(),
+             'sector': project.sector_name,
+             'description': project.description,
+             'lat': str(project.latlong[0]),
+             'lng': str(project.latlong[1])}
+            for project in projects if project.latlong]
 
-    return project_geopoints
+        return project_geopoints
+    else:
+        raise ValueError("No projects provided")
 
 
 def get_geolocations_from_items(items, sector_id=None):
@@ -92,13 +95,16 @@ def get_geolocations_from_items(items, sector_id=None):
     geolocations = []
     for item in items:
         # get reports for this location or project,
-        if sector_id:
-            project_filter_criteria = Project.sector == sector_id
+        try:
+            project_filter_criteria = ''
+            if sector_id:
+                project_filter_criteria = Project.sector == sector_id
+
             projects = item.get_projects(project_filter_criteria)
-        else:
-            projects = item.get_projects()
-        geolocations.extend(
-            get_project_geolocations(projects))
+            geolocations.extend(
+                get_project_geolocations(projects))
+        except ValueError:
+            pass
     return geolocations
 
 

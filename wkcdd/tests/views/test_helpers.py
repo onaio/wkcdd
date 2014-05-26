@@ -11,6 +11,7 @@ from wkcdd.views.helpers import (
     SUB_COUNTIES_LEVEL,
     requested_xlsx_format,
     get_project_geolocations,
+    get_geolocations_from_items,
     get_target_class_from_view_by,
     get_sector_data,
     get_performance_sector_mapping,
@@ -66,18 +67,18 @@ class TestHelpers(TestBase):
     def test_get_sector_data_for_community_cow_projects(self):
         self.setup_test_data()
         community = Community.get(Community.name == "Maragoli")
-        sector = constants.DAIRY_COWS_PROJECT_REGISTRATION
-        reg_id, report_id, label = get_performance_sector_mapping(sector)[0]
-        results = get_sector_data(sector, report_id, [community])
+        sector_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        reg_id, report_id, label = get_performance_sector_mapping(sector_id)[0]
+        results = get_sector_data(sector_id, report_id, [community])
 
         self.assertEqual(len(results['rows']), 1)
 
     def test_get_sector_data_for_cow_project(self):
         self.setup_test_data()
         project = Project.get(Project.code == "7CWA")
-        sector = constants.DAIRY_COWS_PROJECT_REGISTRATION
-        reg_id, report_id, label = get_performance_sector_mapping(sector)[0]
-        results = get_sector_data(sector, report_id, [project])
+        sector_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        reg_id, report_id, label = get_performance_sector_mapping(sector_id)[0]
+        results = get_sector_data(sector_id, report_id, [project])
 
         self.assertEqual(len(results['rows']), 1)
         summary_row = results['summary_row']
@@ -99,3 +100,13 @@ class TestHelpers(TestBase):
         reports = Report.get_reports_for_projects([project], *criteria)
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
+
+    def test_get_geolocations_from_items(self):
+        self.setup_test_data()
+        geopoints = json.dumps(_load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'cow_project_1_geopoints.json')))
+        sector_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        projects = Project.all()
+        project_geopoints = get_geolocations_from_items(projects, sector_id)
+
+        self.assertEquals(json.dumps(project_geopoints), geopoints)
