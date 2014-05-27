@@ -9,7 +9,7 @@ $(document).ready(function () {
     var tableElement = $('.wk-datatable');
 
     tableElement.dataTable({
-        autoWidth        : false,
+        autoWidth        : true,
         preDrawCallback: function () {
             // Initialize the responsive datatables helper once.
             if (!responsiveHelper) {
@@ -23,7 +23,6 @@ $(document).ready(function () {
             responsiveHelper.respond();
         }
     });
-    // $("#prjDatatable").dataTable();
-    // $("#prjDatatable input").addClass(".form-control");
-    // $(".wk-datatable").dataTable();
+    
+    tableElement.addClass(".form-control");
 });

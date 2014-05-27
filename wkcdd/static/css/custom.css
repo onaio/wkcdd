@@ -56,7 +56,7 @@
 }
 .page-sidebar{
 	background:#414141;
-	min-height:45em;
+	min-height:100em;
 	max-width:8em;
 	padding:0;
 	position:fixed;
@@ -192,10 +192,6 @@ span.ratio {
     font-weight: 500 !important;
 }
 /*datatables*/
-.table-holder{
-	
-}
-
 .dataTables_wrapper {
     /*border-top: 1px dashed #dedede;*/
     font-size:12px;
@@ -223,6 +219,9 @@ table.dataTable{
 .dataTables_filter{
     margin-top:-0.2em;
     width:40em;
+}
+.dataTables_wrapper .col-xs-6:last-child > .dataTables_filter{
+	float:right;
 }
 .dataTables_filter input[type=text]{
     width:20em;

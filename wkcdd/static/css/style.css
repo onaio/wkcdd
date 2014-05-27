@@ -3248,18 +3248,17 @@ Responsive & Scrollable Tables
 ***/
 
 .table-scrollable {
-  max-width: 100%;
-  /*overflow-x: auto;*/
-  overflow-y: hidden;
-  /*border: 1px solid #dddddd;*/
+  width:auto!important;
+  /*overflow-y: hidden;*/
   table-layout:fixed;
   width:99%;
   overflow:hidden;
   word-wrap:break-word
 }
 
-.table-scrollable > .table {
-  width: 100%!important;
+.table-scrollable > .table, .table-scrollable table{
+  /*width: 100%!important;*/
+  max-width:60em;
   margin: 0 !important;
   margin-bottom: 0;
   background-color: #fff;
