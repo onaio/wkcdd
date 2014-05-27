@@ -192,6 +192,10 @@ span.ratio {
     font-weight: 500 !important;
 }
 /*datatables*/
+.table-holder{
+	
+}
+
 .dataTables_wrapper {
     /*border-top: 1px dashed #dedede;*/
     font-size:12px;
