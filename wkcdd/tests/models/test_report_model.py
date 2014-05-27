@@ -388,3 +388,14 @@ class TestReport(TestBase):
         self.assertFalse(periods['months'])
         self.assertFalse(periods['years'])
         self.assertFalse(periods['quarters'])
+
+    def test_get_trend_values_for_impact_indicators(self):
+        self.setup_report_trends_data()
+        locations = County.all()
+
+        time_criteria = Report.period == '2012_13'
+        indicator_key = 'impact_information/b_income'
+
+        data = Report.get_trend_values_for_impact_indicators(
+            locations, indicator_key, time_criteria)
+        self.assertEqual(data, [2, 0])

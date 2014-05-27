@@ -280,6 +280,26 @@ class Report(Base):
         periods['quarters'].update(
             {report.quarter for report in reports})
 
+    @classmethod
+    def get_trend_values_for_impact_indicators(cls,
+                                               collection,
+                                               indicator_key,
+                                               time_criteria):
+        indicator_values = []
+        for item in collection:
+            try:
+                projects = item.get_projects()
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    time_criteria)
+                indicator_sum = cls.sum_impact_indicator_values(
+                    indicator_key, reports)
+                indicator_values.append(indicator_sum)
+            except ReportError:
+                indicator_values.append(0)
+
+        return indicator_values
+
 
 class ReportError(Exception):
     pass
