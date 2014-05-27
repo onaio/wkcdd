@@ -102,12 +102,12 @@
               <thead>
               <tr>
               {% if target_class %}
-                <th>{{target_class.__name__}}</th>
+                <th data-class="expand">{{target_class.__name__}}</th>
               {% else %}
-                <th>{% trans %}County{% endtrans %}</th>
+                <th data-class="expand">{% trans %}County{% endtrans %}</th>
               {% endif %}
                 {% for indicator in indicators %}
-                  <th>{{ indicator.label }}</th>
+                  <th data-hide="phone,tablet" data-name="{{ indicator.label }}">{{ indicator.label }}</th>
                 {% endfor %}
               </tr>
               </thead>

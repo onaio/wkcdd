@@ -24,5 +24,5 @@ $(document).ready(function () {
         }
     });
     
-    tableElement.addClass(".form-control");
+    tableElement.find("input").addClass(".form-control");
 });

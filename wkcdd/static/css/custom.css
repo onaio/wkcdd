@@ -204,6 +204,8 @@ span.ratio {
 }
 table.dataTable{
     margin-bottom:1em!important;
+    max-width:100%!important;
+    table-layout: fixed;
 }
 .dataTables_filter input[type=text], .dataTables_length select{
     background-color: #ffffff;
