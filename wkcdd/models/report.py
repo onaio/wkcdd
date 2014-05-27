@@ -93,13 +93,36 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_year_periods(cls):
+    def get_year_interval(cls, start_period, end_period):
         results = DBSession.query(Report)\
+            .filter(Report.month.between(start_period, end_period))\
             .distinct(Report.period)\
             .order_by(Report.period)\
             .all()
         year_periods = [r.period for r in results]
         return year_periods
+
+    @classmethod
+    def get_month_interval(cls, start_period, end_period, year):
+        results = DBSession.query(Report)\
+            .filter(Report.period == year)\
+            .filter(Report.month.between(start_period, end_period))\
+            .distinct(Report.month)\
+            .order_by(Report.month)\
+            .all()
+        month_interval = [r.month for r in results]
+        return month_interval
+
+    @classmethod
+    def get_quarter_interval(cls, start_period, end_period, year):
+        results = DBSession.query(Report)\
+            .filter(Report.period == year)\
+            .distinct(Report.quarter)\
+            .order_by(Report.quarter)\
+            .all()
+
+        quarter_interval = [r.quarter for r in results]
+        return quarter_interval
 
     @classmethod
     def get_reports_for_projects(cls, projects, *criteria):
@@ -284,14 +307,14 @@ class Report(Base):
     def get_trend_values_for_impact_indicators(cls,
                                                collection,
                                                indicator_key,
-                                               time_criteria):
+                                               *time_criteria):
         indicator_values = []
         for item in collection:
             try:
                 projects = item.get_projects()
                 reports = cls.get_reports_for_projects(
                     projects,
-                    time_criteria)
+                    *time_criteria)
                 indicator_sum = cls.sum_impact_indicator_values(
                     indicator_key, reports)
                 indicator_values.append(indicator_sum)

@@ -31,6 +31,10 @@ COMMUNITIES_LEVEL = 'communities'
 PROJECTS_LEVEL = 'projects'
 DEFAULT_OPTION = 'default'
 
+YEAR_PERIOD = 'period'
+MONTH_PERIOD = 'month'
+QUARTER_PERIOD = 'quarter'
+
 
 @subscriber(NewRequest)
 def requested_xlsx_format(event):
@@ -280,3 +284,57 @@ def report_submission_handler(payload):
     except (KeyError, IndexError):
         raise ReportHandlerError(
             "'{}' not found in json".format(constants.XFORM_ID))
+
+
+def generate_time_series(start_period, end_period, time_class, year):
+    """Given time a and b, get all other intervals in between"""
+
+    if time_class == QUARTER_PERIOD:
+        time_series = Report.get_quarter_interval(
+            start_period, end_period, year)
+    elif time_class == MONTH_PERIOD:
+        time_series = Report.get_month_interval(start_period, end_period, year)
+    else:
+        time_series = Report.get_year_interval(start_period, end_period)
+
+    return time_series
+
+
+def get_trend_report(time_series,
+                     time_class,
+                     year,
+                     indicator,
+                     collection,
+                     project_filter_criteria=''):
+    """
+
+    Generate time series data for a given indicator.
+
+    Return ([1,2,3]), # months
+           ([
+                [10,20,30,40,50], # month 1 data for each location
+                [12,13,14,15,16], # month 2 data ''
+                [23,24,25,26,27]  # month 3 data ''
+           ])# series data
+           (['Siaya', 'Vihiga', 'Bungoma', 'Kakamega', 'Busia']) # series
+    """
+    # get reports within the specified period
+    # for each period, get values for specified indicator
+    # return timeseries, series_data, collection labels
+    series_labels = [c.name for c in collection]
+    series_data = []
+    for period in time_series:
+        indicator_key = indicator['key']
+
+        if time_class == YEAR_PERIOD:
+            time_criteria = Report.period == period
+        elif time_class == MONTH_PERIOD:
+            time_criteria = [Report.month == period, Report.period == year]
+        else:
+            time_criteria = [Report.quarter == period, Report.period == year]
+
+        data = Report.get_trend_values_for_impact_indicators(
+            collection, indicator_key, *time_criteria)
+        series_data.append(data)
+
+    return time_series, series_data, series_labels

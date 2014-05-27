@@ -9,13 +9,17 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.views.helpers import (
     SUB_COUNTIES_LEVEL,
+    MONTH_PERIOD,
+    QUARTER_PERIOD,
     requested_xlsx_format,
     get_project_geolocations,
     get_geolocations_from_items,
     get_target_class_from_view_by,
     get_sector_data,
     get_performance_sector_mapping,
-    build_report_period_criteria)
+    build_report_period_criteria,
+    generate_time_series,
+    get_trend_report)
 from wkcdd import constants
 from wkcdd.models import (
     County,
@@ -110,3 +114,30 @@ class TestHelpers(TestBase):
         project_geopoints = get_geolocations_from_items(projects, sector_id)
 
         self.assertEquals(json.dumps(project_geopoints), geopoints)
+
+    def test_generate_time_series_with_months(self):
+        self.setup_report_trends_data()
+        time_series = generate_time_series(1, 12, MONTH_PERIOD, '2012_13')
+        self.assertEqual(time_series, [1, 5])
+
+    def test_generate_time_series_with_quarters(self):
+        self.setup_report_trends_data()
+        time_series = generate_time_series(
+            'q_1', 'q_4', QUARTER_PERIOD, '2012_13')
+        self.assertEqual(time_series, ['q_1', 'q_2'])
+
+    def test_report_trends_for_month_data(self):
+        self.setup_report_trends_data()
+        locations = County.all()
+        time_series = [1, 5, 8]
+
+        indicator = {}
+        indicator['key'] = 'impact_information/b_income'
+
+        time_series, series_data, series_labels = get_trend_report(
+            time_series, MONTH_PERIOD, '2012_13', indicator, locations)
+
+        self.assertEqual(time_series, [1, 5, 8])
+        self.assertEqual(series_labels, [c.name for c in locations])
+
+        self.assertEqual(series_data, [[1, 0], [1, 0], [0, 0]])
