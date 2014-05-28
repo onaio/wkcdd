@@ -9,50 +9,68 @@
 {% set start_period = search_criteria['start_period']%}
 {% set end_period = search_criteria['end_period']%}
 
-{% block filters %}
-<div class="clearfix filters">
-    <form id="filter_criteria" class="form-horizontal" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=('trend')) }}')">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="">
-                    {% include 'location_filters.jinja2'%}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {% with month_or_quarter=search_criteria.get('start_period'),
-                        period_label='Compare from',
-                        month_quarter_select_name='start_period',
-                        period=search_criteria.get('year'),
-                        years = filter_criteria.get('years'),
-                        quarters = filter_criteria.get('quarters'), 
-                        months_present = filter_criteria.get('months')%}     
-                        {% include '/period_selector.jinja2' %}
-                    {% endwith %}
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    {% with month_or_quarter=search_criteria.get('end_period'),
-                        period_label='To',
-                        month_quarter_select_name='end_period',
-                        period=search_criteria.get('year'),
-                        years = filter_criteria.get('years'),
-                        quarters = filter_criteria.get('quarters'), 
-                        months_present = filter_criteria.get('months')%}     
-                        {% include '/period_selector.jinja2' %}
-                    {% endwith %}
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {% include 'aggregate_by_dropdown.jinja2'%}
-                    <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
-                </div>
-            </div>
+{% block page_title %}
+  <h3 class="page-title">
+    {{ self.title() }} {% trans %}Trends {% endtrans %}
+    <small></small>
+  </h3>
+{% endblock %}
 
+{% block filters %}
+<div>
+    <div class="col-md-12">
+        <div class="clearfix filters">
+            <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=('trend')) }}')">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="">
+                            {% include 'location_filters.jinja2'%}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {% with month_or_quarter=search_criteria.get('start_period'),
+                                        period_label='Compare from',
+                                        month_quarter_select_name='start_period',
+                                        period=search_criteria.get('year'),
+                                        years = filter_criteria.get('years'),
+                                        quarters = filter_criteria.get('quarters'), 
+                                        months_present = filter_criteria.get('months')%}     
+                                        {% include '/period_selector.jinja2' %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {% with month_or_quarter=search_criteria.get('end_period'),
+                                        period_label='To',
+                                        month_quarter_select_name='end_period',
+                                        period=search_criteria.get('year'),
+                                        years = filter_criteria.get('years'),
+                                        quarters = filter_criteria.get('quarters'), 
+                                        months_present = filter_criteria.get('months')%}     
+                                        {% include '/period_selector.jinja2' %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {% include 'aggregate_by_dropdown.jinja2'%}
+
+                            <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 {% endblock %}
 
@@ -102,7 +120,7 @@
     {{ super() }}
     chartDataSet = {{ chart_dataset | safe() }};
     TrendCharts.chartDataSet = chartDataSet;
-    
+
     selected_indicator = '{{indicators[0]['key']}}';
     selected_series = chartDataSet.series[selected_indicator];
 

@@ -4,7 +4,9 @@ import datetime
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
-from wkcdd.libs.utils import get_performance_indicator_list
+from wkcdd.libs.utils import (
+    number_to_month_name,
+    get_performance_indicator_list)
 from wkcdd.models import (
     County,
     SubCounty,
@@ -346,5 +348,12 @@ def get_impact_indicator_trend_report(time_series,
             series_data.append(period_row)
 
         series_data_map[indicator_key] = series_data
+
+    if time_class == MONTH_PERIOD:
+        time_series = [number_to_month_name(m) for m in time_series]
+    elif time_class == QUARTER_PERIOD:
+        time_series = [q.replace("q_", "Quarter ") for q in time_series]
+    elif time_class == YEAR_PERIOD:
+        time_series = [y.replace("_", " to 20") for y in time_series]
 
     return time_series, series_data_map, series_labels
