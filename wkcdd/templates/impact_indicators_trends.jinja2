@@ -89,25 +89,34 @@
             </div>
         </div>
         <div class="portlet-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="btn-group pull-right">
-                        <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <span class="selected-trend-indicator">{{indicators[0].label}}</span> <span class="icon-angle-down"></span>
-                        </a>
-                        <ul class="dropdown-menu select-sector">
-                        {% for indicator in indicators %}
-                          <li><a href="javascript:;" class="trend-indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
-                        {% endfor %}
-                        </ul>
+            {% if time_series %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group pull-right">
+                            <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <span class="selected-trend-indicator">{{indicators[0].label}}</span> <span class="icon-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu select-sector">
+                            {% for indicator in indicators %}
+                              <li><a href="javascript:;" class="trend-indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                  {% include 'chart.jinja2' %}
-                </div>                      
-            </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      {% include 'chart.jinja2' %}
+                    </div>                      
+                </div>
+            {% else %}
+                <div class="panel panel-info">
+                  <div class="panel-body">
+                    {% trans %} No data available for the selected period{% endtrans %}
+                  </div>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 {% endblock %}
@@ -133,8 +142,10 @@
     selected_indicator = '{{indicators[0]['key']}}';
     selected_series = chartDataSet.series[selected_indicator];
 
-    $('#chart').empty();
-    TrendCharts.drawTrend(selected_series, chartDataSet.seriesLabels);
+    {% if time_series %}
+        $('#chart').empty();
+        TrendCharts.drawTrend(selected_series, chartDataSet.seriesLabels);
+    {% endif %}
 
     {{ update_selected_location_dropdowns(search_criteria) }}
 

@@ -238,9 +238,13 @@ class ImpactIndicators(object):
              'series': series_data_map,
              'seriesLabels': series_labels})
 
+        # update start period based on the retrieved data
+        start_period = str(time_series[0]) if time_series else ''
+        end_period = str(time_series[-1]) if time_series else ''
+
         search_criteria = {'view_by': view_by,
-                           'start_period': str(time_series[0]),
-                           'end_period': str(time_series[-1]),
+                           'start_period': start_period,
+                           'end_period': end_period,
                            'time_class': time_class,
                            'year': year,
                            'location': location or ''}
@@ -253,5 +257,6 @@ class ImpactIndicators(object):
             'chart_dataset': chart_dataset,
             'indicators': indicators,
             'search_criteria': search_criteria,
-            'filter_criteria': filter_criteria
+            'filter_criteria': filter_criteria,
+            'time_series': time_series
         }
