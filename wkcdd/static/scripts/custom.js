@@ -326,6 +326,7 @@ var LocationSelect = function() {
     this.level2ChangeListener = level2ChangeListener;
     this.level3ChangeListener = level3ChangeListener;
     this.update_select = update_select;
+    this.setViewByValue = setViewByValue;
 
     return this;
 }();
