@@ -300,12 +300,11 @@ def generate_time_series(start_period, end_period, time_class, year):
     return time_series
 
 
-def get_trend_report(time_series,
-                     time_class,
-                     year,
-                     indicator,
-                     collection,
-                     project_filter_criteria=''):
+def get_impact_indicator_trend_report(time_series,
+                                      time_class,
+                                      year,
+                                      indicators,
+                                      collection):
     """
 
     Generate time series data for a given indicator.
@@ -322,19 +321,30 @@ def get_trend_report(time_series,
     # for each period, get values for specified indicator
     # return timeseries, series_data, collection labels
     series_labels = [c.name for c in collection]
-    series_data = []
-    for period in time_series:
+    series_data_map = {}
+    for indicator in indicators:
         indicator_key = indicator['key']
+        series_data = []
 
-        if time_class == YEAR_PERIOD:
-            time_criteria = Report.period == period
-        elif time_class == MONTH_PERIOD:
-            time_criteria = [Report.month == period, Report.period == year]
-        else:
-            time_criteria = [Report.quarter == period, Report.period == year]
+        for item in collection:
+            period_row = []
 
-        data = Report.get_trend_values_for_impact_indicators(
-            collection, indicator_key, *time_criteria)
-        series_data.append(data)
+            for period in time_series:
+                if time_class == YEAR_PERIOD:
+                    time_criteria = Report.period == period
+                elif time_class == MONTH_PERIOD:
+                    time_criteria = [Report.month == period,
+                                     Report.period == year]
+                elif time_class == QUARTER_PERIOD:
+                    time_criteria = [Report.quarter == period,
+                                     Report.period == year]
 
-    return time_series, series_data, series_labels
+                data = Report.get_trend_values_for_impact_indicators(
+                    [item], indicator_key, *time_criteria)
+                period_row.append([period, data[0]])
+
+            series_data.append(period_row)
+
+        series_data_map[indicator_key] = series_data
+
+    return time_series, series_data_map, series_labels

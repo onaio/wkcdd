@@ -8,10 +8,13 @@ from wkcdd import constants
 from wkcdd.models.helpers import get_children_by_level
 from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import (
+    MONTH_PERIOD,
     get_target_class_from_view_by,
     build_report_period_criteria,
     build_impact_indicator_chart_dataset,
-    get_geolocations_from_items)
+    get_geolocations_from_items,
+    generate_time_series,
+    get_impact_indicator_trend_report)
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
     Report,
@@ -138,4 +141,84 @@ class ImpactIndicators(object):
             'chart_dataset': chart_dataset,
             'is_impact': True,
             'geo_locations': geo_locations
+        }
+
+    @view_config(name='trends',
+                 context=LocationFactory,
+                 renderer='impact_indicators_trends.jinja2',
+                 request_method='GET')
+    def trends(self):
+        # Get list of locations
+
+        view_by = self.request.GET.get('view_by') or None
+
+        source_class = County
+        target_class = None
+
+        if view_by is None or view_by == 'counties':
+            child_locations = County.all()
+        else:
+            location_ids = [c.id for c in County.all()]
+            target_class = get_target_class_from_view_by(
+                view_by, source_class)
+            child_ids = get_children_by_level(
+                location_ids, source_class, target_class)
+
+            child_locations = target_class.all(
+                target_class.id.in_(child_ids))
+
+        # Get periods based on the child locations
+
+        periods = Report.get_periods_for(child_locations)
+        months = list(periods['months'])
+        months.sort()
+        years = list(periods['years'])
+        years.sort()
+
+        # Retrieve get parameters and provide defaults if none was selected
+        start_period = self.request.GET.get('start_period', months[0])
+        end_period = self.request.GET.get('end_period', months[-1])
+
+        # handle months or quarters
+        time_class = self.request.GET.get('time_class', MONTH_PERIOD)
+        year = self.request.GET.get('year', years[-2])
+
+        # Generate time series range for the map x_axis
+
+        time_series = generate_time_series(
+            start_period, end_period, time_class, year)
+
+        indicators = get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
+
+        # Generate trend report for all indicators
+
+        time_series, series_data_map, series_labels = (
+            get_impact_indicator_trend_report(
+                time_series,
+                time_class,
+                year,
+                indicators,
+                child_locations))
+
+        chart_dataset = json.dumps(
+            {'labels': time_series,
+             'series': series_data_map,
+             'seriesLabels': series_labels})
+
+        search_criteria = {'view_by': view_by,
+                           'start_period': str(start_period),
+                           'end_period': str(end_period),
+                           'year': year,
+                           'location': ''}
+
+        filter_criteria = Project.generate_filter_criteria()
+
+        filter_criteria.update(periods)
+
+        return {
+            'chart_dataset': chart_dataset,
+            'indicators': indicators,
+            'search_criteria': search_criteria,
+            'filter_criteria': filter_criteria
         }

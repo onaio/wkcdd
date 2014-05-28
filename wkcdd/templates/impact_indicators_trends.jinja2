@@ -1,0 +1,112 @@
+{% extends 'base.jinja2' %}
+{% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
+{% block title %}{% trans %} Impact Indicators {% endtrans %}{% endblock %}
+
+{% set view_by = search_criteria['view_by']%}
+{% set year = search_criteria['year']%}
+{% set start_period = search_criteria['start_period']%}
+{% set end_period = search_criteria['end_period']%}
+
+{% block filters %}
+<div class="clearfix filters">
+    <form id="filter_criteria" class="form-horizontal" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=('trend')) }}')">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="">
+                    {% include 'location_filters.jinja2'%}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {% with month_or_quarter=search_criteria.get('start_period'),
+                        period_label='Compare from',
+                        month_quarter_select_name='start_period',
+                        period=search_criteria.get('year'),
+                        years = filter_criteria.get('years'),
+                        quarters = filter_criteria.get('quarters'), 
+                        months_present = filter_criteria.get('months')%}     
+                        {% include '/period_selector.jinja2' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {% with month_or_quarter=search_criteria.get('end_period'),
+                        period_label='To',
+                        month_quarter_select_name='end_period',
+                        period=search_criteria.get('year'),
+                        years = filter_criteria.get('years'),
+                        quarters = filter_criteria.get('quarters'), 
+                        months_present = filter_criteria.get('months')%}     
+                        {% include '/period_selector.jinja2' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    {% include 'aggregate_by_dropdown.jinja2'%}
+                    <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block content %}
+    {{ add_indicator_links(request, location, search_criteria) }}
+    <div class="row">
+        <div class="col-md-12">
+        <div class="portlet-title">
+          <div class="tools pull-left">
+              <a href="" class="collapse"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group pull-right">
+                        <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <span class="selected-trend-indicator">{{indicators[0].label}}</span> <span class="icon-angle-down"></span>
+                        </a>
+                        <ul class="dropdown-menu select-sector">
+                        {% for indicator in indicators %}
+                          <li><a href="javascript:;" class="trend-indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                  {% include 'chart.jinja2' %}
+                </div>                      
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block page_scripts %}
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.barRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.categoryAxisRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.cursor.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/wkcdd-charts.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+    {{ super() }}
+    chartDataSet = {{ chart_dataset | safe() }};
+    TrendCharts.chartDataSet = chartDataSet;
+    
+    selected_indicator = '{{indicators[0]['key']}}';
+    selected_series = chartDataSet.series[selected_indicator];
+
+    $('#chart').empty();
+    TrendCharts.drawTrend(chartDataSet.labels, selected_series, chartDataSet.seriesLabels);
+
+{% endblock %}

@@ -7,6 +7,7 @@ from wkcdd.tests.test_base import (
     TestBase,
     _load_json_fixture
 )
+from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import (
     SUB_COUNTIES_LEVEL,
     MONTH_PERIOD,
@@ -19,7 +20,7 @@ from wkcdd.views.helpers import (
     get_performance_sector_mapping,
     build_report_period_criteria,
     generate_time_series,
-    get_trend_report)
+    get_impact_indicator_trend_report)
 from wkcdd import constants
 from wkcdd.models import (
     County,
@@ -126,18 +127,24 @@ class TestHelpers(TestBase):
             'q_1', 'q_4', QUARTER_PERIOD, '2012_13')
         self.assertEqual(time_series, ['q_1', 'q_2'])
 
-    def test_report_trends_for_month_data(self):
+    def test_impact_indicator_report_trends_for_month_data(self):
         self.setup_report_trends_data()
         locations = County.all()
         time_series = [1, 5, 8]
 
-        indicator = {}
-        indicator['key'] = 'impact_information/b_income'
+        indicators = get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
 
-        time_series, series_data, series_labels = get_trend_report(
-            time_series, MONTH_PERIOD, '2012_13', indicator, locations)
+        time_series, series_data_map, series_labels = (
+            get_impact_indicator_trend_report(
+                time_series, MONTH_PERIOD, '2012_13', indicators, locations))
 
         self.assertEqual(time_series, [1, 5, 8])
         self.assertEqual(series_labels, [c.name for c in locations])
 
-        self.assertEqual(series_data, [[1, 0], [1, 0], [0, 0]])
+        self.assertEqual(
+            series_data_map['impact_information/b_income'],
+            [[1, 0], [1, 0], [0, 0]])
+        self.assertEqual(
+            series_data_map['impact_information/no_children'],
+            [[3, 0], [3, 0], [0, 0]])
