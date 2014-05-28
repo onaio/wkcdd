@@ -48,7 +48,7 @@ var TrendCharts = (function(self){
             drawTrend(self.chartDataSet.series[indicator], self.chartDataSet.seriesLabels);
         });
 
-        $('select[name=start_period], select[name=end_period]').click(function() {
+        $('select[name=start_period], select[name=end_period]').change(function() {
             var option_val = $(this).val()
             var option = $(this).find("option:selected");
             var timeClass = $(option).data('timeClass');
