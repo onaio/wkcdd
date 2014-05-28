@@ -322,7 +322,7 @@ def get_impact_indicator_trend_report(time_series,
     # get reports within the specified period
     # for each period, get values for specified indicator
     # return timeseries, series_data, collection labels
-    series_labels = [c.name for c in collection]
+    series_labels = [c.pretty for c in collection]
     series_data_map = {}
     for indicator in indicators:
         indicator_key = indicator['key']

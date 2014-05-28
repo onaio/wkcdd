@@ -209,6 +209,7 @@ class ImpactIndicators(object):
         search_criteria = {'view_by': view_by,
                            'start_period': str(time_series[0]),
                            'end_period': str(time_series[-1]),
+                           'time_class': time_class,
                            'year': year,
                            'location': ''}
 

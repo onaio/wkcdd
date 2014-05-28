@@ -32,6 +32,7 @@ var TrendCharts = (function(self){
             },
             series: getSeriesLabels(seriesLabels),
             legend: {
+                renderer: $.jqplot.EnhancedLegendRenderer,
                 show: true,
                 placement: 'outsideGrid'
             }
