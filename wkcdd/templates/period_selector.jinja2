@@ -9,6 +9,7 @@
                {% if month_or_quarter == '{}'.format(quarter) %}
                   selected
                {% endif %} 
+               data-time-class="quarter"
             >
                {{ quarter | replace("q_", "Quarter ") }}
          {% endfor %}
@@ -19,7 +20,8 @@
             <option value="{{key}}"
                {% if month_or_quarter == key | string %}
                   selected
-               {% endif %}
+               {% endif %} 
+               data-time-class="month"
             >
                {% trans %}{{month}}{% endtrans %}
             </option>
@@ -33,7 +35,8 @@
             <option value="{{year}}"
                {% if period == year %}
                   selected
-               {% endif %}
+               {% endif %} 
+               data-time-class="year"
             >
                {{ year | replace("_", " to 20") | replace("-", " to 20") }}
             </option>

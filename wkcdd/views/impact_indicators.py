@@ -181,7 +181,7 @@ class ImpactIndicators(object):
 
         # handle months or quarters
         time_class = self.request.GET.get('time_class', MONTH_PERIOD)
-        year = self.request.GET.get('year', years[-2])
+        year = self.request.GET.get('end_year', years[-1])
 
         # Generate time series range for the map x_axis
 
@@ -207,8 +207,8 @@ class ImpactIndicators(object):
              'seriesLabels': series_labels})
 
         search_criteria = {'view_by': view_by,
-                           'start_period': str(start_period),
-                           'end_period': str(end_period),
+                           'start_period': str(time_series[0]),
+                           'end_period': str(time_series[-1]),
                            'year': year,
                            'location': ''}
 

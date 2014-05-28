@@ -7,7 +7,9 @@ from wkcdd.tests.test_base import (
     TestBase,
     _load_json_fixture
 )
-from wkcdd.libs.utils import get_impact_indicator_list
+from wkcdd.libs.utils import (
+    number_to_month_name,
+    get_impact_indicator_list)
 from wkcdd.views.helpers import (
     SUB_COUNTIES_LEVEL,
     MONTH_PERIOD,
@@ -144,7 +146,25 @@ class TestHelpers(TestBase):
 
         self.assertEqual(
             series_data_map['impact_information/b_income'],
-            [[1, 0], [1, 0], [0, 0]])
+            [[
+                [number_to_month_name(1), 1],
+                [number_to_month_name(5), 1],
+                [number_to_month_name(8), 0]],
+             [
+                 [number_to_month_name(1), 0],
+                 [number_to_month_name(5), 0],
+                 [number_to_month_name(8), 0]
+             ]
+             ])
         self.assertEqual(
             series_data_map['impact_information/no_children'],
-            [[3, 0], [3, 0], [0, 0]])
+            [[
+                [number_to_month_name(1), 3],
+                [number_to_month_name(5), 3],
+                [number_to_month_name(8), 0]],
+             [
+                 [number_to_month_name(1), 0],
+                 [number_to_month_name(5), 0],
+                 [number_to_month_name(8), 0]
+             ]
+             ])

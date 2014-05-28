@@ -20,7 +20,7 @@
 <div>
     <div class="col-md-12">
         <div class="clearfix filters">
-            <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=('trend')) }}')">
+            <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=('trends')) }}')">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="">
@@ -34,6 +34,7 @@
                                     {% with month_or_quarter=search_criteria.get('start_period'),
                                         period_label='Compare from',
                                         month_quarter_select_name='start_period',
+                                        period_select_name='start_year',
                                         period=search_criteria.get('year'),
                                         years = filter_criteria.get('years'),
                                         quarters = filter_criteria.get('quarters'), 
@@ -49,6 +50,7 @@
                                     {% with month_or_quarter=search_criteria.get('end_period'),
                                         period_label='To',
                                         month_quarter_select_name='end_period',
+                                        period_select_name='end_year',
                                         period=search_criteria.get('year'),
                                         years = filter_criteria.get('years'),
                                         quarters = filter_criteria.get('quarters'), 
@@ -58,6 +60,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- This value is set using javascript based on the period selected -->
+                        <input type="hidden" name="time_class" value="">
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
@@ -125,6 +129,6 @@
     selected_series = chartDataSet.series[selected_indicator];
 
     $('#chart').empty();
-    TrendCharts.drawTrend(chartDataSet.labels, selected_series, chartDataSet.seriesLabels);
+    TrendCharts.drawTrend(selected_series, chartDataSet.seriesLabels);
 
 {% endblock %}

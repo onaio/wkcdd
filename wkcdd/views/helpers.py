@@ -332,28 +332,25 @@ def get_impact_indicator_trend_report(time_series,
             period_row = []
 
             for period in time_series:
+                period_label = None
                 if time_class == YEAR_PERIOD:
                     time_criteria = Report.period == period
+                    period_label = period.replace("_", " to 20")
                 elif time_class == MONTH_PERIOD:
                     time_criteria = [Report.month == period,
                                      Report.period == year]
+                    period_label = number_to_month_name(period)
                 elif time_class == QUARTER_PERIOD:
                     time_criteria = [Report.quarter == period,
                                      Report.period == year]
+                    period_label = period.replace("q_", "Quarter ")
 
                 data = Report.get_trend_values_for_impact_indicators(
                     [item], indicator_key, *time_criteria)
-                period_row.append([period, data[0]])
+                period_row.append([period_label, data[0]])
 
             series_data.append(period_row)
 
         series_data_map[indicator_key] = series_data
-
-    if time_class == MONTH_PERIOD:
-        time_series = [number_to_month_name(m) for m in time_series]
-    elif time_class == QUARTER_PERIOD:
-        time_series = [q.replace("q_", "Quarter ") for q in time_series]
-    elif time_class == YEAR_PERIOD:
-        time_series = [y.replace("_", " to 20") for y in time_series]
 
     return time_series, series_data_map, series_labels
