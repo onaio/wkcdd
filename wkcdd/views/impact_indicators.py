@@ -151,37 +151,69 @@ class ImpactIndicators(object):
         # Get list of locations
 
         view_by = self.request.GET.get('view_by') or None
+        county = self.request.GET.get('county') or None
+        sub_county = self.request.GET.get('sub_county') or None
+        constituency = self.request.GET.get('constituency') or None
+        community = self.request.GET.get('community') or None
 
         source_class = County
         target_class = None
+        location = None
 
-        if view_by is None or view_by == 'counties':
-            child_locations = County.all()
-        else:
-            location_ids = [c.id for c in County.all()]
+        location_id = community or constituency or sub_county or county
+
+        if location_id:
+            location = Location.get(Location.id == location_id)
+            source_class = location.__class__
+            location_ids = [location.id]
+
             target_class = get_target_class_from_view_by(
                 view_by, source_class)
+
             child_ids = get_children_by_level(
                 location_ids, source_class, target_class)
 
-            child_locations = target_class.all(
-                target_class.id.in_(child_ids))
+            child_locations = target_class.all(target_class.id.in_(child_ids))
+        else:
+            if view_by is None or view_by == 'counties':
+                child_locations = County.all()
+            else:
+                location_ids = [c.id for c in County.all()]
+                target_class = get_target_class_from_view_by(
+                    view_by, source_class)
+                child_ids = get_children_by_level(
+                    location_ids, source_class, target_class)
 
-        # Get periods based on the child locations
+                child_locations = target_class.all(
+                    target_class.id.in_(child_ids))
+
+            # Get periods based on the child locations
 
         periods = Report.get_periods_for(child_locations)
-        months = list(periods['months'])
+        months = [str(m) for m in periods['months']]
         months.sort()
+        quarters = list(periods['quarters'])
+        quarters.sort()
         years = list(periods['years'])
         years.sort()
 
         # Retrieve get parameters and provide defaults if none was selected
-        start_period = self.request.GET.get('start_period', months[0])
-        end_period = self.request.GET.get('end_period', months[-1])
+        start_period = self.request.GET.get('start_period')
+        start_period = (
+            start_period
+            if start_period and start_period in (months + quarters)
+            else months[0])
+
+        end_period = self.request.GET.get('end_period')
+        end_period = (
+            end_period if end_period and end_period in (months + quarters)
+            else months[-1])
+        year = self.request.GET.get('end_year')
+
+        year = year if year and year in years else years[-1]
 
         # handle months or quarters
         time_class = self.request.GET.get('time_class', MONTH_PERIOD)
-        year = self.request.GET.get('end_year', years[-1])
 
         # Generate time series range for the map x_axis
 
@@ -211,7 +243,7 @@ class ImpactIndicators(object):
                            'end_period': str(time_series[-1]),
                            'time_class': time_class,
                            'year': year,
-                           'location': ''}
+                           'location': location or ''}
 
         filter_criteria = Project.generate_filter_criteria()
 
