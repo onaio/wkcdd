@@ -399,3 +399,11 @@ class TestReport(TestBase):
         data = Report.get_trend_values_for_impact_indicators(
             locations, indicator_key, time_criteria)
         self.assertEqual(data, [2, 0])
+
+    def test_quarter_interval(self):
+        self.setup_report_trends_data()
+        start_quarter = 'q_2'
+        end_quarter = 'q_4'
+        quarters = Report.get_quarter_interval(
+            start_quarter, end_quarter, '2012_13')
+        self.assertEqual(quarters, ['q_2'])

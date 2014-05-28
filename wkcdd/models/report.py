@@ -117,6 +117,7 @@ class Report(Base):
     def get_quarter_interval(cls, start_period, end_period, year):
         results = DBSession.query(Report)\
             .filter(Report.period == year)\
+            .filter(Report.quarter.between(start_period, end_period))\
             .distinct(Report.quarter)\
             .order_by(Report.quarter)\
             .all()
