@@ -76,3 +76,12 @@ class TestImpactIndicatorsFunctional(FunctionalTestBase):
         url = self.request.route_path('impact_indicators', traverse=('trends'))
         response = self.testapp.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_trends_with_location(self):
+        self.setup_report_trends_data()
+        county = County.get(County.name == "Bungoma")
+        url = self.request.route_path('impact_indicators',
+                                      traverse=('trends'),
+                                      _query={'county': county.id})
+        response = self.testapp.get(url)
+        self.assertEqual(response.status_code, 200)
