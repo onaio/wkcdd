@@ -136,13 +136,12 @@
     location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
     LocationSelect.data_map = location_json_data;
 
-    chartDataSet = {{ chart_dataset | safe() }};
-    TrendCharts.chartDataSet = chartDataSet;
-
-    selected_indicator = '{{indicators[0]['key']}}';
-    selected_series = chartDataSet.series[selected_indicator];
-
     {% if time_series %}
+        chartDataSet = {{ chart_dataset | safe() }};
+        TrendCharts.chartDataSet = chartDataSet;
+        
+        selected_indicator = '{{indicators[0]['key']}}';
+        selected_series = chartDataSet.series[selected_indicator];
         $('#chart').empty();
         TrendCharts.drawTrend(selected_series, chartDataSet.seriesLabels);
     {% endif %}

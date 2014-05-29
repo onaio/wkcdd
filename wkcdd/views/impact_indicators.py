@@ -14,6 +14,7 @@ from wkcdd.views.helpers import (
     build_impact_indicator_chart_dataset,
     get_geolocations_from_items,
     generate_time_series,
+    process_trend_parameters,
     get_impact_indicator_trend_report)
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
@@ -190,27 +191,11 @@ class ImpactIndicators(object):
             # Get periods based on the child locations
 
         periods = Report.get_periods_for(child_locations)
-        months = [str(m) for m in periods['months']]
-        months.sort()
-        quarters = list(periods['quarters'])
-        quarters.sort()
-        years = list(periods['years'])
-        years.sort()
-
-        # Retrieve get parameters and provide defaults if none was selected
-        start_period = self.request.GET.get('start_period')
-        start_period = (
-            start_period
-            if start_period and start_period in (months + quarters)
-            else months[0])
-
-        end_period = self.request.GET.get('end_period')
-        end_period = (
-            end_period if end_period and end_period in (months + quarters)
-            else months[-1])
-        year = self.request.GET.get('end_year')
-
-        year = year if year and year in years else years[-1]
+        start_period, end_period, year = (
+            process_trend_parameters(periods,
+                                     self.request.GET.get('start_period'),
+                                     self.request.GET.get('end_period'),
+                                     self.request.GET.get('year')))
 
         # handle months or quarters
         time_class = self.request.GET.get('time_class', MONTH_PERIOD)

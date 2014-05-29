@@ -22,6 +22,7 @@ from wkcdd.views.helpers import (
     get_performance_sector_mapping,
     build_report_period_criteria,
     generate_time_series,
+    process_trend_parameters,
     get_impact_indicator_trend_report)
 from wkcdd import constants
 from wkcdd.models import (
@@ -168,3 +169,19 @@ class TestHelpers(TestBase):
                  [number_to_month_name(8), 0]
              ]
              ])
+
+    def test_process_trend_parameters(self):
+        self.setup_report_trends_data()
+        counties = County.all()
+        periods = Report.get_periods_for(counties)
+        param_start = '1'
+        param_end = '6'
+        param_year = '2012_13'
+
+        start_period, end_period, year = (
+            process_trend_parameters(
+                periods, param_start, param_end, param_year))
+
+        self.assertEqual(start_period, '1')
+        self.assertEqual(end_period, '12')
+        self.assertEqual(year, param_year)

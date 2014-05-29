@@ -354,3 +354,29 @@ def get_impact_indicator_trend_report(time_series,
         series_data_map[indicator_key] = series_data
 
     return time_series, series_data_map, series_labels
+
+
+def process_trend_parameters(periods, start_period, end_period, year):
+    months = list(periods['months'])
+    months.sort()
+    months = [str(m) for m in months]
+
+    quarters = list(periods['quarters'])
+    quarters.sort()
+
+    years = list(periods['years'])
+    years.sort()
+
+    # Retrieve get parameters and provide defaults if none was selected
+    start_period = (
+        start_period
+        if start_period and start_period in (months + quarters)
+        else months[0])
+
+    end_period = (
+        end_period if end_period and end_period in (months + quarters)
+        else months[-1])
+
+    year = year if year and year in years else years[-1]
+
+    return start_period, end_period, year
