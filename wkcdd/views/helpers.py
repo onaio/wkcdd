@@ -354,7 +354,7 @@ def get_impact_indicator_trend_report(time_series,
 
         series_data_map[indicator_key] = series_data
 
-    return time_series, series_data_map, series_labels
+    return series_data_map, series_labels
 
 
 def get_child_locations(view_by,

@@ -138,11 +138,10 @@ class TestHelpers(TestBase):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
 
-        time_series, series_data_map, series_labels = (
+        series_data_map, series_labels = (
             get_impact_indicator_trend_report(
                 time_series, MONTH_PERIOD, '2012_13', indicators, locations))
 
-        self.assertEqual(time_series, [1, 5, 8])
         self.assertEqual(series_labels, [c.name for c in locations])
 
         self.assertEqual(

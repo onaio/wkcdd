@@ -186,7 +186,7 @@ class ImpactIndicators(object):
 
         # Generate trend report for all indicators
 
-        time_series, series_data_map, series_labels = (
+        series_data_map, series_labels = (
             get_impact_indicator_trend_report(
                 time_series,
                 time_class,
