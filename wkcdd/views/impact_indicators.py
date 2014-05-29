@@ -171,7 +171,7 @@ class ImpactIndicators(object):
             process_trend_parameters(periods,
                                      self.request.GET.get('start_period'),
                                      self.request.GET.get('end_period'),
-                                     self.request.GET.get('year')))
+                                     self.request.GET.get('end_year')))
 
         # handle months or quarters
         time_class = self.request.GET.get('time_class', MONTH_PERIOD)

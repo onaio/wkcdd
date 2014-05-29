@@ -1,0 +1,55 @@
+{% set view_by = search_criteria['view_by']%}
+{% set year = search_criteria['year']%}
+{% set start_period = search_criteria['start_period']%}
+{% set end_period = search_criteria['end_period']%}
+<div class="row">
+    <div class="col-md-6">
+        <div class="">
+            {% include 'location_filters.jinja2'%}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {% with month_or_quarter=start_period,
+                        period_label='Compare from',
+                        month_quarter_select_name='start_period',
+                        period_select_name='start_year',
+                        period=year,
+                        years = filter_criteria.get('years'),
+                        quarters = filter_criteria.get('quarters'), 
+                        months_present = filter_criteria.get('months')%}     
+                        {% include '/period_selector.jinja2' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {% with month_or_quarter=end_period,
+                        period_label='To',
+                        month_quarter_select_name='end_period',
+                        period_select_name='end_year',
+                        period=year,
+                        years = filter_criteria.get('years'),
+                        quarters = filter_criteria.get('quarters'), 
+                        months_present = filter_criteria.get('months')%}     
+                        {% include '/period_selector.jinja2' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <!-- This value is set using javascript based on the period selected -->
+        <input type="hidden" name="time_class" value="{{search_criteria.get('time_class')}}">
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            {% include 'aggregate_by_dropdown.jinja2'%}
+
+            <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
+        </div>
+    </div>
+
+</div>

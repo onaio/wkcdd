@@ -25,7 +25,6 @@ from wkcdd.views.helpers import (
 from wkcdd.models import (
     County,
     Project,
-    Report,
     Location)
 
 
@@ -260,13 +259,18 @@ class PerformanceIndicators(object):
                                                         community)
 
         # Get periods based on the child locations
+         # generate trend report for the selected sector
+        sector = self.request.GET.get('sector') or None
+        sectors = get_performance_sector_mapping()
 
-        periods = Report.get_periods_for(child_locations)
+        sector_id, report_id, label = get_performance_sector_mapping(sector)[0]
+
+        periods = get_sector_periods(sector_id, child_locations)
         start_period, end_period, year = (
             process_trend_parameters(periods,
                                      self.request.GET.get('start_period'),
                                      self.request.GET.get('end_period'),
-                                     self.request.GET.get('year')))
+                                     self.request.GET.get('end_year')))
 
         # handle months or quarters
         time_class = self.request.GET.get('time_class', MONTH_PERIOD)
@@ -276,19 +280,22 @@ class PerformanceIndicators(object):
         time_series = generate_time_series(
             start_period, end_period, time_class, year)
 
-        # generate trend report for the selected sector
-        sector = self.request.GET.get('sector') or None
-        sectors = get_performance_sector_mapping()
+        import ipdb
+        ipdb.set_trace()
+        selected_sector = {}
+        selected_sector['sector'] = sector_id
+        selected_sector['report'] = report_id
+        selected_sector['label'] = label
 
-        sector_id, report_id, label = get_performance_sector_mapping(sector)[0]
         indicators = get_performance_indicator_list(
             constants.PERFORMANCE_INDICATORS[report_id])
-        periods = get_sector_periods(sector_id, child_locations)
+
+        sector_indicators = constants.PERFORMANCE_INDICATOR_REPORTS[report_id]
 
         # Generate trend report for all indicators
-
         series_data_map, series_labels = (
             get_performance_indicator_trend_report(
+                sector_id,
                 time_series,
                 time_class,
                 year,
@@ -305,6 +312,7 @@ class PerformanceIndicators(object):
         end_period = str(time_series[-1]) if time_series else ''
 
         search_criteria = {'view_by': view_by,
+                           'selected_sector': selected_sector,
                            'start_period': start_period,
                            'end_period': end_period,
                            'time_class': time_class,
@@ -318,7 +326,7 @@ class PerformanceIndicators(object):
         return {
             'sectors': sectors,
             'chart_dataset': chart_dataset,
-            'indicators': indicators,
+            'sector_indicators': sector_indicators,
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
             'time_series': time_series
