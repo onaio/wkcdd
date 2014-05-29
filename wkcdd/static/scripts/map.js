@@ -8,11 +8,11 @@ var Map = (function(root){
                 attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
             })]
     }).setView([0.31, 34.5], 9);
-
+    
     var data = {};
 
     // @todo: temporary
-    var lookupProperty = 'COUNTY';
+	var lookupProperty = 'COUNTY';
 
     var InfoBox = L.Control.extend({
     	options: {
