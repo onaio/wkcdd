@@ -324,6 +324,35 @@ class Report(Base):
 
         return indicator_values
 
+    @classmethod
+    def get_trend_values_for_performance_indicators(cls,
+                                                    collection,
+                                                    indicator_key,
+                                                    indicator_type,
+                                                    **kwargs):
+        project_filter_criteria = kwargs.get('project_criteria', [])
+        time_criteria = kwargs.get('time_criteria', [])
+        indicator_values = []
+        for item in collection:
+            try:
+
+                projects = item.get_projects(*project_filter_criteria)
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    *time_criteria)
+                try:
+                    indicator_sum = (
+                        cls.sum_performance_indicator_values(
+                            indicator_key, indicator_type, reports))
+                    indicator_values.append(indicator_sum)
+                except ValueError:
+                    indicator_values.append(0)
+
+            except ReportError:
+                indicator_values.append(0)
+
+        return indicator_values
+
 
 class ReportError(Exception):
     pass

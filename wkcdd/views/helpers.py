@@ -310,7 +310,8 @@ def get_impact_indicator_trend_report(time_series,
                                       collection):
     """
 
-    Generate time series data for a given indicator.
+    Generate time series data for impact indicators for a given set of
+    locations or projects.
 
     Return ([1,2,3]), # months
            ([
@@ -420,3 +421,59 @@ def process_trend_parameters(periods, start_period, end_period, year):
     year = year if year and year in years else years[-1]
 
     return start_period, end_period, year
+
+
+def get_performance_indicator_trend_report(sector_id,
+                                           time_series,
+                                           time_class,
+                                           year,
+                                           indicators,
+                                           collection):
+    # Similar to function for generating the impact indicators trend reports
+    series_labels = [c.pretty for c in collection]
+    series_data_map = {}
+    project_filter_criteria = Project.sector == sector_id
+
+    for indicator in indicators:
+        indicator_key = indicator['key']
+        indicator_property = indicator['property']
+        indicator_type = indicator['type']
+
+        if indicator_type == 'ratio':
+            series_data = []
+
+            for item in collection:
+                period_row = []
+
+                for period in time_series:
+                    period_label = None
+
+                    # Generate time criteria based on time_class
+                    if time_class == YEAR_PERIOD:
+                        time_criteria = Report.period == period
+                        period_label = period.replace("_", " to 20")
+                    elif time_class == MONTH_PERIOD:
+                        time_criteria = [Report.month == period,
+                                         Report.period == year]
+                        period_label = number_to_month_name(period)
+                    elif time_class == QUARTER_PERIOD:
+                        time_criteria = [Report.quarter == period,
+                                         Report.period == year]
+                        period_label = period.replace("q_", "Quarter ")
+
+                    # Generate kwargs arguments
+                    kwargs = {
+                        'project_filter_criteria': project_filter_criteria,
+                        'time_criteria': time_criteria}
+
+                    data = Report.get_trend_values_for_performance_indicators(
+                        [item], indicator_key, indicator_type, **kwargs)
+
+                    # Construct list expected to render the line graph
+                    period_row.append([period_label, data[0]])
+
+                series_data.append(period_row)
+
+            series_data_map[indicator_property] = series_data
+
+    return series_data_map, series_labels

@@ -9,7 +9,8 @@ from wkcdd.tests.test_base import (
 )
 from wkcdd.libs.utils import (
     number_to_month_name,
-    get_impact_indicator_list)
+    get_impact_indicator_list,
+    get_performance_indicator_list)
 from wkcdd.views.helpers import (
     SUB_COUNTIES_LEVEL,
     MONTH_PERIOD,
@@ -23,7 +24,8 @@ from wkcdd.views.helpers import (
     build_report_period_criteria,
     generate_time_series,
     process_trend_parameters,
-    get_impact_indicator_trend_report)
+    get_impact_indicator_trend_report,
+    get_performance_indicator_trend_report)
 from wkcdd import constants
 from wkcdd.models import (
     County,
@@ -182,3 +184,34 @@ class TestHelpers(TestBase):
         self.assertEqual(start_period, '1')
         self.assertEqual(end_period, '12')
         self.assertEqual(year, param_year)
+
+    def test_get_performance_indicator_trend_report(self):
+        self.setup_report_trends_data()
+        counties = County.all()
+        time_series = [1, 5, 8]
+        year = '2012_13'
+
+        sector_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        indicators = get_performance_indicator_list(
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
+
+        series_data_map, series_labels = (
+            get_performance_indicator_trend_report(sector_id,
+                                                   time_series,
+                                                   MONTH_PERIOD,
+                                                   year,
+                                                   indicators,
+                                                   counties))
+        self.assertEqual(series_labels, [c.pretty for c in counties])
+        self.assertEqual(
+            series_data_map['community_contribution'],
+            [[
+                [number_to_month_name(1), 136.5],
+                [number_to_month_name(5), 136.5],
+                [number_to_month_name(8), 0]],
+             [
+                 [number_to_month_name(1), 0],
+                 [number_to_month_name(5), 0],
+                 [number_to_month_name(8), 0]]
+             ])

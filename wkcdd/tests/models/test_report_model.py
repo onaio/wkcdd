@@ -407,3 +407,23 @@ class TestReport(TestBase):
         quarters = Report.get_quarter_interval(
             start_quarter, end_quarter, '2012_13')
         self.assertEqual(quarters, ['q_2'])
+
+    def test_get_trend_values_for_performance_indicators(self):
+        self.setup_report_trends_data()
+        location = County.get(County.name == 'Bungoma')
+
+        time_criteria = [Report.month == '1',
+                         Report.period == '2012_13']
+        project_filter_criteria = Project.sector == (
+            constants.DAIRY_COWS_PROJECT_REGISTRATION)
+
+        indicator_key = 'perfomance_summary/community_contribution'
+        indicator_type = 'ratio'
+
+        kwargs = {'project_filter_criteria': project_filter_criteria,
+                  'time_criteria': time_criteria}
+
+        indicator_values = Report.get_trend_values_for_performance_indicators(
+            [location], indicator_key, indicator_type, **kwargs)
+
+        self.assertEqual(indicator_values, [136.5])
