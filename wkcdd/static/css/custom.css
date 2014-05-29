@@ -112,6 +112,14 @@ span.ratio {
 #map {
     height: 400px;
 }
+#map #project_sel{
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+	margin:10px;
+	z-index:10000;
+}
+#project_sel a.dropdown-toggle{
+	color:#FFF;
+}
 
 #chart {
     height: 440px;
