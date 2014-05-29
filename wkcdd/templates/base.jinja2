@@ -33,6 +33,7 @@
 	<link href="{{ request.static_url('wkcdd:static/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.css') }}" rel="stylesheet" type="text/css"/>
+   <link href="{{ request.static_url('wkcdd:static/css/tablesaw.min.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/custom.css') }}" rel="stylesheet" type="text/css"/>
    <!-- END THEME STYLES -->
    <link rel="shortcut icon" href="favicon.ico" />
@@ -64,7 +65,7 @@
    <!-- BEGIN CONTAINER -->
    <div class="page-container">
       <!-- BEGIN SIDEBAR -->
-      <div class="page-sidebar navbar-collapse collapse">
+      <div class="page-sidebar navbar-collapse collapse col-md-3">
          <!-- BEGIN SIDEBAR MENU -->
 	  <ul class="nav-side">
 		<li class="start">
@@ -105,7 +106,7 @@
       </div>
       <!-- END SIDEBAR -->
       <!-- BEGIN PAGE -->
-      <div class="page-content">
+      <div class="page-content col-md-10">
          <!-- BEGIN PAGE HEADER-->
          <div class="row">
             <div class="col-md-12">
@@ -176,6 +177,7 @@
    <script src="{{ request.static_url('wkcdd:static/plugins/jquery.dataTables.min.js') }}" type="text/javascript" ></script>
    <script src="{{ request.static_url('wkcdd:static/plugins/dataTables.bootstrap.js') }}" type="text/javascript" ></script>
    <script src="{{ request.static_url('wkcdd:static/plugins/datatables.responsive.js') }}" type="text/javascript" ></script>
+   <script src="{{ request.static_url('wkcdd:static/plugins/tablesaw.min.js') }}" type="text/javascript" ></script>
 
    <script src="{{ request.static_url('wkcdd:static/scripts/bootstrap-select.min.js') }}"></script>
    <!-- END CORE PLUGINS -->
