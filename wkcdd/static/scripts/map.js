@@ -15,10 +15,13 @@ var Map = (function(root){
     var lookupProperty = 'COUNTY';
 
     var InfoBox = L.Control.extend({
+    	options: {
+    		position: 'bottomleft'
+    	},
         template: _.template('' +
             '<h4><%= title %></h4>' +
             '<p><%= label %>: <%= value %></p>'),
-        onAdd: function (map) {
+        onAdd: function (map){
             return L.DomUtil.create('div', 'info');
         },
         update: function (title, label, value) {
