@@ -21,7 +21,8 @@ from wkcdd.models.report import ReportHandlerError
 
 from wkcdd.models.helpers import (
     get_community_ids_for,
-    get_project_list
+    get_project_list,
+    get_children_by_level
 )
 
 
@@ -354,6 +355,45 @@ def get_impact_indicator_trend_report(time_series,
         series_data_map[indicator_key] = series_data
 
     return time_series, series_data_map, series_labels
+
+
+def get_child_locations(view_by,
+                        county,
+                        sub_county,
+                        constituency,
+                        community):
+    source_class = County
+    target_class = None
+    location = None
+
+    location_id = community or constituency or sub_county or county
+
+    if location_id:
+        location = Location.get(Location.id == location_id)
+        source_class = location.__class__
+        location_ids = [location.id]
+
+        target_class = get_target_class_from_view_by(
+            view_by, source_class)
+
+        child_ids = get_children_by_level(
+            location_ids, source_class, target_class)
+
+        child_locations = target_class.all(target_class.id.in_(child_ids))
+    else:
+        if view_by is None or view_by == 'counties':
+            child_locations = County.all()
+        else:
+            location_ids = [c.id for c in County.all()]
+            target_class = get_target_class_from_view_by(
+                view_by, source_class)
+            child_ids = get_children_by_level(
+                location_ids, source_class, target_class)
+
+            child_locations = target_class.all(
+                target_class.id.in_(child_ids))
+
+    return location, child_locations
 
 
 def process_trend_parameters(periods, start_period, end_period, year):

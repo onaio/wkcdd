@@ -154,8 +154,7 @@ class TestHelpers(TestBase):
              [
                  [number_to_month_name(1), 0],
                  [number_to_month_name(5), 0],
-                 [number_to_month_name(8), 0]
-             ]
+                 [number_to_month_name(8), 0]]
              ])
         self.assertEqual(
             series_data_map['impact_information/no_children'],
@@ -166,8 +165,7 @@ class TestHelpers(TestBase):
              [
                  [number_to_month_name(1), 0],
                  [number_to_month_name(5), 0],
-                 [number_to_month_name(8), 0]
-             ]
+                 [number_to_month_name(8), 0]]
              ])
 
     def test_process_trend_parameters(self):

@@ -15,6 +15,7 @@ from wkcdd.views.helpers import (
     get_geolocations_from_items,
     generate_time_series,
     process_trend_parameters,
+    get_child_locations,
     get_impact_indicator_trend_report)
 from wkcdd.models.location import LocationFactory
 from wkcdd.models import (
@@ -157,38 +158,13 @@ class ImpactIndicators(object):
         constituency = self.request.GET.get('constituency') or None
         community = self.request.GET.get('community') or None
 
-        source_class = County
-        target_class = None
-        location = None
+        location, child_locations = get_child_locations(view_by,
+                                                        county,
+                                                        sub_county,
+                                                        constituency,
+                                                        community)
 
-        location_id = community or constituency or sub_county or county
-
-        if location_id:
-            location = Location.get(Location.id == location_id)
-            source_class = location.__class__
-            location_ids = [location.id]
-
-            target_class = get_target_class_from_view_by(
-                view_by, source_class)
-
-            child_ids = get_children_by_level(
-                location_ids, source_class, target_class)
-
-            child_locations = target_class.all(target_class.id.in_(child_ids))
-        else:
-            if view_by is None or view_by == 'counties':
-                child_locations = County.all()
-            else:
-                location_ids = [c.id for c in County.all()]
-                target_class = get_target_class_from_view_by(
-                    view_by, source_class)
-                child_ids = get_children_by_level(
-                    location_ids, source_class, target_class)
-
-                child_locations = target_class.all(
-                    target_class.id.in_(child_ids))
-
-            # Get periods based on the child locations
+        # Get periods based on the child locations
 
         periods = Report.get_periods_for(child_locations)
         start_period, end_period, year = (
