@@ -1,13 +1,10 @@
 import json
 import datetime
-import re
 
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
-from wkcdd.libs.utils import (
-    number_to_month_name,
-    get_performance_indicator_list)
+from wkcdd.libs.utils import get_performance_indicator_list
 from wkcdd.models import (
     County,
     SubCounty,
@@ -21,9 +18,12 @@ from wkcdd.models import (
 from wkcdd.models.report import ReportHandlerError
 
 from wkcdd.models.helpers import (
+    MONTH_PERIOD,
+    QUARTER_PERIOD,
     get_community_ids_for,
     get_project_list,
-    get_children_by_level
+    get_children_by_level,
+    get_period_row
 )
 
 
@@ -34,10 +34,6 @@ CONSTITUENCIES_LEVEL = 'constituencies'
 COMMUNITIES_LEVEL = 'communities'
 PROJECTS_LEVEL = 'projects'
 DEFAULT_OPTION = 'default'
-
-YEAR_PERIOD = 'period'
-MONTH_PERIOD = 'month'
-QUARTER_PERIOD = 'quarter'
 
 
 @subscriber(NewRequest)
@@ -337,31 +333,8 @@ def get_impact_indicator_trend_report(time_series,
         series_data = []
 
         for item in collection:
-            period_row = []
-
-            for period, year in time_series:
-                period_label = None
-                year_label = re.search('\d+', year).group(0)
-
-                if time_class == YEAR_PERIOD:
-                    time_criteria = Report.period == period
-                    period_label = year_label
-
-                elif time_class == MONTH_PERIOD:
-                    time_criteria = [Report.month == period,
-                                     Report.period == year]
-                    period_label = (
-                        number_to_month_name(period) +
-                        " {}".format(year_label))
-                elif time_class == QUARTER_PERIOD:
-                    time_criteria = [Report.quarter == period,
-                                     Report.period == year]
-                    period_label = (period.replace("q_", "Quarter ") +
-                                    " {}".format(year_label))
-
-                data = Report.get_trend_values_for_impact_indicators(
-                    [item], indicator_key, *time_criteria)
-                period_row.append([period_label, data[0]])
+            period_row = get_period_row(
+                time_series, time_class, item, indicator_key)
 
             series_data.append(period_row)
 
@@ -464,40 +437,14 @@ def get_performance_indicator_trend_report(sector_id,
             series_data = []
 
             for item in collection:
-                period_row = []
+             # Generate kwargs arguments
+                kwargs = {
+                    'project_filter_criteria': project_filter_criteria,
+                    'indicator_type': indicator_type}
 
-                for period, year in time_series:
-                    period_label = None
-
-                    # Generate time criteria based on time_class
-                    year_label = re.search('\d+', year).group(0)
-                    if time_class == YEAR_PERIOD:
-                        time_criteria = Report.period == period
-                        period_label = period.replace("_", " to 20")
-                    elif time_class == MONTH_PERIOD:
-                        time_criteria = [Report.month == period,
-                                         Report.period == year]
-                        period_label = (
-                            number_to_month_name(period) +
-                            " {}".format(year_label))
-
-                    elif time_class == QUARTER_PERIOD:
-                        time_criteria = [Report.quarter == period,
-                                         Report.period == year]
-                        period_label = (period.replace("q_", "Quarter ") +
-                                        " {}".format(year_label))
-
-                    # Generate kwargs arguments
-                    kwargs = {
-                        'project_filter_criteria': project_filter_criteria,
-                        'time_criteria': time_criteria}
-
-                    data = Report.get_trend_values_for_performance_indicators(
-                        [item], indicator_key, indicator_type, **kwargs)
-
-                    # Construct list expected to render the line graph
-                    period_row.append([period_label, data[0]])
-
+                period_row = get_period_row(
+                    time_series, time_class, item, indicator_key, **kwargs)
+                
                 series_data.append(period_row)
 
             series_data_map[indicator_property] = series_data
