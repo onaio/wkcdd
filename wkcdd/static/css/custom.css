@@ -252,9 +252,12 @@ table.dataTable{
 .dataTables_filter, dataTables_length{
     margin-bottom:0.8em;
 }
-
 .dataTables_info{
 	margin-bottom:1em;
+}
+/*tablesaw*/
+.tablesaw-bar{
+	margin-top:1em!important;
 }
 
 /*Indicator-link tabs*/
