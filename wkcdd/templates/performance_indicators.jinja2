@@ -6,6 +6,7 @@
 {% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
 
 {% set selected_sector = search_criteria.selected_sector %}
+{% set view_by = search_criteria['view_by']%}
 
 {% block title %}{% trans %}Performance Indicators{% endtrans %}{% endblock %}
 
@@ -45,10 +46,10 @@
                   </div>
               </div>
               <div class="portlet-body">
-                <div class="row">
+                <div class="row map_chart">
                   <div class="col-md-12">
                       <div class="btn-toolbar margin-bottom-10">
-                        <div class="btn-group pull-right">
+                        <div class="btn-group pull-right" id="project_sel1">
                           <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
                           </a>
@@ -141,12 +142,40 @@
   
    Map.setData(data, false);
 
-   // load json layer
-   $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
-     dataType: 'json'
-   }).done(function(data, status){
-     Map.setGeoJSON(data);
-   });
+  var view_by = '{{ view_by }}';
+  var base_url = 'ona.i42dk97b';
+  var json_url = '';
+  
+  if(view_by == 'counties'){
+  	base_url = 'ona.i3hg15g5';
+  	json_url = 'wkcdd-counties.geojson';
+  }
+  else if(view_by == 'sub_counties'){
+  	base_url = 'ona.i42efo92';
+  	json_url = 'wkcdd-subcounties.geojson';
+  }
+  else if(view_by == 'constituencies'){
+  	base_url = 'ona.i3hmlj38';
+  	json_url = 'wkcdd-constituencies.geojson';
+  }
+  else if(view_by == 'communities'){
+  	base_url = 'ona.i9n8iffk';
+  	json_url = 'wkcdd-communities.geojson';
+  }
+  
+  //Load aggregate geo-jsondata
+  function loadJSONLayer(url){
+  	  var json_url = url;
+  	  
+	  // load json layer
+	  $.ajax("{{ request.static_url('wkcdd:static/geodata/') }}" + json_url, {
+	    dataType: 'json'
+	  }).done(function(data, status){
+	    Map.setGeoJSON(data);
+	  });
+  }
+  Map.initBaseMap(base_url);
+  loadJSONLayer(json_url);
       
    // Draw bar chart
    Custom.setChartDataset({{ chart_dataset | safe() }})
