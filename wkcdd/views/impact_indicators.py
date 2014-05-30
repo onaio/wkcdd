@@ -167,10 +167,11 @@ class ImpactIndicators(object):
         # Get periods based on the child locations
 
         periods = Report.get_periods_for(child_locations)
-        start_period, end_period, year = (
+        start_period, end_period, start_year, end_year = (
             process_trend_parameters(periods,
                                      self.request.GET.get('start_period'),
                                      self.request.GET.get('end_period'),
+                                     self.request.GET.get('start_year'),
                                      self.request.GET.get('end_year')))
 
         # handle months or quarters
@@ -179,7 +180,7 @@ class ImpactIndicators(object):
         # Generate time series range for the map x_axis
 
         time_series = generate_time_series(
-            start_period, end_period, time_class, year)
+            start_period, end_period, time_class, start_year, end_year)
 
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
@@ -190,7 +191,6 @@ class ImpactIndicators(object):
             get_impact_indicator_trend_report(
                 time_series,
                 time_class,
-                year,
                 indicators,
                 child_locations))
 
@@ -200,14 +200,15 @@ class ImpactIndicators(object):
              'seriesLabels': series_labels})
 
         # update start period based on the retrieved data
-        start_period = str(time_series[0]) if time_series else ''
-        end_period = str(time_series[-1]) if time_series else ''
+        start_period = str(time_series[0][0]) if time_series else ''
+        end_period = str(time_series[-1][0]) if time_series else ''
 
         search_criteria = {'view_by': view_by,
                            'start_period': start_period,
                            'end_period': end_period,
                            'time_class': time_class,
-                           'year': year,
+                           'start_year': start_year,
+                           'end_year': end_year,
                            'location': location or ''}
 
         filter_criteria = Project.generate_filter_criteria()

@@ -1,5 +1,6 @@
 import json
 import datetime
+import re
 
 from pyramid.events import subscriber, NewRequest
 
@@ -289,23 +290,28 @@ def report_submission_handler(payload):
             "'{}' not found in json".format(constants.XFORM_ID))
 
 
-def generate_time_series(start_period, end_period, time_class, year):
+def generate_time_series(start_period,
+                         end_period,
+                         time_class,
+                         start_year,
+                         end_year):
     """Given time a and b, get all other intervals in between"""
 
     if time_class == QUARTER_PERIOD:
         time_series = Report.get_quarter_interval(
-            start_period, end_period, year)
+            start_period, end_period, start_year, end_year)
     elif time_class == MONTH_PERIOD:
-        time_series = Report.get_month_interval(start_period, end_period, year)
+        time_series = (
+            Report.get_month_interval(
+                start_period, end_period, start_year, end_year))
     else:
-        time_series = Report.get_year_interval(start_period, end_period)
+        time_series = Report.get_year_interval(start_year, end_year)
 
     return time_series
 
 
 def get_impact_indicator_trend_report(time_series,
                                       time_class,
-                                      year,
                                       indicators,
                                       collection):
     """
@@ -333,19 +339,25 @@ def get_impact_indicator_trend_report(time_series,
         for item in collection:
             period_row = []
 
-            for period in time_series:
+            for period, year in time_series:
                 period_label = None
+                year_label = re.search('\d+', year).group(0)
+
                 if time_class == YEAR_PERIOD:
                     time_criteria = Report.period == period
-                    period_label = period.replace("_", " to 20")
+                    period_label = year_label
+
                 elif time_class == MONTH_PERIOD:
                     time_criteria = [Report.month == period,
                                      Report.period == year]
-                    period_label = number_to_month_name(period)
+                    period_label = (
+                        number_to_month_name(period) +
+                        " {}".format(year_label))
                 elif time_class == QUARTER_PERIOD:
                     time_criteria = [Report.quarter == period,
                                      Report.period == year]
-                    period_label = period.replace("q_", "Quarter ")
+                    period_label = (period.replace("q_", "Quarter ") +
+                                    " {}".format(year_label))
 
                 data = Report.get_trend_values_for_impact_indicators(
                     [item], indicator_key, *time_criteria)
@@ -397,7 +409,11 @@ def get_child_locations(view_by,
     return location, child_locations
 
 
-def process_trend_parameters(periods, start_period, end_period, year):
+def process_trend_parameters(periods,
+                             start_period,
+                             end_period,
+                             start_year,
+                             end_year):
     months = list(periods['months'])
     months.sort()
     months = [str(m) for m in months]
@@ -418,15 +434,17 @@ def process_trend_parameters(periods, start_period, end_period, year):
         end_period if end_period and end_period in (months + quarters)
         else months[-1])
 
-    year = year if year and year in years else years[-1]
+    start_year = (
+        start_year if start_year and start_year in years else years[-1])
 
-    return start_period, end_period, year
+    end_year = (
+        end_year if end_year and end_year in years else years[-1])
+    return start_period, end_period, start_year, end_year
 
 
 def get_performance_indicator_trend_report(sector_id,
                                            time_series,
                                            time_class,
-                                           year,
                                            indicators,
                                            collection):
     # Similar to function for generating the impact indicators trend reports
@@ -445,21 +463,26 @@ def get_performance_indicator_trend_report(sector_id,
             for item in collection:
                 period_row = []
 
-                for period in time_series:
+                for period, year in time_series:
                     period_label = None
 
                     # Generate time criteria based on time_class
+                    year_label = re.search('\d+', year).group(0)
                     if time_class == YEAR_PERIOD:
                         time_criteria = Report.period == period
                         period_label = period.replace("_", " to 20")
                     elif time_class == MONTH_PERIOD:
                         time_criteria = [Report.month == period,
                                          Report.period == year]
-                        period_label = number_to_month_name(period)
+                        period_label = (
+                            number_to_month_name(period) +
+                            " {}".format(year_label))
+
                     elif time_class == QUARTER_PERIOD:
                         time_criteria = [Report.quarter == period,
                                          Report.period == year]
-                        period_label = period.replace("q_", "Quarter ")
+                        period_label = (period.replace("q_", "Quarter ") +
+                                        " {}".format(year_label))
 
                     # Generate kwargs arguments
                     kwargs = {

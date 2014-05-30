@@ -93,37 +93,42 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_year_interval(cls, start_period, end_period):
-        results = DBSession.query(Report)\
-            .filter(Report.month.between(start_period, end_period))\
-            .distinct(Report.period)\
-            .order_by(Report.period)\
+    def get_year_interval(cls, start_year, end_year):
+        results = DBSession.query(Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
+            .group_by(Report.period)\
             .all()
-        year_periods = [r.period for r in results]
-        return year_periods
+        return results
 
     @classmethod
-    def get_month_interval(cls, start_period, end_period, year):
-        results = DBSession.query(Report)\
-            .filter(Report.period == year)\
+    def get_month_interval(cls,
+                           start_period,
+                           end_period,
+                           start_year,
+                           end_year):
+        results = DBSession.query(Report.month, Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
             .filter(Report.month.between(start_period, end_period))\
-            .distinct(Report.month)\
-            .order_by(Report.month)\
+            .group_by(Report.month, Report.period)\
+            .order_by(Report.period, Report.month)\
             .all()
-        month_interval = [r.month for r in results]
-        return month_interval
+
+        return results
 
     @classmethod
-    def get_quarter_interval(cls, start_period, end_period, year):
-        results = DBSession.query(Report)\
-            .filter(Report.period == year)\
+    def get_quarter_interval(cls,
+                             start_period,
+                             end_period,
+                             start_year,
+                             end_year):
+        results = DBSession.query(Report.quarter, Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
             .filter(Report.quarter.between(start_period, end_period))\
-            .distinct(Report.quarter)\
-            .order_by(Report.quarter)\
+            .group_by(Report.quarter, Report.period)\
+            .order_by(Report.period, Report.quarter)\
             .all()
 
-        quarter_interval = [r.quarter for r in results]
-        return quarter_interval
+        return results
 
     @classmethod
     def get_reports_for_projects(cls, projects, *criteria):

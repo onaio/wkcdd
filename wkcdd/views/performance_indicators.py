@@ -266,10 +266,11 @@ class PerformanceIndicators(object):
         sector_id, report_id, label = get_performance_sector_mapping(sector)[0]
 
         periods = get_sector_periods(sector_id, child_locations)
-        start_period, end_period, year = (
+        start_period, end_period, start_year, end_year = (
             process_trend_parameters(periods,
                                      self.request.GET.get('start_period'),
                                      self.request.GET.get('end_period'),
+                                     self.request.GET.get('start_year'),
                                      self.request.GET.get('end_year')))
 
         # handle months or quarters
@@ -278,10 +279,8 @@ class PerformanceIndicators(object):
         # Generate time series range for the map x_axis
 
         time_series = generate_time_series(
-            start_period, end_period, time_class, year)
+            start_period, end_period, time_class, start_year, end_year)
 
-        import ipdb
-        ipdb.set_trace()
         selected_sector = {}
         selected_sector['sector'] = sector_id
         selected_sector['report'] = report_id
@@ -298,7 +297,6 @@ class PerformanceIndicators(object):
                 sector_id,
                 time_series,
                 time_class,
-                year,
                 indicators,
                 child_locations))
 
@@ -308,15 +306,16 @@ class PerformanceIndicators(object):
              'seriesLabels': series_labels})
 
         # update start period based on the retrieved data
-        start_period = str(time_series[0]) if time_series else ''
-        end_period = str(time_series[-1]) if time_series else ''
+        start_period = str(time_series[0][0]) if time_series else ''
+        end_period = str(time_series[-1][0]) if time_series else ''
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
                            'start_period': start_period,
                            'end_period': end_period,
                            'time_class': time_class,
-                           'year': year,
+                           'start_year': start_year,
+                           'end_year': end_year,
                            'location': location or ''}
 
         filter_criteria = Project.generate_filter_criteria()

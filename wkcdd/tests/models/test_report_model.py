@@ -400,13 +400,21 @@ class TestReport(TestBase):
             locations, indicator_key, time_criteria)
         self.assertEqual(data, [2, 0])
 
+    def test_month_interval(self):
+        self.setup_report_trends_data()
+        start_month = '1'
+        end_month = '12'
+        months = Report.get_month_interval(
+            start_month, end_month, '2012_13', '2012_13')
+        self.assertEqual([m for m, y in months], [1, 5])
+
     def test_quarter_interval(self):
         self.setup_report_trends_data()
         start_quarter = 'q_2'
         end_quarter = 'q_4'
         quarters = Report.get_quarter_interval(
-            start_quarter, end_quarter, '2012_13')
-        self.assertEqual(quarters, ['q_2'])
+            start_quarter, end_quarter, '2012_13', '2012_13')
+        self.assertEqual([q for q, y in quarters], ['q_2'])
 
     def test_get_trend_values_for_performance_indicators(self):
         self.setup_report_trends_data()

@@ -1,5 +1,6 @@
 {% set view_by = search_criteria['view_by']%}
-{% set year = search_criteria['year']%}
+{% set start_year = search_criteria['start_year']%}
+{% set end_year = search_criteria['end_year']%}
 {% set start_period = search_criteria['start_period']%}
 {% set end_period = search_criteria['end_period']%}
 <div class="row">
@@ -16,7 +17,7 @@
                         period_label='Compare from',
                         month_quarter_select_name='start_period',
                         period_select_name='start_year',
-                        period=year,
+                        period=start_year,
                         years = filter_criteria.get('years'),
                         quarters = filter_criteria.get('quarters'), 
                         months_present = filter_criteria.get('months')%}     
@@ -32,7 +33,7 @@
                         period_label='To',
                         month_quarter_select_name='end_period',
                         period_select_name='end_year',
-                        period=year,
+                        period=end_year,
                         years = filter_criteria.get('years'),
                         quarters = filter_criteria.get('quarters'), 
                         months_present = filter_criteria.get('months')%}     
