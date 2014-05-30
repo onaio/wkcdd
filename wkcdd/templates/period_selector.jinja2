@@ -1,14 +1,15 @@
 {% set months = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May', 6:'June', 7:'July', 8:'August', 9:'September', 10:'October', 11:'November', 12:'December'}%}
 <div class="form-group">
-   <label>Select Report Period: </label>
-   <select name="month_or_quarter" class="form-control input-small select2me">
-      <option value="">{% trans %}Month/Quarter{% endtrans %}</option>
+   <label>{{ period_label or 'Select Report Period:' }} </label>
+   <select name="{{ month_quarter_select_name or 'month_or_quarter'}}" class="form-control input-small select2me">
+      <option value="" data-time-class="month">{% trans %}Month/Quarter{% endtrans %}</option>
       {% if quarters %}
          {% for quarter in quarters|sort %}
             <option value="{{ quarter }}"
                {% if month_or_quarter == '{}'.format(quarter) %}
                   selected
                {% endif %} 
+               data-time-class="quarter"
             >
                {{ quarter | replace("q_", "Quarter ") }}
          {% endfor %}
@@ -16,24 +17,26 @@
       {% if months_present %}
          <option value="">-------</option>
          {% for key, month in months.iteritems() if key in months_present %}
-            <option value="{{loop.index}}"
-               {% if month_or_quarter == loop.index | string %}
+            <option value="{{key}}"
+               {% if month_or_quarter == key | string %}
                   selected
-               {% endif %}
+               {% endif %} 
+               data-time-class="month"
             >
                {% trans %}{{month}}{% endtrans %}
             </option>
          {% endfor %}
       {% endif %}
    </select>
-   <select name="period" class="form-control input-small select2me">
-      <option value="">{% trans %} Year {% endtrans %}</option>
+   <select name="{{ period_select_name or 'period'}}" class="form-control input-small select2me">
+      <option value="" data-time-class="year">{% trans %} Year {% endtrans %}</option>
       {% if years %}
          {% for year in years|sort %}
             <option value="{{year}}"
                {% if period == year %}
                   selected
-               {% endif %}
+               {% endif %} 
+               data-time-class="year"
             >
                {{ year | replace("_", " to 20") | replace("-", " to 20") }}
             </option>

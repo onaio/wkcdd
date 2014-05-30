@@ -33,7 +33,7 @@
    <link href="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.css') }}" rel="stylesheet" type="text/css"/>
    <link href="{{ request.static_url('wkcdd:static/css/custom.css') }}" rel="stylesheet" type="text/css"/>
    <!-- END THEME STYLES -->
-   <link rel="shortcut icon" href="favicon.ico" />
+   <link rel="shortcut icon" href="{{ request.static_url('wkcdd:static/img/favicon.ico') }}" />
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -50,7 +50,7 @@
          <!-- END LOGO -->
          <!-- BEGIN RESPONSIVE MENU TOGGLER -->
          <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-         <img src="img/menu-toggler.png" alt="" />
+         <img src="{{request.static_url('wkcdd:static/img/menu-toggler.png')}}" alt="" />
          </a>
          <!-- END RESPONSIVE MENU TOGGLER -->
          <!-- END TOP NAVIGATION MENU -->
@@ -67,9 +67,9 @@
 	  <ul class="nav-side">
 		<li class="start">
 			<a class="
-			    {%if request.matched_route.name == 'performance_indicators' %}
+			    {%if request.matched_route.name == 'performance_indicators' and request.url.find('trends') == -1 %}
                     selected
-                {%elif request.matched_route.name == 'impact_indicators' %}
+                {%elif request.matched_route.name == 'impact_indicators' and request.url.find('trends') == -1 %}
                     selected
                 {%endif%}"
                 href="{{ request.route_url('performance_indicators', traverse=('')) }}">
@@ -77,6 +77,16 @@
 			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
+    <li>
+      <a class="
+          {%if request.url.find('trends') != -1 %}
+                    selected
+                {%endif%}"
+                href="{{ request.route_url('performance_indicators', traverse=('trends')) }}">
+      <img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
+      <span class="title">{% trans %} PROJECT <br/>INDICATOR TRENDS {% endtrans %}</span>
+      </a>
+    </li>
 		<li>
             <a class="
                 {%if request.path_info_peek() == 'projects' %}

@@ -388,3 +388,50 @@ class TestReport(TestBase):
         self.assertFalse(periods['months'])
         self.assertFalse(periods['years'])
         self.assertFalse(periods['quarters'])
+
+    def test_get_trend_values_for_impact_indicators(self):
+        self.setup_report_trends_data()
+        locations = County.all()
+
+        time_criteria = Report.period == '2012_13'
+        indicator_key = 'impact_information/b_income'
+
+        data = Report.get_trend_values_for_impact_indicators(
+            locations, indicator_key, time_criteria)
+        self.assertEqual(data, [2, 0])
+
+    def test_month_interval(self):
+        self.setup_report_trends_data()
+        start_month = '1'
+        end_month = '12'
+        months = Report.get_month_interval(
+            start_month, end_month, '2012_13', '2012_13')
+        self.assertEqual([m for m, y in months], [1, 5])
+
+    def test_quarter_interval(self):
+        self.setup_report_trends_data()
+        start_quarter = 'q_2'
+        end_quarter = 'q_4'
+        quarters = Report.get_quarter_interval(
+            start_quarter, end_quarter, '2012_13', '2012_13')
+        self.assertEqual([q for q, y in quarters], ['q_2'])
+
+    def test_get_trend_values_for_performance_indicators(self):
+        self.setup_report_trends_data()
+        location = County.get(County.name == 'Bungoma')
+
+        time_criteria = [Report.month == '1',
+                         Report.period == '2012_13']
+        project_filter_criteria = Project.sector == (
+            constants.DAIRY_COWS_PROJECT_REGISTRATION)
+
+        indicator_key = 'perfomance_summary/community_contribution'
+        indicator_type = 'ratio'
+
+        kwargs = {'project_filter_criteria': project_filter_criteria,
+                  'time_criteria': time_criteria}
+
+        indicator_values = Report.get_trend_values_for_performance_indicators(
+            [location], indicator_key, indicator_type, **kwargs)
+
+        self.assertEqual(indicator_values, [136.5])

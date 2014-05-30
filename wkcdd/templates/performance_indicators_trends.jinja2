@@ -1,0 +1,137 @@
+{% extends 'base.jinja2' %}
+{% from 'macros/generate_filter_criteria_dropdowns.jinja2' import  generate_filter_criteria_dropdowns %}
+{% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
+{% from 'macros/generate_project_type_dropdown.jinja2' import generate_project_type_dropdown %}
+{% from 'macros/update_selected_location_dropdowns.jinja2' import update_selected_location_dropdowns %}
+{% block title %}{% trans %} Performance Indicators {% endtrans %}{% endblock %}
+
+{% set view_by = search_criteria['view_by']%}
+{% set year = search_criteria['year']%}
+{% set start_period = search_criteria['start_period']%}
+{% set end_period = search_criteria['end_period']%}
+{% set selected_sector = search_criteria['selected_sector'] %}
+
+{% block page_title %}
+  <h3 class="page-title">
+    {{ self.title() }} {% trans %}Trends For {% endtrans %} {{selected_sector.label}} {% trans %}Projects{% endtrans %}
+    <small></small>
+  </h3>
+{% endblock %}
+
+{% block filters %}
+    {% with search_criteria=search_criteria, filter_criteria=filter_criteria %}
+        <div>
+            <div class="col-md-12">
+                <div class="clearfix filters">
+                    <form id="filter_criteria" class="form-inline" method="get">
+                      {% include 'trend_filters.jinja2' %}
+                      <input type="hidden" name="sector" value="{{selected_sector.sector}}">
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+{% endblock %}
+
+{% block content %}
+    {% with request=request, search_criteria=search_criteria, filter_criteria=filter_criteria, location=location %}
+        {% include 'trend_nav_links.jinja2'%}
+    {% endwith %}
+
+    <div class="btn-toolbar actions margin-bottom-10">
+        <!--<label class="pull-left margin-right-10"> Sector:</label>-->
+          <div class="btn-group">
+             <a class="btn btn-default btn-lg dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown">
+             {{ selected_sector.label or "Select Sector" }}
+             <i class="icon-angle-down"></i>
+             </a>
+             <ul class="dropdown-menu">
+              <li>
+                   <a href="{{ request.route_url('performance_indicators', traverse=('trends'),
+                            _query={'view_by': view_by, 'start_period': start_period, 'end_period': end_period, 'year': year}) }}">
+                       {% trans %}All sectors{% endtrans %}
+                   </a>
+              </li>
+              {% for sector, report, label in sectors %}
+                <li>
+                   <a href="{{ request.route_url('performance_indicators', traverse=('trends'),
+                            _query={'sector': sector,
+                                    'view_by': view_by, 'start_period': start_period, 'end_period': end_period, 'year': year}) }}">
+                       {{ label }}
+                   </a>
+                </li>
+              {% endfor %}
+             </ul>
+          </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+        <div class="portlet-title">
+          <div class="tools pull-left">
+              <a href="" class="collapse"></a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            {% if time_series %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group pull-right">
+                            <a href="" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <span class="selected-trend-indicator">{{sector_indicators[0][0]}}</span> <span class="icon-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu select-sector">
+                            {% for indicator in sector_indicators %}
+                              {% set label = indicator[0] -%}
+                              {% set key = indicator[1][2] -%}
+                              <li><a href="javascript:;" class="trend-indicator-selector" data-indicator="{{ key }}"> {{ label }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      {% include 'chart.jinja2' %}
+                    </div>                      
+                </div>
+            {% else %}
+                <div class="panel panel-info">
+                  <div class="panel-body">
+                    {% trans %} No data available for the selected period{% endtrans %}
+                  </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+{% block page_scripts %}
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jquery.jqplot.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.barRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.categoryAxisRenderer.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.cursor.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.pointLabels.min.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/jqplot/jqplot.enhancedLegendRenderer.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/custom.js') }}"></script>
+    <script src="{{ request.static_url('wkcdd:static/scripts/wkcdd-charts.js') }}"></script>
+{% endblock %}
+{% block jquery_ready %}
+    {{ super() }}
+
+    location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
+    LocationSelect.data_map = location_json_data;
+
+    {% if time_series %}
+        chartDataSet = {{ chart_dataset | safe() }};
+        TrendCharts.chartDataSet = chartDataSet;
+        
+        selected_indicator = '{{ sector_indicators[0][1][2]}}';
+        selected_series = chartDataSet.series[selected_indicator];
+        $('#chart').empty();
+        TrendCharts.drawTrend(selected_series, chartDataSet.seriesLabels);
+    {% endif %}
+
+    {{ update_selected_location_dropdowns(search_criteria) }}
+
+{% endblock %}
