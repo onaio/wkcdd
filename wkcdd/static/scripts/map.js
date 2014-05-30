@@ -240,19 +240,20 @@ var Map = (function(root){
                 color: icon_sector_map[data.sector].color,
                 size: 's'});
             marker = L.marker(latlng, {icon: icon, title: data.name});
-            description = buildProjectDescriptionTable(data.name, data.description);
+            description = buildProjectDescriptionTable(data.name, data.image_link, data.description);
             marker.bindPopup(description.html());
             markerLayer.addLayer(marker);
         });
     };
 
-    var buildProjectDescriptionTable = function(name, description) {
+    var buildProjectDescriptionTable = function(name, img, description) {
         var
             responsiveDiv = $('<div />', {class: 'table-responsive'}),
             table = $('<table />', {
                 class: 'table table-striped table-bordered table-hover'
             });
-        responsiveDiv.append("<div class='bold'>" + name + "</div>");
+        responsiveDiv.append("<div class='bold text-center'>" + name + "</div>");
+        responsiveDiv.append("<div class=''> <img src=" + img + " class='project-img img-responsive' alt='No Image'></div>");
         $.each(description, function(idx, row_values) {
             var row = $('<tr />').append($('<td />').html(row_values[0])).append($('<td />').html(row_values[1]));
             table.append(row);

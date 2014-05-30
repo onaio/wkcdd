@@ -85,6 +85,10 @@ class Project(Base):
                             for key, label in constants.PROJECT_DETAILS_KEYS]
         return description_list
 
+    @property
+    def image_file(self):
+        return self.project_data.get('group_photo') or ''
+
     def get_projects(self, *criterion):
         if criterion is not None:
             try:

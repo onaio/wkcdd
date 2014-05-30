@@ -1,5 +1,6 @@
 import json
 import datetime
+import urlparse
 
 from pyramid.events import subscriber, NewRequest
 
@@ -76,10 +77,16 @@ def get_project_geolocations(projects):
     Get project geopoints for a list of projects
     """
     if projects:
+        image_url_base = urlparse.urljoin(
+            'https://ona.io',
+            "attachment/small?media_file={}/attachments/".format(
+                "wkcdd"))
+
         project_geopoints = [
             {'id': project.id,
              'name': project.name.title(),
              'sector': project.sector_name,
+             'image_link': (image_url_base + project.image_file),
              'description': project.description,
              'lat': str(project.latlong[0]),
              'lng': str(project.latlong[1])}

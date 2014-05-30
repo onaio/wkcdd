@@ -273,3 +273,10 @@ div.row.map_chart {
 span.title.unapproved {
     margin-left: -7px;
 }
+
+.project-img {
+    margin: 0px auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+}
