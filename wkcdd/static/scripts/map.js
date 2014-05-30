@@ -37,7 +37,7 @@ var Map = (function(root){
                 container.innerHTML = this.template({
                     title: title,
                     label: label,
-                    value: value !== null?value:'No Reports'
+                    value: value !== null? Math.floor(value) :'No Reports'
                 });
             } else {
                 container.innerHTML = '';
