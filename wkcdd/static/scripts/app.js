@@ -775,7 +775,7 @@ var App = function () {
     
     var mapSelector = function() {
     	var selBox = $("#project_sel");
-		selBox.appendTo("#map").attr("id", "project_sel");
+		selBox.appendTo("#map");
     };
 
     //* END:CORE HANDLERS *//

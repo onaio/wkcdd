@@ -12,7 +12,7 @@ var Map = (function(root){
     var data = {};
 
     // @todo: temporary
-	var lookupProperty = 'COUNTY';
+	var lookupProperty = 'location';
 
     var InfoBox = L.Control.extend({
     	options: {

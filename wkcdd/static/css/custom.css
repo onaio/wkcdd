@@ -123,7 +123,7 @@ span.ratio {
 }
 #project_sel a.dropdown-toggle{
 	color:#FFF;
-	font-size:14px;
+	font-size:13px;
 }
 /*leaflet control*/
 .leaflet-top.leaflet-left{
@@ -135,7 +135,7 @@ span.ratio {
 }
 
 #chart {
-    max-height: 440px;
+    height: 440px;
 }
 
 .btn {
