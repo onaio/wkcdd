@@ -34,7 +34,7 @@ var Charts = function () {
                 }
                 // zip the generated y values with the x values
                 var res = [];
-                for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+                for (var i = 0; i < data.length; ++i) res.push([i, data[i]]);
                 return res;
             }
 
@@ -447,7 +447,7 @@ var Charts = function () {
                 data[i] = {
                     label: "Series" + (i + 1),
                     data: Math.floor(Math.random() * 100) + 1
-                }
+                };
             }
 
             // DEFAULT
