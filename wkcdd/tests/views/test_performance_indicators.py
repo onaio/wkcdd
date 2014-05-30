@@ -19,7 +19,7 @@ class TestPerformanceIndicatorsFunctional(FunctionalTestBase):
         self.assertEqual(response.status_code, 200)
 
     def test_trends(self):
-        self.self.setup_report_trends_data()
+        self.setup_report_trends_data()
 
         url = self.request.route_path('performance_indicators',
                                       traverse=('trends'))
@@ -27,7 +27,7 @@ class TestPerformanceIndicatorsFunctional(FunctionalTestBase):
         self.assertEqual(response.status_code, 200)
 
     def test_trends_with_location(self):
-        self.self.setup_report_trends_data()
+        self.setup_report_trends_data()
         county = County.get(County.name == 'Bungoma')
         url = self.request.route_path('performance_indicators',
                                       traverse=('trends'),

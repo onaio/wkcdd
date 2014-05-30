@@ -159,8 +159,7 @@ class PerformanceIndicators(object):
         geo_locations = None
         periods = defaultdict(set)
 
-        target_class = get_target_class_from_view_by(
-            view_by, source_class)
+        target_class = get_target_class_from_view_by(view_by, source_class)
 
         child_ids = get_children_by_level(
             location_ids, source_class, target_class)
@@ -259,7 +258,7 @@ class PerformanceIndicators(object):
                                                         community)
 
         # Get periods based on the child locations
-         # generate trend report for the selected sector
+        # generate trend report for the selected sector
         sector = self.request.GET.get('sector') or None
         sectors = get_performance_sector_mapping()
 

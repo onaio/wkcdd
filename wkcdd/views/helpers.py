@@ -424,22 +424,25 @@ def process_trend_parameters(periods,
     years = list(periods['years'])
     years.sort()
 
-    # Retrieve get parameters and provide defaults if none was selected
-    start_period = (
-        start_period
-        if start_period and start_period in (months + quarters)
-        else months[0])
+    if months and quarters and years:
+        # Retrieve get parameters and provide defaults if none was selected
+        start_period = (
+            start_period
+            if start_period and start_period in (months + quarters)
+            else months[0])
 
-    end_period = (
-        end_period if end_period and end_period in (months + quarters)
-        else months[-1])
+        end_period = (
+            end_period if end_period and end_period in (months + quarters)
+            else months[-1])
 
-    start_year = (
-        start_year if start_year and start_year in years else years[-1])
+        start_year = (
+            start_year if start_year and start_year in years else years[-1])
 
-    end_year = (
-        end_year if end_year and end_year in years else years[-1])
-    return start_period, end_period, start_year, end_year
+        end_year = (
+            end_year if end_year and end_year in years else years[-1])
+        return start_period, end_period, start_year, end_year
+    else:
+        return start_period, end_period, start_year, end_year
 
 
 def get_performance_indicator_trend_report(sector_id,
