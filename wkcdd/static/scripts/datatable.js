@@ -1,16 +1,13 @@
 'use strict';
 
-var jq10 = jQuery.noConflict();
-
-jq10(document).ready(function () {
-    var responsiveHelper = undefined;
-    var breakpointDefinition = {
-        tablet: 1024,
-        phone : 480
-    };
+$(document).ready(function () {
+    // var responsiveHelper = undefined;
+    // var breakpointDefinition = {
+        // tablet: 1024,
+        // phone : 480
+    // };
     
     var tableElement = $('.wk-datatable');
-
     // tableElement.dataTable({
         // autoWidth        : true,
         // preDrawCallback: function () {
