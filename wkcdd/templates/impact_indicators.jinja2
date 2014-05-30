@@ -174,12 +174,35 @@
   };
   Map.setData(data, true);
 
-  // load json layer
-  $.ajax("{{ request.static_url('wkcdd:static/geodata/wkcdd-counties.geojson') }}", {
-    dataType: 'json'
-  }).done(function(data, status){
-    Map.setGeoJSON(data);
-  });
+  var view_by = 'subcounties';
+  var json_url = '';
+  <!-- console.log("Loading for: "+view_by); -->
+  
+  if(view_by == 'counties'){
+  	json_url = 'wkcdd-counties.geojson';
+  }
+  else if(view_by == 'sub_counties'){
+  	json_url = 'wkcdd-subcounties.geojson';
+  }
+  else if(view_by == 'constituencies'){
+  	json_url = 'wkcdd-constituencies.geojson';
+  }
+  else if(view_by == 'communities'){
+  	json_url = 'wkcdd-communities.geojson';
+  }
+  else if(view_by == 'projects'){
+  	json_url = 'wkcdd-projects.geojson';
+  }
+  
+  function loadJSONLayer(json_url){
+	  // load json layer
+	  $.ajax("{{ request.static_url('wkcdd:static/geodata/"+json_url+"') }}", {
+	    dataType: 'json'
+	  }).done(function(data, status){
+	    Map.setGeoJSON(data);
+	  });
+  }
+  loadJSONLayer(json_url);
 
   // Draw bar chart
   Custom.setChartDataset({{ chart_dataset | safe() }})
