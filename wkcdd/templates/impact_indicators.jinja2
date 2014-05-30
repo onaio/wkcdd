@@ -98,7 +98,7 @@
         </div>
         <div class="portlet-body clearfix">
           <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover wk-datatable">
+            <table class="table table-striped table-bordered table-hover wk-datatable-">
               <thead>
               <tr>
               {% if target_class %}
@@ -186,8 +186,6 @@
   else if(view_by == 'constituencies'){
   	json_url = 'wkcdd-constituencies.geojson';
   }
-  
-  alert("Aggregate: "+view_by+"\nData: "+json_url);
   
   //Load aggregate geo-jsondata
   function loadJSONLayer(url){
