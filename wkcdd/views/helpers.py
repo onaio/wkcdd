@@ -444,14 +444,14 @@ def get_performance_indicator_trend_report(sector_id,
             series_data = []
 
             for item in collection:
-             # Generate kwargs arguments
+                # Generate kwargs arguments
                 kwargs = {
                     'project_filter_criteria': project_filter_criteria,
                     'indicator_type': indicator_type}
 
                 period_row = get_period_row(
                     time_series, time_class, item, indicator_key, **kwargs)
-                
+
                 series_data.append(period_row)
 
             series_data_map[indicator_property] = series_data
