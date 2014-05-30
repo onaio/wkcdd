@@ -1,0 +1,47 @@
+{% set view_by = search_criteria['view_by']%}
+{% set start_year = search_criteria['start_year']%}
+{% set end_year = search_criteria['end_year']%}
+{% set start_period = search_criteria['start_period']%}
+{% set end_period = search_criteria['end_period']%}
+{% set id = location.id if location else '' %}
+{% set location_class = location.__class__ if location else 'county' %}
+
+<div class="row nav-holder indicator_links">
+        <ul class="nav nav-tabs indicator_tabs">
+            <li class="indicator_list">
+                <a href="{{ request.route_url('performance_indicators',traverse=('trends'),
+                           _query={'view_by': view_by,
+                                   location_class: id,
+                                   'start_period': start_period,
+                                   'end_period': end_period,
+                                   'start_year': start_year,
+                                   'end_year': end_year,
+                                   'period': period}) }}"
+
+                {% if request.matched_route.name == 'performance_indicators'%}
+                        class="selected" >
+                {% else %}
+                        >
+                {% endif %}
+                {% trans %} Performance {% endtrans %}
+                </a>
+            </li>
+            <li class="indicator_list">
+                <a href="{{ request.route_url('impact_indicators',traverse=('trends'),
+                _query={'view_by': view_by,
+                         location_class: id,
+                         'start_period': start_period,
+                         'end_period': end_period,
+                         'start_year': start_year,
+                         'end_year': end_year,
+                         'period': period}) }}"
+                {% if request.matched_route.name == 'impact_indicators' %}
+                        class="selected" >
+                {% else %}
+                        >
+                {% endif %}
+                {% trans %} Impact {% endtrans %}
+                </a>
+            </li>
+        </ul>
+    </div>

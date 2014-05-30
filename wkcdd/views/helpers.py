@@ -18,8 +18,12 @@ from wkcdd.models import (
 from wkcdd.models.report import ReportHandlerError
 
 from wkcdd.models.helpers import (
+    MONTH_PERIOD,
+    QUARTER_PERIOD,
     get_community_ids_for,
-    get_project_list
+    get_project_list,
+    get_children_by_level,
+    get_period_row
 )
 
 
@@ -280,3 +284,169 @@ def report_submission_handler(payload):
     except (KeyError, IndexError):
         raise ReportHandlerError(
             "'{}' not found in json".format(constants.XFORM_ID))
+
+
+def generate_time_series(start_period,
+                         end_period,
+                         time_class,
+                         start_year,
+                         end_year):
+    """Given time a and b, get all other intervals in between"""
+
+    if time_class == QUARTER_PERIOD:
+        time_series = Report.get_quarter_interval(
+            start_period, end_period, start_year, end_year)
+    elif time_class == MONTH_PERIOD:
+        time_series = (
+            Report.get_month_interval(
+                start_period, end_period, start_year, end_year))
+    else:
+        time_series = Report.get_year_interval(start_year, end_year)
+
+    return time_series
+
+
+def get_impact_indicator_trend_report(time_series,
+                                      time_class,
+                                      indicators,
+                                      collection):
+    """
+
+    Generate time series data for impact indicators for a given set of
+    locations or projects.
+
+    Return ([1,2,3]), # months
+           ([
+                [10,20,30,40,50], # month 1 data for each location
+                [12,13,14,15,16], # month 2 data ''
+                [23,24,25,26,27]  # month 3 data ''
+           ])# series data
+           (['Siaya', 'Vihiga', 'Bungoma', 'Kakamega', 'Busia']) # series
+    """
+    # get reports within the specified period
+    # for each period, get values for specified indicator
+    # return timeseries, series_data, collection labels
+    series_labels = [c.pretty for c in collection]
+    series_data_map = {}
+    for indicator in indicators:
+        indicator_key = indicator['key']
+        series_data = []
+
+        for item in collection:
+            period_row = get_period_row(
+                time_series, time_class, item, indicator_key)
+
+            series_data.append(period_row)
+
+        series_data_map[indicator_key] = series_data
+
+    return series_data_map, series_labels
+
+
+def get_child_locations(view_by,
+                        county,
+                        sub_county,
+                        constituency,
+                        community):
+    source_class = County
+    target_class = None
+    location = None
+
+    location_id = community or constituency or sub_county or county
+
+    if location_id:
+        location = Location.get(Location.id == location_id)
+        source_class = location.__class__
+        location_ids = [location.id]
+
+        target_class = get_target_class_from_view_by(
+            view_by, source_class)
+
+        child_ids = get_children_by_level(
+            location_ids, source_class, target_class)
+
+        child_locations = target_class.all(target_class.id.in_(child_ids))
+    else:
+        if view_by is None or view_by == 'counties':
+            child_locations = County.all()
+        else:
+            location_ids = [c.id for c in County.all()]
+            target_class = get_target_class_from_view_by(
+                view_by, source_class)
+            child_ids = get_children_by_level(
+                location_ids, source_class, target_class)
+
+            child_locations = target_class.all(
+                target_class.id.in_(child_ids))
+
+    return location, child_locations
+
+
+def process_trend_parameters(periods,
+                             start_period,
+                             end_period,
+                             start_year,
+                             end_year):
+    months = list(periods['months'])
+    months.sort()
+    months = [str(m) for m in months]
+
+    quarters = list(periods['quarters'])
+    quarters.sort()
+
+    years = list(periods['years'])
+    years.sort()
+
+    if months and quarters and years:
+        # Retrieve get parameters and provide defaults if none was selected
+        start_period = (
+            start_period
+            if start_period and start_period in (months + quarters)
+            else months[0])
+
+        end_period = (
+            end_period if end_period and end_period in (months + quarters)
+            else months[-1])
+
+        start_year = (
+            start_year if start_year and start_year in years else years[-1])
+
+        end_year = (
+            end_year if end_year and end_year in years else years[-1])
+        return start_period, end_period, start_year, end_year
+    else:
+        return start_period, end_period, start_year, end_year
+
+
+def get_performance_indicator_trend_report(sector_id,
+                                           time_series,
+                                           time_class,
+                                           indicators,
+                                           collection):
+    # Similar to function for generating the impact indicators trend reports
+    series_labels = [c.pretty for c in collection]
+    series_data_map = {}
+    project_filter_criteria = Project.sector == sector_id
+
+    for indicator in indicators:
+        indicator_key = indicator['key']
+        indicator_property = indicator['property']
+        indicator_type = indicator['type']
+
+        if indicator_type == 'ratio':
+            series_data = []
+
+            for item in collection:
+             # Generate kwargs arguments
+                kwargs = {
+                    'project_filter_criteria': project_filter_criteria,
+                    'indicator_type': indicator_type}
+
+                period_row = get_period_row(
+                    time_series, time_class, item, indicator_key, **kwargs)
+                
+                series_data.append(period_row)
+
+            series_data_map[indicator_property] = series_data
+
+    return series_data_map, series_labels

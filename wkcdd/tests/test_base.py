@@ -367,6 +367,86 @@ class TestBase(unittest.TestCase):
 
         transaction.commit()
 
+    def setup_report_trends_data(self):
+        """
+        Report months Jan, May, Aug, Dec
+        Report quarters q_1, q_2, q_3, q_4
+        Reporting years 2012_2013, 2013_2014
+        Locations: Bungoma County, Kakamega County
+        """
+        transaction.begin()
+
+        # Add Bungoma County data
+
+        county1 = self._add_county(name="Bungoma")
+        sub_county1 = self._add_sub_county(county=county1, name="Bungoma")
+        constituency1 = self._add_constituency(
+            sub_county=sub_county1, name="Bumula")
+        community1 = self._add_community(
+            constituency=constituency1, name="Kibuke")
+
+        # Add Kakamega County data
+
+        county2 = self._add_county(name="Kakamega")
+        sub_county2 = self._add_sub_county(county=county2, name="Lugari")
+        constituency2 = self._add_constituency(
+            sub_county=sub_county2, name="Lugari")
+        community2 = self._add_community(
+            constituency=constituency2, name="Marakusi")
+
+        project_type = self._add_project_type(name="CAP")
+
+        # Add Project within Bungoma County
+        self._add_project(project_code="7CWA",
+                          name="Cow project 1",
+                          project_type=project_type,
+                          community=community1,
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION
+                          )
+
+        # Add Project within Kakamega county
+        self._add_project(project_code="YH9T",
+                          name="Cow project 2",
+                          project_type=project_type,
+                          community=community2,
+                          sector=constants.DAIRY_COWS_PROJECT_REGISTRATION
+                          )
+
+        months = ['1', '5', '8', '12']
+        quarters = ['q_1', 'q_2', 'q_3', 'q_4']
+        reporting_years = ['2012_13', '2013_14']
+
+        # Cow project report data for Kibuke project
+        report_data = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', '7CWA.json'))
+
+        # Cow project report data for Marakusi project
+        report_data_2 = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'YH9T.json'))
+
+        for index, month in enumerate(months, 0):
+            # Jan(1) and May(2) will be in year 2012_13
+            # Aug(8) and Dec(12) will be in year 2013_14
+            year = reporting_years[0] if index < 2 else reporting_years[1]
+
+            # Cow project 1 reports
+            self._add_report(project_code='7CWA',
+                             report_data=report_data,
+                             submission_time=datetime.datetime(2014, 3, 1),
+                             month=month,
+                             quarter=quarters[index],
+                             period=year)
+
+            # Cow project 2 reports
+            self._add_report(project_code='7CWA',
+                             report_data=report_data_2,
+                             submission_time=datetime.datetime(2014, 3, 1),
+                             month=month,
+                             quarter=quarters[index],
+                             period=year)
+
+        transaction.commit()
+
 
 class IntegrationTestBase(TestBase):
 

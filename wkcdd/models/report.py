@@ -93,13 +93,42 @@ class Report(Base):
         return performance_indicators
 
     @classmethod
-    def get_year_periods(cls):
-        results = DBSession.query(Report)\
-            .distinct(Report.period)\
-            .order_by(Report.period)\
+    def get_year_interval(cls, start_year, end_year):
+        results = DBSession.query(Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
+            .group_by(Report.period)\
             .all()
-        year_periods = [r.period for r in results]
-        return year_periods
+        return results
+
+    @classmethod
+    def get_month_interval(cls,
+                           start_period,
+                           end_period,
+                           start_year,
+                           end_year):
+        results = DBSession.query(Report.month, Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
+            .filter(Report.month.between(start_period, end_period))\
+            .group_by(Report.month, Report.period)\
+            .order_by(Report.period, Report.month)\
+            .all()
+
+        return results
+
+    @classmethod
+    def get_quarter_interval(cls,
+                             start_period,
+                             end_period,
+                             start_year,
+                             end_year):
+        results = DBSession.query(Report.quarter, Report.period)\
+            .filter(Report.period.between(start_year, end_year))\
+            .filter(Report.quarter.between(start_period, end_period))\
+            .group_by(Report.quarter, Report.period)\
+            .order_by(Report.period, Report.quarter)\
+            .all()
+
+        return results
 
     @classmethod
     def get_reports_for_projects(cls, projects, *criteria):
@@ -279,6 +308,55 @@ class Report(Base):
         periods['months'].update({report.month for report in reports})
         periods['quarters'].update(
             {report.quarter for report in reports})
+
+    @classmethod
+    def get_trend_values_for_impact_indicators(cls,
+                                               collection,
+                                               indicator_key,
+                                               *time_criteria):
+        indicator_values = []
+        for item in collection:
+            try:
+                projects = item.get_projects()
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    *time_criteria)
+                indicator_sum = cls.sum_impact_indicator_values(
+                    indicator_key, reports)
+                indicator_values.append(indicator_sum)
+            except ReportError:
+                indicator_values.append(0)
+
+        return indicator_values
+
+    @classmethod
+    def get_trend_values_for_performance_indicators(cls,
+                                                    collection,
+                                                    indicator_key,
+                                                    indicator_type,
+                                                    **kwargs):
+        project_filter_criteria = kwargs.get('project_criteria', [])
+        time_criteria = kwargs.get('time_criteria', [])
+        indicator_values = []
+        for item in collection:
+            try:
+
+                projects = item.get_projects(*project_filter_criteria)
+                reports = cls.get_reports_for_projects(
+                    projects,
+                    *time_criteria)
+                try:
+                    indicator_sum = (
+                        cls.sum_performance_indicator_values(
+                            indicator_key, indicator_type, reports))
+                    indicator_values.append(indicator_sum)
+                except ValueError:
+                    indicator_values.append(0)
+
+            except ReportError:
+                indicator_values.append(0)
+
+        return indicator_values
 
 
 class ReportError(Exception):

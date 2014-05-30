@@ -1,13 +1,24 @@
+import re
+
 from wkcdd.models.base import DBSession
 from sqlalchemy.sql.expression import and_
 
 from wkcdd import constants
+
+from wkcdd.libs.utils import number_to_month_name
+
 from wkcdd.models import (
     Location, Project)
 from wkcdd.models.sub_county import SubCounty
 from wkcdd.models.constituency import Constituency
 from wkcdd.models.community import Community
 from wkcdd.models.county import County
+from wkcdd.models.report import Report
+
+
+YEAR_PERIOD = 'period'
+MONTH_PERIOD = 'month'
+QUARTER_PERIOD = 'quarter'
 
 
 def get_sub_county_ids(county_ids):
@@ -88,3 +99,49 @@ def get_children_by_level(location_ids, source_klass, target_klass):
     else:
         raise ValueError(
             "Target class cannot be of a greater rank than the source class")
+
+
+def get_period_row(time_series,
+                   time_class,
+                   item,
+                   indicator_key,
+                   **kwargs):
+    period_row = []
+
+    for period, year in time_series:
+        period_label = None
+        year_label = re.search('\d+', year).group(0)
+
+        if time_class == YEAR_PERIOD:
+            time_criteria = Report.period == period
+            period_label = year_label
+
+        elif time_class == MONTH_PERIOD:
+            time_criteria = [Report.month == period,
+                             Report.period == year]
+            period_label = (
+                number_to_month_name(period) +
+                " {}".format(year_label))
+        elif time_class == QUARTER_PERIOD:
+            time_criteria = [Report.quarter == period,
+                             Report.period == year]
+            period_label = (period.replace("q_", "Quarter ") +
+                            " {}".format(year_label))
+
+        project_filter_criteria = kwargs.get('project_filter_criteria')
+        if project_filter_criteria is not None:
+            indicator_type = kwargs.get('indicator_type')
+
+            criteria_args = {
+                'project_filter_criteria': project_filter_criteria,
+                'time_criteria': time_criteria}
+
+            data = Report.get_trend_values_for_performance_indicators(
+                [item], indicator_key, indicator_type, **criteria_args)
+        else:
+            data = Report.get_trend_values_for_impact_indicators(
+                [item], indicator_key, *time_criteria)
+
+        period_row.append([period_label, data[0]])
+
+    return period_row
