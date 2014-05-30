@@ -67,9 +67,9 @@
 	  <ul class="nav-side">
 		<li class="start">
 			<a class="
-			    {%if request.matched_route.name == 'performance_indicators' %}
+			    {%if request.matched_route.name == 'performance_indicators' and request.url.find('trends') == -1 %}
                     selected
-                {%elif request.matched_route.name == 'impact_indicators' %}
+                {%elif request.matched_route.name == 'impact_indicators' and request.url.find('trends') == -1 %}
                     selected
                 {%endif%}"
                 href="{{ request.route_url('performance_indicators', traverse=('')) }}">
@@ -77,6 +77,16 @@
 			<span class="title">{% trans %} PROJECT <br/>INDICATORS {% endtrans %}</span>
 			</a>
 		</li>
+    <li>
+      <a class="
+          {%if request.url.find('trends') != -1 %}
+                    selected
+                {%endif%}"
+                href="{{ request.route_url('performance_indicators', traverse=('trends')) }}">
+      <img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
+      <span class="title">{% trans %} PROJECT <br/>INDICATOR TRENDS {% endtrans %}</span>
+      </a>
+    </li>
 		<li>
             <a class="
                 {%if request.path_info_peek() == 'projects' %}

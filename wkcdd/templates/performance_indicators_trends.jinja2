@@ -34,7 +34,9 @@
 {% endblock %}
 
 {% block content %}
-    {{ add_indicator_links(request, location, search_criteria) }}
+    {% with request=request, search_criteria=search_criteria, filter_criteria=filter_criteria, location=location %}
+        {% include 'trend_nav_links.jinja2'%}
+    {% endwith %}
 
     <div class="btn-toolbar actions margin-bottom-10">
         <!--<label class="pull-left margin-right-10"> Sector:</label>-->

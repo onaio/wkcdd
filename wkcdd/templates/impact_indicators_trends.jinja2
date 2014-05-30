@@ -26,7 +26,9 @@
 {% endblock %}
 
 {% block content %}
-    {{ add_indicator_links(request, location, search_criteria) }}
+    {% with request=request, search_criteria=search_criteria, filter_criteria=filter_criteria, location=location %}
+        {% include 'trend_nav_links.jinja2'%}
+    {% endwith %}
     <div class="row">
         <div class="col-md-12">
         <div class="portlet-title">
