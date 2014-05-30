@@ -112,6 +112,7 @@
 
   var geo_locations = {{ project_geopoints|safe() }};
   Map.displayMarkers(geo_locations);
+  Map.initBaseMap('ona.i42dk97b');
 
   location_json_data = {{ filter_criteria["location_json_data"]|safe() }};
   LocationSelect.data_map = location_json_data;
