@@ -14,6 +14,7 @@ from wkcdd.views.helpers import (
     build_impact_indicator_chart_dataset,
     get_geolocations_from_items,
     generate_time_series,
+    get_default_period,
     process_trend_parameters,
     get_child_locations,
     get_impact_indicator_trend_report)
@@ -58,6 +59,13 @@ class ImpactIndicators(object):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
 
+        periods = Report.get_periods_for(child_locations)
+
+        # set default period values when none is provided
+        # Validate selected date
+        month_or_quarter, period = get_default_period(
+            periods, month_or_quarter, period)
+
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
 
@@ -66,8 +74,6 @@ class ImpactIndicators(object):
 
         geo_locations = json.dumps(
             get_geolocations_from_items(child_locations))
-
-        periods = Report.get_periods_for(child_locations)
 
         chart_dataset = build_impact_indicator_chart_dataset(indicators, rows)
         search_criteria = {'view_by': view_by,
@@ -113,6 +119,13 @@ class ImpactIndicators(object):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
 
+        periods = Report.get_periods_for(child_locations)
+
+        # set default period values when none is provided
+        # Validate selected date
+        month_or_quarter, period = get_default_period(
+            periods, month_or_quarter, period)
+
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
 
@@ -121,8 +134,6 @@ class ImpactIndicators(object):
 
         geo_locations = json.dumps(
             get_geolocations_from_items(child_locations))
-
-        periods = Report.get_periods_for(child_locations)
 
         chart_dataset = build_impact_indicator_chart_dataset(indicators, rows)
         search_criteria = {'view_by': view_by,
