@@ -307,5 +307,8 @@ span.title.unapproved {
     margin: 0px auto;
     padding-top: 5px;
     padding-bottom: 5px;
+}
 
+#project-report #filter_criteria {
+    margin-bottom: 10px;
 }

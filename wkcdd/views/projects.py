@@ -104,6 +104,7 @@ class ProjectViews(object):
                 constants.IMPACT_INDICATOR_KEYS)
             return {
                 'project': project,
+                'report': report,
                 'performance_indicators': performance_indicators,
                 'impact_indicators': impact_indicators,
                 'performance_indicator_mapping': tuple_to_dict_list(
@@ -117,6 +118,7 @@ class ProjectViews(object):
         else:
             return {
                 'project': project,
+                'report': None,
                 'performance_indicators': None,
                 'performance_indicator_mapping': None,
                 'impact_indicators': None,
