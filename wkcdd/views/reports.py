@@ -63,7 +63,7 @@ class ReportViews(object):
         return HTTPFound(location=url)
 
     @view_config(
-        name='sumbissions',
+        name='submissions',
         request_method='POST',
         context=ReportFactory)
     def json_post(self):
