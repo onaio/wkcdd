@@ -31,17 +31,17 @@
             {% if rows %}
               <div class="portlet-body table-holder">
                 <!-- <div class="table-scrollable"> -->
-                  <table class="table table-striped table-bordered table-hover 
-                  	wk-datatable-" data-mode="swipe" data-minimap>
+            	<table class="table table-striped table-bordered table-hover" data-mode="swipe" 
+            	data-minimap data-sortable>
                     <thead>
                     <tr>
                     {% if target_class %}
-                      <th data-priority="persist">{{target_class.__name__}}</th>
+                      <th data-priority="persist" data-sortable-col data-sortable-default-col>{{target_class.__name__}}</th>
                     {% else %}
-                      <th data-priority="persist">{% trans %}County{% endtrans %}</th>
+                      <th data-priority="persist" data-sortable-col data-sortable-default-col>{% trans %}County{% endtrans %}</th>
                     {% endif %}
                       {% for label, key_group in indicators %}
-                        <th data-priority="3" class="data-header">{{ label }}</th>
+                        <th data-priority="3" class="data-header" data-sortable-col>{{ label }}</th>
                       {% endfor %}
                     </tr>
                     </thead>

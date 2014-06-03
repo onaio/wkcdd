@@ -2,23 +2,23 @@
 {% macro generate_impact_indicator_table(request, location, location_type, entity_list, impact_indicators, impact_indicator_mapping) %}
       <div class="portlet-body">
          <div class="">
-            <table class="table table-striped table-bordered table-hover 
-            	wk-datatable-" data-mode="swipe" data-minimap>
+            <table class="table table-striped table-bordered table-hover" data-mode="swipe" 
+            	data-minimap data-sortable>
                {% include 'impact_indicator_table_head.jinja2' %}
                <tbody>
                 {% for entity in entity_list %}
                   <tr>
-                     <td>
+                     <td data-sortable-col>
                         <a href="{{ request.route_url(location_type, traverse=(entity.id)) }}">
                          {{ entity.name | capitalize | replace("_", " ") }}
                         </a>
                      </td>
 
                      {% for indicator in impact_indicator_mapping %}
-                        <td>
-                         {{
-                         impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|format_value(request)|default('-') }}
-                        </td>
+                    <td data-sortable-col>
+                     {{
+                     impact_indicators['aggregated_impact_indicators'][entity.id]['summary'][indicator.key]|format_value(request)|default('-') }}
+                    </td>
                      {% endfor %}
                   </tr>
                {% endfor %}
