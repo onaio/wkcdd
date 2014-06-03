@@ -2,9 +2,7 @@
 Custom module for you to write your own javascript functions
 **/
 var Custom = function () {
-
     // private functions & variables
-
     var 
         chartDataSet,
         ENTER_KEY_CODE = 13,
@@ -114,7 +112,6 @@ var Custom = function () {
         drawIndicatorChart: drawIndicatorChart,
         setChartDataset: setChartDataset
     };
-
 }();
 
 var LocationSelect = function() {

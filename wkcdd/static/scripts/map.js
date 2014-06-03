@@ -1,24 +1,33 @@
 var Map = (function(root){
     var map =  new L.Map('map', {
-        fullscreenControl: true,
-        layers: [
-            L.tileLayer('https://{s}.tiles.mapbox.com/v3/ona.i42dk97b/{z}/{x}/{y}.png', {
-                maxZoom: 13,
-                minZoom: 9,
-                attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
-            })]
+        fullscreenControl: true
     }).setView([0.31, 34.5], 9);
-
+    
+    var initBaseMap = function(map_url){
+    	//'https://{s}.tiles.mapbox.com/v3/ona.i42dk97b/{z}/{x}/{y}.png'
+    	var map_data = 'https://{s}.tiles.mapbox.com/v3/'+map_url+'/{z}/{x}/{y}.png';
+    	
+		L.tileLayer(map_data, {
+            maxZoom: 13,
+            minZoom: 9,
+            attribution: '<a href="http://www.mapbox.com/about/maps/" target="blank"> Terms &amp; Feedback</a>'
+        }).addTo(map);
+        //alert("Map URL: "+map_data);
+    };
+    
     var data = {};
 
     // @todo: temporary
-    var lookupProperty = 'COUNTY';
+	var lookupProperty = 'location';
 
     var InfoBox = L.Control.extend({
+    	options: {
+    		position: 'bottomleft'
+    	},
         template: _.template('' +
             '<h4><%= title %></h4>' +
             '<p><%= label %>: <%= value %></p>'),
-        onAdd: function (map) {
+        onAdd: function (map){
             return L.DomUtil.create('div', 'info');
         },
         update: function (title, label, value) {
@@ -28,7 +37,7 @@ var Map = (function(root){
                 container.innerHTML = this.template({
                     title: title,
                     label: label,
-                    value: value !== null?value:'No Reports'
+                    value: value !== null? Math.floor(value) :'No Reports'
                 });
             } else {
                 container.innerHTML = '';
@@ -263,6 +272,7 @@ var Map = (function(root){
 
     return {
         map: map,
+        initBaseMap: initBaseMap,
         setData: setData,
         setGeoJSON: setGeoJSON,
         setIndicator: setIndicator,

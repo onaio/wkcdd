@@ -688,8 +688,8 @@ Fancy box fix overlay fix(in v1.2.4)
 /***
 Datatables Plugin(in v1.3)
 ***/
-.dataTable {  
-  width: 100% !important;
+/*.dataTable {  
+  max-width: 100% !important;
   clear: both;
   margin-top: 5px;
 }
@@ -774,7 +774,7 @@ Datatables Plugin(in v1.3)
     float: left;
     margin-top: 20px;
   }
-}
+}*/
 
 /***
 Password Strength(in v1.4)

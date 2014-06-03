@@ -37,7 +37,7 @@ var MapsVector = function () {
         }
         map.width(map.parent().width());
         map.vectorMap(data);
-    }
+    };
 
 
     return {

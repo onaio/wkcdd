@@ -1,4 +1,8 @@
 /* here you can put your own css to customize and override the theme */
+body{
+	font-size:12px;
+}
+
 .header.navbar{
 	background:#2E4358;
 }
@@ -56,7 +60,7 @@
 }
 .page-sidebar{
 	background:#414141;
-	min-height:45em;
+	min-height:100em;
 	max-width:8em;
 	padding:0;
 	position:fixed;
@@ -111,6 +115,23 @@ span.ratio {
 
 #map {
     height: 400px;
+}
+#map #project_sel{
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+	margin:10px;
+	z-index:900;
+}
+#project_sel a.dropdown-toggle{
+	color:#FFF;
+	font-size:13px;
+}
+/*leaflet control*/
+.leaflet-top.leaflet-left{
+	width:100%;left:0;right:0;
+}
+.leaflet-control-zoom, .leaflet-control-fullscreen{
+	float:right;
+	margin-right:10px;
 }
 
 #chart {
@@ -200,6 +221,8 @@ span.ratio {
 }
 table.dataTable{
     margin-bottom:1em!important;
+    max-width:100%!important;
+    table-layout: fixed;
 }
 .dataTables_filter input[type=text], .dataTables_length select{
     background-color: #ffffff;
@@ -220,15 +243,21 @@ table.dataTable{
     margin-top:-0.2em;
     width:40em;
 }
+.dataTables_wrapper .col-xs-6:last-child > .dataTables_filter{
+	float:right;
+}
 .dataTables_filter input[type=text]{
     width:20em;
 }
 .dataTables_filter, dataTables_length{
     margin-bottom:0.8em;
 }
-
 .dataTables_info{
 	margin-bottom:1em;
+}
+/*tablesaw*/
+.tablesaw-bar{
+	margin-top:1em!important;
 }
 
 /*Indicator-link tabs*/

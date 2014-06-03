@@ -3246,17 +3246,20 @@ Disabled Menu Link
 /***
 Responsive & Scrollable Tables
 ***/
-
-.table-scrollable {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  /*border: 1px solid #dddddd;*/
-  margin: 0.9em!important;
+table tr td{
+	width:auto!important;
 }
 
-.table-scrollable > .table {
-  width: 100% !important;
+.table-scrollable {
+  max-width:99%!important;
+  overflow-y:hidden;
+  table-layout:fixed;
+  word-wrap:break-word;
+}
+
+.table-scrollable > .table{
+  /*width: 100%!important;*/
+  max-width:60em;
   margin: 0 !important;
   margin-bottom: 0;
   background-color: #fff;
