@@ -982,7 +982,5 @@ var App = function () {
                 return '';
             }
         }
-
     };
-
 }();

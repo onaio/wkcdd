@@ -2,6 +2,9 @@
 body{
 	font-size:12px;
 }
+.greentxt{
+	color:green;
+}
 
 .header.navbar{
 	background:#2E4358;
