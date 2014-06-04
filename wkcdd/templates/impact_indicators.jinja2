@@ -25,6 +25,10 @@
 {% endblock %}
 
 {% block content %}
+	<h4 class="greentxt">
+		<i class="glyphicon glyphicon-map-marker"></i>
+		<span id="currLocation">Select a location</span></h4>
+		
   {{ add_indicator_links(request, location, search_criteria) }}
   
   <div class="row">
@@ -207,6 +211,11 @@
   }
   Map.initBaseMap(base_url);
   loadJSONLayer(json_url);
+  
+  updateLocationLabel('county');
+  updateLocationLabel('sub_county');
+  updateLocationLabel('constituency');
+  updateLocationLabel('community');
 
   // Draw bar chart
   Custom.setChartDataset({{ chart_dataset | safe() }})

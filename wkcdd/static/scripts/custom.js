@@ -323,20 +323,23 @@ var LocationSelect = function() {
 	    updateLocationLabel = function(field){
 		    // Update location labels
 			var field_array = ['county', 'sub_county', 'constituency', 'community'];
-    		var currLoc = $("select[name="+field+"] option:selected").text();
+			var currField = $("select[name="+field+"] option:selected");
+    		var currLoc = currField.text();
     		var updateLabel = $("#currLocation");
-    		var updateTxt = 'Selected: ';
     		
 	    	field = field.replace('_','');
 	    	var upper = field.charAt(0);
 	    	field = field.replace(upper,upper.toUpperCase());
 	    	
-	    	if(field != 'None'){
-	    		updateTxt += currLoc+" "+field;
-	    	}
-	    	if(currLoc == ''){
-	    		updateTxt = 'All counties';
-	    	}
+    		var updateTxt = 'Selected: ';
+	    	
+    		//Check if top item ie. 'All Counties' is selected
+    		if(currField.val() == ''){
+    			updateTxt += currLoc;
+    		}
+    		else{
+    			updateTxt += currLoc+" "+field;
+    		}
 	    	updateLabel.text(updateTxt);
 	    	//alert("Field: "+field+" + Location: "+ currLoc);
 	    };
