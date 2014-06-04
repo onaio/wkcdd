@@ -16,7 +16,8 @@ from sqlalchemy import (
     Integer,
     DateTime,
     String,
-    Enum
+    Enum,
+    desc
 )
 from sqlalchemy.dialects.postgresql import JSON
 
@@ -127,6 +128,16 @@ class Report(Base):
             .group_by(Report.quarter, Report.period)\
             .order_by(Report.period, Report.quarter)\
             .all()
+
+        return results
+
+    @classmethod
+    def get_latest_month_for_year(cls, year):
+        results = DBSession.query(Report.month)\
+            .filter(Report.period == year)\
+            .group_by(Report.month)\
+            .order_by(desc(Report.month))\
+            .first()
 
         return results
 
