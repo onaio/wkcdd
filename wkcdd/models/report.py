@@ -20,9 +20,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSON
 
-from wkcdd.libs.utils import (
-    get_impact_indicator_list,
-    sum_reduce_func)
+from wkcdd.libs.utils import get_impact_indicator_list
 
 
 class Report(Base):
@@ -148,13 +146,20 @@ class Report(Base):
             raise ReportError("No projects provided")
 
     @classmethod
-    def sum_impact_indicator_values(cls, indicator_key, reports):
+    def sum_indicator_values(cls, indicator_key, reports):
         """
         Calculate the sum for the specified indicator from the reports
         """
-        values = [r.report_data.get(indicator_key) for r in reports]
-        return reduce(
-            sum_reduce_func, values, 0)
+        report_ids = [r.id for r in reports]
+        if report_ids:
+            total = DBSession.query('total').from_statement(
+                "Select SUM((report_data->>:key)::integer) as total \
+                FROM reports where report_data->>:key <> 'Infinity'\
+                and id in :list").params(
+                key=indicator_key, list=tuple(report_ids)).first()
+            return total[0] or 0
+        else:
+            return 0
 
     @classmethod
     def generate_impact_indicators(cls, collection, indicators, *criteria):
@@ -178,7 +183,7 @@ class Report(Base):
 
                 for indicator in indicators:
                     indicator_key = indicator['key']
-                    location_indicator_sum = cls.sum_impact_indicator_values(
+                    location_indicator_sum = cls.sum_indicator_values(
                         indicator_key, reports)
                     row['indicators'][indicator_key] = location_indicator_sum
 
@@ -200,26 +205,21 @@ class Report(Base):
         Calculate the sum and average for the specified indicator from the
         reports
         """
-        values = []
-        # handle keys which are lists due to legacy form submissions
+        total = 0
+
         if reports:
-            try:
-                values = [r.report_data.get(indicator_key) for r in reports]
-            except TypeError:
+            # handle keys which are lists due to legacy form submissions
+            if isinstance(indicator_key, list):
+                # Find sum for all values
                 for key in indicator_key:
-                    values.extend(
-                        [r.report_data.get(key) for r in reports])
-            finally:
-                if indicator_type == 'ratio':
-                    return (float(
-                            reduce(
-                                sum_reduce_func, values, 0))
-                            /
-                            float(
-                                len(reports)))
-                else:
-                    return reduce(
-                        sum_reduce_func, values, 0)
+                    total += cls.sum_indicator_values(key, reports)
+            else:
+                total += cls.sum_indicator_values(indicator_key, reports)
+
+            if indicator_type == 'ratio':
+                return float(total) / float(len(reports))
+            else:
+                return total
         else:
             raise ValueError("No reports provided")
 
@@ -321,7 +321,7 @@ class Report(Base):
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
-                indicator_sum = cls.sum_impact_indicator_values(
+                indicator_sum = cls.sum_indicator_values(
                     indicator_key, reports)
                 indicator_values.append(indicator_sum)
             except ReportError:

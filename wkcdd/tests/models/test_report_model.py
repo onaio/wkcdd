@@ -117,33 +117,8 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['milk_bnf_sale_percentage'], 0)
 
-    reports = [
-        Report(
-            report_data={
-                'impact_information/b_income': '2060',
-                'impact_information/b_improved_houses': '1220',
-                # simulate missing report
-                # 'impact_information/b_hh_assets':,
-                'impact_information/no_children': '1400'
-            }
-        ),
-        Report(
-            report_data={
-                'impact_information/b_income': '0',
-                'impact_information/b_improved_houses': '860',
-                'impact_information/b_hh_assets': '230',
-                'impact_information/no_children': '670'
-            }
-        )
-    ]
-
-    def test_sum_impact_indicator_values(self):
-        indicator_sum = Report.sum_impact_indicator_values(
-            'impact_information/b_hh_assets', self.reports)
-        self.assertEqual(indicator_sum, 230)
-
-    def test_sum_impact_indicator_values_returns_0_for_list_of_none(self):
-        indicator_sum = Report.sum_impact_indicator_values(
+    def test_sum_indicator_values_returns_0_for_list_of_none(self):
+        indicator_sum = Report.sum_indicator_values(
             'impact_information/b_hh_assets', [
                 Report(report_data={})
             ])
@@ -183,49 +158,6 @@ class TestReport(TestBase):
             summary_row['impact_information/b_improved_houses'], 0)
         self.assertEqual(summary_row['impact_information/b_hh_assets'], 0)
         self.assertEqual(summary_row['impact_information/no_children'], 0)
-
-    performance_reports = [
-        Report(
-            report_data={
-                'perfomance_summary/exp_contribution': '123',
-                'perfomance_summary/actual_contribution': '120',
-                'perfomance_summary/community_contribution': '98',
-                'mproject_performance/dbirds_number': '15',
-                'impact_information/db_percentage': '20'
-            }
-        ),
-        Report(
-            report_data={
-                'perfomance_summary/exp_contribution': '100',
-                'perfomance_summary/actual_contribution': '200',
-                'perfomance_summary/community_contribution': '100',
-                'mproject_performance/dbirds_number': '30',
-                'mproject_performance/db_percentage': '18'
-            }
-        )
-    ]
-
-    def test_sum_performance_indicator_values(self):
-        indicator_sum_target = Report.sum_performance_indicator_values(
-            'perfomance_summary/exp_contribution',
-            'target',
-            self.performance_reports)
-
-        indicator_ratio = Report.sum_performance_indicator_values(
-            'perfomance_summary/community_contribution',
-            'ratio',
-            self.performance_reports)
-
-        self.assertEqual(indicator_sum_target, 223)
-        self.assertEqual(indicator_ratio, 99)
-
-    def test_sum_performance_indicators_for_legacy_values(self):
-        indicator_ratio = Report.sum_performance_indicator_values(
-            ['impact_information/db_percentage',
-             'mproject_performance/db_percentage'],
-            'ratio',
-            self.performance_reports)
-        self.assertEqual(indicator_ratio, 19)
 
     def test_generate_performance_indicators(self):
         self.setup_test_data()
