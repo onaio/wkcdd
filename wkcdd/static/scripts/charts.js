@@ -189,7 +189,7 @@ var Charts = function () {
                             points: {
                                 show: true
                             },
-                            shadowSize: 2
+                            shadowSize: 0
                         },
                         grid: {
                             hoverable: true,
@@ -332,7 +332,7 @@ var Charts = function () {
                 //server load
                 var options = {
                     series: {
-                        shadowSize: 1
+                        shadowSize: 0
                     },
                     lines: {
                         show: true,
