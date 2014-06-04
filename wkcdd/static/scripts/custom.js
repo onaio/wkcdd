@@ -59,7 +59,8 @@ var Custom = function () {
                         fillToZero: true,
                         barDirection: 'horizontal'
                     },
-                    pointLabels: {show: true, formatString: '%.2f'}
+                    pointLabels: {show: true, formatString: '%.2f'},
+                    shadow: false
                 },
                 grid: {
                     background:'#ffffff'
