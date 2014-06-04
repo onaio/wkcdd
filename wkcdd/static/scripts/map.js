@@ -69,6 +69,40 @@ var Map = (function(root){
         }
     });
 
+    // Control for printing the map
+    var PrintControl = L.Control.extend({
+        options: {
+            position: 'topleft',
+            title: 'Print Map'
+        },
+        onAdd: function(map) {
+            var container, className = 'print-btn';
+
+            container = L.DomUtil.create('div', 'leaflet-bar pull-right leaflet-print-control');
+            this._createPrintButton(this.options.title, className, container, this.printMap, map);
+            return container;
+        },
+        _createPrintButton: function(title, className, container, fn, context) {
+            var link = L.DomUtil.create('a', className, container);
+            link.innerHTML = '<i class="icon-print"></i>';
+            link.href = '#';
+            link.title = title;
+
+            L.DomEvent
+                .addListener(link, 'click', L.DomEvent.stopPropagation)
+                .addListener(link, 'click', L.DomEvent.preventDefault)
+                .addListener(link, 'click', fn, context);
+
+            return link;
+        },
+        printMap: function(map){
+            debugger;
+        }
+    });
+
+    var printer = new PrintControl();
+    printer.addTo(map);
+
     var colors = {
         GREY: '#ccc',
         RED: '#FF4136',
