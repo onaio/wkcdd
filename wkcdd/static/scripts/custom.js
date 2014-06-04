@@ -63,7 +63,8 @@ var Custom = function () {
                     shadow: false
                 },
                 grid: {
-                    background:'#ffffff'
+                    background:'#ffffff',
+                    shadow: false
                 },
                 axes: {
                     xaxis: {
