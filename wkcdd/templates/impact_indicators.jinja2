@@ -174,11 +174,11 @@
   Map.setData(data, true);
 
   var view_by = '{{ view_by }}';
-  var base_url = 'ona.i42dk97b';
+  var base_url = '';
   var json_url = '';
   
-  if(view_by == 'counties'){
-  	base_url = 'ona.i3hg15g5';
+  if(view_by == 'counties' || view_by == 'None'){
+  	base_url = 'ona.i42dk97b'; //ona.i3hg15g5
   	json_url = 'wkcdd-counties.geojson';
   }
   else if(view_by == 'sub_counties'){
@@ -194,7 +194,7 @@
   	json_url = 'wkcdd-communities.geojson';
   }
   
-  //Load aggregate geo-jsondata
+  //Load aggregate geojson data
   function loadJSONLayer(url){
   	  var json_url = url;
   	  
