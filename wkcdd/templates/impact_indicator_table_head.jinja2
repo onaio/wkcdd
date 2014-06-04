@@ -1,8 +1,8 @@
 <thead>
   <tr>
-     <th>{% trans %} Name {% endtrans %}</th>
+     <th data-priority="persist" data-sortable-default-col>{% trans %} Name {% endtrans %}</th>
      {% for indicator in impact_indicator_mapping %}
-        <th>
+        <th data-priority="3" data-sortable-default-col>
          {{ indicator.title | replace ('Number of', '#') }}
         </th>
      {% endfor %}

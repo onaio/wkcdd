@@ -954,6 +954,7 @@ Footer
 .footer {
   padding: 10px 20px 5px 20px; 
   font-size: 12px;
+  text-align:center;
 }
 
 .footer:after,
@@ -969,7 +970,7 @@ Footer
 
 .footer .footer-inner {
   float: left;
-  display: inline-block;
+  display: block;
 }
 
 .footer .footer-tools {
