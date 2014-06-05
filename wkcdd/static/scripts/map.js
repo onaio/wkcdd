@@ -188,7 +188,7 @@ var Map = (function(root){
                 var dimensions = map.getSize();
                 img.width = dimensions.x;
                 img.height = dimensions.y;
-                img.src = canvas.toDataURL().replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                img.src = canvas.toDataURL()
                 location.href = img.src;
                 // cleanup processing state
                 $('a.print-btn').removeClass('export-spinner');
