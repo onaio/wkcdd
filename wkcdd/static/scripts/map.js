@@ -99,11 +99,9 @@ var Map = (function(root){
         printMap: function(){
             var map = this;
             // toggle processing state
-            console.log("Exporting map…");
-
             $('a.print-btn').children('i').addClass("hidden");
             $('a.print-btn').addClass('export-spinner');
-            
+
             leafletImage(map, function(err, canvas) {
 
                 var mapID = 'map';
@@ -190,10 +188,9 @@ var Map = (function(root){
                 var dimensions = map.getSize();
                 img.width = dimensions.x;
                 img.height = dimensions.y;
-                img.src = canvas.toDataURL();
-                window.win = open(img.src);
+                img.src = canvas.toDataURL().replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                location.href = img.src;
                 // cleanup processing state
-                console.log('done');
                 $('a.print-btn').removeClass('export-spinner');
                 $('a.print-btn').children('i').removeClass("hidden");
             });
