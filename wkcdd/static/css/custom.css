@@ -312,3 +312,12 @@ span.title.unapproved {
 #project-report #filter_criteria {
     margin-bottom: 10px;
 }
+
+.leaflet-print-control {
+    margin-right: 10px;
+}
+
+.export-spinner {
+    background-image: url("../img/input-spinner.gif");
+    background-repeat: no-repeat;
+}
