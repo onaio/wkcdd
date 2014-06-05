@@ -315,6 +315,26 @@ span.title.unapproved {
     margin-bottom: 10px;
 }
 
+#filter_box, #filter_box .col-xs-10, #filter_box .col-xs-2,
+#filter_box .col-xs-1{
+	margin-bottom:1em;
+	padding:0;
+}
+#filter_box{
+	font-size:12px;
+	padding:1em 0;
+}
+#filter_box .search-txt{
+	margin-bottom:0.8em;
+}
+#filter_box .col-xs-2{
+	padding-right:0.5em;
+	width:20%;
+}
+.search-txt input{
+	width:47.4%;
+}
+
 /***
 Up To Medium Devices
 ***/
@@ -456,6 +476,12 @@ Up To Medium Devices
 
 	.page-sidebar .sidebar-search .input-box {
 	  width: 220px;
+	}
+	
+	/*Filter boxes*/
+	#filter_box .col-xs-2{
+		float:left;
+		/*width:16%;*/
 	}
 
 	/***
