@@ -130,11 +130,6 @@ var Map = (function(root){
         });*/
     };
 
-    var setGeoJSON = function (geoJson) {
-        shapeLayer.clearLayers();
-        shapeLayer.addData(geoJson);
-    };
-
     var setIndicator = function (indicator_id) {
         var bins;
         map.removeLayer(markerLayer);
@@ -287,8 +282,8 @@ var Map = (function(root){
         map: map,
         project_geolocations: project_geolocations,
         initBaseMap: initBaseMap,
+        shapeLayer: shapeLayer,
         setData: setData,
-        setGeoJSON: setGeoJSON,
         setIndicator: setIndicator,
         displayMarkers: displayMarkers
     };

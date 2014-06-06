@@ -175,13 +175,13 @@
   };
   Map.setData(data, true);
 
-  var view_by = '{{ view_by }}';
+  var view_by = '{{ view_by or 'counties'}}';
   var base_url = 'ona.i42dk97b';
   var json_url = '';
   
   if(view_by == 'counties'){
-  	base_url = 'ona.i3hg15g5';
-  	json_url = 'wkcdd-counties.geojson';
+  	base_url = 'ona.i42dk97b';
+  	json_url = 'wkcdd-counties.topojson.json';
   }
   else if(view_by == 'sub_counties'){
   	base_url = 'ona.i42efo92';
@@ -197,18 +197,13 @@
   }
   
   //Load aggregate geo-jsondata
-  function loadJSONLayer(url){
-  	  var json_url = url;
-  	  
-	  // load json layer
-	  $.ajax("{{ request.static_url('wkcdd:static/geodata/') }}" + json_url, {
-	    dataType: 'json'
-	  }).done(function(data, status){
-	    Map.setGeoJSON(data);
-	  });
+  function loadTopoJSONLayer(url){
+    var static_url = "{{ request.static_url('wkcdd:static/geodata/') }}" + url;
+    shapeLayer = omnivore.topojson(static_url, null, Map.shapeLayer);
   }
+
   Map.initBaseMap(base_url);
-  loadJSONLayer(json_url);
+  loadTopoJSONLayer(json_url);
 
   // Draw bar chart
   Custom.setChartDataset({{ chart_dataset | safe() }})
