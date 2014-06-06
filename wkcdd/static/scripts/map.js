@@ -106,6 +106,7 @@ var Map = (function(root){
 
                 var mapID = 'map';
                 var title = $('.selected-indicator').text().trim();
+                title = title === "Select Indicator" ? '': title;
                 var titleSizePx = 20;
                 var titleHeight = titleSizePx + Math.round(titleSizePx * 0.25);
 
