@@ -27,6 +27,10 @@
 {% endblock %}
 
 {% block content %}
+
+	<h4 class="greentxt">
+		<i class="glyphicon glyphicon-map-marker"></i>
+		<span id="currLocation">Select a location</span></h4>	
     <!-- Loop though the different sectors -->
     {{ add_indicator_links(request, location, search_criteria) }}
 
@@ -144,11 +148,11 @@
    Map.setData(data, false);
 
   var view_by = '{{ view_by }}';
-  var base_url = 'ona.i42dk97b';
+  var base_url = '';
   var json_url = '';
   
-  if(view_by == 'counties'){
-  	base_url = 'ona.i3hg15g5';
+  if(view_by == 'counties' || view_by == 'None'){
+  	base_url = 'ona.i42dk97b'; //ona.i3hg15g5
   	json_url = 'wkcdd-counties.geojson';
   }
   else if(view_by == 'sub_counties'){
@@ -177,9 +181,10 @@
   }
   Map.initBaseMap(base_url);
   loadJSONLayer(json_url);
-      
-   // Draw bar chart
-   Custom.setChartDataset({{ chart_dataset | safe() }})
+
+  // Draw bar chart
+  Custom.setChartDataset({{ chart_dataset | safe() }});
+   
   {% endif %}
 
   {{ update_selected_location_dropdowns(search_criteria) }}

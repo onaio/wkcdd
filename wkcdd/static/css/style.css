@@ -1251,6 +1251,7 @@ Portlets
   padding: 10px;    
   background-color: #fff;  
   border-radius: 0px 0px 4px 4px;
+  overflow-x:hidden;
 }
 
 /*  draggable girds */
