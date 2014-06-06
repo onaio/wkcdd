@@ -406,7 +406,7 @@ var Map = (function(root){
                 color: icon_sector_map[data.sector].color,
                 size: 's'});
             marker = L.marker(latlng, {icon: icon, title: data.name});
-            description = buildProjectDescriptionTable(data.name, data.image_link, data.description);
+            description = buildProjectDescriptionTable(data.id, data.name, data.image_link, data.description);
             marker.bindPopup(description.html());
             markerLayer.addLayer(marker);
         });
@@ -416,7 +416,7 @@ var Map = (function(root){
         };
     };
 
-    var buildProjectDescriptionTable = function(name, img, description) {
+    var buildProjectDescriptionTable = function(id, name, img, description) {
         var
             responsiveDiv = $('<div />', {class: 'table-responsive'}),
             table = $('<table />', {
@@ -428,7 +428,9 @@ var Map = (function(root){
             var row = $('<tr />').append($('<td />').html(row_values[0])).append($('<td />').html(row_values[1]));
             table.append(row);
         });
-        return responsiveDiv.append(table);
+        responsiveDiv.append(table)
+        responsiveDiv.append("<div class=''><a href='/projects/" + id + "'>Show Project Details</a></div>");
+        return responsiveDiv;
     };
 
     var project_geolocations = {}

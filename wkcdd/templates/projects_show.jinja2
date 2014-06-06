@@ -45,6 +45,11 @@
          <div class="caption"><i class="icon-tasks"></i>Project Details</div>
       </div>
       <div class="portlet-body">
+        {% if project.image_file %}
+        <div class="">
+          <img src="https://ona.io/attachment/small?media_file=wkcdd/attachments/{{project.image_file}}" class="project-img img-responsive" alt="{{project.pretty}}">
+        </div>
+        {% endif %}
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover">
             <tbody>
