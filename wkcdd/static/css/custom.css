@@ -2,6 +2,9 @@
 body{
 	font-size:12px;
 }
+.greentxt{
+	color:green;
+}
 
 .header.navbar{
 	background:#2E4358;
@@ -116,7 +119,7 @@ span.ratio {
 }
 
 #map {
-    height: 400px;
+    height: 432px;
 }
 #map #project_sel{
 	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
@@ -833,3 +836,16 @@ The Most Extra Small Devices Portrait Mode Only
 		width: 100px;
 	}
 }	
+
+.leaflet-print-control {
+    margin-right: 10px;
+}
+
+.export-spinner {
+    background-image: url("../img/input-spinner.gif");
+    background-repeat: no-repeat;
+}
+
+#currLocation {
+    text-transform: capitalize;
+}

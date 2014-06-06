@@ -54,7 +54,7 @@ var Map = (function(root){
     // Map legend
     var Legend = L.Control.extend({
         template: _.template('<% _.each(items, function (item) { %>' +
-            '<i style="background: <%= item.color %>"></i> <%= item.label %><br />' +
+            '<span><i style="background: <%= item.color %>"></i> <%= item.label %></span><br />' +
             '<% }) %>'),
         options: {
             position: 'bottomright'
@@ -68,6 +68,161 @@ var Map = (function(root){
             });
         }
     });
+
+    // Control for printing the map
+    var PrintControl = L.Control.extend({
+        options: {
+            position: 'topleft',
+            title: 'Print Map'
+        },
+        onAdd: function(map) {
+            var container, className = 'print-btn';
+            this._map = map;
+
+            container = L.DomUtil.create('div', 'leaflet-bar pull-right leaflet-print-control');
+            this._createPrintButton(this.options.title, className, container, this.printMap, map);
+            return container;
+        },
+        _createPrintButton: function(title, className, container, fn, context) {
+            var link = L.DomUtil.create('a', className, container);
+            link.innerHTML = '<i class="icon-save"></i>';
+            link.href = '#';
+            link.title = title;
+
+            L.DomEvent
+                .addListener(link, 'click', L.DomEvent.stopPropagation)
+                .addListener(link, 'click', L.DomEvent.preventDefault)
+                .addListener(link, 'click', fn, context);
+
+            return link;
+        },
+        printMap: function(){
+            var map = this;
+            // toggle processing state
+            $('a.print-btn').children('i').addClass("hidden");
+            $('a.print-btn').addClass('export-spinner');
+
+            leafletImage(map, function(err, canvas_map) {
+
+                var mapID = 'map';
+                var title = $('.selected-indicator').text().trim();
+                title = title === "Select Indicator" ? '': title;
+                var titleSizePx = 20;
+                var titleHeight = titleSizePx + Math.round(titleSizePx * 0.25);
+
+                var canvas = document.createElement('canvas');
+                var canvasWidth = canvas_map.width;
+                var canvasHeight = canvas_map.height;
+
+                canvas.width = canvasWidth;
+                canvas.height = canvas_map.height + titleHeight;
+
+                var ctx = canvas.getContext("2d");
+
+
+                ctx.fillStyle = "rgb(255,255,255)";
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.drawImage(canvas_map, 0, 0);
+
+                // draw title
+                ctx.fillStyle = "black";
+                ctx.font = titleSizePx + "px 'Open Sans',sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // draw title
+                ctx.fillText(title, canvasWidth / 2 , ((canvasHeight + titleHeight) - (titleSizePx / 1.5)));
+
+                //draw map legend
+                var html_legend = $('#' + mapID + ' .legend');
+
+                if(html_legend.length) {
+                    // define helper functions
+                    function cssvalue(elem, prop) {
+                        return parseInt(elem.css(prop).replace('px', ''));
+                    }
+                    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+                        if (typeof stroke == "undefined" ) {
+                            stroke = true;
+                        }
+                        if (typeof radius === "undefined") {
+                            radius = 5;
+                        }
+                        ctx.beginPath();
+                        ctx.moveTo(x + radius, y);
+                        ctx.lineTo(x + width - radius, y);
+                        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                        ctx.lineTo(x + width, y + height - radius);
+                        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                        ctx.lineTo(x + radius, y + height);
+                        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                        ctx.lineTo(x, y + radius);
+                        ctx.quadraticCurveTo(x, y, x + radius, y);
+                        ctx.closePath();
+                        if (stroke) {
+                            ctx.stroke();
+                        }
+                        if (fill) {
+                            ctx.fill();
+                        }
+                    }
+
+                    var legendWidth = cssvalue(html_legend, 'width');
+                    var legendHeight = cssvalue(html_legend, 'height');
+                    var legendMarginRight = cssvalue(html_legend, 'margin-right');
+                    var legendMarginBottom = cssvalue(html_legend, 'margin-bottom');
+                    var legendPaddingLeft = cssvalue(html_legend, 'padding-left');
+                    var legendPaddingTop = cssvalue(html_legend, 'padding-top');
+                    var legendX = canvasWidth - legendWidth - legendMarginRight;
+                    var legendY = canvasHeight - legendHeight - legendMarginBottom;
+                    ctx.fillStyle = "rgba(255,255,255, 0.8)";
+                    ctx.strokeStyle = '#bbbbbb';
+                    roundRect(ctx, legendX, legendY,
+                              legendWidth, legendHeight, 5, true, true);
+                    // draw legend text
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    ctx.shadowBlur = 0;
+                    var legendTextX = legendX + legendPaddingLeft;
+                    var legendTextY = legendY + legendPaddingTop;
+                    var currentLegendTextY = legendTextY;
+                    html_legend.children('span').each(function (index, spanElem) {
+                        var span = $(spanElem);
+                        var i = span.children('i');
+                        var width = cssvalue(i, 'width');
+                        var height = cssvalue(i, 'height');
+                        var text = span.text();
+                        ctx.fillStyle = i.css('background-color');
+                        ctx.fillRect(legendTextX, currentLegendTextY,
+                                      width, height);
+                        // text
+                        ctx.fillStyle = "#555";
+                        ctx.font = "14px 'Open Sans',sans-serif";
+                        ctx.textAlign = "left";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(text,
+                                     legendTextX + width,
+                                     currentLegendTextY + height / 2);
+                        currentLegendTextY += height;
+                    });
+                }
+
+                var img = document.createElement('img');
+                var dimensions = map.getSize();
+                img.width = dimensions.x;
+                img.height = dimensions.y;
+                img.src = canvas.toDataURL()
+                location.href = img.src;
+                // cleanup processing state
+                $('a.print-btn').removeClass('export-spinner');
+                $('a.print-btn').children('i').removeClass("hidden");
+            });
+            
+        }
+    });
+
+    var printer = new PrintControl();
+    printer.addTo(map);
 
     var colors = {
         GREY: '#ccc',
@@ -128,11 +283,6 @@ var Map = (function(root){
             d3.max(values);
             d3.min(values);
         });*/
-    };
-
-    var setGeoJSON = function (geoJson) {
-        shapeLayer.clearLayers();
-        shapeLayer.addData(geoJson);
     };
 
     var setIndicator = function (indicator_id) {
@@ -256,7 +406,7 @@ var Map = (function(root){
                 color: icon_sector_map[data.sector].color,
                 size: 's'});
             marker = L.marker(latlng, {icon: icon, title: data.name});
-            description = buildProjectDescriptionTable(data.name, data.image_link, data.description);
+            description = buildProjectDescriptionTable(data.id, data.name, data.image_link, data.description);
             marker.bindPopup(description.html());
             markerLayer.addLayer(marker);
         });
@@ -266,7 +416,7 @@ var Map = (function(root){
         };
     };
 
-    var buildProjectDescriptionTable = function(name, img, description) {
+    var buildProjectDescriptionTable = function(id, name, img, description) {
         var
             responsiveDiv = $('<div />', {class: 'table-responsive'}),
             table = $('<table />', {
@@ -278,7 +428,9 @@ var Map = (function(root){
             var row = $('<tr />').append($('<td />').html(row_values[0])).append($('<td />').html(row_values[1]));
             table.append(row);
         });
-        return responsiveDiv.append(table);
+        responsiveDiv.append(table)
+        responsiveDiv.append("<div class=''><a href='/projects/" + id + "'>Show Project Details</a></div>");
+        return responsiveDiv;
     };
 
     var project_geolocations = {}
@@ -287,8 +439,8 @@ var Map = (function(root){
         map: map,
         project_geolocations: project_geolocations,
         initBaseMap: initBaseMap,
+        shapeLayer: shapeLayer,
         setData: setData,
-        setGeoJSON: setGeoJSON,
         setIndicator: setIndicator,
         displayMarkers: displayMarkers
     };
