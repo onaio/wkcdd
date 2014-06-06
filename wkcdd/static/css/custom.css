@@ -504,6 +504,14 @@ Up To Medium Devices
  		margin: 0 !important;
  		padding: 0 !important;
  	}
+ 	
+ 	/*Chart*/
+ 	#chart-content{
+ 		margin-top:1em;
+ 	}
+ 	#chart{
+ 		height:auto;
+ 	}
 
 }
 
