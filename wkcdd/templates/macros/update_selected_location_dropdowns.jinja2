@@ -2,14 +2,19 @@
     {% set location = search_criteria['location']%}
     {% if location and location.location_type == "community" %}
         LocationSelect.level3ChangeListener($('select[name=community]'));
+        updateLocationLabel('community');
     {% elif location and location.location_type == "constituency" %}
         LocationSelect.level2ChangeListener($('select[name=constituency]'));
+        updateLocationLabel('constituency');
     {% elif location and location.location_type == "sub_county" %}
         LocationSelect.level1ChangeListener($('select[name=sub_county]'));
+        updateLocationLabel('sub_county');
     {% elif location and location.location_type == "county" %}
         LocationSelect.level0ChangeListener($('select[name=county]'));
+        updateLocationLabel('county');
     {% elif not location %}
         $('select[name=view_by]').val('{{search_criteria['view_by'] or "counties"}}');
+        updateLocationLabel('county');
     {% endif %}
 
     {% if location and search_criteria['view_by'] %}
