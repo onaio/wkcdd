@@ -59,10 +59,12 @@ var Custom = function () {
                         fillToZero: true,
                         barDirection: 'horizontal'
                     },
-                    pointLabels: {show: true, formatString: '%.2f'}
+                    pointLabels: {show: true, formatString: '%.2f'},
+                    shadow: false
                 },
                 grid: {
-                    background:'#ffffff'
+                    background:'#ffffff',
+                    shadow: false
                 },
                 axes: {
                     xaxis: {
@@ -100,6 +102,10 @@ var Custom = function () {
                     } else {
                         reports.val(report_ids.replace(value + ",", ""));
                     }
+            });
+
+            $('#show-projects').click(function(){
+                Map.displayMarkers(Map.project_geolocations);
             });
         };
         init();
@@ -196,6 +202,7 @@ var LocationSelect = function() {
                 //Communities are all unique
                 community_list.push(elem.community);
             });
+            updateLocationLabel('county');
             update_select($('select[name=sub_county]'), sub_county_list, "All Sub-Counties");
             update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
             update_select($('select[name=community]'), community_list, "All Communities");
@@ -212,6 +219,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('sub_counties');
+                updateLocationLabel('county');
                 return;
             }
 
@@ -225,6 +233,7 @@ var LocationSelect = function() {
                 //Communities are all unique
                 community_list.push(elem.community);
             });
+            updateLocationLabel('sub_county');
             set_select_value($('select[name=county]'), county);
             update_select($('select[name=constituency]'), constituency_list, "All Constituencies");
             update_select($('select[name=community]'), community_list, "All Communities");
@@ -242,6 +251,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('constituencies');
+                updateLocationLabel('sub_county');
                 return;
             }
 
@@ -250,6 +260,7 @@ var LocationSelect = function() {
                 sub_county = elem.sub_county;
                 community_list.push(elem.community);
             });
+            updateLocationLabel('constituency');
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             update_select($('select[name=community]'), community_list, "All Communities");
@@ -267,6 +278,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                  setViewByValue('communities');
+                 updateLocationLabel('constituency');
                 return;
             }else{
                 county = locations[0].county;
@@ -274,13 +286,14 @@ var LocationSelect = function() {
                 constituency = locations[0].constituency;
             }
 
+            updateLocationLabel('community');
             set_select_value($('select[name=county]'), county);
             set_select_value($('select[name=sub_county]'), sub_county);
             set_select_value($('select[name=constituency]'), constituency);
             setViewByValue('projects');
         },
         setViewByValue = function(value) {
-            //udate view_by dropdown based on selected location type
+            //update view_by dropdown based on selected location type
 
             var
                 view_by = $('select[name=view_by]'),
@@ -290,6 +303,7 @@ var LocationSelect = function() {
 
             view_by = this.view_by.clone();
             view_by.val(value);
+            
             switch (value)
             {
                 case "sub_counties":
@@ -312,7 +326,21 @@ var LocationSelect = function() {
                 break;
             }
             $('select[name=view_by]').replaceWith(view_by);
-        };
+        },
+	    updateLocationLabel = function(field){
+		    // Update location labels
+			var currField = $("select[name="+field+"] option:selected");
+    		var currLoc = currField.text();
+    		var updateLabel = $("#currLocation");
+    		
+	    	field = field.replace('_',' ');
+	    	
+    		var updateTxt = '';
+	    	
+    		//Check if top item ie. 'All Counties' is selected
+            updateTxt = currField.val() === '' ? updateTxt += currLoc : updateTxt += currLoc+" "+field;
+	    	updateLabel.text(updateTxt);
+	    };
 
     this.data_map = {};
     this.url = '';
@@ -324,6 +352,7 @@ var LocationSelect = function() {
     this.level3ChangeListener = level3ChangeListener;
     this.update_select = update_select;
     this.setViewByValue = setViewByValue;
+    this.updateLocationLabel = updateLocationLabel;
 
     return this;
 }();

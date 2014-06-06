@@ -25,6 +25,10 @@
 {% endblock %}
 
 {% block content %}
+	<h4 class="greentxt">
+		<i class="glyphicon glyphicon-map-marker"></i>
+		<span id="currLocation">Select a location</span></h4>
+		
   {{ add_indicator_links(request, location, search_criteria) }}
   
   <div class="row">
@@ -44,6 +48,7 @@
                     <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu select-sector">
+                    <li><a href="javascript:;" id="show-projects">{% trans %}Show Projects{% endtrans %}</a></li>
                     {% for indicator in indicators %}
                       <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
                     {% endfor %}
@@ -157,6 +162,7 @@
   LocationSelect.data_map = location_json_data;
   LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}';
   var geo_locations = {{ geo_locations|safe() }};
+  Map.project_geolocations = geo_locations;
   Map.displayMarkers(geo_locations);
 
   var data = {
@@ -174,11 +180,11 @@
   Map.setData(data, true);
 
   var view_by = '{{ view_by }}';
-  var base_url = 'ona.i42dk97b';
+  var base_url = '';
   var json_url = '';
   
-  if(view_by == 'counties'){
-  	base_url = 'ona.i3hg15g5';
+  if(view_by == 'counties' || view_by == 'None'){
+  	base_url = 'ona.i42dk97b'; //ona.i3hg15g5
   	json_url = 'wkcdd-counties.geojson';
   }
   else if(view_by == 'sub_counties'){
@@ -194,7 +200,7 @@
   	json_url = 'wkcdd-communities.geojson';
   }
   
-  //Load aggregate geo-jsondata
+  //Load aggregate geojson data
   function loadJSONLayer(url){
   	  var json_url = url;
   	  
