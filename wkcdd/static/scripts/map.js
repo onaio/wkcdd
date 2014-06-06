@@ -102,13 +102,35 @@ var Map = (function(root){
             $('a.print-btn').children('i').addClass("hidden");
             $('a.print-btn').addClass('export-spinner');
 
-            leafletImage(map, function(err, canvas) {
+            leafletImage(map, function(err, canvas_map) {
 
                 var mapID = 'map';
+                var title = $('.selected-indicator').text().trim();
+                var titleSizePx = 20;
+                var titleHeight = titleSizePx + Math.round(titleSizePx * 0.25);
 
-                var canvasWidth = canvas.width;
-                var canvasHeight = canvas.height;
+                var canvas = document.createElement('canvas');
+                var canvasWidth = canvas_map.width;
+                var canvasHeight = canvas_map.height;
+
+                canvas.width = canvasWidth;
+                canvas.height = canvas_map.height + titleHeight;
+
                 var ctx = canvas.getContext("2d");
+
+
+                ctx.fillStyle = "rgb(255,255,255)";
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.drawImage(canvas_map, 0, 0);
+
+                // draw title
+                ctx.fillStyle = "black";
+                ctx.font = titleSizePx + "px 'Open Sans',sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // draw title
+                ctx.fillText(title, canvasWidth / 2 , ((canvasHeight + titleHeight) - (titleSizePx / 1.5)));
 
                 //draw map legend
                 var html_legend = $('#' + mapID + ' .legend');
