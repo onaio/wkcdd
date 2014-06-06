@@ -219,6 +219,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('sub_counties');
+                updateLocationLabel('county');
                 return;
             }
 
@@ -250,6 +251,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                 setViewByValue('constituencies');
+                updateLocationLabel('sub_county');
                 return;
             }
 
@@ -276,6 +278,7 @@ var LocationSelect = function() {
             if(locations.length === 0) {
                 //refresh filter based on parent
                  setViewByValue('communities');
+                 updateLocationLabel('constituency');
                 return;
             }else{
                 county = locations[0].county;
@@ -326,26 +329,17 @@ var LocationSelect = function() {
         },
 	    updateLocationLabel = function(field){
 		    // Update location labels
-			var field_array = ['county', 'sub_county', 'constituency', 'community'];
 			var currField = $("select[name="+field+"] option:selected");
     		var currLoc = currField.text();
     		var updateLabel = $("#currLocation");
     		
-	    	field = field.replace('_','');
-	    	var upper = field.charAt(0);
-	    	field = field.replace(upper,upper.toUpperCase());
+	    	field = field.replace('_',' ');
 	    	
-    		var updateTxt = 'Selected: ';
+    		var updateTxt = '';
 	    	
     		//Check if top item ie. 'All Counties' is selected
-    		if(currField.val() == ''){
-    			updateTxt += currLoc;
-    		}
-    		else{
-    			updateTxt += currLoc+" "+field;
-    		}
+            updateTxt = currField.val() === '' ? updateTxt += currLoc : updateTxt += currLoc+" "+field;
 	    	updateLabel.text(updateTxt);
-	    	//alert("Field: "+field+" + Location: "+ currLoc);
 	    };
 
     this.data_map = {};

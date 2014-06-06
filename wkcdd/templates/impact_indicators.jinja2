@@ -213,11 +213,6 @@
   }
   Map.initBaseMap(base_url);
   loadJSONLayer(json_url);
-  
-  updateLocationLabel('county');
-  updateLocationLabel('sub_county');
-  updateLocationLabel('constituency');
-  updateLocationLabel('community');
 
   // Draw bar chart
   Custom.setChartDataset({{ chart_dataset | safe() }})

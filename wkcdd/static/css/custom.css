@@ -315,3 +315,7 @@ span.title.unapproved {
 #project-report #filter_criteria {
     margin-bottom: 10px;
 }
+
+#currLocation {
+    text-transform: capitalize;
+}
