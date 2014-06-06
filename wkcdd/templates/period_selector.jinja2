@@ -1,7 +1,7 @@
 {% set months = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May', 6:'June', 7:'July', 8:'August', 9:'September', 10:'October', 11:'November', 12:'December'}%}
 <div class="form-group">
    <label>{{ period_label or 'Select Report Period:' }} </label>
-   <select name="{{ month_quarter_select_name or 'month_or_quarter'}}" class="form-control input-small select2me">
+   <select name="{{ month_quarter_select_name or 'month_or_quarter'}}" class="form-control select2me">
       <option value="" data-time-class="month">{% trans %}Month/Quarter{% endtrans %}</option>
       {% if quarters %}
          {% for quarter in quarters|sort %}
@@ -28,7 +28,7 @@
          {% endfor %}
       {% endif %}
    </select>
-   <select name="{{ period_select_name or 'period'}}" class="form-control input-small select2me">
+   <select name="{{ period_select_name or 'period'}}" class="form-control select2me">
       <option value="" data-time-class="year">{% trans %} Year {% endtrans %}</option>
       {% if years %}
          {% for year in years|sort %}

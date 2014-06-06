@@ -173,7 +173,7 @@ span.ratio {
 }
 
 .filters form select {
-     width: auto !important;
+     /*width: auto !important;*/
 }
 
 .select-sector{
@@ -315,6 +315,7 @@ span.title.unapproved {
     margin-bottom: 10px;
 }
 
+/*Project filters*/
 #filter_box, #filter_box .col-xs-8, #filter_box .col-xs-2,
 #filter_box .col-xs-1{
 	margin-bottom:1em;
