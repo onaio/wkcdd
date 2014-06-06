@@ -103,6 +103,10 @@ var Custom = function () {
                         reports.val(report_ids.replace(value + ",", ""));
                     }
             });
+
+            $('#show-projects').click(function(){
+                Map.displayMarkers(Map.project_geolocations);
+            });
         };
         init();
     

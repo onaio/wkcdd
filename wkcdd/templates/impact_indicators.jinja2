@@ -48,6 +48,7 @@
                     <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu select-sector">
+                    <li><a href="javascript:;" id="show-projects">{% trans %}Show Projects{% endtrans %}</a></li>
                     {% for indicator in indicators %}
                       <li><a href="javascript:;" class="indicator-selector" data-indicator="{{ indicator.key }}"> {{ indicator.label }}</a></li>
                     {% endfor %}
@@ -161,6 +162,7 @@
   LocationSelect.data_map = location_json_data;
   LocationSelect.url = '{{ request.route_path('impact_indicators', traverse=()) }}';
   var geo_locations = {{ geo_locations|safe() }};
+  Map.project_geolocations = geo_locations;
   Map.displayMarkers(geo_locations);
 
   var data = {

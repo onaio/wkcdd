@@ -58,6 +58,7 @@
                             <span class="selected-indicator">Select Indicator</span> <span class="icon-angle-down"></span>
                           </a>
                           <ul class="dropdown-menu select-sector">
+                            <li><a href="javascript:;" id="show-projects">{% trans %}Show Projects{% endtrans %}</a></li>
                             {% for indicator in indicators %}
                               {% set label = indicator[0] -%}
                               {% set key = indicator[1][2] -%}

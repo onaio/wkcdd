@@ -435,3 +435,9 @@ class TestReport(TestBase):
             [location], indicator_key, indicator_type, **kwargs)
 
         self.assertEqual(indicator_values, [136.5])
+
+    def test_get_latest_month_available(self):
+        self.setup_report_trends_data()
+        results = Report.get_latest_month_for_year('2012_13')
+
+        self.assertEqual(results[0], 5)

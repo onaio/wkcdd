@@ -389,6 +389,30 @@ def get_child_locations(view_by,
     return location, child_locations
 
 
+def get_default_period(periods, month_or_quarter, year):
+    if periods['months'] and periods['years']:
+        years = list(periods['years'])
+        years.sort()
+
+        months = list(periods['months'])
+        months.sort()
+        months = [str(m) for m in months]
+
+        quarters = list(periods['quarters'])
+        quarters.sort()
+
+        year = year if year and year in years else years[-1]
+        # default month is the latest month
+        month = (
+            month_or_quarter
+            if month_or_quarter and month_or_quarter in (months + quarters)
+            else str(Report.get_latest_month_for_year(year)[0]))
+        return month, year
+    else:
+        # values that cannot return any data
+        return 0, 0
+
+
 def process_trend_parameters(periods,
                              start_period,
                              end_period,
@@ -457,3 +481,14 @@ def get_performance_indicator_trend_report(sector_id,
             series_data_map[indicator_property] = series_data
 
     return series_data_map, series_labels
+
+
+def get_all_sector_periods(sectors, child_locations, periods):
+    for reg_id, report_id, title in sectors:
+        sector_periods = get_sector_periods(reg_id, child_locations)
+
+        periods['years'].update(sector_periods['years'])
+        periods['months'].update(sector_periods['months'])
+        periods['quarters'].update(sector_periods['quarters'])
+
+    return periods

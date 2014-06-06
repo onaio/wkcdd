@@ -241,6 +241,13 @@ var Map = (function(root){
                 'Poultry': {label: 'p', color: '#ae241a'},
                 'Tailoring': {label: 't', color: '#3aa32a'}
             };
+
+        map.removeLayer(shapeLayer);
+        map.removeLayer(info);
+        if(legend._map) {
+            map.removeControl(legend);
+        }
+
         $.each(raw_data, function (index, data) {
             var marker;
             latlng = L.latLng(data.lat, data.lng);
@@ -253,6 +260,10 @@ var Map = (function(root){
             marker.bindPopup(description.html());
             markerLayer.addLayer(marker);
         });
+
+        if (!map.hasLayer(markerLayer)) {
+            markerLayer.addTo(map);
+        };
     };
 
     var buildProjectDescriptionTable = function(name, img, description) {
@@ -270,8 +281,11 @@ var Map = (function(root){
         return responsiveDiv.append(table);
     };
 
+    var project_geolocations = {}
+
     return {
         map: map,
+        project_geolocations: project_geolocations,
         initBaseMap: initBaseMap,
         setData: setData,
         setGeoJSON: setGeoJSON,
