@@ -159,7 +159,7 @@ span.ratio {
 
 .filter-btn{
 	border-radius:.3em;
-    margin-left:0.7em;
+    /*margin-left:0.7em;*/
     padding-left:1.1em;
     padding-right:1.1em;
 }
@@ -335,6 +335,12 @@ span.title.unapproved {
 #filter_box .col-xs-2{
 	padding-right:0.5em;
 	width:25%;
+}
+
+/*Indicator filters*/
+#filter_box .filter_col select{
+	margin-bottom:0.8em;
+	width:96%;
 }
 
 /***
@@ -600,6 +606,9 @@ Extra Small Devices Only
 	#filter_box .col-xs-8{
 		width:100%;
 	}
+	.filter_col .col-xs-3{
+		width:50%;
+	}
 
 	/***
 	Page title
@@ -760,6 +769,15 @@ The Most Extra Small Devices Landscape Mode Only
 	#filter_box .col-xs-2{
 		width:100%;
 	}
+	.filter_col .col-xs-6{
+		width:100%;
+	}
+	.filter_col .col-xs-6 .col-xs-6{
+		width:50%;
+	}
+	.filter_col .form-group{
+		margin-bottom:0;
+	}
 
 	/***
 	Hidden phone
@@ -779,6 +797,17 @@ The Most Extra Small Devices Portrait Mode Only
 	  padding-left: 8px !important;
 	  padding-right: 8px !important;
 	}
+	
+	/*Filter forms*/
+	.filter_col .col-xs-3{
+		width:100%;
+	}
+	.filter_col .col-xs-6 .col-xs-6{
+		width:100%;
+	}
+	.filter_col .form-group{
+		margin-bottom:0;
+	}
 
 	/***
 	Hidden phone
@@ -789,5 +818,5 @@ The Most Extra Small Devices Portrait Mode Only
 
 	.header .navbar-brand {
 		width: 100px;
-	}	
+	}
 }	

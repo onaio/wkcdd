@@ -1,12 +1,14 @@
-<label>Aggregate by: </label>
 
-<select name="view_by" class="form-control float-left" data-placeholder="Select...">
-  {% set location_types = ["counties", "sub_counties", "constituencies", "communities", "projects"]%}
-  {% for location_type in location_types %}
-      <option value="{{location_type}}"
-       {% if search_criteria['view_by'] == location_type %}
-          selected
-       {% endif %} 
-      >{{ location_type.title() | replace("_", "-")}}</option>
-  {% endfor %}
-</select> 
+<label>Aggregate by: </label>
+<div class="col-xs-6">
+	<select name="view_by" class="form-control float-left" data-placeholder="Select...">
+	  {% set location_types = ["counties", "sub_counties", "constituencies", "communities", "projects"]%}
+	  {% for location_type in location_types %}
+	      <option value="{{location_type}}"
+	       {% if search_criteria['view_by'] == location_type %}
+	          selected
+	       {% endif %} 
+	      >{{ location_type.title() | replace("_", "-")}}</option>
+	  {% endfor %}
+	</select>
+</div> 
