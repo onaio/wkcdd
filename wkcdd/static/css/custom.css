@@ -765,6 +765,11 @@ The Most Extra Small Devices Landscape Mode Only
   		margin-right: 2px !important;
 	}
 	
+	/*Responsive nav*/
+	.page-sidebar ul li{
+		width:50%;
+	}
+	
 	/* Filter form */
 	#filter_box .col-xs-2{
 		width:100%;
