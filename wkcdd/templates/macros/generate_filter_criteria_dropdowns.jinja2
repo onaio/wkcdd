@@ -1,30 +1,28 @@
 {% macro generate_filter_criteria_dropdowns(request, filter_criteria, search_criteria) %}
-<div class="clearfix filters">
+<div id="filter_box" class="clearfix filters">
   <form id="filter_criteria" class="form-inline" method="get" onsubmit="Custom.addFilterFormAction(this, '{{ request.route_path(request.matched_route.name, traverse=()) }}')">
-  	<div class="col-md-6">
+  	<div class="col-xs-12 filter_col">
 		{% with filter_criteria=filter_criteria, search_criteria=search_criteria %}
 			{% include '/location_filters.jinja2' %}
 		{% endwith %}
 		<input type="hidden" name="sector" value="{{ search_criteria.selected_sector.sector if search_criteria.selected_sector else '' }}">
 	</div>
-	<div class="col-md-3">
-		{% with month_or_quarter=search_criteria.get('month_or_quarter'),
-			    period=search_criteria.get('period'),
-			    years = filter_criteria.get('years'),
-			    quarters = filter_criteria.get('quarters'), 
-			    months_present = filter_criteria.get('months')%}	 
-			{% include '/period_selector.jinja2' %}
-		{% endwith %}
+	<div class="col-xs-12 filter_col">
+		<div class="col-xs-6">
+			{% with month_or_quarter=search_criteria.get('month_or_quarter'),
+				    period=search_criteria.get('period'),
+				    years = filter_criteria.get('years'),
+				    quarters = filter_criteria.get('quarters'), 
+				    months_present = filter_criteria.get('months')%}	 
+				{% include '/period_selector.jinja2' %}
+			{% endwith %}
+		</div>
+		<div class="col-xs-6">
+			{% include '/aggregate_by_dropdown.jinja2'%}
+			
+			<button type="submit" class="filter-btn btn btn-info">Apply</button>
+		</div>
 	</div>
-	
-	<div class="col-md-3">
-	    <div class="form-group">
-	      {% include '/aggregate_by_dropdown.jinja2'%}
-	      
-		  <button type="submit" class="filter-btn btn btn-info pull-right">Apply</button>
-	    </div>
-	</div>
-
   </form>
 </div>
 {% endmacro %}

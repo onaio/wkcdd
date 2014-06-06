@@ -25,51 +25,62 @@
          <div class="caption"><i class="icon-tasks"></i>Projects</div>
       </div>
       <div class="portlet-body clearfix">
-         <div class="row">
-             <div class="col-md-4">
-                <div class="input-icon right">
-                   <input id="search_term"
-                          type="text"
-                          class="form-control input-medium input-sm"
-                          name="search_project"
-                          placeholder="Search..."
-                          value="{{search_criteria['name']}}">
-                </div>
-             </div>
-             <div class="col-md-8">
-                <form id="filter_criteria" class="form-inline" method="get">
-                  <input hidden name="filter" value="1" type="text"/>
-                  <select  name="sector" class="form-control input-small select2me" data-placeholder="Select...">
-                      <option value="">--Sector--</option>
-                      {% for key, value in filter_criteria["sectors"] %}
-                          <option value="{{ key }}"
-                          {%if search_criteria["sector"] == key%}
-                              selected
-                          {%endif%}
-                          >
-                      {{ value }}</option>
-                      {% endfor %}
-                  </select>
-                  <select name="county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
-                      <option value="">--County--</option>
-                      {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "counties", "county" ) }}
-                  </select>
-                  <select name="sub_county" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
-                      <option value="">--Sub-County--</option>
-                       {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "sub_counties", "sub_county" ) }}
-                  </select>
-                  <select name="constituency" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
-                      <option value="">--Constituency--</option>
-                       {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "constituencies", "constituency" ) }}
-                  </select>
-                  <select  name="community" class="form-control input-small select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
-                      <option value="">--Community--</option>
-                        {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "communities", "community" ) }}
-                  </select>
-                  <button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter</button>
-                </form>
-             </div>
+         <div id="filter_box" class="col-md-12 clearfix">
+            <form id="filter_criteria" class="form-inline" method="get">
+            	<div class="clearfix">
+            		<div class="col-xs-8 search-txt clearfix">
+		               <input id="search_term"
+		                      type="text"
+		                      class="form-control col-md-8"
+		                      name="search_project"
+		                      placeholder="Search Projects..."
+		                      value="{{search_criteria['name']}}">
+		            </div>
+		            <div class="col-xs-2">
+		            	<input hidden name="filter" value="1" type="text"/>
+		              <select  name="sector" class="form-control select2me" data-placeholder="Select...">
+		                  <option value="">--Sector--</option>
+		                  {% for key, value in filter_criteria["sectors"] %}
+		                      <option value="{{ key }}"
+		                      {%if search_criteria["sector"] == key%}
+		                          selected
+		                      {%endif%}
+		                      >
+		                  {{ value }}</option>
+		                  {% endfor %}
+		              </select>
+		            </div>
+            	</div>
+	            <div class="col-xs-2">
+	            	<select name="county" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
+                  <option value="">--County--</option>
+                  {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "counties", "county" ) }}
+              </select>
+	            </div>
+	            <div class="col-xs-2">
+	            	<select name="sub_county" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level1ChangeListener(this);">
+                  <option value="">--Sub-County--</option>
+                   {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "sub_counties", "sub_county" ) }}
+              </select>
+	            </div>
+	            <div class="col-xs-2">
+	            	<select name="constituency" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level2ChangeListener(this);">
+                  <option value="">--Constituency--</option>
+                   {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "constituencies", "constituency" ) }}
+              </select>
+	            </div>
+	            <div class="col-xs-2">
+	            	<select  name="community" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level3ChangeListener(this);">
+                  <option value="">--Community--</option>
+                    {{ filter_criteria_options(request, filter_criteria, search_criteria['location_map'], "communities", "community" ) }}
+              </select>
+	            </div>
+	            <div class="col-xs-8">
+	            	<button type="submit" class="btn btn-info"><i class="icon-filter"></i> Filter Projects</button>
+	            </div>
+            </form>
          </div>
+         
          <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover" data-mode="swipe" 
             	data-minimap data-sortable>
