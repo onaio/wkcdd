@@ -175,36 +175,9 @@
   };
   Map.setData(data, true);
 
-  var view_by = '{{ view_by or 'counties'}}';
-  var base_url = 'ona.i42dk97b';
-  var json_url = '';
-  
-  if(view_by == 'counties'){
-  	base_url = 'ona.i42dk97b';
-  	json_url = 'wkcdd-counties.topojson.json';
-  }
-  else if(view_by == 'sub_counties'){
-  	base_url = 'ona.i42efo92';
-  	json_url = 'wkcdd-subcounties.geojson';
-  }
-  else if(view_by == 'constituencies'){
-  	base_url = 'ona.i3hmlj38';
-  	json_url = 'wkcdd-constituencies.geojson';
-  }
-  else if(view_by == 'communities'){
-  	base_url = 'ona.i9n8iffk';
-  	json_url = 'wkcdd-communities.geojson';
-  }
-  
-  //Load aggregate geo-jsondata
-  function loadTopoJSONLayer(url){
-    var static_url = "{{ request.static_url('wkcdd:static/geodata/') }}" + url;
-    shapeLayer = omnivore.topojson(static_url, null, Map.shapeLayer);
-  }
-
-  Map.initBaseMap(base_url);
-  loadTopoJSONLayer(json_url);
-
+  {% with request=request, view_by=view_by %}
+    {% include 'map_layer.jinja2' %}
+  {% endwith %}
   // Draw bar chart
   Custom.setChartDataset({{ chart_dataset | safe() }})
 
