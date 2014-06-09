@@ -68,6 +68,7 @@ var Custom = function () {
                 },
                 axes: {
                     xaxis: {
+                    	min: 0,
                         pad: 1.05,
                         tickOptions: {formatString: '%d'}
                     },

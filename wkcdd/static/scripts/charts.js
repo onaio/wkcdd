@@ -8,7 +8,6 @@ var Charts = function () {
             App.addResponsiveHandler(function () {
                  Charts.initPieCharts(); 
             });
-            
         },
 
         initCharts: function () {

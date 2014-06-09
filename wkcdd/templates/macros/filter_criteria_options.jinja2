@@ -1,7 +1,7 @@
 {% macro filter_criteria_options (request, filter_criteria, search_criteria, filter_location_type, location_type) %}
     {% set view_by = search_criteria['view_by']%}
-    {% set selected_location = search_criteria['location']%}
-    {% for location in filter_criteria[filter_location_type] %}
+    {% set selected_location = search_criteria['location'] %}
+    {% for location in filter_criteria[filter_location_type]|sort(case_sensitive=False, attribute='name') %}
     <option value="{{ location.id }}"
         {%if selected_location and selected_location.is_found_in(location) %}
             selected
