@@ -84,7 +84,7 @@ class ProjectViews(object):
         # filter by period
         criteria = build_report_period_criteria(month_or_quarter, period)
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         periods = Report.get_periods_for([project])
 

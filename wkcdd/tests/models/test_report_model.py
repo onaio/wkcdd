@@ -280,7 +280,7 @@ class TestReport(TestBase):
         quarter_criteria = Report.quarter == quarter
         criteria = [period_criteria, quarter_criteria]
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
@@ -290,7 +290,7 @@ class TestReport(TestBase):
         period_criteria = Report.period == period
         quarter_criteria = Report.quarter == quarter
         criteria = [period_criteria, quarter_criteria]
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 0)
 
@@ -309,7 +309,7 @@ class TestReport(TestBase):
         quarter_criteria = Report.month == month
         criteria = [period_criteria, quarter_criteria]
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
@@ -320,7 +320,7 @@ class TestReport(TestBase):
         period_criteria = Report.period == period
         quarter_criteria = Report.month == month
         criteria = [period_criteria, quarter_criteria]
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
         self.assertEqual(len(reports), 0)
 
     def test_generate_performance_indicators_with_period(self):

@@ -52,7 +52,7 @@ def get_project_list(community_ids, *criterion):
 
 
 def get_project_ids(community_ids, *criterion):
-    projects = DBSession.query(Project)\
+    projects = DBSession.query(Project.id)\
         .filter(and_(Project.community_id.in_(community_ids),
                 *criterion))\
         .all()

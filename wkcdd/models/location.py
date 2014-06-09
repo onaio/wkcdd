@@ -28,7 +28,7 @@ class Location(Base):
     parent_id = Column(Integer, ForeignKey('locations.id'), nullable=True)
     location_type = Column(Enum(COUNTY, SUB_COUNTY, CONSTITUENCY, COMMUNITY,
                            name='LOCATION_TYPES'),
-                           nullable=False)
+                           nullable=False, index=True)
     parent = relationship("Location", remote_side=[id])
 
     __mapper_args__ = {

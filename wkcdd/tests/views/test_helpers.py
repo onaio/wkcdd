@@ -107,7 +107,7 @@ class TestHelpers(TestBase):
 
         criteria = build_report_period_criteria(month, period)
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
 

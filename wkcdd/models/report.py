@@ -142,15 +142,16 @@ class Report(Base):
         return results
 
     @classmethod
-    def get_reports_for_projects(cls, projects, *criteria):
+    def get_reports_for_projects(cls, project_ids, *criteria):
         """
         Get the reports for the specified list of projects based on the
         specified time period
+        Projects is a tuple list containing id and project code
         """
-        if projects:
+        if project_ids:
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
-                .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(Project.id.in_(project_ids))\
                 .filter(Report.status == Report.APPROVED)\
                 .filter(*criteria)\
                 .order_by(Report.submission_time)\
@@ -181,7 +182,7 @@ class Report(Base):
                 'indicators': {}
             }
             # get reports for this location or project,
-            projects = item.get_projects()
+            projects = item.get_project_ids()
 
             # get project reports @todo: filtered by said period
             try:
@@ -254,7 +255,7 @@ class Report(Base):
                 # get reports for this location or project,
                 project_filter_criteria = kwargs.get(
                     'project_filter_criteria', [])
-                projects = item.get_projects(project_filter_criteria)
+                projects = item.get_project_ids(project_filter_criteria)
 
                 # filter reports by period
                 period_criteria = kwargs.get('period_criteria', [])
@@ -303,7 +304,7 @@ class Report(Base):
 
         for item in collection:
             try:
-                projects = item.get_projects(*project_filter_criteria)
+                projects = item.get_project_ids(*project_filter_criteria)
                 reports = cls.get_reports_for_projects(projects)
                 # retrieve periods based on the reports available
                 cls.generate_periods_from_reports(periods, reports)
@@ -328,7 +329,7 @@ class Report(Base):
         indicator_values = []
         for item in collection:
             try:
-                projects = item.get_projects()
+                projects = item.get_project_ids()
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
@@ -352,7 +353,7 @@ class Report(Base):
         for item in collection:
             try:
 
-                projects = item.get_projects(*project_filter_criteria)
+                projects = item.get_project_ids(*project_filter_criteria)
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
