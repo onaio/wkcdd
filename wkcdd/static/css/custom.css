@@ -21,6 +21,8 @@ body{
 }
 .page-content{
 	background:#F0F1F2;
+	border-radius:0;
+	margin-left:8.5em;
 }
 
 /*Tabs*/
@@ -60,9 +62,6 @@ body{
     white-space: normal!important;
 }
 /*sidebar*/
-.page-content{
-	margin-left:8.5em;
-}
 .page-sidebar{
 	background:#414141;
 	margin-top:;
