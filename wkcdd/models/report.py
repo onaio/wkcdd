@@ -213,27 +213,28 @@ class Report(Base):
         reports
         """
         values = []
-        # handle keys which are lists due to legacy form submissions
+
         if reports:
             try:
                 values = [r.report_data.get(indicator_key) for r in reports]
             except TypeError:
+                # handle legacy form submissions
                 for key in indicator_key:
                     values.extend(
                         [r.report_data.get(key) for r in reports])
             finally:
-                if indicator_type == 'ratio':
-                    return (float(
-                            reduce(
-                                sum_reduce_func, values, 0))
-                            /
-                            float(
-                                len(reports)))
-                else:
-                    return reduce(
-                        sum_reduce_func, values, 0)
+                return reduce(
+                    sum_reduce_func, values, 0)
         else:
             raise ValueError("No reports provided")
+
+    @classmethod
+    def calculate_ratio_value(cls, actual_value, expected_value):
+        if actual_value and expected_value:
+            return round(
+                float(actual_value) / float(expected_value) * 100, 2)
+        else:
+            return 0
 
     @classmethod
     def generate_performance_indicators(cls,
@@ -263,17 +264,28 @@ class Report(Base):
                     projects,
                     *period_criteria)
 
-                for indicator in indicators:
+                for index, indicator in enumerate(indicators):
                     indicator_key = indicator['key']
                     indicator_property = indicator['property']
                     indicator_type = indicator['type']
 
-                    try:
-                        location_indicator_sum = (
-                            cls.sum_performance_indicator_values(
-                                indicator_key, indicator_type, reports))
-                    except ValueError:
-                        location_indicator_sum = 0
+                    if indicator_type == 'ratio':
+                        # retrieve the last two calculated values and divide
+                        target_property = indicators[index - 2]['property']
+                        actual_property = indicators[index - 1]['property']
+
+                        target_val = row['indicators'].get(target_property)
+                        actual_val = row['indicators'].get(actual_property)
+
+                        location_indicator_sum = cls.calculate_ratio_value(
+                            actual_val, target_val)
+                    else:
+                        try:
+                            location_indicator_sum = (
+                                cls.sum_performance_indicator_values(
+                                    indicator_key, indicator_type, reports))
+                        except ValueError:
+                            location_indicator_sum = 0
 
                     row['indicators'][
                         indicator_property] = location_indicator_sum
@@ -288,13 +300,18 @@ class Report(Base):
                 pass
 
         # get summary row averages for ratio fields
-        for indicator in indicators:
+        for index, indicator in enumerate(indicators):
             indicator_type = indicator['type']
             indicator_property = indicator['property']
 
             if indicator_type == 'ratio':
-                summary_row[indicator_property] = (
-                    summary_row[indicator_property] / len(collection))
+                target_property = indicators[index - 2]['property']
+                actual_property = indicators[index - 1]['property']
+                target_val = summary_row.get(target_property)
+                actual_val = summary_row.get(actual_property)
+
+                summary_row[indicator_property] = cls.calculate_ratio_value(
+                    actual_val, target_val)
 
         return rows, summary_row
 

@@ -71,7 +71,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['actual_contribution'], 96800)
         self.assertEquals(
-            summary_row['community_contribution'], 173)
+            summary_row['community_contribution'], 172.86)
         self.assertEquals(
             summary_row['cws_proceeds_percentage'], 0)
         self.assertEquals(
@@ -83,7 +83,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['vb_achievement'], 4)
         self.assertEquals(
-            summary_row['milk_grp_sale_percentage'], 30)
+            summary_row['milk_grp_sale_percentage'], 29.63)
 
     def test_calculate_dairy_goat_performance_indicators(self):
         self.setup_test_data()
@@ -101,7 +101,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['actual_contribution'], 152300)
         self.assertEquals(
-            summary_row['community_contribution'], 112)
+            summary_row['community_contribution'], 111.76)
         self.assertEquals(
             summary_row['bucks_target'], 1)
         self.assertEquals(
@@ -113,7 +113,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['does_proceeds_achievement'], 8)
         self.assertEquals(
-            summary_row['does_proceeds_percentage'], 114)
+            summary_row['does_proceeds_percentage'], 114.29)
         self.assertEquals(
             summary_row['milk_bnf_sale_percentage'], 0)
 
@@ -191,7 +191,7 @@ class TestReport(TestBase):
                 'perfomance_summary/actual_contribution': '120',
                 'perfomance_summary/community_contribution': '98',
                 'mproject_performance/dbirds_number': '15',
-                'impact_information/db_percentage': '20'
+                'impact_information/mb_target': '20'
             }
         ),
         Report(
@@ -200,7 +200,7 @@ class TestReport(TestBase):
                 'perfomance_summary/actual_contribution': '200',
                 'perfomance_summary/community_contribution': '100',
                 'mproject_performance/dbirds_number': '30',
-                'mproject_performance/db_percentage': '18'
+                'mproject_performance/mb_target': '18'
             }
         )
     ]
@@ -211,21 +211,15 @@ class TestReport(TestBase):
             'target',
             self.performance_reports)
 
-        indicator_ratio = Report.sum_performance_indicator_values(
-            'perfomance_summary/community_contribution',
-            'ratio',
-            self.performance_reports)
-
         self.assertEqual(indicator_sum_target, 223)
-        self.assertEqual(indicator_ratio, 99)
 
     def test_sum_performance_indicators_for_legacy_values(self):
         indicator_ratio = Report.sum_performance_indicator_values(
-            ['impact_information/db_percentage',
-             'mproject_performance/db_percentage'],
+            ['impact_information/mb_target',
+             'mproject_performance/mb_target'],
             'ratio',
             self.performance_reports)
-        self.assertEqual(indicator_ratio, 19)
+        self.assertEqual(indicator_ratio, 38)
 
     def test_generate_performance_indicators(self):
         self.setup_test_data()
@@ -243,7 +237,7 @@ class TestReport(TestBase):
         self.assertEqual(
             summary_row['actual_contribution'], 721600)
         self.assertEqual(
-            summary_row['community_contribution'], 45.5)
+            summary_row['community_contribution'], 105.99)
 
     def test_generate_performance_indicators_for_legacy_data(self):
         self.setup_test_data()
