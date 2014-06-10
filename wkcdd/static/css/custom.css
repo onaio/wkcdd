@@ -3,7 +3,9 @@ body{
 	font-size:12px;
 }
 .greentxt{
-	color:green;
+	color:#665;
+	font-size:1.7em;
+    font-weight:700!important;
 }
 
 .header.navbar{
@@ -19,6 +21,8 @@ body{
 }
 .page-content{
 	background:#F0F1F2;
+	border-radius:0;
+	margin-left:8.5em;
 }
 
 /*Tabs*/
@@ -58,9 +62,6 @@ body{
     white-space: normal!important;
 }
 /*sidebar*/
-.page-content{
-	margin-left:8.5em;
-}
 .page-sidebar{
 	background:#414141;
 	margin-top:;
@@ -175,9 +176,7 @@ span.ratio {
 	margin-top:.5em;
 }
 
-.filters form select {
-     /*width: auto !important;*/
-}
+.filters form select {}
 
 .select-sector{
      z-index: 10001 !important;
