@@ -71,7 +71,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['actual_contribution'], 96800)
         self.assertEquals(
-            summary_row['community_contribution'], 173)
+            summary_row['community_contribution'], 172.86)
         self.assertEquals(
             summary_row['cws_proceeds_percentage'], 0)
         self.assertEquals(
@@ -83,7 +83,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['vb_achievement'], 4)
         self.assertEquals(
-            summary_row['milk_grp_sale_percentage'], 30)
+            summary_row['milk_grp_sale_percentage'], 29.63)
 
     def test_calculate_dairy_goat_performance_indicators(self):
         self.setup_test_data()
@@ -101,7 +101,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['actual_contribution'], 152300)
         self.assertEquals(
-            summary_row['community_contribution'], 112)
+            summary_row['community_contribution'], 111.76)
         self.assertEquals(
             summary_row['bucks_target'], 1)
         self.assertEquals(
@@ -113,7 +113,7 @@ class TestReport(TestBase):
         self.assertEquals(
             summary_row['does_proceeds_achievement'], 8)
         self.assertEquals(
-            summary_row['does_proceeds_percentage'], 114)
+            summary_row['does_proceeds_percentage'], 114.29)
         self.assertEquals(
             summary_row['milk_bnf_sale_percentage'], 0)
 
@@ -191,7 +191,7 @@ class TestReport(TestBase):
                 'perfomance_summary/actual_contribution': '120',
                 'perfomance_summary/community_contribution': '98',
                 'mproject_performance/dbirds_number': '15',
-                'impact_information/db_percentage': '20'
+                'impact_information/mb_target': '20'
             }
         ),
         Report(
@@ -200,7 +200,7 @@ class TestReport(TestBase):
                 'perfomance_summary/actual_contribution': '200',
                 'perfomance_summary/community_contribution': '100',
                 'mproject_performance/dbirds_number': '30',
-                'mproject_performance/db_percentage': '18'
+                'mproject_performance/mb_target': '18'
             }
         )
     ]
@@ -208,24 +208,16 @@ class TestReport(TestBase):
     def test_sum_performance_indicator_values(self):
         indicator_sum_target = Report.sum_performance_indicator_values(
             'perfomance_summary/exp_contribution',
-            'target',
-            self.performance_reports)
-
-        indicator_ratio = Report.sum_performance_indicator_values(
-            'perfomance_summary/community_contribution',
-            'ratio',
             self.performance_reports)
 
         self.assertEqual(indicator_sum_target, 223)
-        self.assertEqual(indicator_ratio, 99)
 
     def test_sum_performance_indicators_for_legacy_values(self):
         indicator_ratio = Report.sum_performance_indicator_values(
-            ['impact_information/db_percentage',
-             'mproject_performance/db_percentage'],
-            'ratio',
+            ['impact_information/mb_target',
+             'mproject_performance/mb_target'],
             self.performance_reports)
-        self.assertEqual(indicator_ratio, 19)
+        self.assertEqual(indicator_ratio, 38)
 
     def test_generate_performance_indicators(self):
         self.setup_test_data()
@@ -243,7 +235,7 @@ class TestReport(TestBase):
         self.assertEqual(
             summary_row['actual_contribution'], 721600)
         self.assertEqual(
-            summary_row['community_contribution'], 45.5)
+            summary_row['community_contribution'], 105.99)
 
     def test_generate_performance_indicators_for_legacy_data(self):
         self.setup_test_data()
@@ -280,7 +272,7 @@ class TestReport(TestBase):
         quarter_criteria = Report.quarter == quarter
         criteria = [period_criteria, quarter_criteria]
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
@@ -290,7 +282,7 @@ class TestReport(TestBase):
         period_criteria = Report.period == period
         quarter_criteria = Report.quarter == quarter
         criteria = [period_criteria, quarter_criteria]
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 0)
 
@@ -309,7 +301,7 @@ class TestReport(TestBase):
         quarter_criteria = Report.month == month
         criteria = [period_criteria, quarter_criteria]
 
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
 
         self.assertEqual(len(reports), 1)
         self.assertIn(report, reports)
@@ -320,7 +312,7 @@ class TestReport(TestBase):
         period_criteria = Report.period == period
         quarter_criteria = Report.month == month
         criteria = [period_criteria, quarter_criteria]
-        reports = Report.get_reports_for_projects([project], *criteria)
+        reports = Report.get_reports_for_projects([project.id], *criteria)
         self.assertEqual(len(reports), 0)
 
     def test_generate_performance_indicators_with_period(self):
@@ -393,12 +385,16 @@ class TestReport(TestBase):
         self.setup_report_trends_data()
         locations = County.all()
 
+        time_criteria = [Report.month == 2,
+                         Report.period == '2012_13']
         time_criteria = Report.period == '2012_13'
-        indicator_key = 'impact_information/b_income'
+        period_label = 'February, 2012'
+        indicators = utils.get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
 
         data = Report.get_trend_values_for_impact_indicators(
-            locations, indicator_key, time_criteria)
-        self.assertEqual(data, [2, 0])
+            locations, indicators, period_label, time_criteria)
+        self.assertIn(locations[0].pretty, data)
 
     def test_month_interval(self):
         self.setup_report_trends_data()
@@ -425,16 +421,18 @@ class TestReport(TestBase):
         project_filter_criteria = Project.sector == (
             constants.DAIRY_COWS_PROJECT_REGISTRATION)
 
-        indicator_key = 'perfomance_summary/community_contribution'
-        indicator_type = 'ratio'
+        indicators = utils.get_performance_indicator_list(
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
 
+        period_label = 'February, 2012'
         kwargs = {'project_filter_criteria': project_filter_criteria,
                   'time_criteria': time_criteria}
 
-        indicator_values = Report.get_trend_values_for_performance_indicators(
-            [location], indicator_key, indicator_type, **kwargs)
+        data = Report.get_trend_values_for_performance_indicators(
+            [location], indicators, period_label, **kwargs)
 
-        self.assertEqual(indicator_values, [136.5])
+        self.assertIn(location.pretty, data)
 
     def test_get_latest_month_available(self):
         self.setup_report_trends_data()

@@ -46,6 +46,8 @@ class ImpactIndicators(object):
 
         if view_by is None or view_by == 'counties':
             child_locations = County.all()
+            # sort locations or projects by name
+            child_locations.sort(key=lambda c: c.pretty)
         else:
             location_ids = [c.id for c in County.all()]
             target_class = get_target_class_from_view_by(
@@ -54,6 +56,8 @@ class ImpactIndicators(object):
                 location_ids, source_class, target_class)
 
             child_locations = target_class.all(target_class.id.in_(child_ids))
+            # sort locations or projects by name
+            child_locations.sort(key=lambda c: c.pretty)
 
         # create a dict mapping to "name, key and label"
         indicators = get_impact_indicator_list(
@@ -115,6 +119,9 @@ class ImpactIndicators(object):
             location_ids, source_class, target_class)
 
         child_locations = target_class.all(target_class.id.in_(child_ids))
+        # sort locations or projects by name
+        child_locations.sort(key=lambda c: c.pretty)
+
         # create a dict mapping to "name, key and label"
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
@@ -175,8 +182,10 @@ class ImpactIndicators(object):
                                                         constituency,
                                                         community)
 
-        # Get periods based on the child locations
+        # sort locations or projects by name
+        child_locations.sort(key=lambda c: c.pretty)
 
+        # Get periods based on the child locations
         periods = Report.get_periods_for(child_locations)
         start_period, end_period, start_year, end_year = (
             process_trend_parameters(periods,

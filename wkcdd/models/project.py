@@ -48,7 +48,7 @@ class Project(Base):
     project_type_id = Column(Integer, ForeignKey('project_type.id'),
                              nullable=False)
     # TODO index sector field
-    sector = Column(String, nullable=False)
+    sector = Column(String, nullable=False, index=True)
     # TODO Possibly use postgis for geolocation
     geolocation = Column(Text, nullable=True)
     project_type = relationship("ProjectType",
@@ -99,6 +99,17 @@ class Project(Base):
 
         else:
             return [self]
+
+    def get_project_ids(self, *criterion):
+        if criterion is not None:
+            try:
+                project = Project.get(Project.id == self.id, *criterion)
+                return [project.id]
+            except NoResultFound:
+                return None
+
+        else:
+            return [self.id]
 
     def url(self, request, route_name, query_params=None):
         return request.route_url(

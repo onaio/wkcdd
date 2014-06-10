@@ -8,11 +8,21 @@ class SubCounty(Location):
 
     def get_projects(self, *criterion):
         """
-        Get the list of projects associated with this county.
+        Get the list of projects associated with this sub_county.
         """
         from wkcdd.models.helpers import (
             get_project_list, get_community_ids, get_constituency_ids)
         return get_project_list(
+            get_community_ids(
+                get_constituency_ids([self.id])), *criterion)
+
+    def get_project_ids(self, *criterion):
+        """
+        Get the project ids associated with this sub_county.
+        """
+        from wkcdd.models.helpers import (
+            get_project_ids, get_community_ids, get_constituency_ids)
+        return get_project_ids(
             get_community_ids(
                 get_constituency_ids([self.id])), *criterion)
 
