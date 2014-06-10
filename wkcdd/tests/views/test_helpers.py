@@ -217,8 +217,8 @@ class TestHelpers(TestBase):
         self.assertEqual(
             series_data_map['community_contribution'],
             [[
-                [number_to_month_name(1) + " {}".format(year), 136.5],
-                [number_to_month_name(5) + " {}".format(year), 136.5],
+                [number_to_month_name(1) + " {}".format(year), 105.99],
+                [number_to_month_name(5) + " {}".format(year), 105.99],
                 [number_to_month_name(8) + " {}".format(year), 0]],
              [
                  [number_to_month_name(1) + " {}".format(year), 0],

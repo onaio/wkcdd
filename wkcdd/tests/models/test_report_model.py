@@ -208,7 +208,6 @@ class TestReport(TestBase):
     def test_sum_performance_indicator_values(self):
         indicator_sum_target = Report.sum_performance_indicator_values(
             'perfomance_summary/exp_contribution',
-            'target',
             self.performance_reports)
 
         self.assertEqual(indicator_sum_target, 223)
@@ -217,7 +216,6 @@ class TestReport(TestBase):
         indicator_ratio = Report.sum_performance_indicator_values(
             ['impact_information/mb_target',
              'mproject_performance/mb_target'],
-            'ratio',
             self.performance_reports)
         self.assertEqual(indicator_ratio, 38)
 
