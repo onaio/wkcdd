@@ -52,7 +52,7 @@ def filter_projects_by(criteria):
     if "sector" in criteria:
         project_criteria.append(
             Project.sector.like("%" + criteria['sector'] + "%"))
-    
+
     if project_criteria and not location:
         projects = Project.all(*project_criteria)
     else:

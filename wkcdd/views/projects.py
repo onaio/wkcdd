@@ -50,7 +50,10 @@ class ProjectViews(object):
                 'county': self.request.GET.get('county')
             }
             location_id = get_lowest_location_value(location_map)
-            location = Location.get(Location.id == location_id)
+
+            location = (
+                Location.get(Location.id == location_id)
+                if location_id else '')
 
             search_criteria = {'name': search,
                                'sector': sector,
