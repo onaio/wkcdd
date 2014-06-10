@@ -21,8 +21,6 @@ from wkcdd.models.report import ReportHandlerError
 from wkcdd.models.helpers import (
     MONTH_PERIOD,
     QUARTER_PERIOD,
-    get_community_ids_for,
-    get_project_list,
     get_children_by_level,
     get_period_row
 )
@@ -47,23 +45,18 @@ def requested_xlsx_format(event):
 
 def filter_projects_by(criteria):
     project_criteria = []
-    community_ids = []
+    location = criteria['location']
     if "name" in criteria:
         project_criteria.append(
             Project.name.ilike("%" + criteria['name'] + "%"))
     if "sector" in criteria:
         project_criteria.append(
             Project.sector.like("%" + criteria['sector'] + "%"))
-    if "location_map" in criteria:
-        value = get_lowest_location_value(criteria['location_map'])
-        if value:
-            location = Location.get(Location.id == value)
-            community_ids = get_community_ids_for(type(location),
-                                                  [location.id])
-    if project_criteria and not community_ids:
+    
+    if project_criteria and not location:
         projects = Project.all(*project_criteria)
     else:
-        projects = get_project_list(community_ids, *project_criteria)
+        projects = location.get_projects(*project_criteria)
     return projects
 
 
