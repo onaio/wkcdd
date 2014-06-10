@@ -331,19 +331,45 @@ def get_impact_indicator_trend_report(time_series,
     # for each period, get values for specified indicator
     # return timeseries, series_data, collection labels
     series_labels = [c.pretty for c in collection]
-    period_data_map = {}
+    series_data_list = []
 
     for period, year in time_series:
         period_label, time_criteria = get_time_criteria(
             period, year, time_class)
 
-        period_data_map[period_label] = (
+        series_data_list.append(
             Report.get_trend_values_for_impact_indicators(
                 collection, indicators, period_label, *time_criteria))
 
     # map returned data to the chart format
+    series_data_map = restructure_impact_trend_data(
+        indicators, series_data_list, collection)
 
-    return period_data_map, series_labels
+    return series_data_map, series_labels
+
+
+def restructure_impact_trend_data(indicators,
+                                  series_data_list,
+                                  collection):
+    series_data_map = defaultdict(list)
+
+    # iterate through each period data
+    for series_data in series_data_list:
+        # retrieve indicator values by location
+
+        for indicator in indicators:
+            indicator_key = indicator['key']
+
+            for index, item in enumerate(collection):
+                trend_value = series_data[item.pretty][indicator_key]
+                try:
+                    series_data_map[indicator_key][index].extend(
+                        [trend_value])
+                except IndexError:
+                    series_data_map[indicator_key].append(
+                        [trend_value])
+
+    return series_data_map
 
 
 def get_child_locations(view_by,

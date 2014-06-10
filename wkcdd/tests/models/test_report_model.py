@@ -385,12 +385,16 @@ class TestReport(TestBase):
         self.setup_report_trends_data()
         locations = County.all()
 
+        time_criteria = [Report.month == 2,
+                         Report.period == '2012_13']
         time_criteria = Report.period == '2012_13'
-        indicator_key = 'impact_information/b_income'
+        period_label = 'February, 2012'
+        indicators = utils.get_impact_indicator_list(
+            constants.IMPACT_INDICATOR_KEYS)
 
         data = Report.get_trend_values_for_impact_indicators(
-            locations, indicator_key, time_criteria)
-        self.assertEqual(data, [2, 0])
+            locations, indicators, period_label, time_criteria)
+        self.assertIn(locations[0].pretty, data)
 
     def test_month_interval(self):
         self.setup_report_trends_data()
@@ -417,16 +421,18 @@ class TestReport(TestBase):
         project_filter_criteria = Project.sector == (
             constants.DAIRY_COWS_PROJECT_REGISTRATION)
 
-        indicator_key = 'perfomance_summary/community_contribution'
-        indicator_type = 'ratio'
+        indicators = utils.get_performance_indicator_list(
+            constants.PERFORMANCE_INDICATORS[
+                constants.DAIRY_COWS_PROJECT_REPORT])
 
+        period_label = 'February, 2012'
         kwargs = {'project_filter_criteria': project_filter_criteria,
                   'time_criteria': time_criteria}
 
-        indicator_values = Report.get_trend_values_for_performance_indicators(
-            [location], indicator_key, indicator_type, **kwargs)
+        data = Report.get_trend_values_for_performance_indicators(
+            [location], indicators, period_label, **kwargs)
 
-        self.assertEqual(indicator_values, [136.5])
+        self.assertIn(location.pretty, data)
 
     def test_get_latest_month_available(self):
         self.setup_report_trends_data()

@@ -340,22 +340,31 @@ class Report(Base):
     @classmethod
     def get_trend_values_for_impact_indicators(cls,
                                                collection,
-                                               indicator_key,
+                                               indicators,
+                                               period_label,
                                                *time_criteria):
-        indicator_values = []
+        series_map = {}
         for item in collection:
+            series_data = {}
             try:
                 projects = item.get_project_ids()
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
-                indicator_sum = cls.sum_impact_indicator_values(
-                    indicator_key, reports)
-                indicator_values.append(indicator_sum)
-            except ReportError:
-                indicator_values.append(0)
 
-        return indicator_values
+                for indicator in indicators:
+                    indicator_key = indicator['key']
+                    indicator_sum = cls.sum_impact_indicator_values(
+                        indicator_key, reports)
+                    series_data[indicator_key] = [period_label, indicator_sum]
+
+            except ReportError:
+                series_data = {indicator['key']: [period_label, 0]
+                               for indicator in indicators}
+            finally:
+                series_map[item.pretty] = series_data
+
+        return series_map
 
     @classmethod
     def get_trend_values_for_performance_indicators(cls,
@@ -404,7 +413,7 @@ class Report(Base):
                         indicator_values[indicator_property] = indicator_sum
 
             except ReportError:
-                series_data = {indicator['property']: 0
+                series_data = {indicator['property']: [period_label, 0]
                                for indicator in indicators}
 
             series_map[item.pretty] = series_data
