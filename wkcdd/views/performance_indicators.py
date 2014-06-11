@@ -59,6 +59,9 @@ class PerformanceIndicators(object):
 
         if view_by is None or view_by == 'counties':
             child_locations = County.all()
+
+            # sort locations or projects by name
+            child_locations.sort(key=lambda c: c.pretty)
         else:
             location_ids = [c.id for c in County.all()]
             target_class = get_target_class_from_view_by(
@@ -67,6 +70,9 @@ class PerformanceIndicators(object):
                 location_ids, source_class, target_class)
 
             child_locations = target_class.all(target_class.id.in_(child_ids))
+
+            # sort locations or projects by name
+            child_locations.sort(key=lambda c: c.pretty)
 
         # create a dict mapping to "property, key and type" based on
         # a selected sector or the first sector on the list
@@ -176,6 +182,9 @@ class PerformanceIndicators(object):
 
         child_locations = target_class.all(target_class.id.in_(child_ids))
 
+        # sort locations or projects by name
+        child_locations.sort(key=lambda c: c.pretty)
+
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
 
@@ -266,6 +275,9 @@ class PerformanceIndicators(object):
                                                         sub_county,
                                                         constituency,
                                                         community)
+
+        # sort locations or projects by name
+        child_locations.sort(key=lambda c: c.pretty)
 
         # Get periods based on the child locations
         # generate trend report for the selected sector

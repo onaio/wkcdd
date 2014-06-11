@@ -31,6 +31,13 @@ class Community(Location):
         from wkcdd.models.helpers import get_project_list
         return get_project_list([self.id], *criterion)
 
+    def get_project_ids(self, *criterion):
+        """
+        Get the project_ids associated with this Community.
+        """
+        from wkcdd.models.helpers import get_project_ids
+        return get_project_ids([self.id], *criterion)
+
     def is_found_in(self, location):
         return (self.id == location.id
                 or self.constituency.is_found_in(location))

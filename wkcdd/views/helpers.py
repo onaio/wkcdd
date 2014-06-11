@@ -1,11 +1,15 @@
 import json
 import datetime
 import urlparse
+import re
+from collections import defaultdict
 
 from pyramid.events import subscriber, NewRequest
 
 from wkcdd import constants
-from wkcdd.libs.utils import get_performance_indicator_list
+from wkcdd.libs.utils import (
+    number_to_month_name,
+    get_performance_indicator_list)
 from wkcdd.models import (
     County,
     SubCounty,
@@ -18,12 +22,7 @@ from wkcdd.models import (
 
 from wkcdd.models.report import ReportHandlerError
 
-from wkcdd.models.helpers import (
-    MONTH_PERIOD,
-    QUARTER_PERIOD,
-    get_children_by_level,
-    get_period_row
-)
+from wkcdd.models.helpers import get_children_by_level
 
 
 PROJECT_LEVEL = 'projects'
@@ -33,6 +32,10 @@ CONSTITUENCIES_LEVEL = 'constituencies'
 COMMUNITIES_LEVEL = 'communities'
 PROJECTS_LEVEL = 'projects'
 DEFAULT_OPTION = 'default'
+
+YEAR_PERIOD = 'period'
+MONTH_PERIOD = 'month'
+QUARTER_PERIOD = 'quarter'
 
 
 @subscriber(NewRequest)
@@ -314,33 +317,50 @@ def get_impact_indicator_trend_report(time_series,
 
     Generate time series data for impact indicators for a given set of
     locations or projects.
-
-    Return ([1,2,3]), # months
-           ([
-                [10,20,30,40,50], # month 1 data for each location
-                [12,13,14,15,16], # month 2 data ''
-                [23,24,25,26,27]  # month 3 data ''
-           ])# series data
-           (['Siaya', 'Vihiga', 'Bungoma', 'Kakamega', 'Busia']) # series
     """
     # get reports within the specified period
     # for each period, get values for specified indicator
     # return timeseries, series_data, collection labels
     series_labels = [c.pretty for c in collection]
-    series_data_map = {}
-    for indicator in indicators:
-        indicator_key = indicator['key']
-        series_data = []
+    series_data_list = []
 
-        for item in collection:
-            period_row = get_period_row(
-                time_series, time_class, item, indicator_key)
+    for period, year in time_series:
+        period_label, time_criteria = get_time_criteria(
+            period, year, time_class)
 
-            series_data.append(period_row)
+        series_data_list.append(
+            Report.get_trend_values_for_impact_indicators(
+                collection, indicators, period_label, *time_criteria))
 
-        series_data_map[indicator_key] = series_data
+    # map returned data to the chart format
+    series_data_map = restructure_impact_trend_data(
+        indicators, series_data_list, collection)
 
     return series_data_map, series_labels
+
+
+def restructure_impact_trend_data(indicators,
+                                  series_data_list,
+                                  collection):
+    series_data_map = defaultdict(list)
+
+    # iterate through each period data
+    for series_data in series_data_list:
+        # retrieve indicator values by location
+
+        for indicator in indicators:
+            indicator_key = indicator['key']
+
+            for index, item in enumerate(collection):
+                trend_value = series_data[item.pretty][indicator_key]
+                try:
+                    series_data_map[indicator_key][index].extend(
+                        [trend_value])
+                except IndexError:
+                    series_data_map[indicator_key].append(
+                        [trend_value])
+
+    return series_data_map
 
 
 def get_child_locations(view_by,
@@ -442,6 +462,29 @@ def process_trend_parameters(periods,
         return start_period, end_period, start_year, end_year
 
 
+def get_time_criteria(period, year, time_class):
+    period_label = None
+    year_label = re.search('\d+', year).group(0)
+
+    if time_class == YEAR_PERIOD:
+        time_criteria = Report.period == period
+        period_label = year_label
+
+    elif time_class == MONTH_PERIOD:
+        time_criteria = [Report.month == period,
+                         Report.period == year]
+        period_label = (
+            number_to_month_name(period) +
+            " {}".format(year_label))
+    elif time_class == QUARTER_PERIOD:
+        time_criteria = [Report.quarter == period,
+                         Report.period == year]
+        period_label = (period.replace("q_", "Quarter ") +
+                        " {}".format(year_label))
+
+    return period_label, time_criteria
+
+
 def get_performance_indicator_trend_report(sector_id,
                                            time_series,
                                            time_class,
@@ -449,31 +492,53 @@ def get_performance_indicator_trend_report(sector_id,
                                            collection):
     # Similar to function for generating the impact indicators trend reports
     series_labels = [c.pretty for c in collection]
-    series_data_map = {}
+    series_data_list = []
     project_filter_criteria = Project.sector == sector_id
 
-    for indicator in indicators:
-        indicator_key = indicator['key']
-        indicator_property = indicator['property']
-        indicator_type = indicator['type']
+    for period, year in time_series:
+        period_label, time_criteria = get_time_criteria(
+            period, year, time_class)
+        criteria_args = {
+            'project_filter_criteria': project_filter_criteria,
+            'time_criteria': time_criteria}
 
-        if indicator_type == 'ratio':
-            series_data = []
+        # each entry in the list is a period entry
+        series_data_list.append(
+            Report.get_trend_values_for_performance_indicators(
+                collection, indicators, period_label, **criteria_args))
 
-            for item in collection:
-                # Generate kwargs arguments
-                kwargs = {
-                    'project_filter_criteria': project_filter_criteria,
-                    'indicator_type': indicator_type}
-
-                period_row = get_period_row(
-                    time_series, time_class, item, indicator_key, **kwargs)
-
-                series_data.append(period_row)
-
-            series_data_map[indicator_property] = series_data
+    # map data to chart format
+    series_data_map = restructure_performance_trend_data(
+        indicators, series_data_list, collection)
 
     return series_data_map, series_labels
+
+
+def restructure_performance_trend_data(indicators,
+                                       series_data_list,
+                                       collection):
+    series_data_map = defaultdict(list)
+
+    # iterate through each period data
+    for series_data in series_data_list:
+        # retrieve indicator values by location
+
+        for indicator in indicators:
+            indicator_type = indicator['type']
+
+            if indicator_type == 'ratio':
+                indicator_property = indicator['property']
+
+                for index, item in enumerate(collection):
+                    trend_value = series_data[item.pretty][indicator_property]
+                    try:
+                        series_data_map[indicator_property][index].extend(
+                            [trend_value])
+                    except IndexError:
+                        series_data_map[indicator_property].append(
+                            [trend_value])
+
+    return series_data_map
 
 
 def get_all_sector_periods(sectors, child_locations, periods):

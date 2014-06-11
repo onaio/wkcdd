@@ -142,15 +142,16 @@ class Report(Base):
         return results
 
     @classmethod
-    def get_reports_for_projects(cls, projects, *criteria):
+    def get_reports_for_projects(cls, project_ids, *criteria):
         """
         Get the reports for the specified list of projects based on the
         specified time period
+        Projects is a tuple list containing id and project code
         """
-        if projects:
+        if project_ids:
             return DBSession.query(Report)\
                 .join(Project, Report.project_code == Project.code)\
-                .filter(Project.id.in_([p.id for p in projects]))\
+                .filter(Project.id.in_(project_ids))\
                 .filter(Report.status == Report.APPROVED)\
                 .filter(*criteria)\
                 .order_by(Report.submission_time)\
@@ -181,7 +182,7 @@ class Report(Base):
                 'indicators': {}
             }
             # get reports for this location or project,
-            projects = item.get_projects()
+            projects = item.get_project_ids()
 
             # get project reports @todo: filtered by said period
             try:
@@ -205,34 +206,34 @@ class Report(Base):
     @classmethod
     def sum_performance_indicator_values(cls,
                                          indicator_key,
-                                         indicator_type,
                                          reports):
         """
         Calculate the sum and average for the specified indicator from the
         reports
         """
         values = []
-        # handle keys which are lists due to legacy form submissions
+
         if reports:
             try:
                 values = [r.report_data.get(indicator_key) for r in reports]
             except TypeError:
+                # handle legacy form submissions
                 for key in indicator_key:
                     values.extend(
                         [r.report_data.get(key) for r in reports])
             finally:
-                if indicator_type == 'ratio':
-                    return (float(
-                            reduce(
-                                sum_reduce_func, values, 0))
-                            /
-                            float(
-                                len(reports)))
-                else:
-                    return reduce(
-                        sum_reduce_func, values, 0)
+                return reduce(
+                    sum_reduce_func, values, 0)
         else:
             raise ValueError("No reports provided")
+
+    @classmethod
+    def calculate_ratio_value(cls, actual_value, expected_value):
+        if actual_value and expected_value:
+            return round(
+                float(actual_value) / float(expected_value) * 100, 2)
+        else:
+            return 0
 
     @classmethod
     def generate_performance_indicators(cls,
@@ -254,7 +255,7 @@ class Report(Base):
                 # get reports for this location or project,
                 project_filter_criteria = kwargs.get(
                     'project_filter_criteria', [])
-                projects = item.get_projects(project_filter_criteria)
+                projects = item.get_project_ids(project_filter_criteria)
 
                 # filter reports by period
                 period_criteria = kwargs.get('period_criteria', [])
@@ -262,17 +263,28 @@ class Report(Base):
                     projects,
                     *period_criteria)
 
-                for indicator in indicators:
+                for index, indicator in enumerate(indicators):
                     indicator_key = indicator['key']
                     indicator_property = indicator['property']
                     indicator_type = indicator['type']
 
-                    try:
-                        location_indicator_sum = (
-                            cls.sum_performance_indicator_values(
-                                indicator_key, indicator_type, reports))
-                    except ValueError:
-                        location_indicator_sum = 0
+                    if indicator_type == 'ratio':
+                        # retrieve the last two calculated values and divide
+                        target_property = indicators[index - 2]['property']
+                        actual_property = indicators[index - 1]['property']
+
+                        target_value = row['indicators'].get(target_property)
+                        actual_value = row['indicators'].get(actual_property)
+
+                        location_indicator_sum = cls.calculate_ratio_value(
+                            actual_value, target_value)
+                    else:
+                        try:
+                            location_indicator_sum = (
+                                cls.sum_performance_indicator_values(
+                                    indicator_key, reports))
+                        except ValueError:
+                            location_indicator_sum = 0
 
                     row['indicators'][
                         indicator_property] = location_indicator_sum
@@ -287,13 +299,18 @@ class Report(Base):
                 pass
 
         # get summary row averages for ratio fields
-        for indicator in indicators:
+        for index, indicator in enumerate(indicators):
             indicator_type = indicator['type']
             indicator_property = indicator['property']
 
             if indicator_type == 'ratio':
-                summary_row[indicator_property] = (
-                    summary_row[indicator_property] / len(collection))
+                target_property = indicators[index - 2]['property']
+                actual_property = indicators[index - 1]['property']
+                target_value = summary_row.get(target_property)
+                actual_value = summary_row.get(actual_property)
+
+                summary_row[indicator_property] = cls.calculate_ratio_value(
+                    actual_value, target_value)
 
         return rows, summary_row
 
@@ -303,7 +320,7 @@ class Report(Base):
 
         for item in collection:
             try:
-                projects = item.get_projects(*project_filter_criteria)
+                projects = item.get_project_ids(*project_filter_criteria)
                 reports = cls.get_reports_for_projects(projects)
                 # retrieve periods based on the reports available
                 cls.generate_periods_from_reports(periods, reports)
@@ -323,51 +340,85 @@ class Report(Base):
     @classmethod
     def get_trend_values_for_impact_indicators(cls,
                                                collection,
-                                               indicator_key,
+                                               indicators,
+                                               period_label,
                                                *time_criteria):
-        indicator_values = []
+        series_map = {}
         for item in collection:
+            series_data = {}
             try:
-                projects = item.get_projects()
+                projects = item.get_project_ids()
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
-                indicator_sum = cls.sum_impact_indicator_values(
-                    indicator_key, reports)
-                indicator_values.append(indicator_sum)
-            except ReportError:
-                indicator_values.append(0)
 
-        return indicator_values
+                for indicator in indicators:
+                    indicator_key = indicator['key']
+                    indicator_sum = cls.sum_impact_indicator_values(
+                        indicator_key, reports)
+                    series_data[indicator_key] = [period_label, indicator_sum]
+
+            except ReportError:
+                series_data = {indicator['key']: [period_label, 0]
+                               for indicator in indicators}
+            finally:
+                series_map[item.pretty] = series_data
+
+        return series_map
 
     @classmethod
     def get_trend_values_for_performance_indicators(cls,
-                                                    collection,
-                                                    indicator_key,
-                                                    indicator_type,
+                                                    collections,
+                                                    indicators,
+                                                    period_label,
                                                     **kwargs):
-        project_filter_criteria = kwargs.get('project_criteria', [])
+        project_filter_criteria = kwargs.get('project_filter_criteria', [])
         time_criteria = kwargs.get('time_criteria', [])
-        indicator_values = []
-        for item in collection:
-            try:
+        series_map = {}
 
-                projects = item.get_projects(*project_filter_criteria)
+        for item in collections:
+            try:
+                projects = item.get_project_ids(project_filter_criteria)
                 reports = cls.get_reports_for_projects(
                     projects,
                     *time_criteria)
-                try:
-                    indicator_sum = (
-                        cls.sum_performance_indicator_values(
-                            indicator_key, indicator_type, reports))
-                    indicator_values.append(indicator_sum)
-                except ValueError:
-                    indicator_values.append(0)
+                series_data = {}
+                indicator_values = {}
+
+                for index, indicator in enumerate(indicators):
+                    # Need to group into target, actual, ratio key groups
+                    indicator_type = indicator['type']
+                    indicator_property = indicator['property']
+                    indicator_key = indicator['key']
+
+                    if indicator_type == 'ratio':
+                        target_property = indicators[index - 2]['property']
+                        actual_property = indicators[index - 1]['property']
+
+                        actual_value = indicator_values[actual_property]
+                        target_value = indicator_values[target_property]
+
+                        ratio = cls.calculate_ratio_value(
+                            actual_value, target_value)
+                        series_data[indicator_property] = (
+                            [period_label, ratio])
+                    else:
+                        try:
+                            indicator_sum = (
+                                cls.sum_performance_indicator_values(
+                                    indicator_key, reports))
+                        except ValueError:
+                            indicator_sum = 0
+
+                        indicator_values[indicator_property] = indicator_sum
 
             except ReportError:
-                indicator_values.append(0)
+                series_data = {indicator['property']: [period_label, 0]
+                               for indicator in indicators}
 
-        return indicator_values
+            series_map[item.pretty] = series_data
+
+        return series_map
 
 
 class ReportError(Exception):
