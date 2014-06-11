@@ -51,6 +51,7 @@ def populate_reports_table(raw_data, project_report_code):
             month=report_data.get(constants.REPORT_MONTH),
             quarter=report_data.get(constants.REPORT_QUARTER),
             period=report_data.get(constants.REPORT_PERIOD),
+            status='approved',
             report_data=report_data
         )
         Report.add_report_submission(report_submission)
