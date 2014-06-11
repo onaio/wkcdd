@@ -2,6 +2,7 @@ import os
 import json
 from pyramid.events import NewRequest
 from pyramid import testing
+from pyramid.httpexceptions import HTTPBadRequest
 
 from wkcdd.tests.test_base import (
     TestBase,
@@ -237,3 +238,15 @@ class TestHelpers(TestBase):
 
         self.assertEqual(month, '3')
         self.assertEqual(year, '2013_14')
+
+    def test_process_trend_parameters_with_invalid_data(self):
+        self.setup_test_data()
+        locations = County.all()
+        periods = Report.get_periods_for(locations)
+
+        start_period = "1"
+        end_period = "q_3"
+
+        self.assertRaises(
+            HTTPBadRequest, process_trend_parameters,
+            *[periods, start_period, '2013_14', end_period, '2013_14'])

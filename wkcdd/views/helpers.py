@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 
 from pyramid.events import subscriber, NewRequest
+from pyramid.httpexceptions import HTTPBadRequest
 
 from wkcdd import constants
 from wkcdd.libs.utils import (
@@ -460,8 +461,20 @@ def process_trend_parameters(periods,
     years = list(periods['years'])
     years.sort()
 
+    # validate that periods are of the same type
+    if start_period and end_period:
+        # test if both are quarters
+        valid = False
+        valid = (
+            True if 'q_' in start_period and 'q_' in end_period else False)
+        if not valid:
+            try:
+                valid = int(start_period) and int(end_period)
+            except ValueError:
+                raise HTTPBadRequest('Select Months or Quarters but not both')
+
+    # Retrieve get parameters and provide defaults if none was selected
     if months and quarters and years:
-        # Retrieve get parameters and provide defaults if none was selected
         start_period = (
             start_period
             if start_period and start_period in (months + quarters)
