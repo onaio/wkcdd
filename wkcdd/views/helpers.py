@@ -411,7 +411,10 @@ def get_child_locations(view_by,
     return location, child_locations
 
 
-def get_default_period(periods, month_or_quarter, year):
+def get_default_period(periods,
+                       month_or_quarter,
+                       year,
+                       location_selected=False):
     if periods['months'] and periods['years']:
         years = list(periods['years'])
         years.sort()
@@ -425,10 +428,17 @@ def get_default_period(periods, month_or_quarter, year):
 
         year = year if year and year in years else years[-1]
         # default month is the latest month
-        month = (
-            month_or_quarter
-            if month_or_quarter and month_or_quarter in (months + quarters)
-            else str(Report.get_latest_month_for_year(year)[0]))
+        if location_selected:
+            month = (
+                month_or_quarter
+                if month_or_quarter and month_or_quarter in (months + quarters)
+                else months[-1])
+        else:
+            month = (
+                month_or_quarter
+                if month_or_quarter and month_or_quarter in (months + quarters)
+                else str(Report.get_latest_month_for_year(year)[0]))
+
         return month, year
     else:
         # values that cannot return any data

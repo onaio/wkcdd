@@ -82,9 +82,8 @@ class PerformanceIndicators(object):
             periods = get_sector_periods(sector, child_locations)
 
             # set default period values when none is provided
-            if not month_or_quarter and not period:
-                month_or_quarter, period = get_default_period(
-                    periods, month_or_quarter, period)
+            month_or_quarter, period = get_default_period(
+                periods, month_or_quarter, period)
 
             # generate report period criteria
             criteria = build_report_period_criteria(month_or_quarter, period)
@@ -115,9 +114,8 @@ class PerformanceIndicators(object):
                 sectors, child_locations, periods)
 
             # set default period values when none is provided
-            if not month_or_quarter and not period:
-                month_or_quarter, period = get_default_period(
-                    periods, month_or_quarter, period)
+            month_or_quarter, period = get_default_period(
+                periods, month_or_quarter, period)
 
             criteria = build_report_period_criteria(
                 month_or_quarter, period)
@@ -185,16 +183,23 @@ class PerformanceIndicators(object):
         # sort locations or projects by name
         child_locations.sort(key=lambda c: c.pretty)
 
-        # generate report period criteria
-        criteria = build_report_period_criteria(month_or_quarter, period)
-
         # create a dict mapping to "property, key and type" based on
         # a selected sector or the first sector on the list
         if sector:
             # if the specified sector is not in location sector types
-            # load all sectors
             reg_id, report_id, label = get_performance_sector_mapping(
                 sector)[0]
+
+            # retrieve sector periods
+            periods = get_sector_periods(reg_id, child_locations)
+
+            # set default period values when none is provided
+            month_or_quarter, period = get_default_period(
+                periods, month_or_quarter, period, True)
+
+            # generate report period criteria
+            criteria = build_report_period_criteria(month_or_quarter, period)
+
             sector_data[sector] = get_sector_data(reg_id,
                                                   report_id,
                                                   child_locations,
@@ -216,24 +221,31 @@ class PerformanceIndicators(object):
                 build_performance_indicator_chart_dataset(
                     sector_indicators[reg_id], sector_data[sector]['rows']))
 
-            # retrieve sector periods
-            periods = get_sector_periods(reg_id, child_locations)
-
         else:
-            # load first sector for the location list
+            # populate sector periods
             for reg_id, report_id, title in sectors:
+                sector_periods = get_sector_periods(reg_id, child_locations)
+
+                periods['years'].update(sector_periods['years'])
+                periods['months'].update(sector_periods['months'])
+                periods['quarters'].update(sector_periods['quarters'])
+
+            # set default period values when none is provided
+            month_or_quarter, period = get_default_period(
+                periods, month_or_quarter, period, True)
+
+            # generate report period criteria
+            criteria = build_report_period_criteria(
+                month_or_quarter, period)
+
+            for reg_id, report_id, title in sectors:
+
                 sector_data[reg_id] = get_sector_data(reg_id,
                                                       report_id,
                                                       child_locations,
                                                       *criteria)
                 sector_indicators[reg_id] = (
                     constants.PERFORMANCE_INDICATOR_REPORTS[report_id])
-
-                sector_periods = get_sector_periods(reg_id, child_locations)
-
-                periods['years'].update(sector_periods['years'])
-                periods['months'].update(sector_periods['months'])
-                periods['quarters'].update(sector_periods['quarters'])
 
         search_criteria = {'view_by': view_by,
                            'selected_sector': selected_sector,
