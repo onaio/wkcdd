@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 
 from pyramid.events import subscriber, NewRequest
+from pyramid.httpexceptions import HTTPBadRequest
 
 from wkcdd import constants
 from wkcdd.libs.utils import (
@@ -402,7 +403,10 @@ def get_child_locations(view_by,
     return location, child_locations
 
 
-def get_default_period(periods, month_or_quarter, year):
+def get_default_period(periods,
+                       month_or_quarter,
+                       year,
+                       location_selected=False):
     if periods['months'] and periods['years']:
         years = list(periods['years'])
         years.sort()
@@ -416,10 +420,17 @@ def get_default_period(periods, month_or_quarter, year):
 
         year = year if year and year in years else years[-1]
         # default month is the latest month
-        month = (
-            month_or_quarter
-            if month_or_quarter and month_or_quarter in (months + quarters)
-            else str(Report.get_latest_month_for_year(year)[0]))
+        if location_selected:
+            month = (
+                month_or_quarter
+                if month_or_quarter and month_or_quarter in (months + quarters)
+                else months[-1])
+        else:
+            month = (
+                month_or_quarter
+                if month_or_quarter and month_or_quarter in (months + quarters)
+                else str(Report.get_latest_month_for_year(year)[0]))
+
         return month, year
     else:
         # values that cannot return any data
@@ -441,8 +452,20 @@ def process_trend_parameters(periods,
     years = list(periods['years'])
     years.sort()
 
+    # validate that periods are of the same type
+    if start_period and end_period:
+        # test if both are quarters
+        valid = False
+        valid = (
+            True if 'q_' in start_period and 'q_' in end_period else False)
+        if not valid:
+            try:
+                valid = int(start_period) and int(end_period)
+            except ValueError:
+                raise HTTPBadRequest('Select Months or Quarters but not both')
+
+    # Retrieve get parameters and provide defaults if none was selected
     if months and quarters and years:
-        # Retrieve get parameters and provide defaults if none was selected
         start_period = (
             start_period
             if start_period and start_period in (months + quarters)

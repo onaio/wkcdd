@@ -131,7 +131,7 @@ class ImpactIndicators(object):
         # set default period values when none is provided
         # Validate selected date
         month_or_quarter, period = get_default_period(
-            periods, month_or_quarter, period)
+            periods, month_or_quarter, period, True)
 
         # generate report period criteria
         criteria = build_report_period_criteria(month_or_quarter, period)
