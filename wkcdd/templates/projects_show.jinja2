@@ -47,7 +47,7 @@
       <div class="portlet-body">
         {% if project.image_file %}
         <div class="">
-          <img src="https://ona.io/attachment/small?media_file=wkcdd/attachments/{{project.image_file}}" class="project-img img-responsive" alt="{{project.pretty}}">
+          <img src="https://ona.io/attachment/medium?media_file=wkcdd/attachments/{{project.image_file}}" class="project-img img-responsive" alt="{{project.pretty}}">
         </div>
         {% endif %}
         <div class="table-responsive">
@@ -74,20 +74,20 @@
             <div class="caption"><i class="icon-tasks"></i>Performance Indicators</div>
         </div>
         <div class="portlet-body">
-            <div>
-                <form id="filter_criteria" class="form-inline" method="get">
-                      {% with month_or_quarter=(report.month | string if report else ''),
-                              period=(report.period if report else ''),
-                              quarters = filter_criteria.get('quarters'), 
-                              months_present = filter_criteria.get('months'),
-                              years = filter_criteria.get('years')%}   
-                        {% include '/period_selector.jinja2' %}
-                      {% endwith %}
-
-                      <button type="submit" class="filter-btn btn btn-info">Apply</button>
-                </form>
-            </div>
           {% if performance_indicator_mapping %}
+           <div>
+              <form id="filter_criteria" class="form-inline" method="get">
+                    {% with month_or_quarter=(report.month | string if report else ''),
+                            period=(report.period if report else ''),
+                            quarters = filter_criteria.get('quarters'), 
+                            months_present = filter_criteria.get('months'),
+                            years = filter_criteria.get('years')%}   
+                      {% include '/period_selector.jinja2' %}
+                    {% endwith %}
+
+                    <button type="submit" class="filter-btn btn btn-info">Apply</button>
+              </form>
+           </div>
            <div class="table-responsive">
               <table class="table table-striped table-bordered table-hover">
                  <thead>

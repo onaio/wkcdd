@@ -11,13 +11,16 @@ from wkcdd.models.project import (
     Project,
     ProjectFactory
 )
-from wkcdd.models import Report
+from wkcdd.models import (
+    Location,
+    Report)
 from wkcdd import constants
 from wkcdd.libs.utils import (
     tuple_to_dict_list,
     get_impact_indicator_list)
 from wkcdd.views.helpers import (
     filter_projects_by,
+    get_lowest_location_value,
     get_project_geolocations,
     build_report_period_criteria)
 
@@ -38,7 +41,7 @@ class ProjectViews(object):
         # Filter
         filter_projects = self.request.GET.get('filter')
         if filter_projects is not None:
-            search = self.request.GET.get('search', '')
+            project_name = self.request.GET.get('search_term', '')
             sector = self.request.GET.get('sector', '')
             location_map = {
                 'community': self.request.GET.get('community'),
@@ -46,9 +49,15 @@ class ProjectViews(object):
                 'sub_county': self.request.GET.get('sub_county'),
                 'county': self.request.GET.get('county')
             }
-            search_criteria = {'name': search,
+            location_id = get_lowest_location_value(location_map)
+
+            location = (
+                Location.get(Location.id == location_id)
+                if location_id else '')
+
+            search_criteria = {'name': project_name,
                                'sector': sector,
-                               'location_map': location_map}
+                               'location': location or ''}
 
             projects = filter_projects_by(search_criteria)
 
