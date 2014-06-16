@@ -134,7 +134,7 @@ class Report(Base):
     @classmethod
     def get_latest_month_for_year(cls, year):
         results = DBSession.query(Report.month)\
-            .filter(Report.period == year)\
+            .filter(Report.period == year, Report.status == Report.APPROVED)\
             .group_by(Report.month)\
             .order_by(desc(Report.month))\
             .first()
