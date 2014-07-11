@@ -61,9 +61,9 @@ def populate_reports_table(raw_data, project_report_code):
 def fetch_project_registration_data():
     for project_registration_form, project_code\
             in constants.PROJECT_REGISTRATION_FORMS:
-            with transaction.manager:
-                populate_projects_table(fetch_data(project_registration_form),
-                                        project_code)
+        with transaction.manager:
+            populate_projects_table(fetch_data(project_registration_form),
+                                    project_code)
 
 
 # fetch project report data and persist it to the DB

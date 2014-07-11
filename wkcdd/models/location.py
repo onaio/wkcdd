@@ -25,6 +25,7 @@ class Location(Base):
     COMMUNITY = 'community'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
+    mis_code = Column(Text, nullable=True)
     parent_id = Column(Integer, ForeignKey('locations.id'), nullable=True)
     location_type = Column(Enum(COUNTY, SUB_COUNTY, CONSTITUENCY, COMMUNITY,
                            name='LOCATION_TYPES'),

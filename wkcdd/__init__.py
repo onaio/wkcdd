@@ -67,6 +67,10 @@ def includeme(config):
                      factory=LocationFactory)
     config.add_route('reports', '/reports/*traverse',
                      factory=ReportFactory)
+
+    config.add_route('export_projects', '/export-projects')
+    config.add_route('export_reports', '/export-reports')
+
     config.add_route('reporting_status', '/reporting_status')
     config.add_route('private', '/private')
     config.add_route('supervisors_only', '/supervisors-only')
