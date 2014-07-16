@@ -107,8 +107,8 @@ class ProjectViews(object):
         if reports:
             # limit report to the latest report within the period
             report = reports[0]
-            performance_indicators = report.calculate_performance_indicators()
-            impact_indicators = report.calculate_impact_indicators()
+            performance_indicators = report.get_performance_indicators()
+            impact_indicators = report.get_impact_indicators()
             impact_indicator_mapping = get_impact_indicator_list(
                 constants.IMPACT_INDICATOR_KEYS)
             return {

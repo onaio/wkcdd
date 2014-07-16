@@ -65,8 +65,7 @@ class Report(Base):
     def add_report_submission(cls, report):
         report.save()
 
-    # TODO rename to get_impact_indicators
-    def calculate_impact_indicators(self):
+    def get_impact_indicators(self):
         indicators = get_impact_indicator_list(
             constants.IMPACT_INDICATOR_KEYS)
         impact_indicators = {
@@ -74,8 +73,7 @@ class Report(Base):
             for item in indicators}
         return impact_indicators
 
-    # TODO rename to get_performance_indicators
-    def calculate_performance_indicators(self):
+    def get_performance_indicators(self):
         performance_indicators = defaultdict(int)
         set_value = lambda value: (0 if value is None
                                    or value == 'Infinity'

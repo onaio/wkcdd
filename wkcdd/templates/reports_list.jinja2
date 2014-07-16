@@ -60,7 +60,7 @@
                                                 <td>{{report.quarter | replace("q_", "")}}</td>
                                                 <td>{{report.period | replace("_", " to 20") | replace("-", " to 20")}}</td>
                                                 <td>
-                                                    {% set impact_indicators = report.calculate_impact_indicators()%}
+                                                    {% set impact_indicators = report.get_impact_indicators()%}
                                                     <div class="table-responsive">
                                                         <table class="table table-stripped table-bordered table-hover">
                                                             <thead>
@@ -81,7 +81,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    {% set performance_indicators = report.calculate_performance_indicators()%}
+                                                    {% set performance_indicators = report.get_performance_indicators()%}
                                                     {% set performance_indicator_mapping = performance_indicator_mappings.get(report.form_id)%}
                                                     <div class="table-responsive">
                                                         <table class="table table-stripped table-bordered table-hover">

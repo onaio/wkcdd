@@ -41,9 +41,9 @@ class TestProjectViews(IntegrationTestBase):
         response = self.project_views.show()
         self.assertIsInstance(response['project'], Project)
         self.assertEqual(response['performance_indicators'],
-                         project.reports[0].calculate_performance_indicators())
+                         project.reports[0].get_performance_indicators())
         self.assertEqual(response['impact_indicators'],
-                         project.reports[0].calculate_impact_indicators())
+                         project.reports[0].get_impact_indicators())
 
     def test_search_project_list(self):
         self.setup_test_data()

@@ -42,10 +42,10 @@ class TestReport(TestBase):
         self.assertEquals(report, report_submission)
 
     # Number of beneficiaries with increased income earned from the project
-    def test_calculate_impact_indicator(self):
+    def test_get_impact_indicator(self):
         self.setup_test_data()
         report = Report.get(Report.project_code == 'YH9T')
-        impact_indicators = report.calculate_impact_indicators()
+        impact_indicators = report.get_impact_indicators()
         self.assertEquals(
             impact_indicators['impact_information/b_income'], '1')
         self.assertEquals(
