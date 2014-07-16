@@ -89,6 +89,38 @@ class Project(Base):
     def image_file(self):
         return self.project_data.get('group_photo') or ''
 
+    @property
+    def mis_code(self):
+        return "P{}{}".format(self.code, self.id)
+
+    @property
+    def start_date(self):
+        return self.project_data[constants.PROJECT_START_DATE]
+
+    @property
+    def chairperson(self):
+        return self.project_data[constants.PROJECT_CHAIRPERSON]
+
+    @property
+    def chairperson_phone_number(self):
+        return self.project_data[constants.PROJECT_CHAIRPERSON_PHONE]
+
+    @property
+    def secretary(self):
+        return self.project_data[constants.PROJECT_SECRETARY]
+
+    @property
+    def secretary_phone_number(self):
+        return self.project_data[constants.PROJECT_SECRETARY_PHONE]
+
+    @property
+    def treasurer(self):
+        return self.project_data[constants.PROJECT_TREASURER]
+
+    @property
+    def treasurer_phone_number(self):
+        return self.project_data[constants.PROJECT_TREASURER_PHONE]
+
     def get_projects(self, *criterion):
         if criterion is not None:
             try:

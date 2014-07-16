@@ -1,5 +1,7 @@
 import tablib
 
+from wkcdd import constants
+
 
 class TablibRenderer(object):
 
@@ -16,6 +18,12 @@ class TablibRenderer(object):
             # Generate dataset for impact indicators
             title, headers, rows, summary_row = (
                 self.generate_impact_indicator_dataset(value))
+        elif value.get('is_project_export'):
+            title, headers, rows, summary_row = (
+                self.generate_project_mis_export(value))
+        elif value.get('is_report_export'):
+            title, headers, rows, summary_row = (
+                self.generate_mis_project_indicator_reports(value))
         else:
             # Generate dataset for performance indicators
             title, headers, rows, summary_row = (
@@ -23,11 +31,15 @@ class TablibRenderer(object):
 
         dataset = tablib.Dataset(headers)
         dataset.title = title
+
         for row in rows:
             dataset.append(row)
+
         # prepend a summary title to the summary row
-        summary_row[:0] = ['Total Summary']
-        dataset.append(summary_row)
+        if summary_row:
+            summary_row[:0] = ['Total Summary']
+            dataset.append(summary_row)
+
         return dataset
 
     def generate_impact_indicator_dataset(self, value):
@@ -85,6 +97,99 @@ class TablibRenderer(object):
              for target, actual, percentage in indicator_keys])
 
         return title, headers, dataset_rows, dataset_summary_row
+
+    def generate_project_mis_export(self, value):
+        projects = value.get('projects')
+        title = "MIS Project Export"
+        headers = []
+        rows = []
+        summary_row = []
+        if projects:
+            headers = ["Project ID", "Start Date", "Name", "County",
+                       "Sub County", "Constituency", "Community", "Sector",
+                       "Category", "Chairman", "Phone Number", "Secretary",
+                       "Phone Number", "Treasurer", "Phone Number"]
+
+            for project in projects:
+                row = []
+                row.append(project.mis_code)
+                row.append(project.start_date)
+                row.append(project.name)
+
+                community = project.community
+                constituency = community.constituency
+                sub_county = constituency.sub_county
+                county = sub_county.county
+                row.append(county.mis_code or county.name)
+                row.append(sub_county.mis_code or sub_county.name)
+                row.append(constituency.mis_code or constituency.name)
+                row.append(community.mis_code or community.name)
+
+                row.append(project.sector)
+                row.append(project.project_type.name)
+
+                row.append(project.chairperson)
+                row.append(project.chairperson_phone_number)
+
+                row.append(project.secretary)
+                row.append(project.secretary_phone_number)
+
+                row.append(project.treasurer)
+                row.append(project.treasurer_phone_number)
+
+                rows.append(row)
+
+            return title, headers, rows, summary_row
+        else:
+            raise ValueError("No projects to generate MIS report")
+
+    def generate_mis_project_indicator_reports(self, value):
+        reports = value.get('reports')
+        title = "MIS Indicator Export"
+        headers = []
+        rows = []
+        summary_row = []
+
+        if reports:
+            # generate MIS reports based on the agreed format.
+            headers = ["Community Code", "Project Code", "Indicator Code",
+                       "Expected Value", "Actual Value", "Month", "Year"]
+
+            for report in reports:
+                project = report.project
+
+                # Skip reports without a valid project entry
+
+                if project is None:
+                    continue
+
+                # Add function for retrieving list of report indicator values
+                indicators = report.get_performance_indicators()
+                indicator_mapping = (
+                    constants.PERFORMANCE_INDICATOR_REPORTS[report.form_id])
+
+                for label, keys in indicator_mapping:
+                    row = []
+                    row.append(project.community.mis_code)
+                    row.append(project.mis_code)
+
+                    # generate indicator key in a fancy way e.g. Community
+                    # Contribution = CC
+                    row.append(label)
+
+                    expected_value_key = keys[0]
+                    actual_value_key = keys[1]
+
+                    row.append(indicators[expected_value_key])
+                    row.append(indicators[actual_value_key])
+                    row.append(report.month)
+                    row.append(report.period)
+
+                    rows.append(row)
+
+            return title, headers, rows, summary_row
+        else:
+            raise ValueError("No reports to generate MIS report")
 
     def __call__(self, value, system):
         raise NotImplementedError("Use a specific subclass")

@@ -1,11 +1,13 @@
 import unittest
 
 from pyramid import testing
+from wkcdd.tests.test_base import IntegrationTestBase
 from wkcdd.renderers import TablibXLSXRenderer
 from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import get_performance_sector_mapping
 from wkcdd import constants
 from wkcdd.models import County
+from wkcdd.models import Project, Report
 
 
 class TestTablibRenderer(unittest.TestCase):
@@ -76,6 +78,34 @@ class TestTablibRenderer(unittest.TestCase):
             'search_criteria': {'selected_sector': {'sector': goat_reg_id}}
         }
         renderer(data, {'request': request})
+        self.assertEqual(
+            request.response.content_type,
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  # noqa
+
+
+class TestTablibRendererIntegration(IntegrationTestBase):
+    def test_generate_project_mis_export(self):
+        self.setup_test_data()
+        projects = Project.all()
+        request = testing.DummyRequest()
+        renderer = TablibXLSXRenderer({})
+        data = {'projects': projects,
+                'is_project_export': True}
+
+        renderer(data, {'request': request})
+        self.assertEqual(
+            request.response.content_type,
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  # noqa
+
+    def test_generate_project_report_mis_export(self):
+        self.setup_report_period_test_data()
+        reports = Report.all()
+        request = testing.DummyRequest()
+        renderer = TablibXLSXRenderer({})
+        data = {'reports': reports,
+                'is_report_export': True}
+        renderer(data, {'request': request})
+
         self.assertEqual(
             request.response.content_type,
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  # noqa
