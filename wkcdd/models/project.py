@@ -112,6 +112,9 @@ class Project(Base):
     def mis_sector_code(self):
         return self.mis_project_map[self.sector]
 
+    def mis_code(self):
+        return "P{}{}".format(self.code, self.id)
+
     @property
     def start_date(self):
         return self.project_data[constants.PROJECT_START_DATE]
