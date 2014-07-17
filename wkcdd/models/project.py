@@ -60,6 +60,21 @@ class Project(Base):
                            order_by='desc(Report.submission_time)')
     project_data = Column(JSON, nullable=False)
 
+    mis_project_map = {
+        'dairy_cows_project_registration3': 'dairy_cows',
+        'dairy_goat_project_registration': 'dairy_goat',
+        'field_industrial_crops_project_registration': (
+            'field_industrial_crops'),
+        'bodaboda_project_registration': 'bodaboda',
+        'poultry_project_registration': 'poultry',
+        'banana_project_registration2': 'banana',
+        'catering_project_registration': 'catering',
+        'piggery_project_registration': 'piggery',
+        'fish_farming_project_registration': 'fish_farming',
+        'oxen_plough_project_registration': 'oxen_plough',
+        'tailoring_project_registration': 'tailoring'
+    }
+
     def __str__(self):
         return self.name
 
@@ -90,8 +105,8 @@ class Project(Base):
         return self.project_data.get('group_photo') or ''
 
     @property
-    def mis_code(self):
-        return "P{}{}".format(self.code, self.id)
+    def mis_sector_code(self):
+        return self.mis_project_map[self.sector]
 
     @property
     def start_date(self):

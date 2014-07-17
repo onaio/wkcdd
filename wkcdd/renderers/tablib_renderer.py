@@ -112,7 +112,7 @@ class TablibRenderer(object):
 
             for project in projects:
                 row = []
-                row.append(project.mis_code)
+                row.append(project.code.upper())
                 row.append(project.start_date)
                 row.append(project.name)
 
@@ -120,13 +120,13 @@ class TablibRenderer(object):
                 constituency = community.constituency
                 sub_county = constituency.sub_county
                 county = sub_county.county
-                row.append(county.mis_code or county.name)
-                row.append(sub_county.mis_code or sub_county.name)
-                row.append(constituency.mis_code or constituency.name)
-                row.append(community.mis_code or community.name)
+                row.append(county.get_mis_code())
+                row.append(sub_county.get_mis_code())
+                row.append(constituency.get_mis_code())
+                row.append(community.get_mis_code())
 
-                row.append(project.sector)
-                row.append(project.project_type.name)
+                row.append(project.mis_sector_code)
+                row.append(project.project_type.name.upper())
 
                 row.append(project.chairperson)
                 row.append(project.chairperson_phone_number)
@@ -170,8 +170,8 @@ class TablibRenderer(object):
 
                 for label, keys in indicator_mapping:
                     row = []
-                    row.append(project.community.mis_code)
-                    row.append(project.mis_code)
+                    row.append(project.community.get_mis_code())
+                    row.append(project.code.upper())
 
                     # generate indicator key in a fancy way e.g. Community
                     # Contribution = CC

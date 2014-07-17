@@ -82,6 +82,9 @@ class Location(Base):
         """
         return humanize(self.name).title()
 
+    def get_mis_code(self):
+        return self.mis_code.upper() if self.mis_code else self.name.upper()
+
     @classmethod
     def get_child_ids(cls, parent_ids):
         raise NotImplementedError
