@@ -105,10 +105,10 @@ class TablibRenderer(object):
         rows = []
         summary_row = []
         if projects:
-            headers = ["Project ID", "Start Date", "Name", "County",
-                       "Sub County", "Constituency", "Community", "Sector",
-                       "Category", "Chairman", "Phone Number", "Secretary",
-                       "Phone Number", "Treasurer", "Phone Number"]
+            headers = ["ProjectID", "StartDate", "Name", "County",
+                       "SubCounty", "Constituency", "Community", "Sector",
+                       "Category", "Chairman", "Cno", "Secretary",
+                       "Sno", "Treasurer", "Tno"]
 
             for project in projects:
                 row = []
@@ -152,8 +152,8 @@ class TablibRenderer(object):
 
         if reports:
             # generate MIS reports based on the agreed format.
-            headers = ["Community Code", "Project Code", "Indicator Code",
-                       "Expected Value", "Actual Value", "Month", "Year"]
+            headers = ["Community", "ProjectID", "IndicatorCode",
+                       "Expected", "Actual", "Month", "Year"]
 
             for report in reports:
                 project = report.project
