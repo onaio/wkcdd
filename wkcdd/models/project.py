@@ -84,7 +84,11 @@ class Project(Base):
 
     @property
     def latlong(self):
-        latlong = self.geolocation.split(' ')[0:2] if self.geolocation else []
+        latlong = []
+        if self.geolocation and self.geolocation.strip():
+            latlong = self.geolocation.split(' ')[0:2]
+            latlong = latlong if latlong[0] and latlong[1] else []
+
         return latlong
 
     @property
