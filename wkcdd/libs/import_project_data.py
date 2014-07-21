@@ -25,19 +25,29 @@ OLD_PROJECT_FILE = 'data/old_projects.csv'
 NEW_PROJECT_FILE = 'data/new_projects.csv'
 
 
-def fetch_data(form_id):
-    headers = {'Authorization':
-               'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'
-               }
-    ona_rest_api = 'https://ona.io/api/v1/data/wkcdd/'
-    onadata_url = ona_rest_api + form_id
-    response = requests.get(onadata_url, headers=headers)
+ONA_HEADERS = {
+    'Authorization': 'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'}
+
+
+def fetch_ona_url(url, headers=ONA_HEADERS):
+    response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
         raise Exception("Server responded with %s" % response.status_code)
 
     raw_data = response.json()
+
     return raw_data
+
+
+def fetch_data(form_id):
+    headers = {'Authorization':
+               'Token 1142ea373ff4bcf894e83ef76ef8c99d3e5fb587'
+               }
+
+    url = 'https://ona.io/api/v1/data/%s' % form_id
+
+    return fetch_ona_url(url, headers)
 
 
 def populate_projects_table(raw_data, project_code):
@@ -77,19 +87,39 @@ def populate_reports_table(raw_data, project_report_code):
         Report.add_report_submission(report_submission)
 
 
+def get_ona_form_list(url='https://ona.io/api/v1/forms'):
+    return fetch_ona_url(url)
+
+
+def get_formid(id_string, form_list):
+    for form in form_list:
+        if form['id_string'] == id_string:
+            return form['formid']
+
+    raise Exception('Form with id_string %s not found' % id_string)
+
+
 # fetch project registration data and persist it to the DB
 def fetch_project_registration_data():
+    form_list = get_ona_form_list()
+
     for project_registration_form, project_code\
             in constants.PROJECT_REGISTRATION_FORMS:
-            with transaction.manager:
-                populate_projects_table(fetch_data(project_registration_form),
-                                        project_code)
+        project_registration_form = get_formid(project_registration_form,
+                                               form_list)
+        with transaction.manager:
+            populate_projects_table(fetch_data(project_registration_form),
+                                    project_code)
 
 
 # fetch project report data and persist it to the DB
 def fetch_report_form_data():
+    form_list = get_ona_form_list()
+
     for project_report_form, project_report_code\
             in constants.PROJECT_REPORT_FORMS:
+        project_report_form = get_formid(project_report_form, form_list)
+
         with transaction.manager:
             populate_reports_table(fetch_data(project_report_form),
                                    project_report_code)
