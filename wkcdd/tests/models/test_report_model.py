@@ -4,7 +4,10 @@ import os
 
 from wkcdd import constants
 from wkcdd.libs import utils
-from wkcdd.models.indicator import TotalDirectBeneficiariesIndicator
+from wkcdd.models.indicator import (
+    TotalAverageMonthlyIncomeIndicator,
+    TotalDirectBeneficiariesIndicator,
+    PercentageIncomeIncreasedIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -453,8 +456,9 @@ class TestReport(TestBase):
 
     def test_calculation_of_percentage_income_increased(self):
         self._result_indicator_setup()
-        percentage_income_increased = (
-            Report.get_percentage_income_increased(self.project_ids))
+
+        percentage_income_increased = \
+            PercentageIncomeIncreasedIndicator.get_value(self.project_ids)
 
         self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
 
@@ -468,3 +472,9 @@ class TestReport(TestBase):
         total_beneficiaries = \
             TotalDirectBeneficiariesIndicator.get_value(self.project_ids)
         self.assertEqual(total_beneficiaries, 34)
+
+    def test_average_monthly_income_indicator(self):
+        self._result_indicator_setup()
+        total_beneficiaries = \
+            TotalAverageMonthlyIncomeIndicator.get_value(self.project_ids)
+        self.assertEqual(total_beneficiaries, 11250.0)

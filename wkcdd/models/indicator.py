@@ -32,5 +32,33 @@ class Indicator(object):
         return total
 
 
+class RatioIndicator(object):
+    numerator_class = None
+    denomenator_class = None
+
+    def __init__(self, numerator, denomenator):
+        self.numerator_class = numerator
+        self.denomenator_class = denomenator
+
+    @classmethod
+    def get_value(cls, project_ids):
+        numerator_value = cls.numerator_class.get_value(project_ids)
+        denomenator_value = cls.denomenator_class.get_value(project_ids)
+
+        if not denomenator_value:
+            return 0
+
+        return float(numerator_value) / float(denomenator_value)
+
+
 class TotalDirectBeneficiariesIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATOR_DIRECT_BENEFICIARIES
+
+
+class TotalAverageMonthlyIncomeIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME
+
+
+class PercentageIncomeIncreasedIndicator(RatioIndicator):
+    numerator_class = TotalAverageMonthlyIncomeIndicator
+    denomenator_class = TotalDirectBeneficiariesIndicator
