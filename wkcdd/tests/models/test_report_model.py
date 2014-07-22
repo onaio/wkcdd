@@ -8,7 +8,8 @@ from wkcdd.models.indicator import (
     TotalAverageMonthlyIncomeIndicator,
     TotalDirectBeneficiariesIndicator,
     PercentageIncomeIncreasedIndicator,
-    TotalBeneficiariesIndicator)
+    TotalBeneficiariesIndicator,
+    TotalFemaleBeneficiariesIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -480,3 +481,9 @@ class TestReport(TestBase):
         total_beneficiaries = \
             TotalAverageMonthlyIncomeIndicator.get_value(self.project_ids)
         self.assertEqual(total_beneficiaries, 11250.0)
+
+    def test_total_female_beneficiaries_indicator(self):
+        self._result_indicator_setup()
+        total_female_beneficiaries = \
+            TotalFemaleBeneficiariesIndicator.get_value(self.project_ids)
+        self.assertEqual(total_female_beneficiaries, 20.0)
