@@ -4,6 +4,7 @@ import os
 
 from wkcdd import constants
 from wkcdd.libs import utils
+from wkcdd.models.indicator import TotalDirectBeneficiariesIndicator
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -462,3 +463,8 @@ class TestReport(TestBase):
         total_beneficiaries = Report.get_total_beneficiaries(self.project_ids)
         self.assertEqual(total_beneficiaries, 80.0)
 
+    def test_total_direct_beneficiaries_indicator(self):
+        self._result_indicator_setup()
+        total_beneficiaries = \
+            TotalDirectBeneficiariesIndicator.get_value(self.project_ids)
+        self.assertEqual(total_beneficiaries, 34)
