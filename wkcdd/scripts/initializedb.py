@@ -17,6 +17,7 @@ from wkcdd.libs.import_project_data import (
     fetch_project_registration_data,
     fetch_report_form_data
 )
+from wkcdd.libs.mis_location_integration import read_mis_csv
 
 
 def usage(argv):
@@ -40,16 +41,26 @@ def get_settings(argv):
     return get_appsettings(config_uri)
 
 
-def main(argv=sys.argv):
-    settings = get_settings(argv)
+def get_engine(args):
+    settings = get_settings(args)
     engine = setup_database_engine(settings)
+    return engine
+
+
+def main(argv=sys.argv):
+    engine = get_engine(argv)
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
 
 
 def import_data(argv=sys.argv):
-    settings = get_settings(argv)
-    engine = setup_database_engine(settings)
+    engine = get_engine(argv)
     DBSession.configure(bind=engine)
     fetch_project_registration_data()
     fetch_report_form_data()
+
+
+def mis_encode_locations(argv=sys.argv):
+    engine = get_engine(argv)
+    DBSession.configure(bind=engine)
+    read_mis_csv()
