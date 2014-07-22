@@ -1,5 +1,17 @@
 
 from collections import defaultdict
+from sqlalchemy import (
+    Column,
+    Integer,
+    DateTime,
+    String,
+    Enum,
+    desc,
+    Float
+)
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import JSON
 
 from wkcdd import constants
 from wkcdd.models.project import Project
@@ -9,18 +21,6 @@ from wkcdd.models.base import (
     DBSession,
     BaseModelFactory
 )
-from sqlalchemy.orm.exc import NoResultFound
-
-from sqlalchemy import (
-    Column,
-    Integer,
-    DateTime,
-    String,
-    Enum,
-    desc
-)
-from sqlalchemy.dialects.postgresql import JSON
-
 from wkcdd.libs.utils import (
     get_impact_indicator_list,
     sum_reduce_func)
@@ -419,6 +419,54 @@ class Report(Base):
             series_map[item.pretty] = series_data
 
         return series_map
+
+    @classmethod
+    def sum_indicator_query(cls, project_ids, indicator):
+        query = DBSession.query(
+            func.sum(
+                Report.report_data[indicator].cast(Float)))\
+            .join(Project, Report.project_code == Project.code)\
+            .filter(Project.id.in_(project_ids))\
+            .filter(Report.status == Report.APPROVED)
+        return query.first()[0]
+
+    @classmethod
+    def get_total_average_monthly_income(cls, project_ids):
+        total_average_monthly_income = 0
+
+        for indicator in constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME:
+            value = cls.sum_indicator_query(project_ids, indicator)
+
+            if value:
+                total_average_monthly_income += value
+
+        return total_average_monthly_income
+
+    @classmethod
+    def get_total_direct_beneficiaries(cls, project_ids):
+        total_direct_beneficiaries = 0
+
+        for indicator in constants.RESULT_INDICATOR_DIRECT_BENEFICIARIES:
+            value = cls.sum_indicator_query(project_ids, indicator)
+
+            if value:
+                total_direct_beneficiaries += value
+
+        return total_direct_beneficiaries
+
+    @classmethod
+    def get_percentage_income_increased(cls, project_ids):
+        numerator = cls.get_total_average_monthly_income(project_ids)
+        denomenator = cls.get_total_direct_beneficiaries(project_ids)
+
+        if denomenator == 0:
+            return 0
+
+        return float(numerator) / float(denomenator)
+
+    @classmethod
+    def generate_report_indicators(child_locations, *criteria):
+        pass
 
 
 class ReportError(Exception):

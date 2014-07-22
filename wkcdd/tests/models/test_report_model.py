@@ -439,3 +439,16 @@ class TestReport(TestBase):
         results = Report.get_latest_month_for_year('2012_13')
 
         self.assertEqual(results[0], 5)
+
+    def test_calculation_of_percentage_income_increased(self):
+        self.setup_test_data()
+        locations = County.all()
+        project_ids = []
+
+        for location in locations:
+            project_ids.extend(location.get_project_ids())
+
+        percentage_income_increased = (
+            Report.get_percentage_income_increased(project_ids))
+
+        self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)

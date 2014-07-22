@@ -1337,3 +1337,32 @@ PROJECT_DETAILS_KEYS = (
     ('treasurer', _('Treasurer')),
     ('number_treas', _('Treasurer Phone Number'))
 )
+
+RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME = (
+    'impact_information/bnf_income_achievement',
+    'mproject_performance/bnf_income_achievement',
+    'mproject_performance/milk_bnf_sale_achievement',
+    'impact_information/milk_bnf_sale_achievement')
+
+RESULT_INDICATOR_DIRECT_BENEFICIARIES = (
+    'impact_information/db_achievement',
+    'mproject_performance/db_achievement')
+
+RESULT_INDICATOR_TOTAL_BENEFICIARIES = (
+    'impact_information/db_achievement',
+    'mproject_performance/db_achievement',
+    'impact_information/mb_achievement',
+    'mproject_performance/mb_achievement',
+    'impact_information/fb_achievement',
+    'mproject_performance/fb_achievement',
+    'impact_information/vb_achievement',
+    'mproject_performance/vb_achievement')
+
+RESULT_INDICATORS_FEMALE_BENEFICIARIES = (
+    'impact_information/fb_achievement',
+    'mproject_performance/fb_achievement', )
+
+RESULT_INDICATORS_VULN_MEMBERS = (
+    'membership/v_members')
+RESULT_INDICATORS_TOTAL_MEMBERS = (
+    'membership/total_members')
