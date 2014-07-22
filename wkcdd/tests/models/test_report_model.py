@@ -10,7 +10,8 @@ from wkcdd.models.indicator import (
     PercentageIncomeIncreasedIndicator,
     TotalBeneficiariesIndicator,
     TotalFemaleBeneficiariesIndicator,
-    TotalVulnerableMemberIndicator)
+    TotalVulnerableCIGMemberIndicator,
+    TotalCIGMemberIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -489,9 +490,14 @@ class TestReport(TestBase):
             TotalFemaleBeneficiariesIndicator.get_value(self.project_ids)
         self.assertEqual(total_female_beneficiaries, 20.0)
 
-    def test_total_vulnerable_members(self):
+    def test_total_vulnerable_members_indicator(self):
         self._result_indicator_setup()
         total_vulnerable_members = \
-            TotalVulnerableMemberIndicator.get_value(self.project_ids)
+            TotalVulnerableCIGMemberIndicator.get_value(self.project_ids)
 
         self.assertEqual(total_vulnerable_members, 67.0)
+
+    def test_total_cig_member_indicator(self):
+        self._result_indicator_setup()
+        total_cig_members = TotalCIGMemberIndicator.get_value(self.project_ids)
+        self.assertEqual(total_cig_members, 276.0)

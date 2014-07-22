@@ -68,8 +68,12 @@ class TotalFemaleBeneficiariesIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_FEMALE_BENEFICIARIES
 
 
-class TotalVulnerableMemberIndicator(Indicator):
+class TotalVulnerableCIGMemberIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_VULN_MEMBERS
+
+
+class TotalCIGMemberIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_TOTAL_MEMBERS
 
 
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
