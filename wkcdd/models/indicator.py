@@ -59,6 +59,10 @@ class TotalAverageMonthlyIncomeIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME
 
 
+class TotalBeneficiariesIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATOR_TOTAL_BENEFICIARIES
+
+
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
     numerator_class = TotalAverageMonthlyIncomeIndicator
     denomenator_class = TotalDirectBeneficiariesIndicator
