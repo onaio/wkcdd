@@ -17,6 +17,7 @@ class Indicator(object):
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
             .filter(Report.status == Report.APPROVED)
+
         return query.first()[0]
 
     @classmethod

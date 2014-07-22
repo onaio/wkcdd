@@ -494,4 +494,4 @@ class TestReport(TestBase):
         total_vulnerable_members = \
             TotalVulnerableMemberIndicator.get_value(self.project_ids)
 
-        self.assertEqual(total_vulnerable_members, 0)
+        self.assertEqual(total_vulnerable_members, 67.0)

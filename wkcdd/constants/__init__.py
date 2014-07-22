@@ -1363,6 +1363,6 @@ RESULT_INDICATORS_FEMALE_BENEFICIARIES = (
     'mproject_performance/fb_achievement', )
 
 RESULT_INDICATORS_VULN_MEMBERS = (
-    'membership/v_members')
+    'membership/v_members', )
 RESULT_INDICATORS_TOTAL_MEMBERS = (
-    'membership/total_members')
+    'membership/total_members', )
