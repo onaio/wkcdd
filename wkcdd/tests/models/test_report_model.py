@@ -440,7 +440,7 @@ class TestReport(TestBase):
 
         self.assertEqual(results[0], 5)
 
-    def test_calculation_of_percentage_income_increased(self):
+    def _result_indicator_setup(self):
         self.setup_test_data()
         locations = County.all()
         project_ids = []
@@ -448,7 +448,17 @@ class TestReport(TestBase):
         for location in locations:
             project_ids.extend(location.get_project_ids())
 
+        self.project_ids = project_ids
+
+    def test_calculation_of_percentage_income_increased(self):
+        self._result_indicator_setup()
         percentage_income_increased = (
-            Report.get_percentage_income_increased(project_ids))
+            Report.get_percentage_income_increased(self.project_ids))
 
         self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
+
+    def test_calculation_of_total_beneficiaries(self):
+        self._result_indicator_setup()
+        total_beneficiaries = Report.get_total_beneficiaries(self.project_ids)
+        self.assertEqual(total_beneficiaries, 80.0)
+

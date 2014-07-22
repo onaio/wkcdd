@@ -465,6 +465,18 @@ class Report(Base):
         return float(numerator) / float(denomenator)
 
     @classmethod
+    def get_total_beneficiaries(cls, project_ids):
+        total_beneficiaries = 0
+
+        for indicator in constants.RESULT_INDICATOR_TOTAL_BENEFICIARIES:
+            value = cls.sum_indicator_query(project_ids, indicator)
+
+            if value:
+                total_beneficiaries += value
+
+        return total_beneficiaries
+
+    @classmethod
     def generate_report_indicators(child_locations, *criteria):
         pass
 
