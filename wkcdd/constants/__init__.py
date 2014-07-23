@@ -1328,14 +1328,22 @@ PROJECT_TYPE_MAPPING = [
      _("Tailoring")),
 ]
 
+PROJECT_START_DATE = 'start_date'
+PROJECT_CHAIRPERSON = 'chair'
+PROJECT_CHAIRPERSON_PHONE = 'cp_phone'
+PROJECT_SECRETARY = 'secretary'
+PROJECT_SECRETARY_PHONE = 'sec_phone'
+PROJECT_TREASURER = 'treasurer'
+PROJECT_TREASURER_PHONE = 'number_treas'
+
 PROJECT_DETAILS_KEYS = (
-    ('start_date', _('Project Start Date')),
-    ('chair', _('Chairperson')),
-    ('cp_phone', _('Chairperson Phone Number')),
-    ('secretary', _('Secretary')),
-    ('sec_phone', _('Secretary Phone Number')),
-    ('treasurer', _('Treasurer')),
-    ('number_treas', _('Treasurer Phone Number'))
+    (PROJECT_START_DATE, _('Project Start Date')),
+    (PROJECT_CHAIRPERSON, _('Chairperson')),
+    (PROJECT_CHAIRPERSON_PHONE, _('Chairperson Phone Number')),
+    (PROJECT_SECRETARY, _('Secretary')),
+    (PROJECT_SECRETARY_PHONE, _('Secretary Phone Number')),
+    (PROJECT_TREASURER, _('Treasurer')),
+    (PROJECT_TREASURER_PHONE, _('Treasurer Phone Number'))
 )
 
 RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME = (

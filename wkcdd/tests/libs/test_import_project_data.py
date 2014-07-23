@@ -2,6 +2,8 @@ from wkcdd import constants
 from wkcdd.models.project import Project
 from wkcdd.models.report import Report
 from wkcdd.libs.import_project_data import(
+    get_ona_form_list,
+    get_formid,
     fetch_data,
     add_project,
     populate_reports_table)
@@ -24,7 +26,9 @@ class TestProjectImport(TestBase):
 
     # FIXME should not make actual HTTP Call
     def test_fetch_data(self):
-        form_id = constants.DAIRY_COWS_PROJECT_REGISTRATION
+        form_list = get_ona_form_list()
+        form_id = get_formid(constants.DAIRY_COWS_PROJECT_REGISTRATION,
+                             form_list)
         raw_data = fetch_data(form_id)
         self.assertIsInstance(raw_data, list)
         self.assertTrue(len(raw_data) > 0)
