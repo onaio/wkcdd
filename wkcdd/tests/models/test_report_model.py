@@ -12,8 +12,8 @@ from wkcdd.models.indicator import (
     TotalFemaleBeneficiariesIndicator,
     TotalVulnerableCIGMemberIndicator,
     TotalCIGMemberIndicator,
-    CGAExpectedAttendanceIndicator,
-    CGAActualAttendanceIndicator,
+    ExpectedCGAAttendanceIndicator,
+    ActualCGAAttendanceIndicator,
     PercentageCGAAttendanceIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
@@ -508,13 +508,13 @@ class TestReport(TestBase):
     def test_expected_cig_cga_attendance_indicator(self):
         self._result_indicator_setup()
         expected_cga_attendance = \
-            CGAExpectedAttendanceIndicator.get_value('q_2')
+            ExpectedCGAAttendanceIndicator.get_value('q_2')
         self.assertEqual(expected_cga_attendance, 104.0)
 
     def test_actual_cig_cga_attendance_indicator(self):
         self._result_indicator_setup()
         actual_cga_attendance = \
-            CGAActualAttendanceIndicator.get_value('q_2')
+            ActualCGAAttendanceIndicator.get_value('q_2')
         self.assertEqual(actual_cga_attendance, 93.0)
 
     def test_percentage_cga_attendcance_indicator(self):

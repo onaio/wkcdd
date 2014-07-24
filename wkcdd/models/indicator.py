@@ -94,14 +94,14 @@ class MeetingReportIndicator(Indicator):
         return query.first()[0]
 
 
-class CGAExpectedAttendanceIndicator(MeetingReportIndicator):
+class ExpectedCGAAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE
 
 
-class CGAActualAttendanceIndicator(MeetingReportIndicator):
+class ActualCGAAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
 
 
 class PercentageCGAAttendanceIndicator(RatioIndicator):
-    numerator_class = CGAExpectedAttendanceIndicator
-    denomenator_class = CGAActualAttendanceIndicator
+    numerator_class = ExpectedCGAAttendanceIndicator
+    denomenator_class = ActualCGAAttendanceIndicator
