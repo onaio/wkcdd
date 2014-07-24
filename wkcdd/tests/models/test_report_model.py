@@ -16,6 +16,7 @@ from wkcdd.models.indicator import (
     ActualCGAAttendanceIndicator,
     PercentageCGAAttendanceIndicator,
     ExpectedCDDCAttendanceIndicator,
+    ActualCDDCAttendanceIndicator,
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -529,3 +530,9 @@ class TestReport(TestBase):
         expected_cddc_attendance = \
             ExpectedCDDCAttendanceIndicator.get_value('q_2')
         self.assertEqual(expected_cddc_attendance, 15.0)
+
+    def test_actual_cddc_attendance_indicator(self):
+        self._result_indicator_setup()
+        actual_cddc_attendance = \
+            ActualCDDCAttendanceIndicator.get_value('q_2')
+        self.assertEqual(actual_cddc_attendance, 12.0)

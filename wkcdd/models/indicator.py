@@ -110,3 +110,7 @@ class PercentageCGAAttendanceIndicator(RatioIndicator):
 class ExpectedCDDCAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_EXPECTED_CDDC_ATTENDANCE
 
+
+class ActualCDDCAttendanceIndicator(MeetingReportIndicator):
+    indicator_list = constants.RESULT_INDICATORS_ACTUAL_CDDC_ATTENDANCE
+
