@@ -74,6 +74,8 @@ REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
 REPORT_PERIOD = 'perfomance_summary/year'
 
+MEETING_REPORT = 'meetings_report3'
+
 PROJECT_REGISTRATION_FORMS = (
     (DAIRY_GOAT_PROJECT_REGISTRATION, DAIRY_GOAT_PROJECT_CODE),
     (DAIRY_COWS_PROJECT_REGISTRATION, DAIRY_COWS_PROJECT_CODE),
@@ -1374,3 +1376,34 @@ RESULT_INDICATORS_VULN_MEMBERS = (
     'membership/v_members', )
 RESULT_INDICATORS_TOTAL_MEMBERS = (
     'membership/total_members', )
+
+# percentage of community members participating in CGA
+# Meeting Report indicators
+RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE = ('meetings/cga_expected_members', )
+RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE = ('meetings/cga_members_attended', )
+
+# Percentage of CDDC members participating in decision making
+# Meeting Report indicators
+RESULT_INDICATORS_EXPECTED_CDDC_ATTENDANCE = (
+    'meetings/cddc_expected_members', )
+RESULT_INDICATORS_ACTUAL_CDDC_ATTENDANCE = ('meetings/cddc_members_attended', )
+
+# Percentage of PMC members participating in decision making
+# Found in each project report form
+RESULT_INDICATORS_EXPECTED_PMC_ATTENDANCE = (
+    'meetings/epmc_expected_members', )
+RESULT_INDICATORS_ACTUAL_PMC_ATTENDANCE = ('meetings/epmc_members_attended', )
+
+# Percentage of CIG members participating in decision making
+# Found in each project report form
+RESULT_INDICATORS_EXPECTED_CIG_ATTENDANCE = ('meetings/mmm_expected_members', )
+RESULT_INDICATORS_ACTUAL_CIG_ATTENDANCE = ('meetings/mmm_members_attended', )
+
+# Count of CDDCs managing development priorities identified in the
+# CAPs and YAPs
+
+# TODO Confirm how this indicator is called in the different forms
+RESULT_INDICATORS_CDDC_MEETING_COUNT_RATIO = ('meetings/cddc_mh_percentage', )
+
+# Found in each project report form
+RESULT_INDICATORS_GEOLOCATION_FIELD = (GEOLOCATION, )
