@@ -105,3 +105,8 @@ class ActualCGAAttendanceIndicator(MeetingReportIndicator):
 class PercentageCGAAttendanceIndicator(RatioIndicator):
     numerator_class = ExpectedCGAAttendanceIndicator
     denomenator_class = ActualCGAAttendanceIndicator
+
+
+class ExpectedCDDCAttendanceIndicator(MeetingReportIndicator):
+    indicator_list = constants.RESULT_INDICATORS_EXPECTED_CDDC_ATTENDANCE
+
