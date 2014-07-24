@@ -24,11 +24,11 @@ class Indicator(object):
         return query.first()[0]
 
     @classmethod
-    def get_value(cls, project_ids):
+    def get_value(cls, control_values):
         total = 0
 
         for indicator in cls.indicator_list:
-            value = cls.sum_indicator_query(project_ids, indicator)
+            value = cls.sum_indicator_query(control_values, indicator)
 
             if value:
                 total += value
