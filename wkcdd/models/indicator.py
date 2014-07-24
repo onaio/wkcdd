@@ -169,3 +169,8 @@ class CountIndicator(object):
     def get_value(cls, quarter):
         return cls.count_indicator_query(quarter)
 
+
+class CDDCManagemnentCountIndicator(CountIndicator):
+    klass = MeetingReport
+    fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
+    count_criteria = [50.0, 50.0]
