@@ -140,3 +140,7 @@ class ExpectedCIGAttendanceIndicator(Indicator):
 class ActualCIGAttendanceIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_CIG_ATTENDANCE
 
+
+class PercentageCIGAttendanceIndicator(RatioIndicator):
+    numerator_class = ExpectedCIGAttendanceIndicator
+    denomenator_class = ActualCIGAttendanceIndicator
