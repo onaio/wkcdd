@@ -1,5 +1,5 @@
 from sqlalchemy import Float
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, and_
 
 from wkcdd import constants
 from wkcdd.models import (
@@ -144,3 +144,28 @@ class ActualCIGAttendanceIndicator(Indicator):
 class PercentageCIGAttendanceIndicator(RatioIndicator):
     numerator_class = ExpectedCIGAttendanceIndicator
     denomenator_class = ActualCIGAttendanceIndicator
+
+
+class CountIndicator(object):
+    klass = None
+    fields = []
+    count_criteria = []
+
+    @classmethod
+    def count_indicator_query(cls, quarter):
+        and_criteria = []
+        for idx, field in enumerate(cls.fields):
+            and_criteria.append(
+                cls.klass.report_data[field].cast(Float) >=
+                cls.count_criteria[idx])
+
+        query = DBSession.query(MeetingReport)\
+            .filter(MeetingReport.quarter == quarter)\
+            .filter(and_(*and_criteria))
+
+        return query.count()
+
+    @classmethod
+    def get_value(cls, quarter):
+        return cls.count_indicator_query(quarter)
+

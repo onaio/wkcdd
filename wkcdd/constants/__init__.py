@@ -1400,10 +1400,9 @@ RESULT_INDICATORS_EXPECTED_CIG_ATTENDANCE = ('meetings/mmm_expected_members', )
 RESULT_INDICATORS_ACTUAL_CIG_ATTENDANCE = ('meetings/mmm_members_attended', )
 
 # Count of CDDCs managing development priorities identified in the
-# CAPs and YAPs
-
-# TODO Confirm how this indicator is called in the different forms
-RESULT_INDICATORS_CDDC_MEETING_COUNT_RATIO = ('meetings/cddc_mh_percentage', )
+# CAPs and YAPs from Meeting Form
+RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT = (
+    'meetings/cddc_mh_percentage', 'meetings/cddc_ma_percentage')
 
 # Found in each project report form
 RESULT_INDICATORS_GEOLOCATION_FIELD = (GEOLOCATION, )
