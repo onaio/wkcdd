@@ -2,7 +2,10 @@ from sqlalchemy import Float
 from sqlalchemy.sql import func
 
 from wkcdd import constants
-from wkcdd.models import Report, Project
+from wkcdd.models import (
+    Report,
+    Project,
+    MeetingReport)
 from wkcdd.models.base import DBSession
 
 
@@ -79,3 +82,18 @@ class TotalCIGMemberIndicator(Indicator):
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
     numerator_class = TotalAverageMonthlyIncomeIndicator
     denomenator_class = TotalDirectBeneficiariesIndicator
+
+
+class MeetingReportIndicator(Indicator):
+    @classmethod
+    def sum_indicator_query(cls, quarter, indicator):
+        query = DBSession.query(
+            func.sum(
+                MeetingReport.report_data[indicator].cast(Float)))\
+            .filter(MeetingReport.quarter == quarter)
+        return query.first()[0]
+
+
+class CGAExpectedAttendanceIndicator(MeetingReportIndicator):
+    indicator_list = constants.RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE
+
