@@ -100,3 +100,8 @@ class CGAExpectedAttendanceIndicator(MeetingReportIndicator):
 
 class CGAActualAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
+
+
+class PercentageCGAAttendanceIndicator(RatioIndicator):
+    numerator_class = CGAExpectedAttendanceIndicator
+    denomenator_class = CGAActualAttendanceIndicator

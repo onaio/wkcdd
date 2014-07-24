@@ -515,3 +515,9 @@ class TestReport(TestBase):
         actual_cga_attendance = \
             CGAActualAttendanceIndicator.get_value('q_2')
         self.assertEqual(actual_cga_attendance, 93.0)
+
+    def test_percentage_cga_attendcance_indicator(self):
+        self._result_indicator_setup()
+        percentage_cga_attendance = \
+            PercentageCGAAttendanceIndicator.get_value('q_2')
+        self.assertAlmostEqual(percentage_cga_attendance, 1.118279569892473)
