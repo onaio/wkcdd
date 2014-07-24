@@ -127,3 +127,7 @@ class ExpectedPMCAttendanceIndicator(Indicator):
 class ActualPMCAttendanceIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_PMC_ATTENDANCE
 
+
+class PercentagePMCAttendanceIndicator(RatioIndicator):
+    numerator_class = ExpectedPMCAttendanceIndicator
+    denomenator_class = ActualPMCAttendanceIndicator
