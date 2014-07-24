@@ -1405,4 +1405,5 @@ RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT = (
     'meetings/cddc_mh_percentage', 'meetings/cddc_ma_percentage')
 
 # Found in each project report form
-RESULT_INDICATORS_GEOLOCATION_FIELD = (GEOLOCATION, )
+RESULT_INDICATORS_ACTUAL_CONTRIBUTION = (
+    "perfomance_summary/actual_contribution", )

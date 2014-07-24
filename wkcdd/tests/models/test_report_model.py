@@ -24,7 +24,8 @@ from wkcdd.models.indicator import (
     ExpectedCIGAttendanceIndicator,
     ActualCIGAttendanceIndicator,
     PercentageCIGAttendanceIndicator,
-    CDDCManagemnentCountIndicator)
+    CDDCManagemnentCountIndicator,
+    ProjectMappingIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -592,3 +593,8 @@ class TestReport(TestBase):
         cddc_management_count = \
             CDDCManagemnentCountIndicator.get_value('q_2')
         self.assertEqual(cddc_management_count, 1)
+
+    def test_project_mapping_indicator(self):
+        self._result_indicator_setup()
+        project_mapping_count = ProjectMappingIndicator.get_value()
+        self.assertEqual(project_mapping_count, 7)

@@ -174,3 +174,16 @@ class CDDCManagemnentCountIndicator(CountIndicator):
     klass = MeetingReport
     fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
     count_criteria = [50.0, 50.0]
+
+
+class ProjectMappingIndicator(CountIndicator):
+    klass = Project
+
+    @classmethod
+    def count_indicator_query(cls):
+        query = DBSession.query(Project).filter(Project.geolocation != None)
+        return query.count()
+
+    @classmethod
+    def get_value(cls):
+        return cls.count_indicator_query()
