@@ -123,3 +123,7 @@ class PercentageCDDCAttendanceIndicator(RatioIndicator):
 class ExpectedPMCAttendanceIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_EXPECTED_PMC_ATTENDANCE
 
+
+class ActualPMCAttendanceIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_ACTUAL_PMC_ATTENDANCE
+

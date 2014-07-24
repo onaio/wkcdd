@@ -19,6 +19,7 @@ from wkcdd.models.indicator import (
     ActualCDDCAttendanceIndicator,
     PercentageCDDCAttendanceIndicator,
     ExpectedPMCAttendanceIndicator,
+    ActualPMCAttendanceIndicator,
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -551,3 +552,8 @@ class TestReport(TestBase):
             ExpectedPMCAttendanceIndicator.get_value(self.project_ids)
         self.assertEqual(expected_pmc_attendance, 30.0)
 
+    def test_actual_pmc_attendance_indicator(self):
+        self._result_indicator_setup()
+        actual_pmc_attendance = \
+            ActualPMCAttendanceIndicator.get_value(self.project_ids)
+        self.assertEqual(actual_pmc_attendance, 27.0)
