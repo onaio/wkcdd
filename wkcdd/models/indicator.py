@@ -166,8 +166,8 @@ class CountIndicator(object):
         return query.count()
 
     @classmethod
-    def get_value(cls, quarter):
-        return cls.count_indicator_query(quarter)
+    def get_value(cls, control_values):
+        return cls.count_indicator_query(control_values)
 
 
 class CDDCManagemnentCountIndicator(CountIndicator):
@@ -177,8 +177,6 @@ class CDDCManagemnentCountIndicator(CountIndicator):
 
 
 class ProjectMappingIndicator(CountIndicator):
-    klass = Project
-
     @classmethod
     def count_indicator_query(cls):
         query = DBSession.query(Project).filter(Project.geolocation != None)
