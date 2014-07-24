@@ -187,3 +187,16 @@ class ProjectMappingIndicator(CountIndicator):
     @classmethod
     def get_value(cls):
         return cls.count_indicator_query()
+
+
+class FinancialInformationIndicator(CountIndicator):
+    klass = Report
+
+    @classmethod
+    def count_indicator_query(cls, project_ids):
+        financial_info = constants.RESULT_INDICATORS_ACTUAL_CONTRIBUTION
+        query = DBSession.query(Report)\
+            .join(Project, Report.project_code == Project.code)\
+            .filter(Project.id.in_(project_ids))\
+            .filter(Report.report_data[financial_info].cast(Float) != None)
+        return query.count()

@@ -25,7 +25,8 @@ from wkcdd.models.indicator import (
     ActualCIGAttendanceIndicator,
     PercentageCIGAttendanceIndicator,
     CDDCManagemnentCountIndicator,
-    ProjectMappingIndicator)
+    ProjectMappingIndicator,
+    FinancialInformationIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -597,4 +598,10 @@ class TestReport(TestBase):
     def test_project_mapping_indicator(self):
         self._result_indicator_setup()
         project_mapping_count = ProjectMappingIndicator.get_value()
+        self.assertEqual(project_mapping_count, 7)
+
+    def test_financial_information_indicator(self):
+        self._result_indicator_setup()
+        project_mapping_count = \
+            FinancialInformationIndicator.get_value(self.project_ids)
         self.assertEqual(project_mapping_count, 7)
