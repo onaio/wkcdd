@@ -20,7 +20,8 @@ from wkcdd.models.indicator import (
     PercentageCDDCAttendanceIndicator,
     ExpectedPMCAttendanceIndicator,
     ActualPMCAttendanceIndicator,
-    PercentagePMCAttendanceIndicator)
+    PercentagePMCAttendanceIndicator,
+    ExpectedCIGAttendanceIndicator,
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
@@ -564,3 +565,10 @@ class TestReport(TestBase):
         percentage_pmc_attendance = \
             PercentagePMCAttendanceIndicator.get_value(self.project_ids)
         self.assertEqual(percentage_pmc_attendance, 1.1111111111111112)
+
+    def test_expected_cig_attendance_indicator(self):
+        self._result_indicator_setup()
+        expected_cig_attendance = \
+            ExpectedCIGAttendanceIndicator.get_value(self.project_ids)
+        self.assertEqual(expected_cig_attendance, 277.0)
+

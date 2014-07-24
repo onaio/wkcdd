@@ -131,3 +131,8 @@ class ActualPMCAttendanceIndicator(Indicator):
 class PercentagePMCAttendanceIndicator(RatioIndicator):
     numerator_class = ExpectedPMCAttendanceIndicator
     denomenator_class = ActualPMCAttendanceIndicator
+
+
+class ExpectedCIGAttendanceIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_EXPECTED_CIG_ATTENDANCE
+
