@@ -5,30 +5,55 @@ from wkcdd import constants
 from wkcdd.models import (
     Report,
     Project,
-    MeetingReport)
+    MeetingReport
+    )
 from wkcdd.models.base import DBSession
+from wkcdd.models.period import Period
 
 
 class Indicator(object):
     indicator_list = []
 
     @classmethod
-    def sum_indicator_query(cls, project_ids, indicator):
+    def _get_period_criteria(cls, period):
+        quarter = period.quarter
+        year = period.year
+        criteria = and_(Report.quarter == quarter, Report.period == year)
+
+        return criteria
+
+    @classmethod
+    def get_quarter_criteria_list(cls, quarters):
+        quarter_criteria_list = []
+
+        if isinstance(quarters, list):
+            for period in quarters:
+                quarter_criteria_list.append(cls._get_period_criteria(period))
+        else:
+            quarter_criteria_list.append(cls._get_period_criteria(quarters))
+
+        return quarter_criteria_list
+
+    @classmethod
+    def sum_indicator_query(cls, project_ids, indicator, quarters):
+        quarter_criteria_list = cls.get_quarter_criteria_list(quarters)
+
         query = DBSession.query(
             func.sum(
                 Report.report_data[indicator].cast(Float)))\
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
+            .filter(*quarter_criteria_list)\
             .filter(Report.status == Report.APPROVED)
 
         return query.first()[0]
 
     @classmethod
-    def get_value(cls, control_values):
+    def get_value(cls, project_ids, quarters):
         total = 0
 
         for indicator in cls.indicator_list:
-            value = cls.sum_indicator_query(control_values, indicator)
+            value = cls.sum_indicator_query(project_ids, indicator, quarters)
 
             if value:
                 total += value
@@ -45,9 +70,11 @@ class RatioIndicator(object):
         self.denomenator_class = denomenator
 
     @classmethod
-    def get_value(cls, project_ids):
-        numerator_value = cls.numerator_class.get_value(project_ids)
-        denomenator_value = cls.denomenator_class.get_value(project_ids)
+    def get_value(cls, project_ids, quarters):
+        numerator_value = cls.numerator_class.get_value(
+            project_ids, quarters)
+        denomenator_value = cls.denomenator_class.get_value(
+            project_ids, quarters)
 
         if not denomenator_value:
             return 0
@@ -86,7 +113,8 @@ class PercentageIncomeIncreasedIndicator(RatioIndicator):
 
 class MeetingReportIndicator(Indicator):
     @classmethod
-    def sum_indicator_query(cls, quarter, indicator):
+    def sum_indicator_query(cls, quarters, indicator):
+
         query = DBSession.query(
             func.sum(
                 MeetingReport.report_data[indicator].cast(Float)))\

@@ -28,6 +28,7 @@ from wkcdd.models.indicator import (
     ProjectMappingIndicator,
     FinancialInformationIndicator)
 from wkcdd.models.report import Report
+from wkcdd.models.period import Period
 from wkcdd.models.project import Project
 from wkcdd.models import County, Constituency, Community
 from wkcdd.tests.test_base import TestBase
@@ -472,20 +473,25 @@ class TestReport(TestBase):
             project_ids.extend(location.get_project_ids())
 
         self.project_ids = project_ids
+        self.period = Period('q_2', '2013_14')
 
     def test_calculation_of_percentage_income_increased(self):
         self._result_indicator_setup()
 
         percentage_income_increased = \
-            PercentageIncomeIncreasedIndicator.get_value(self.project_ids)
+            PercentageIncomeIncreasedIndicator.get_value(
+                self.project_ids,
+                self.period)
 
         self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
 
     def test_calculation_of_total_beneficiaries(self):
         self._result_indicator_setup()
         total_beneficiaries = \
-            TotalBeneficiariesIndicator.get_value(self.project_ids)
-        self.assertEqual(total_beneficiaries, 80.0)
+            TotalBeneficiariesIndicator.get_value(
+                self.project_ids, self.period)
+
+        self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
 
     def test_total_direct_beneficiaries_indicator(self):
         self._result_indicator_setup()
