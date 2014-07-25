@@ -194,8 +194,8 @@ class CountIndicator(object):
         return query.count()
 
     @classmethod
-    def get_value(cls, control_values):
-        return cls.count_indicator_query(control_values)
+    def get_value(cls, quarters):
+        return cls.count_indicator_query(quarters)
 
 
 class CDDCManagemnentCountIndicator(CountIndicator):
