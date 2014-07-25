@@ -1,4 +1,4 @@
-from sqlalchemy import Float
+from sqlalchemy import Float, null
 from sqlalchemy.sql import func, and_
 
 from wkcdd import constants
@@ -241,7 +241,7 @@ class CDDCManagemnentCountIndicator(CountIndicator):
 class ProjectMappingIndicator(CountIndicator):
     @classmethod
     def count_indicator_query(cls):
-        query = DBSession.query(Project).filter(Project.geolocation != None)
+        query = DBSession.query(Project).filter(Project.geolocation != null())
         return query.count()
 
     @classmethod
@@ -256,7 +256,7 @@ class FinancialInformationIndicator(Indicator):
         query = DBSession.query(Report)\
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
-            .filter(Report.report_data[financial_info].cast(Float) != None)
+            .filter(Report.report_data[financial_info].cast(Float) != null())
         return query.count()
 
     @classmethod
