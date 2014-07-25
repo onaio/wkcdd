@@ -5,20 +5,19 @@ from wkcdd import constants
 from wkcdd.models import (
     Report,
     Project,
-    MeetingReport
-    )
+    MeetingReport)
 from wkcdd.models.base import DBSession
-from wkcdd.models.period import Period
 
 
 class Indicator(object):
+    klass = Report
     indicator_list = []
 
     @classmethod
     def _get_period_criteria(cls, period):
         quarter = period.quarter
         year = period.year
-        criteria = and_(Report.quarter == quarter, Report.period == year)
+        criteria = and_(cls.klass.quarter == quarter, cls.klass.period == year)
 
         return criteria
 
@@ -47,6 +46,21 @@ class Indicator(object):
             .filter(Report.status == Report.APPROVED)
 
         return query.first()[0]
+
+    @classmethod
+    def count_indicator_query(cls, quarters):
+        quarter_criteria_list = cls.get_quarter_criteria_list(quarters)
+        and_criteria = []
+        for idx, field in enumerate(cls.fields):
+            and_criteria.append(
+                cls.klass.report_data[field].cast(Float) >=
+                cls.count_criteria[idx])
+
+        query = DBSession.query(cls.klass)\
+            .filter(*quarter_criteria_list)\
+            .filter(and_(*and_criteria))
+
+        return query.count()
 
     @classmethod
     def get_value(cls, project_ids, quarters):
@@ -113,13 +127,35 @@ class PercentageIncomeIncreasedIndicator(RatioIndicator):
 
 class MeetingReportIndicator(Indicator):
     @classmethod
-    def sum_indicator_query(cls, quarters, indicator):
+    def _get_period_criteria(cls, period):
+        quarter = period.quarter
+        year = period.year
+        criteria = and_(MeetingReport.quarter == quarter,
+                        MeetingReport.period == year)
+
+        return criteria
+
+    @classmethod
+    def sum_indicator_query(cls, indicator, quarters):
+        quarter_criteria_list = cls.get_quarter_criteria_list(quarters)
 
         query = DBSession.query(
             func.sum(
                 MeetingReport.report_data[indicator].cast(Float)))\
-            .filter(MeetingReport.quarter == quarter)
+            .filter(*quarter_criteria_list)
+
         return query.first()[0]
+
+    @classmethod
+    def get_value(cls, quarters):
+        total = 0
+        for indicator in cls.indicator_list:
+            value = cls.sum_indicator_query(indicator, quarters)
+
+            if value:
+                total += value
+
+        return total
 
 
 class ExpectedCGAAttendanceIndicator(MeetingReportIndicator):
@@ -130,7 +166,19 @@ class ActualCGAAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
 
 
-class PercentageCGAAttendanceIndicator(RatioIndicator):
+class MeetingReportRatioIndicator(RatioIndicator):
+    @classmethod
+    def get_value(cls, quarters):
+        numerator_value = cls.numerator_class.get_value(quarters)
+        denomenator_value = cls.denomenator_class.get_value(quarters)
+
+        if not denomenator_value:
+            return 0
+
+        return float(numerator_value) / float(denomenator_value)
+
+
+class PercentageCGAAttendanceIndicator(MeetingReportRatioIndicator):
     numerator_class = ExpectedCGAAttendanceIndicator
     denomenator_class = ActualCGAAttendanceIndicator
 
@@ -143,7 +191,7 @@ class ActualCDDCAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_CDDC_ATTENDANCE
 
 
-class PercentageCDDCAttendanceIndicator(RatioIndicator):
+class PercentageCDDCAttendanceIndicator(MeetingReportRatioIndicator):
     numerator_class = ExpectedCDDCAttendanceIndicator
     denomenator_class = ActualCDDCAttendanceIndicator
 
@@ -174,24 +222,10 @@ class PercentageCIGAttendanceIndicator(RatioIndicator):
     denomenator_class = ActualCIGAttendanceIndicator
 
 
-class CountIndicator(object):
+class CountIndicator(Indicator):
     klass = None
     fields = []
     count_criteria = []
-
-    @classmethod
-    def count_indicator_query(cls, quarter):
-        and_criteria = []
-        for idx, field in enumerate(cls.fields):
-            and_criteria.append(
-                cls.klass.report_data[field].cast(Float) >=
-                cls.count_criteria[idx])
-
-        query = DBSession.query(MeetingReport)\
-            .filter(MeetingReport.quarter == quarter)\
-            .filter(and_(*and_criteria))
-
-        return query.count()
 
     @classmethod
     def get_value(cls, quarters):
@@ -215,12 +249,16 @@ class ProjectMappingIndicator(CountIndicator):
         return cls.count_indicator_query()
 
 
-class FinancialInformationIndicator(CountIndicator):
+class FinancialInformationIndicator(Indicator):
     @classmethod
-    def count_indicator_query(cls, project_ids):
+    def count_indicator_query(cls, project_ids, quarters):
         financial_info = constants.RESULT_INDICATORS_ACTUAL_CONTRIBUTION
         query = DBSession.query(Report)\
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
             .filter(Report.report_data[financial_info].cast(Float) != None)
         return query.count()
+
+    @classmethod
+    def get_value(cls, project_ids, quarters):
+        return cls.count_indicator_query(project_ids, quarters)

@@ -28,8 +28,8 @@ from wkcdd.models.indicator import (
     ProjectMappingIndicator,
     FinancialInformationIndicator)
 from wkcdd.models.report import Report
-from wkcdd.models.period import Period
 from wkcdd.models.project import Project
+from wkcdd.models.period import Period
 from wkcdd.models import County, Constituency, Community
 from wkcdd.tests.test_base import TestBase
 from wkcdd.models.helpers import get_project_list
@@ -491,114 +491,125 @@ class TestReport(TestBase):
             TotalBeneficiariesIndicator.get_value(
                 self.project_ids, self.period)
 
-        self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
+        self.assertAlmostEqual(total_beneficiaries, 80.0)
 
     def test_total_direct_beneficiaries_indicator(self):
         self._result_indicator_setup()
         total_beneficiaries = \
-            TotalDirectBeneficiariesIndicator.get_value(self.project_ids)
+            TotalDirectBeneficiariesIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(total_beneficiaries, 34)
 
     def test_average_monthly_income_indicator(self):
         self._result_indicator_setup()
         total_beneficiaries = \
-            TotalAverageMonthlyIncomeIndicator.get_value(self.project_ids)
+            TotalAverageMonthlyIncomeIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(total_beneficiaries, 11250.0)
 
     def test_total_female_beneficiaries_indicator(self):
         self._result_indicator_setup()
         total_female_beneficiaries = \
-            TotalFemaleBeneficiariesIndicator.get_value(self.project_ids)
+            TotalFemaleBeneficiariesIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(total_female_beneficiaries, 20.0)
 
     def test_total_vulnerable_members_indicator(self):
         self._result_indicator_setup()
         total_vulnerable_members = \
-            TotalVulnerableCIGMemberIndicator.get_value(self.project_ids)
+            TotalVulnerableCIGMemberIndicator.get_value(
+                self.project_ids, self.period)
 
         self.assertEqual(total_vulnerable_members, 67.0)
 
     def test_total_cig_member_indicator(self):
         self._result_indicator_setup()
-        total_cig_members = TotalCIGMemberIndicator.get_value(self.project_ids)
+        total_cig_members = TotalCIGMemberIndicator.get_value(
+            self.project_ids, self.period)
         self.assertEqual(total_cig_members, 276.0)
 
     def test_expected_cig_cga_attendance_indicator(self):
         self._result_indicator_setup()
         expected_cga_attendance = \
-            ExpectedCGAAttendanceIndicator.get_value('q_2')
+            ExpectedCGAAttendanceIndicator.get_value(self.period)
         self.assertEqual(expected_cga_attendance, 104.0)
 
     def test_actual_cig_cga_attendance_indicator(self):
         self._result_indicator_setup()
         actual_cga_attendance = \
-            ActualCGAAttendanceIndicator.get_value('q_2')
+            ActualCGAAttendanceIndicator.get_value(self.period)
         self.assertEqual(actual_cga_attendance, 93.0)
 
     def test_percentage_cga_attendcance_indicator(self):
         self._result_indicator_setup()
         percentage_cga_attendance = \
-            PercentageCGAAttendanceIndicator.get_value('q_2')
+            PercentageCGAAttendanceIndicator.get_value(self.period)
         self.assertAlmostEqual(percentage_cga_attendance, 1.118279569892473)
 
     def test_expected_cddc_attendance_indicator(self):
         self._result_indicator_setup()
         expected_cddc_attendance = \
-            ExpectedCDDCAttendanceIndicator.get_value('q_2')
+            ExpectedCDDCAttendanceIndicator.get_value(self.period)
         self.assertEqual(expected_cddc_attendance, 15.0)
 
     def test_actual_cddc_attendance_indicator(self):
         self._result_indicator_setup()
         actual_cddc_attendance = \
-            ActualCDDCAttendanceIndicator.get_value('q_2')
+            ActualCDDCAttendanceIndicator.get_value(self.period)
         self.assertEqual(actual_cddc_attendance, 12.0)
 
     def test_percentage_cddc_attendcance_indicator(self):
         self._result_indicator_setup()
         percentage_cddc_attendance = \
-            PercentageCDDCAttendanceIndicator.get_value('q_2')
+            PercentageCDDCAttendanceIndicator.get_value(self.period)
         self.assertAlmostEqual(percentage_cddc_attendance, 1.25)
 
     def test_expected_pmc_attendance_indicator(self):
         self._result_indicator_setup()
         expected_pmc_attendance = \
-            ExpectedPMCAttendanceIndicator.get_value(self.project_ids)
+            ExpectedPMCAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(expected_pmc_attendance, 30.0)
 
     def test_actual_pmc_attendance_indicator(self):
         self._result_indicator_setup()
         actual_pmc_attendance = \
-            ActualPMCAttendanceIndicator.get_value(self.project_ids)
+            ActualPMCAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(actual_pmc_attendance, 27.0)
 
     def test_percentage_pmc_attendance_indicator(self):
         self._result_indicator_setup()
         percentage_pmc_attendance = \
-            PercentagePMCAttendanceIndicator.get_value(self.project_ids)
+            PercentagePMCAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(percentage_pmc_attendance, 1.1111111111111112)
 
     def test_expected_cig_attendance_indicator(self):
         self._result_indicator_setup()
         expected_cig_attendance = \
-            ExpectedCIGAttendanceIndicator.get_value(self.project_ids)
+            ExpectedCIGAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(expected_cig_attendance, 277.0)
 
     def test_actual_cig_attendance_indicator(self):
         self._result_indicator_setup()
         actual_cig_attendance = \
-            ActualCIGAttendanceIndicator.get_value(self.project_ids)
+            ActualCIGAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(actual_cig_attendance, 157.0)
 
     def test_percentage_cig_attendance_indicator(self):
         self._result_indicator_setup()
         percentage_cig_attendance = \
-            PercentageCIGAttendanceIndicator.get_value(self.project_ids)
+            PercentageCIGAttendanceIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(percentage_cig_attendance, 1.7643312101910829)
 
     def test_cddc_management_count_indicator(self):
         self._result_indicator_setup()
         cddc_management_count = \
-            CDDCManagemnentCountIndicator.get_value('q_2')
+            CDDCManagemnentCountIndicator.get_value(self.period)
         self.assertEqual(cddc_management_count, 1)
 
     def test_project_mapping_indicator(self):
@@ -609,5 +620,6 @@ class TestReport(TestBase):
     def test_financial_information_indicator(self):
         self._result_indicator_setup()
         project_mapping_count = \
-            FinancialInformationIndicator.get_value(self.project_ids)
+            FinancialInformationIndicator.get_value(
+                self.project_ids, self.period)
         self.assertEqual(project_mapping_count, 7)
