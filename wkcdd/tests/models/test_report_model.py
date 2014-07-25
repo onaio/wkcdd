@@ -25,8 +25,8 @@ from wkcdd.models.indicator import (
     ActualCIGAttendanceIndicator,
     PercentageCIGAttendanceIndicator,
     CDDCManagemnentCountIndicator,
-    ProjectMappingIndicator,
-    FinancialInformationIndicator)
+    ProjectInformationIndicator,
+    PercentageUpdatedProjectIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models.period import Period
@@ -612,14 +612,16 @@ class TestReport(TestBase):
             CDDCManagemnentCountIndicator.get_value(self.period)
         self.assertEqual(cddc_management_count, 1)
 
-    def test_project_mapping_indicator(self):
+    def test_project_information_indicator(self):
         self._result_indicator_setup()
-        project_mapping_count = ProjectMappingIndicator.get_value()
-        self.assertEqual(project_mapping_count, 7)
-
-    def test_financial_information_indicator(self):
-        self._result_indicator_setup()
-        project_mapping_count = \
-            FinancialInformationIndicator.get_value(
+        project_info_count = \
+            ProjectInformationIndicator.get_value(
                 self.project_ids, self.period)
-        self.assertEqual(project_mapping_count, 7)
+        self.assertEqual(project_info_count, 7)
+
+    def test_percentage_updated_project_indicator(self):
+        self._result_indicator_setup()
+        percentage_updated_projects = \
+            PercentageUpdatedProjectIndicator.get_value(
+                self.project_ids, self.period)
+        self.assertEqual(percentage_updated_projects, 1.0)

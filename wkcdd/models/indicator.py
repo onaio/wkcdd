@@ -238,27 +238,39 @@ class CDDCManagemnentCountIndicator(CountIndicator):
     count_criteria = [50.0, 50.0]
 
 
-class ProjectMappingIndicator(CountIndicator):
-    @classmethod
-    def count_indicator_query(cls):
-        query = DBSession.query(Project).filter(Project.geolocation != null())
-        return query.count()
-
-    @classmethod
-    def get_value(cls):
-        return cls.count_indicator_query()
-
-
-class FinancialInformationIndicator(Indicator):
+class ProjectInformationIndicator(Indicator):
     @classmethod
     def count_indicator_query(cls, project_ids, quarters):
         financial_info = constants.RESULT_INDICATORS_ACTUAL_CONTRIBUTION
         query = DBSession.query(Report)\
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
-            .filter(Report.report_data[financial_info].cast(Float) != null())
+            .filter(and_(
+                Report.report_data[financial_info].cast(Float) != null(),
+                Project.geolocation != null()))
         return query.count()
 
     @classmethod
     def get_value(cls, project_ids, quarters):
         return cls.count_indicator_query(project_ids, quarters)
+
+
+class TotalProjectCountIndicator(object):
+    @classmethod
+    def get_value(cls, quarters):
+        return Project.count()
+
+
+class PercentageUpdatedProjectIndicator(RatioIndicator):
+    numerator_class = ProjectInformationIndicator
+    denomenator_class = TotalProjectCountIndicator
+
+    @classmethod
+    def get_value(cls, project_ids, quarters):
+        numerator_value = cls.numerator_class.get_value(project_ids, quarters)
+        denomenator_value = cls.denomenator_class.get_value(quarters)
+
+        if not denomenator_value:
+            return 0
+
+        return float(numerator_value) / float(denomenator_value)
