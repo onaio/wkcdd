@@ -216,8 +216,6 @@ class ProjectMappingIndicator(CountIndicator):
 
 
 class FinancialInformationIndicator(CountIndicator):
-    klass = Report
-
     @classmethod
     def count_indicator_query(cls, project_ids):
         financial_info = constants.RESULT_INDICATORS_ACTUAL_CONTRIBUTION
