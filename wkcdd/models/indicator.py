@@ -297,3 +297,8 @@ class SaicExpectedMeetingIndicator(MeetingReportIndicator):
 
 class SaicActualMeetingIndicator(MeetingReportIndicator):
     indicator_list = SaicMeetingReport.ACTUAL_MEETINGS
+
+
+class SaicMeetingRatioIndicator(MeetingReportRatioIndicator):
+    numerator_class = SaicActualMeetingIndicator
+    denomenator_class = SaicExpectedMeetingIndicator
