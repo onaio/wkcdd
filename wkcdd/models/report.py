@@ -417,10 +417,6 @@ class Report(Base):
 
         return series_map
 
-    @classmethod
-    def generate_report_indicators(child_locations, *criteria):
-        pass
-
 
 class ReportError(Exception):
     pass

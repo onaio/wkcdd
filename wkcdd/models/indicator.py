@@ -248,13 +248,10 @@ class CIGAttendanceRatioIndicator(RatioIndicator):
 class ProjectInformationIndicator(Indicator):
     @classmethod
     def count_indicator_query(cls, project_ids, quarters):
-        financial_info = constants.RESULT_INDICATORS_ACTUAL_CONTRIBUTION
         query = DBSession.query(Report)\
             .join(Project, Report.project_code == Project.code)\
             .filter(Project.id.in_(project_ids))\
-            .filter(and_(
-                Report.report_data[financial_info].cast(Float) != null(),
-                Project.geolocation != null()))
+            .filter(Project.geolocation != null())
         return query.count()
 
     @classmethod

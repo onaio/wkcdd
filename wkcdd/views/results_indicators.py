@@ -3,13 +3,15 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models import County, Report, Project
+from wkcdd.models import County
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.period import Period
 
+from wkcdd.views.helpers import get_result_framework_indicators
+
 
 @view_defaults(route_name='results_indicators')
-class ResultIndicators(object):
+class ResultsIndicators(object):
 
     def __init__(self, request):
         self.request = request
@@ -26,17 +28,16 @@ class ResultIndicators(object):
 
         child_locations = County.all()
 
-        indicators = Report.generate_report_indicators(
-            child_locations, period)
+        indicators = get_result_framework_indicators(child_locations, period)
 
         search_criteria = {'month_or_quarter': quarter,
                            'period': period,
                            'location': ''}
-        filter_criteria = Project.generate_filter_criteria()
+        county_list = County.all()
 
         return {
             'indicators': indicators,
             'search_criteria': search_criteria,
-            'filter_criteria': filter_criteria,
+            'county_list': county_list,
             'is_result_indicator': True
         }

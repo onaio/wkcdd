@@ -21,6 +21,20 @@ from wkcdd.models import (
     Report
 )
 
+from wkcdd.models.indicator import (
+    PercentageIncomeIncreasedIndicator,
+    TotalBeneficiariesIndicator,
+    TotalFemaleBeneficiariesIndicator,
+    CGAAttendanceRatioIndicator,
+    CDDCAttendanceRatioIndicator,
+    CDDCManagementCountIndicator,
+    CIGMemberRatioIndicator,
+    SaicComplaintsResolveRatioIndicator,
+    SaicMeetingRatioIndicator,
+    PMCAttendanceRatioIndicator,
+    CIGAttendanceRatioIndicator,
+    UpdatedProjectRatioIndicator)
+
 from wkcdd.models.report import ReportHandlerError
 
 from wkcdd.models.helpers import get_children_by_level
@@ -573,3 +587,79 @@ def get_all_sector_periods(sectors, child_locations, periods):
         periods['quarters'].update(sector_periods['quarters'])
 
     return periods
+
+
+def get_result_framework_indicators(child_locations, period):
+    project_ids = []
+
+    for item in child_locations:
+        project_ids.extend(item.get_project_ids())
+
+    # percentage increase in income
+    income_increase_ratio = PercentageIncomeIncreasedIndicator.get_value(
+        project_ids,
+        period)
+
+    # total number of beneficiaries
+    total_beneficiaries = TotalBeneficiariesIndicator.get_value(
+        project_ids,
+        period)
+
+    # proportion of female beneficiaries
+    total_female_beneficiaries = \
+        TotalFemaleBeneficiariesIndicator.get_value(
+            project_ids,
+            period)
+
+    # percentage of community members participating in CGM
+    cga_attendance_ratio = CGAAttendanceRatioIndicator.get_value(period)
+
+    # percentage of PMC members participating in decision making
+    pmc_attendance_ratio = PMCAttendanceRatioIndicator.get_value(
+        project_ids, period)
+
+    # percentage of CDDC members participating in decision making
+    cddc_attendance_ratio = CDDCAttendanceRatioIndicator.get_value(period)
+
+    # percentage of CIG members participating in decisions making
+    cig_attendance_ratio = CIGAttendanceRatioIndicator.get_value(
+        project_ids, period)
+
+    # No. of CDDC managing development priorities
+    cddc_management_count = CDDCManagementCountIndicator.get_value(period)
+
+    # proportion of vulnerable community members
+    vulnerable_member_ratio = CIGMemberRatioIndicator.get_value(
+        project_ids, period)
+
+    # proportion of complaints resolved
+    saic_complaints_resolved_ratio = \
+        SaicComplaintsResolveRatioIndicator.get_value(period)
+
+    # proportion of meetings conducted by social audit committees at the
+    # community level
+    saic_meeting_ratio = SaicMeetingRatioIndicator.get_value(period)
+
+    # percentage of sub-projects including financial information
+    updated_sub_projects_ratio = \
+        UpdatedProjectRatioIndicator.get_value(project_ids, period)
+
+    to_ratio = lambda x: x * 100
+
+    indicators = {
+        'income_increase_ratio': to_ratio(income_increase_ratio),
+        'total_beneficiaries': total_beneficiaries,
+        'total_female_beneficiaries': total_female_beneficiaries,
+        'cga_attendance_ratio': to_ratio(cga_attendance_ratio),
+        'pmc_attendance_ratio': to_ratio(pmc_attendance_ratio),
+        'cddc_attendance_ratio': to_ratio(cddc_attendance_ratio),
+        'cig_attendance_ratio': to_ratio(cig_attendance_ratio),
+        'cddc_management_count': cddc_management_count,
+        'vulnerable_member_ratio': to_ratio(vulnerable_member_ratio),
+        'saic_complaints_resolved_ratio': to_ratio(
+            saic_complaints_resolved_ratio),
+        'saic_meeting_ratio': to_ratio(saic_meeting_ratio),
+        'updated_sub_projects_ratio': to_ratio(updated_sub_projects_ratio)
+    }
+
+    return indicators
