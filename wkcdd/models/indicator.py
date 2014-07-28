@@ -5,7 +5,8 @@ from wkcdd import constants
 from wkcdd.models import (
     Report,
     Project,
-    MeetingReport)
+    MeetingReport,
+    SaicMeetingReport)
 from wkcdd.models.base import DBSession
 
 
@@ -96,36 +97,8 @@ class RatioIndicator(object):
         return float(numerator_value) / float(denomenator_value)
 
 
-class TotalDirectBeneficiariesIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATOR_DIRECT_BENEFICIARIES
-
-
-class TotalAverageMonthlyIncomeIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME
-
-
-class TotalBeneficiariesIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATOR_TOTAL_BENEFICIARIES
-
-
-class TotalFemaleBeneficiariesIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATORS_FEMALE_BENEFICIARIES
-
-
-class TotalVulnerableCIGMemberIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATORS_VULN_MEMBERS
-
-
-class TotalCIGMemberIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATORS_TOTAL_MEMBERS
-
-
-class PercentageIncomeIncreasedIndicator(RatioIndicator):
-    numerator_class = TotalAverageMonthlyIncomeIndicator
-    denomenator_class = TotalDirectBeneficiariesIndicator
-
-
 class MeetingReportIndicator(Indicator):
+
     @classmethod
     def _get_period_criteria(cls, period):
         quarter = period.quarter
@@ -158,12 +131,14 @@ class MeetingReportIndicator(Indicator):
         return total
 
 
-class ExpectedCGAAttendanceIndicator(MeetingReportIndicator):
-    indicator_list = constants.RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE
+class CountIndicator(Indicator):
+    klass = None
+    fields = []
+    count_criteria = []
 
-
-class ActualCGAAttendanceIndicator(MeetingReportIndicator):
-    indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
+    @classmethod
+    def get_value(cls, quarters):
+        return cls.count_indicator_query(quarters)
 
 
 class MeetingReportRatioIndicator(RatioIndicator):
@@ -176,6 +151,49 @@ class MeetingReportRatioIndicator(RatioIndicator):
             return 0
 
         return float(numerator_value) / float(denomenator_value)
+
+
+class CDDCManagemnentCountIndicator(CountIndicator):
+    klass = MeetingReport
+    fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
+    count_criteria = [50.0, 50.0]
+
+
+class TotalDirectBeneficiariesIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATOR_DIRECT_BENEFICIARIES
+
+
+class TotalAverageMonthlyIncomeIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME
+
+
+class TotalBeneficiariesIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATOR_TOTAL_BENEFICIARIES
+
+
+class TotalFemaleBeneficiariesIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_FEMALE_BENEFICIARIES
+
+
+class TotalVulnerableCIGMemberIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_VULN_MEMBERS
+
+
+class TotalCIGMemberIndicator(Indicator):
+    indicator_list = constants.RESULT_INDICATORS_TOTAL_MEMBERS
+
+
+class PercentageIncomeIncreasedIndicator(RatioIndicator):
+    numerator_class = TotalAverageMonthlyIncomeIndicator
+    denomenator_class = TotalDirectBeneficiariesIndicator
+
+
+class ExpectedCGAAttendanceIndicator(MeetingReportIndicator):
+    indicator_list = constants.RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE
+
+
+class ActualCGAAttendanceIndicator(MeetingReportIndicator):
+    indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
 
 
 class PercentageCGAAttendanceIndicator(MeetingReportRatioIndicator):
@@ -222,22 +240,6 @@ class PercentageCIGAttendanceIndicator(RatioIndicator):
     denomenator_class = ActualCIGAttendanceIndicator
 
 
-class CountIndicator(Indicator):
-    klass = None
-    fields = []
-    count_criteria = []
-
-    @classmethod
-    def get_value(cls, quarters):
-        return cls.count_indicator_query(quarters)
-
-
-class CDDCManagemnentCountIndicator(CountIndicator):
-    klass = MeetingReport
-    fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
-    count_criteria = [50.0, 50.0]
-
-
 class ProjectInformationIndicator(Indicator):
     @classmethod
     def count_indicator_query(cls, project_ids, quarters):
@@ -274,3 +276,7 @@ class PercentageUpdatedProjectIndicator(RatioIndicator):
             return 0
 
         return float(numerator_value) / float(denomenator_value)
+
+
+class SaicComplaintsReceivedIndicator(MeetingReportIndicator):
+    indicator_list = SaicMeetingReport.COMPLAINTS_RECEIVED

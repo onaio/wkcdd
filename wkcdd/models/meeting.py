@@ -33,11 +33,11 @@ class SaicMeetingReport(MeetingReport):
     REPORT_QUARTER = 'summary/quarter_year'
     REPORT_PERIOD = 'summary/year'
 
-    COMPLAINTS_RECEIVED = 'complain_status/saic_complains_recieved'
-    COMPLAINTS_RESOLVED = 'complain_status/saic_complains_resolved'
+    COMPLAINTS_RECEIVED = ('complain_status/saic_complains_recieved', )
+    COMPLAINTS_RESOLVED = ('complain_status/saic_complains_resolved', )
 
-    EXPECTED_MEETINGS = 'status_saic/saic_em'
-    ACTUAL_MEETINGS = 'status_saic/saic_mh'
+    EXPECTED_MEETINGS = ('status_saic/saic_em', )
+    ACTUAL_MEETINGS = ('status_saic/saic_mh', )
 
     __mapper_args__ = {
         'polymorphic_identity': 'saic_meeting_report'
