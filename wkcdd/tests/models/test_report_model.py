@@ -12,6 +12,7 @@ from wkcdd.models.indicator import (
     TotalFemaleBeneficiariesIndicator,
     TotalVulnerableCIGMemberIndicator,
     TotalCIGMemberIndicator,
+    CIGMemberRatioIndicator,
     ExpectedCGAAttendanceIndicator,
     ActualCGAAttendanceIndicator,
     PercentageCGAAttendanceIndicator,
@@ -667,3 +668,9 @@ class TestReport(TestBase):
         meeting_ratio = \
             SaicMeetingRatioIndicator.get_value(self.period)
         self.assertEqual(meeting_ratio, 0.5)
+
+    def test_cig_member_indicator(self):
+        self._result_indicator_setup()
+        cig_member_ratio = CIGMemberRatioIndicator.get_value(
+            self.project_ids, self.period)
+        self.assertEqual(cig_member_ratio, 0.2427536231884058)

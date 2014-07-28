@@ -183,6 +183,11 @@ class TotalCIGMemberIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_TOTAL_MEMBERS
 
 
+class CIGMemberRatioIndicator(RatioIndicator):
+    numerator_class = TotalVulnerableCIGMemberIndicator
+    denomenator_class = TotalCIGMemberIndicator
+
+
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
     numerator_class = TotalAverageMonthlyIncomeIndicator
     denomenator_class = TotalDirectBeneficiariesIndicator
