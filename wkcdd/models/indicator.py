@@ -293,3 +293,7 @@ class SaicComplaintsResolveRatioIndicator(MeetingReportRatioIndicator):
 
 class SaicExpectedMeetingIndicator(MeetingReportIndicator):
     indicator_list = SaicMeetingReport.EXPECTED_MEETINGS
+
+
+class SaicActualMeetingIndicator(MeetingReportIndicator):
+    indicator_list = SaicMeetingReport.ACTUAL_MEETINGS
