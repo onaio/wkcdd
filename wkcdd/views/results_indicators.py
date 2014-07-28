@@ -25,6 +25,8 @@ class ResultsIndicators(object):
         period = self.request.GET.get('period', '')
 
         period = Period(quarter, period)
+        if not period:
+            period = Period.latest_quarter()
 
         child_locations = County.all()
 
