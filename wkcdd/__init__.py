@@ -66,7 +66,7 @@ def includeme(config):
                      '/performance-indicators/*traverse',
                      factory=LocationFactory)
     config.add_route('results_indicators',
-                     'result-indicators/*traverse',
+                     'results-indicators/*traverse',
                      factory=LocationFactory)
     config.add_route('reports', '/reports/*traverse',
                      factory=ReportFactory)
