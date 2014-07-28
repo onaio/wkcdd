@@ -153,7 +153,7 @@ class MeetingReportRatioIndicator(RatioIndicator):
         return float(numerator_value) / float(denomenator_value)
 
 
-class CDDCManagemnentCountIndicator(CountIndicator):
+class CDDCManagementCountIndicator(CountIndicator):
     klass = MeetingReport
     fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
     count_criteria = [50.0, 50.0]
@@ -201,7 +201,7 @@ class ActualCGAAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE
 
 
-class PercentageCGAAttendanceIndicator(MeetingReportRatioIndicator):
+class CGAAttendanceRatioIndicator(MeetingReportRatioIndicator):
     numerator_class = ExpectedCGAAttendanceIndicator
     denomenator_class = ActualCGAAttendanceIndicator
 
@@ -214,7 +214,7 @@ class ActualCDDCAttendanceIndicator(MeetingReportIndicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_CDDC_ATTENDANCE
 
 
-class PercentageCDDCAttendanceIndicator(MeetingReportRatioIndicator):
+class CDDCAttendanceRatioIndicator(MeetingReportRatioIndicator):
     numerator_class = ExpectedCDDCAttendanceIndicator
     denomenator_class = ActualCDDCAttendanceIndicator
 
@@ -227,7 +227,7 @@ class ActualPMCAttendanceIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_PMC_ATTENDANCE
 
 
-class PercentagePMCAttendanceIndicator(RatioIndicator):
+class PMCAttendanceRatioIndicator(RatioIndicator):
     numerator_class = ExpectedPMCAttendanceIndicator
     denomenator_class = ActualPMCAttendanceIndicator
 
@@ -240,7 +240,7 @@ class ActualCIGAttendanceIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATORS_ACTUAL_CIG_ATTENDANCE
 
 
-class PercentageCIGAttendanceIndicator(RatioIndicator):
+class CIGAttendanceRatioIndicator(RatioIndicator):
     numerator_class = ExpectedCIGAttendanceIndicator
     denomenator_class = ActualCIGAttendanceIndicator
 
@@ -268,7 +268,7 @@ class TotalProjectCountIndicator(object):
         return Project.count()
 
 
-class PercentageUpdatedProjectIndicator(RatioIndicator):
+class UpdatedProjectRatioIndicator(RatioIndicator):
     numerator_class = ProjectInformationIndicator
     denomenator_class = TotalProjectCountIndicator
 

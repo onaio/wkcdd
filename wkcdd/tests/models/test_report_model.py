@@ -15,19 +15,19 @@ from wkcdd.models.indicator import (
     CIGMemberRatioIndicator,
     ExpectedCGAAttendanceIndicator,
     ActualCGAAttendanceIndicator,
-    PercentageCGAAttendanceIndicator,
+    CGAAttendanceRatioIndicator,
     ExpectedCDDCAttendanceIndicator,
     ActualCDDCAttendanceIndicator,
-    PercentageCDDCAttendanceIndicator,
+    CDDCAttendanceRatioIndicator,
     ExpectedPMCAttendanceIndicator,
     ActualPMCAttendanceIndicator,
-    PercentagePMCAttendanceIndicator,
+    PMCAttendanceRatioIndicator,
     ExpectedCIGAttendanceIndicator,
     ActualCIGAttendanceIndicator,
-    PercentageCIGAttendanceIndicator,
-    CDDCManagemnentCountIndicator,
+    CIGAttendanceRatioIndicator,
+    CDDCManagementCountIndicator,
     ProjectInformationIndicator,
-    PercentageUpdatedProjectIndicator,
+    UpdatedProjectRatioIndicator,
     SaicComplaintsReceivedIndicator,
     SaicComplaintsResolvedIndicator,
     SaicComplaintsResolveRatioIndicator,
@@ -550,7 +550,7 @@ class TestReport(TestBase):
     def test_percentage_cga_attendcance_indicator(self):
         self._result_indicator_setup()
         percentage_cga_attendance = \
-            PercentageCGAAttendanceIndicator.get_value(self.period)
+            CGAAttendanceRatioIndicator.get_value(self.period)
         self.assertAlmostEqual(percentage_cga_attendance, 1.118279569892473)
 
     def test_expected_cddc_attendance_indicator(self):
@@ -568,7 +568,7 @@ class TestReport(TestBase):
     def test_percentage_cddc_attendcance_indicator(self):
         self._result_indicator_setup()
         percentage_cddc_attendance = \
-            PercentageCDDCAttendanceIndicator.get_value(self.period)
+            CDDCAttendanceRatioIndicator.get_value(self.period)
         self.assertAlmostEqual(percentage_cddc_attendance, 1.25)
 
     def test_expected_pmc_attendance_indicator(self):
@@ -588,7 +588,7 @@ class TestReport(TestBase):
     def test_percentage_pmc_attendance_indicator(self):
         self._result_indicator_setup()
         percentage_pmc_attendance = \
-            PercentagePMCAttendanceIndicator.get_value(
+            PMCAttendanceRatioIndicator.get_value(
                 self.project_ids, self.period)
         self.assertEqual(percentage_pmc_attendance, 1.1111111111111112)
 
@@ -609,14 +609,14 @@ class TestReport(TestBase):
     def test_percentage_cig_attendance_indicator(self):
         self._result_indicator_setup()
         percentage_cig_attendance = \
-            PercentageCIGAttendanceIndicator.get_value(
+            CIGAttendanceRatioIndicator.get_value(
                 self.project_ids, self.period)
         self.assertEqual(percentage_cig_attendance, 1.7643312101910829)
 
     def test_cddc_management_count_indicator(self):
         self._result_indicator_setup()
         cddc_management_count = \
-            CDDCManagemnentCountIndicator.get_value(self.period)
+            CDDCManagementCountIndicator.get_value(self.period)
         self.assertEqual(cddc_management_count, 1)
 
     def test_project_information_indicator(self):
@@ -629,7 +629,7 @@ class TestReport(TestBase):
     def test_percentage_updated_project_indicator(self):
         self._result_indicator_setup()
         percentage_updated_projects = \
-            PercentageUpdatedProjectIndicator.get_value(
+            UpdatedProjectRatioIndicator.get_value(
                 self.project_ids, self.period)
         self.assertEqual(percentage_updated_projects, 1.0)
 
