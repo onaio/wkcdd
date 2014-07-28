@@ -648,7 +648,7 @@ class TestReport(TestBase):
         self._result_indicator_setup()
         complaints_resolve_ratio = \
             SaicComplaintsResolveRatioIndicator.get_value(self.period)
-        self.assertEqual(complaints_resolve_ratio, 1.4285714285714286)
+        self.assertEqual(complaints_resolve_ratio, 0.7)
 
     def test_saic_expected_meeting_indicator(self):
         self._result_indicator_setup()

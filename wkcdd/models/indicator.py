@@ -287,8 +287,8 @@ class SaicComplaintsResolvedIndicator(MeetingReportIndicator):
 
 
 class SaicComplaintsResolveRatioIndicator(MeetingReportRatioIndicator):
-    numerator_class = SaicComplaintsReceivedIndicator
-    denomenator_class = SaicComplaintsResolvedIndicator
+    numerator_class = SaicComplaintsResolvedIndicator
+    denomenator_class = SaicComplaintsReceivedIndicator
 
 
 class SaicExpectedMeetingIndicator(MeetingReportIndicator):
