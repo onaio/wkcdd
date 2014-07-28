@@ -289,3 +289,7 @@ class SaicComplaintsResolvedIndicator(MeetingReportIndicator):
 class SaicComplaintsResolveRatioIndicator(MeetingReportRatioIndicator):
     numerator_class = SaicComplaintsReceivedIndicator
     denomenator_class = SaicComplaintsResolvedIndicator
+
+
+class SaicExpectedMeetingIndicator(MeetingReportIndicator):
+    indicator_list = SaicMeetingReport.EXPECTED_MEETINGS

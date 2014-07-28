@@ -29,7 +29,8 @@ from wkcdd.models.indicator import (
     PercentageUpdatedProjectIndicator,
     SaicComplaintsReceivedIndicator,
     SaicComplaintsResolvedIndicator,
-    SaicComplaintsResolveRatioIndicator)
+    SaicComplaintsResolveRatioIndicator,
+    SaicExpectedMeetingIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models.period import Period
@@ -646,3 +647,9 @@ class TestReport(TestBase):
         complaints_resolve_ratio = \
             SaicComplaintsResolveRatioIndicator.get_value(self.period)
         self.assertEqual(complaints_resolve_ratio, 1.4285714285714286)
+
+    def test_saic_expected_meeting_indicator(self):
+        self._result_indicator_setup()
+        expected_meetings = \
+            SaicExpectedMeetingIndicator.get_value(self.period)
+        self.assertEqual(expected_meetings, 2)
