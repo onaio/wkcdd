@@ -280,3 +280,12 @@ class PercentageUpdatedProjectIndicator(RatioIndicator):
 
 class SaicComplaintsReceivedIndicator(MeetingReportIndicator):
     indicator_list = SaicMeetingReport.COMPLAINTS_RECEIVED
+
+
+class SaicComplaintsResolvedIndicator(MeetingReportIndicator):
+    indicator_list = SaicMeetingReport.COMPLAINTS_RESOLVED
+
+
+class SaicComplaintsResolveRatioIndicator(MeetingReportRatioIndicator):
+    numerator_class = SaicComplaintsReceivedIndicator
+    denomenator_class = SaicComplaintsResolvedIndicator

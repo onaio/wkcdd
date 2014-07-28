@@ -27,7 +27,9 @@ from wkcdd.models.indicator import (
     CDDCManagemnentCountIndicator,
     ProjectInformationIndicator,
     PercentageUpdatedProjectIndicator,
-    SaicComplaintsReceivedIndicator)
+    SaicComplaintsReceivedIndicator,
+    SaicComplaintsResolvedIndicator,
+    SaicComplaintsResolveRatioIndicator)
 from wkcdd.models.report import Report
 from wkcdd.models.project import Project
 from wkcdd.models.period import Period
@@ -632,3 +634,15 @@ class TestReport(TestBase):
         complaints_received = \
             SaicComplaintsReceivedIndicator.get_value(self.period)
         self.assertEqual(complaints_received, 10.0)
+
+    def test_saic_complaints_resolved_indicator(self):
+        self._result_indicator_setup()
+        complaints_resolved = \
+            SaicComplaintsResolvedIndicator.get_value(self.period)
+        self.assertEqual(complaints_resolved, 7.0)
+
+    def test_saic_complaints_resolve_ratio_indicator(self):
+        self._result_indicator_setup()
+        complaints_resolve_ratio = \
+            SaicComplaintsResolveRatioIndicator.get_value(self.period)
+        self.assertEqual(complaints_resolve_ratio, 1.4285714285714286)
