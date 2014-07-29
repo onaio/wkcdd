@@ -23,12 +23,19 @@ class ResultsIndicators(object):
     def index(self):
         quarter = self.request.GET.get('quarter', '')
         year = self.request.GET.get('year', '')
+        county_id = self.request.GET.get('county', '')
+        selected_county = None
 
         period = Period(quarter, year)
+
         if not period:
             period = Period.latest_quarter()
 
-        child_locations = County.all()
+        if county_id:
+            selected_county = County.get(County.id == county_id)
+            child_locations = [selected_county]
+        else:
+            child_locations = County.all()
 
         indicators = get_result_framework_indicators(child_locations, period)
 
@@ -45,5 +52,6 @@ class ResultsIndicators(object):
             'periods': periods,
             'selected_quarter': quarter,
             'selected_year': year,
+            'selected_county': selected_county,
             'is_result_indicator': True
         }

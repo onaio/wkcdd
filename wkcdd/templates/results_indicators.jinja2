@@ -17,7 +17,11 @@
                 <select name="county" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
                     <option value="">All Counties</option>
                     {% for county in counties%}
-                        <option value="{{county.id}}">{{county.pretty}}</option>
+                        <option value="{{county.id}}"
+                            {% if selected_county.id == county.id %}
+                                  selected
+                               {% endif %} 
+                        >{{county.pretty}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -59,7 +63,11 @@
 {% block content %}
     <h4 class="greentxt">
         <i class="glyphicon glyphicon-map-marker"></i>
-        <span id="currLocation">Select a location</span>
+        {% if selected_county %}
+            <span id="currLocation">{{selected_county.pretty}}</span>
+        {% else %}
+            <span id="currLocation">Select a location</span>
+        {% endif %}
     </h4>
         
   {{ add_indicator_links(request, location, search_criteria) }}
