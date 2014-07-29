@@ -3,7 +3,7 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models import County
+from wkcdd.models import County, Report
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.period import Period
 
@@ -21,10 +21,10 @@ class ResultsIndicators(object):
                  renderer='results_indicators.jinja2',
                  request_method='GET')
     def index(self):
-        quarter = self.request.GET.get('month_or_quarter', '')
-        period = self.request.GET.get('period', '')
+        quarter = self.request.GET.get('quarter', '')
+        year = self.request.GET.get('year', '')
 
-        period = Period(quarter, period)
+        period = Period(quarter, year)
         if not period:
             period = Period.latest_quarter()
 
@@ -36,10 +36,14 @@ class ResultsIndicators(object):
                            'period': period,
                            'location': ''}
         county_list = County.all()
+        periods = Report.get_periods_for(child_locations)
 
         return {
             'indicators': indicators,
             'search_criteria': search_criteria,
-            'county_list': county_list,
+            'counties': county_list,
+            'periods': periods,
+            'selected_quarter': quarter,
+            'selected_year': year,
             'is_result_indicator': True
         }

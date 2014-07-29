@@ -848,3 +848,7 @@ The Most Extra Small Devices Portrait Mode Only
 #currLocation {
     text-transform: capitalize;
 }
+
+#results_indicator_filter_criteria div {
+    margin-right: 0.5em;
+}

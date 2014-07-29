@@ -11,7 +11,50 @@
 {% endblock %}
 
 {% block filters %}
-    <!-- Add County filters here -->
+    <div id="fiter_box" class="clearfix filters">
+        <form id="results_indicator_filter_criteria" class="form-inline" method="get">
+            <div class="col-xs-3 filter_col">
+                <select name="county" class="form-control select2me" data-placeholder="Select..." onchange="LocationSelect.level0ChangeListener(this);">
+                    <option value="">All Counties</option>
+                    {% for county in counties%}
+                        <option value="{{county.id}}">{{county.pretty}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-xs-3">
+                <select class="form-control select2me" name="quarter">
+                    <option value="">{% trans %} Quarter {% endtrans %}</option>
+                        {% for quarter in periods.quarters|sort %}
+                            <option value="{{ quarter }}"
+                               {% if selected_quarter == '{}'.format(quarter) %}
+                                  selected
+                               {% endif %} 
+                            >
+                               {{ quarter | replace("q_", "Quarter ") }}
+                            </option>
+                        {% endfor %}
+                </select>
+            </div>
+            <div class="col-xs-3">
+               <select name="year" class="form-control select2me">
+                  <option value="">{% trans %} Year {% endtrans %}</option>
+                  {% for year in periods.years|sort %}
+                     <option value="{{year}}"
+                        {% if selected_year == year %}
+                           selected
+                        {% endif %} 
+                     >
+                        {{ year | replace("_", " to 20") | replace("-", " to 20") }}
+                     </option>
+                  {% endfor %}
+               </select>
+            </div>
+            <div class="col-xs-2">
+                <button type="submit" class="filter-btn btn btn-info">Apply</button>
+            </div>
+        </form>
+    </div>
+
 {% endblock %}
 {% block content %}
     <h4 class="greentxt">
