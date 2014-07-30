@@ -3,7 +3,7 @@ from pyramid.view import (
     view_defaults,
     view_config
 )
-from wkcdd.models import County, Report
+from wkcdd.models import SubCounty, Report
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.period import Period
 
@@ -23,7 +23,7 @@ class ResultsIndicators(object):
     def index(self):
         quarter = self.request.GET.get('quarter', '')
         year = self.request.GET.get('year', '')
-        county_id = self.request.GET.get('county', '')
+        county_id = self.request.GET.get('sub_county', '')
         selected_county = None
 
         period = Period(quarter, year)
@@ -31,11 +31,12 @@ class ResultsIndicators(object):
         if year == '' and quarter == '':
             period = Period.latest_quarter()
 
+        sub_counties = SubCounty.all()
         if county_id:
-            selected_county = County.get(County.id == county_id)
+            selected_county = SubCounty.get(SubCounty.id == county_id)
             child_locations = [selected_county]
         else:
-            child_locations = County.all()
+            child_locations = sub_counties
 
         indicators = get_result_framework_indicators(child_locations, period)
 
@@ -43,13 +44,13 @@ class ResultsIndicators(object):
                            'month_or_quarter': period.quarter,
                            'period': period.year,
                            'location': selected_county}
-        county_list = County.all()
+
         periods = Report.get_periods_for(child_locations)
 
         return {
             'indicators': indicators,
             'search_criteria': search_criteria,
-            'counties': county_list,
+            'sub_counties': sub_counties,
             'periods': periods,
             'is_result_indicator': True
         }
