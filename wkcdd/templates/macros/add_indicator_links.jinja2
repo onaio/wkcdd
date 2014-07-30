@@ -26,6 +26,16 @@
                 {% trans %} Impact {% endtrans %}
                 </a>
             </li>
+            <li class="indicator_list">
+                <a href="{{ request.route_url('results_indicators',traverse=()) }}"
+                {% if request.matched_route.name == 'results_indicators' %}
+                        class="selected" >
+                {% else %}
+                        >
+                {% endif %}
+                {% trans %} Result {% endtrans %}
+                </a>
+            </li>
         </ul>
     </div>
 {% endmacro %}

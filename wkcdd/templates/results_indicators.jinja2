@@ -3,6 +3,8 @@
 {% from 'macros/add_indicator_links.jinja2' import  add_indicator_links %}
 {% block title %}{% trans %}Results Indicators {% endtrans %}{% endblock %}
 
+{% set selected_county, selected_quarter, selected_year = search_criteria.location, search_criteria.month_or_quarter, search_criteria.period %}
+
 {% block page_title %}
   <h3 class="page-title">
     {{ self.title() }}
@@ -64,7 +66,7 @@
     <h4 class="greentxt">
         <i class="glyphicon glyphicon-map-marker"></i>
         {% if selected_county %}
-            <span id="currLocation">{{selected_county.pretty}}</span>
+            <span id="currLocation">{{selected_county.pretty}} {% trans %}County{% endtrans %}</span>
         {% else %}
             <span id="currLocation">Select a location</span>
         {% endif %}
