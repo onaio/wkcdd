@@ -28,7 +28,7 @@ class ResultsIndicators(object):
 
         period = Period(quarter, year)
 
-        if not period:
+        if year == '' and quarter == '':
             period = Period.latest_quarter()
 
         if county_id:
@@ -40,8 +40,9 @@ class ResultsIndicators(object):
         indicators = get_result_framework_indicators(child_locations, period)
 
         search_criteria = {'month_or_quarter': quarter,
-                           'period': period,
-                           'location': ''}
+                           'month_or_quarter': period.quarter,
+                           'period': period.year,
+                           'location': selected_county}
         county_list = County.all()
         periods = Report.get_periods_for(child_locations)
 
@@ -50,8 +51,5 @@ class ResultsIndicators(object):
             'search_criteria': search_criteria,
             'counties': county_list,
             'periods': periods,
-            'selected_quarter': quarter,
-            'selected_year': year,
-            'selected_county': selected_county,
             'is_result_indicator': True
         }

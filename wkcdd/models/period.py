@@ -12,7 +12,7 @@ class Period(object):
         self.year = year
 
     def __bool__(self):
-        return self.quarter and self.year
+        return bool(self.quarter and self.year)
 
     @classmethod
     def latest_quarter(cls):
