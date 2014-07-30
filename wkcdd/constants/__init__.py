@@ -1407,3 +1407,14 @@ RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT = (
 # Found in each project report form
 RESULT_INDICATORS_ACTUAL_CONTRIBUTION = (
     "perfomance_summary/actual_contribution", )
+
+EMPOWERING_LOCAL_COMMUNITIES_OBJECTIVE = "Empower local communities to engage \
+    in wealth creating livelihood activities, lower the incidence of poverty \
+    and reduce their vulnerability to adverse outcomes associated with \
+    flooding"
+
+ENHANCING_COMMUNITIES_OBJECTIVE = "Enhanced communities' ability to plan \
+    manage and implement prioritized investments at the community level"
+
+CAPACITY_BUILT_OBJECTIVE = "Capacity built for effective M&E and project \
+    implementation"

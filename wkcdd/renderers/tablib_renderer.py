@@ -1,4 +1,18 @@
 import tablib
+from wkcdd import constants
+from wkcdd.models.indicator import (
+    CDDCAttendanceRatioIndicator,
+    CDDCManagementCountIndicator,
+    CGAAttendanceRatioIndicator,
+    CIGAttendanceRatioIndicator,
+    CIGMemberRatioIndicator,
+    PercentageIncomeIncreasedIndicator,
+    PMCAttendanceRatioIndicator,
+    SaicComplaintsResolveRatioIndicator,
+    SaicMeetingRatioIndicator,
+    TotalFemaleBeneficiariesIndicator,
+    TotalBeneficiariesIndicator,
+    UpdatedProjectRatioIndicator)
 
 
 class TablibRenderer(object):
@@ -85,6 +99,65 @@ class TablibRenderer(object):
              for target, actual, percentage in indicator_keys])
 
         return title, headers, dataset_rows, dataset_summary_row
+
+    def generate_results_indicator_dataset(self, value):
+        indicators = value.get('indicators')
+        selected_county = value.get("selected_county")
+        title = "{} Results Indicators".format(selected_county.pretty) \
+                if selected_county else "All County Results Indicators"
+        headers = ["Objectives", "Indicator", "Value"]
+        dataset_rows = []
+
+        dataset_rows.append([
+            constants.EMPOWERING_LOCAL_COMMUNITIES_OBJECTIVE,
+            PercentageIncomeIncreasedIndicator.DESCRIPTION,
+            indicators['income_increase_ratio']])
+        dataset_rows.append([
+            '',
+            TotalBeneficiariesIndicator.DESCRIPTION,
+            indicators['total_beneficiaries']])
+        dataset_rows.append([
+            '',
+            TotalFemaleBeneficiariesIndicator.DESCRIPTION,
+            indicators['total_female_beneficiaries']])
+        dataset_rows.append([
+            constants.ENHANCING_COMMUNITIES_OBJECTIVE,
+            CGAAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cga_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            PMCAttendanceRatioIndicator.DESCRIPTION,
+            indicators['pmc_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CDDCAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cddc_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CIGAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cig_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CDDCManagementCountIndicator.DESCRIPTION,
+            indicators['cddc_management_count']])
+        dataset_rows.append([
+            '',
+            CIGMemberRatioIndicator.DESCRIPTION,
+            indicators['vulnerable_member_ratio']])
+        dataset_rows.append([
+            constants.CAPACITY_BUILT_OBJECTIVE,
+            SaicComplaintsResolveRatioIndicator.DESCRIPTION,
+            indicators['saic_complaints_resolved_ratio']])
+        dataset_rows.append([
+            '',
+            SaicMeetingRatioIndicator.DESCRIPTION,
+            indicators['saic_meeting_ratio']])
+        dataset_rows.append([
+            '',
+            UpdatedProjectRatioIndicator.DESCRIPTION,
+            indicators['updated_sub_projects_ratio']])
+
+        return title, headers, dataset_rows
 
     def __call__(self, value, system):
         raise NotImplementedError("Use a specific subclass")
