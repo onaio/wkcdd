@@ -7,6 +7,8 @@ from wkcdd.views.helpers import get_performance_sector_mapping
 from wkcdd import constants
 from wkcdd.models import County
 
+from wkcdd.views.impact_indicators import ImpactIndicators
+from wkcdd.views.performance_indicators import PerformanceIndicators
 
 class TestTablibRenderer(unittest.TestCase):
 
@@ -17,7 +19,7 @@ class TestTablibRenderer(unittest.TestCase):
             constants.IMPACT_INDICATOR_KEYS)
         data = {
             'indicators': indicators,
-            'is_impact': True,
+            ImpactIndicators.IMPACT_INDICATOR_EXPORT_KEY: True,
             'rows': [
                 {'indicators': {
                     'impact_information/no_children': 0,
@@ -59,7 +61,7 @@ class TestTablibRenderer(unittest.TestCase):
                             'bucks_percentage': 0}}
         data = {
             'sectors': sectors,
-            'is_impact': False,
+            PerformanceIndicators.PERFORMANCE_INDICATOR_EXPORT_KEY: True,
             'sector_indicators': {
                 goat_reg_id: (
                     ('Community Contribution', (

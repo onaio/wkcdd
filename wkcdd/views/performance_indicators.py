@@ -32,6 +32,7 @@ from wkcdd.models import (
 
 @view_defaults(route_name='performance_indicators')
 class PerformanceIndicators(object):
+    PERFORMANCE_INDICATOR_EXPORT_KEY = "performance_export"
 
     def __init__(self, request):
         self.request = request
@@ -148,7 +149,7 @@ class PerformanceIndicators(object):
             'filter_criteria': filter_criteria,
             'chart_dataset': chart_dataset,
             'geo_locations': geo_locations,
-            'is_impact': False
+            self.PERFORMANCE_INDICATOR_EXPORT_KEY: True
         }
 
     @view_config(name='',
@@ -266,7 +267,7 @@ class PerformanceIndicators(object):
             'location': location,
             'chart_dataset': chart_dataset,
             'geo_locations': geo_locations,
-            'is_impact': False
+            self.PERFORMANCE_INDICATOR_EXPORT_KEY: True
         }
 
     @view_config(name='trends',

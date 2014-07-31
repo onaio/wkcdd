@@ -14,6 +14,8 @@ from wkcdd.models.indicator import (
     TotalBeneficiariesIndicator,
     UpdatedProjectRatioIndicator)
 
+from wkcdd.views.impact_indicators import ImpactIndicators
+from wkcdd.views.performance_indicators import PerformanceIndicators
 
 class TablibRenderer(object):
 
@@ -26,14 +28,16 @@ class TablibRenderer(object):
         rows = None
         summary_row = None
 
-        if value.get('is_impact'):
+        if value.get(ImpactIndicators.IMPACT_INDICATOR_EXPORT_KEY):
             # Generate dataset for impact indicators
             title, headers, rows, summary_row = (
                 self.generate_impact_indicator_dataset(value))
-        else:
+        elif value.get(PerformanceIndicators.PERFORMANCE_INDICATOR_EXPORT_KEY):
             # Generate dataset for performance indicators
             title, headers, rows, summary_row = (
                 self.generate_performance_indicator_dataset(value))
+        else:
+            raise HTTPBadRequest("Export for dataset not implemented.")
 
         dataset = tablib.Dataset(headers)
         dataset.title = title
@@ -42,6 +46,12 @@ class TablibRenderer(object):
         # prepend a summary title to the summary row
         summary_row[:0] = ['Total Summary']
         dataset.append(summary_row)
+
+        if summary_row:
+            # prepend a summary title to the summary row
+            summary_row[:0] = ['Total Summary']
+            dataset.append(summary_row)
+
         return dataset
 
     def generate_impact_indicator_dataset(self, value):

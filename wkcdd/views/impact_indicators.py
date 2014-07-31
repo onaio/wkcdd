@@ -28,6 +28,7 @@ from wkcdd.models import (
 
 @view_defaults(route_name='impact_indicators')
 class ImpactIndicators(object):
+    IMPACT_INDICATOR_EXPORT_KEY = "impact_export"
 
     def __init__(self, request):
         self.request = request
@@ -95,7 +96,7 @@ class ImpactIndicators(object):
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
             'chart_dataset': chart_dataset,
-            'is_impact': True,
+            self.IMPACT_INDICATOR_EXPORT_KEY: True,
             'geo_locations': geo_locations
         }
 
@@ -159,7 +160,7 @@ class ImpactIndicators(object):
             'search_criteria': search_criteria,
             'filter_criteria': filter_criteria,
             'chart_dataset': chart_dataset,
-            'is_impact': True,
+            self.IMPACT_INDICATOR_EXPORT_KEY: True,
             'geo_locations': geo_locations
         }
 
