@@ -12,6 +12,7 @@ from wkcdd.views.helpers import get_result_framework_indicators
 
 @view_defaults(route_name='results_indicators')
 class ResultsIndicators(object):
+    EXPORT_INDICATOR_EXPORT_KEY = "result_export"
 
     def __init__(self, request):
         self.request = request
@@ -52,5 +53,5 @@ class ResultsIndicators(object):
             'search_criteria': search_criteria,
             'sub_counties': sub_counties,
             'periods': periods,
-            'is_result_indicator': True
+            self.EXPORT_INDICATOR_EXPORT_KEY: True
         }

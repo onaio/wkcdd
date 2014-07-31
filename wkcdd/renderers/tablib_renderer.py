@@ -1,4 +1,6 @@
 import tablib
+
+from pyramid.httpexceptions import HTTPBadRequest
 from wkcdd import constants
 from wkcdd.models.indicator import (
     CDDCAttendanceRatioIndicator,
@@ -16,6 +18,8 @@ from wkcdd.models.indicator import (
 
 from wkcdd.views.impact_indicators import ImpactIndicators
 from wkcdd.views.performance_indicators import PerformanceIndicators
+from wkcdd.views.results_indicators import ResultsIndicators
+
 
 class TablibRenderer(object):
 
@@ -36,6 +40,10 @@ class TablibRenderer(object):
             # Generate dataset for performance indicators
             title, headers, rows, summary_row = (
                 self.generate_performance_indicator_dataset(value))
+        elif value.get(ResultsIndicators.EXPORT_INDICATOR_EXPORT_KEY):
+            # Genrate dataset for result indicators
+            title, headers, rows, summary_row = (
+                self.generate_results_indicator_dataset(value))
         else:
             raise HTTPBadRequest("Export for dataset not implemented.")
 
@@ -43,9 +51,6 @@ class TablibRenderer(object):
         dataset.title = title
         for row in rows:
             dataset.append(row)
-        # prepend a summary title to the summary row
-        summary_row[:0] = ['Total Summary']
-        dataset.append(summary_row)
 
         if summary_row:
             # prepend a summary title to the summary row
@@ -117,6 +122,7 @@ class TablibRenderer(object):
                 if selected_county else "All County Results Indicators"
         headers = ["Objectives", "Indicator", "Value"]
         dataset_rows = []
+        summary_row = []
 
         dataset_rows.append([
             constants.EMPOWERING_LOCAL_COMMUNITIES_OBJECTIVE,
@@ -167,7 +173,7 @@ class TablibRenderer(object):
             UpdatedProjectRatioIndicator.DESCRIPTION,
             indicators['updated_sub_projects_ratio']])
 
-        return title, headers, dataset_rows
+        return title, headers, dataset_rows, summary_row
 
     def __call__(self, value, system):
         raise NotImplementedError("Use a specific subclass")

@@ -9,6 +9,8 @@ from wkcdd.models import County
 
 from wkcdd.views.impact_indicators import ImpactIndicators
 from wkcdd.views.performance_indicators import PerformanceIndicators
+from wkcdd.views.results_indicators import ResultsIndicators
+
 
 class TestTablibRenderer(unittest.TestCase):
 
@@ -77,6 +79,30 @@ class TestTablibRenderer(unittest.TestCase):
                 goat_reg_id: goat_sector_data},
             'search_criteria': {'selected_sector': {'sector': goat_reg_id}}
         }
+        renderer(data, {'request': request})
+        self.assertEqual(
+            request.response.content_type,
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  # noqa
+
+    def test_renderer_output_for_results_indicators(self):
+        request = testing.DummyRequest()
+        renderer = TablibXLSXRenderer({})
+        indicators = {
+            'income_increase_ratio': 10,
+            'total_beneficiaries': 15,
+            'total_female_beneficiaries': 20,
+            'cga_attendance_ratio': 14,
+            'pmc_attendance_ratio': 42,
+            'cddc_attendance_ratio': 23,
+            'cig_attendance_ratio': 13,
+            'cddc_management_count': 12,
+            'vulnerable_member_ratio': 4,
+            'saic_complaints_resolved_ratio': 42,
+            'saic_meeting_ratio': 40,
+            'updated_sub_projects_ratio': 12}
+        data = {
+            ResultsIndicators.EXPORT_INDICATOR_EXPORT_KEY: True,
+            'indicators': indicators}
         renderer(data, {'request': request})
         self.assertEqual(
             request.response.content_type,
