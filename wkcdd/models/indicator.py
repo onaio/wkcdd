@@ -155,7 +155,7 @@ class MeetingReportRatioIndicator(RatioIndicator):
 
 class CDDCManagementCountIndicator(CountIndicator):
     DESCRIPTION = "Number of CDDCs managing development priorities \
-        identified in the CAPs and YAPs"
+identified in the CAPs and YAPs"
     klass = MeetingReport
     fields = constants.RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT
     count_criteria = [50.0, 50.0]
@@ -171,8 +171,8 @@ class TotalAverageMonthlyIncomeIndicator(Indicator):
 
 class TotalBeneficiariesIndicator(Indicator):
     DESCRIPTION = "Total number of people in the project target area \
-        benefiting from project interventions (of which at least \
-        34% are female)"
+benefiting from project interventions (of which at least \
+34% are female)"
     indicator_list = constants.RESULT_INDICATOR_TOTAL_BENEFICIARIES
 
 
@@ -191,14 +191,16 @@ class TotalCIGMemberIndicator(Indicator):
 
 class CIGMemberRatioIndicator(RatioIndicator):
     DESCRIPTION = "Proportion of the most vulnerable community members \
-        participating in implementation of the project"
+participating in implementation of the project"
+
     numerator_class = TotalVulnerableCIGMemberIndicator
     denomenator_class = TotalCIGMemberIndicator
 
 
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
     DESCRIPTION = "Percentage increase in income of target households \
-        members of CIGs (Direct beneficiaries)"
+members of CIGs (Direct beneficiaries)"
+
     numerator_class = TotalAverageMonthlyIncomeIndicator
     denomenator_class = TotalDirectBeneficiariesIndicator
 
@@ -213,7 +215,8 @@ class ActualCGAAttendanceIndicator(MeetingReportIndicator):
 
 class CGAAttendanceRatioIndicator(MeetingReportRatioIndicator):
     DESCRIPTION = "Percent of community members participating in \
-        Community General Meetings"
+Community General Meetings"
+
     numerator_class = ExpectedCGAAttendanceIndicator
     denomenator_class = ActualCGAAttendanceIndicator
 
@@ -282,7 +285,8 @@ class TotalProjectCountIndicator(object):
 
 class UpdatedProjectRatioIndicator(RatioIndicator):
     DESCRIPTION = "Percentage of sub projects including financial \
-        information updated and disclosed on mapping platform"
+information updated and disclosed on mapping platform"
+
     numerator_class = ProjectInformationIndicator
     denomenator_class = TotalProjectCountIndicator
 
@@ -321,6 +325,7 @@ class SaicActualMeetingIndicator(MeetingReportIndicator):
 
 class SaicMeetingRatioIndicator(MeetingReportRatioIndicator):
     DESCRIPTION = "Proportion of meetings conducted by Social Audit \
-        Committees at the community level"
+Committees at the community level"
+
     numerator_class = SaicActualMeetingIndicator
     denomenator_class = SaicExpectedMeetingIndicator

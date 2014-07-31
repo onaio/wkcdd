@@ -119,7 +119,7 @@ class TablibRenderer(object):
         indicators = value.get('indicators')
         selected_county = value.get("selected_county")
         title = "{} Results Indicators".format(selected_county.pretty) \
-                if selected_county else "All County Results Indicators"
+                if selected_county else "Results Indicators"
         headers = ["Objectives", "Indicator", "Value"]
         dataset_rows = []
         summary_row = []
