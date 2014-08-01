@@ -74,6 +74,8 @@ REPORT_MONTH = 'perfomance_summary/month'
 REPORT_QUARTER = 'perfomance_summary/quarter_year'
 REPORT_PERIOD = 'perfomance_summary/year'
 
+MEETING_REPORT = 'meetings_report3'
+
 PROJECT_REGISTRATION_FORMS = (
     (DAIRY_GOAT_PROJECT_REGISTRATION, DAIRY_GOAT_PROJECT_CODE),
     (DAIRY_COWS_PROJECT_REGISTRATION, DAIRY_COWS_PROJECT_CODE),
@@ -1345,3 +1347,74 @@ PROJECT_DETAILS_KEYS = (
     (PROJECT_TREASURER, _('Treasurer')),
     (PROJECT_TREASURER_PHONE, _('Treasurer Phone Number'))
 )
+
+RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME = (
+    'impact_information/bnf_income_achievement',
+    'mproject_performance/bnf_income_achievement',
+    'mproject_performance/milk_bnf_sale_achievement',
+    'impact_information/milk_bnf_sale_achievement')
+
+RESULT_INDICATOR_DIRECT_BENEFICIARIES = (
+    'impact_information/db_achievement',
+    'mproject_performance/db_achievement')
+
+RESULT_INDICATOR_TOTAL_BENEFICIARIES = (
+    'impact_information/db_achievement',
+    'mproject_performance/db_achievement',
+    'impact_information/mb_achievement',
+    'mproject_performance/mb_achievement',
+    'impact_information/fb_achievement',
+    'mproject_performance/fb_achievement',
+    'impact_information/vb_achievement',
+    'mproject_performance/vb_achievement')
+
+RESULT_INDICATORS_FEMALE_BENEFICIARIES = (
+    'impact_information/fb_achievement',
+    'mproject_performance/fb_achievement', )
+
+RESULT_INDICATORS_VULN_MEMBERS = (
+    'membership/v_members', )
+RESULT_INDICATORS_TOTAL_MEMBERS = (
+    'membership/total_members', )
+
+# percentage of community members participating in CGA
+# Meeting Report indicators
+RESULT_INDICATORS_CGA_EXPECTED_ATTENDANCE = ('meetings/cga_expected_members', )
+RESULT_INDICATORS_CGA_ACTUAL_ATTENDANCE = ('meetings/cga_members_attended', )
+
+# Percentage of CDDC members participating in decision making
+# Meeting Report indicators
+RESULT_INDICATORS_EXPECTED_CDDC_ATTENDANCE = (
+    'meetings/cddc_expected_members', )
+RESULT_INDICATORS_ACTUAL_CDDC_ATTENDANCE = ('meetings/cddc_members_attended', )
+
+# Percentage of PMC members participating in decision making
+# Found in each project report form
+RESULT_INDICATORS_EXPECTED_PMC_ATTENDANCE = (
+    'meetings/epmc_expected_members', )
+RESULT_INDICATORS_ACTUAL_PMC_ATTENDANCE = ('meetings/epmc_members_attended', )
+
+# Percentage of CIG members participating in decision making
+# Found in each project report form
+RESULT_INDICATORS_EXPECTED_CIG_ATTENDANCE = ('meetings/mmm_expected_members', )
+RESULT_INDICATORS_ACTUAL_CIG_ATTENDANCE = ('meetings/mmm_members_attended', )
+
+# Count of CDDCs managing development priorities identified in the
+# CAPs and YAPs from Meeting Form
+RESULT_INDICATORS_CDDC_MANAGEMENT_COUNT = (
+    'meetings/cddc_mh_percentage', 'meetings/cddc_ma_percentage')
+
+# Found in each project report form
+RESULT_INDICATORS_ACTUAL_CONTRIBUTION = (
+    "perfomance_summary/actual_contribution", )
+
+EMPOWERING_LOCAL_COMMUNITIES_OBJECTIVE = "Empower local communities to engage \
+in wealth creating livelihood activities, lower the incidence of poverty \
+and reduce their vulnerability to adverse outcomes associated with \
+flooding"
+
+ENHANCING_COMMUNITIES_OBJECTIVE = "Enhanced communities' ability to plan \
+manage and implement prioritized investments at the community level"
+
+CAPACITY_BUILT_OBJECTIVE = "Capacity built for effective M&E and project \
+implementation"

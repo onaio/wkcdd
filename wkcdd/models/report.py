@@ -1,5 +1,14 @@
 
 from collections import defaultdict
+from sqlalchemy import (
+    Column,
+    Integer,
+    DateTime,
+    String,
+    Enum,
+    desc)
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.dialects.postgresql import JSON
 
 from wkcdd import constants
 from wkcdd.models.project import Project
@@ -9,18 +18,6 @@ from wkcdd.models.base import (
     DBSession,
     BaseModelFactory
 )
-from sqlalchemy.orm.exc import NoResultFound
-
-from sqlalchemy import (
-    Column,
-    Integer,
-    DateTime,
-    String,
-    Enum,
-    desc
-)
-from sqlalchemy.dialects.postgresql import JSON
-
 from wkcdd.libs.utils import (
     get_impact_indicator_list,
     sum_reduce_func)

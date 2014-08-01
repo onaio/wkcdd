@@ -29,6 +29,7 @@ def deploy(deployment="prod", branch="master"):
             run('pip install -r requirements.txt')
             run("python setup.py test -q")
             run("python setup.py install")
+            run("rm -rf build")
             # run migrations
             run("alembic -n {0} upgrade head".format(
                 env.get('alembic_section', 'alembic')))

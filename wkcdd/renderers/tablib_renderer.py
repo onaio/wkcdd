@@ -1,6 +1,24 @@
 import tablib
 
 from wkcdd import constants
+from pyramid.httpexceptions import HTTPBadRequest
+from wkcdd.models.indicator import (
+    CDDCAttendanceRatioIndicator,
+    CDDCManagementCountIndicator,
+    CGAAttendanceRatioIndicator,
+    CIGAttendanceRatioIndicator,
+    CIGMemberRatioIndicator,
+    PercentageIncomeIncreasedIndicator,
+    PMCAttendanceRatioIndicator,
+    SaicComplaintsResolveRatioIndicator,
+    SaicMeetingRatioIndicator,
+    TotalFemaleBeneficiariesIndicator,
+    TotalBeneficiariesIndicator,
+    UpdatedProjectRatioIndicator)
+
+from wkcdd.views.impact_indicators import ImpactIndicators
+from wkcdd.views.performance_indicators import PerformanceIndicators
+from wkcdd.views.results_indicators import ResultsIndicators
 
 
 class TablibRenderer(object):
@@ -14,7 +32,7 @@ class TablibRenderer(object):
         rows = None
         summary_row = None
 
-        if value.get('is_impact'):
+        if value.get(ImpactIndicators.IMPACT_INDICATOR_EXPORT_KEY):
             # Generate dataset for impact indicators
             title, headers, rows, summary_row = (
                 self.generate_impact_indicator_dataset(value))
@@ -24,10 +42,16 @@ class TablibRenderer(object):
         elif value.get('is_report_export'):
             title, headers, rows, summary_row = (
                 self.generate_mis_project_indicator_reports(value))
-        else:
+        elif value.get(PerformanceIndicators.PERFORMANCE_INDICATOR_EXPORT_KEY):
             # Generate dataset for performance indicators
             title, headers, rows, summary_row = (
                 self.generate_performance_indicator_dataset(value))
+        elif value.get(ResultsIndicators.EXPORT_INDICATOR_EXPORT_KEY):
+            # Genrate dataset for result indicators
+            title, headers, rows, summary_row = (
+                self.generate_results_indicator_dataset(value))
+        else:
+            raise HTTPBadRequest("Export for dataset not implemented.")
 
         dataset = tablib.Dataset(headers)
         dataset.title = title
@@ -35,8 +59,8 @@ class TablibRenderer(object):
         for row in rows:
             dataset.append(row)
 
-        # prepend a summary title to the summary row
         if summary_row:
+            # prepend a summary title to the summary row
             summary_row[:0] = ['Total Summary']
             dataset.append(summary_row)
 
@@ -190,6 +214,66 @@ class TablibRenderer(object):
             return title, headers, rows, summary_row
         else:
             raise ValueError("No reports to generate MIS report")
+
+    def generate_results_indicator_dataset(self, value):
+        indicators = value.get('indicators')
+        selected_county = value.get("selected_county")
+        title = "{} Results Indicators".format(selected_county.pretty) \
+                if selected_county else "Results Indicators"
+        headers = ["Objectives", "Indicator", "Value"]
+        dataset_rows = []
+        summary_row = []
+
+        dataset_rows.append([
+            constants.EMPOWERING_LOCAL_COMMUNITIES_OBJECTIVE,
+            PercentageIncomeIncreasedIndicator.DESCRIPTION,
+            indicators['income_increase_ratio']])
+        dataset_rows.append([
+            '',
+            TotalBeneficiariesIndicator.DESCRIPTION,
+            indicators['total_beneficiaries']])
+        dataset_rows.append([
+            '',
+            TotalFemaleBeneficiariesIndicator.DESCRIPTION,
+            indicators['total_female_beneficiaries']])
+        dataset_rows.append([
+            constants.ENHANCING_COMMUNITIES_OBJECTIVE,
+            CGAAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cga_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            PMCAttendanceRatioIndicator.DESCRIPTION,
+            indicators['pmc_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CDDCAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cddc_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CIGAttendanceRatioIndicator.DESCRIPTION,
+            indicators['cig_attendance_ratio']])
+        dataset_rows.append([
+            '',
+            CDDCManagementCountIndicator.DESCRIPTION,
+            indicators['cddc_management_count']])
+        dataset_rows.append([
+            '',
+            CIGMemberRatioIndicator.DESCRIPTION,
+            indicators['vulnerable_member_ratio']])
+        dataset_rows.append([
+            constants.CAPACITY_BUILT_OBJECTIVE,
+            SaicComplaintsResolveRatioIndicator.DESCRIPTION,
+            indicators['saic_complaints_resolved_ratio']])
+        dataset_rows.append([
+            '',
+            SaicMeetingRatioIndicator.DESCRIPTION,
+            indicators['saic_meeting_ratio']])
+        dataset_rows.append([
+            '',
+            UpdatedProjectRatioIndicator.DESCRIPTION,
+            indicators['updated_sub_projects_ratio']])
+
+        return title, headers, dataset_rows, summary_row
 
     def __call__(self, value, system):
         raise NotImplementedError("Use a specific subclass")

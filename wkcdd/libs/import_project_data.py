@@ -5,11 +5,13 @@ import csv
 
 from wkcdd.models import Report, Project
 from wkcdd.models import (
-    Location,
     Community,
+    Constituency,
     County,
-    SubCounty,
-    Constituency)
+    Location,
+    MeetingReport,
+    SaicMeetingReport,
+    SubCounty)
 from wkcdd.models.project import ProjectType
 from wkcdd import constants
 
@@ -202,3 +204,40 @@ def import_legacy_data(import_file_url):
             project_import_rows.append(row)
 
     add_old_project_data(column_mapping, project_import_rows)
+
+
+def fetch_meeting_form_reports():
+    form_list = get_ona_form_list()
+    project_report_form = get_formid(constants.MEETING_REPORT, form_list)
+
+    with transaction.manager:
+        raw_data = fetch_data(project_report_form)
+        for report_data in raw_data:
+            report = MeetingReport(
+                submission_time=datetime.datetime.strptime(
+                    report_data.get(constants.REPORT_SUBMISSION_TIME),
+                    "%Y-%m-%dT%H:%M:%S"),
+                month=report_data.get(constants.REPORT_MONTH),
+                quarter=report_data.get(constants.REPORT_QUARTER),
+                period=report_data.get(constants.REPORT_PERIOD),
+                report_data=report_data)
+            report.save()
+
+
+def fetch_saic_meeting_form_reports():
+    form_list = get_ona_form_list()
+    project_report_form = get_formid(
+        SaicMeetingReport.FORM_ID, form_list)
+
+    with transaction.manager:
+        raw_data = fetch_data(project_report_form)
+        for report_data in raw_data:
+            report = SaicMeetingReport(
+                submission_time=datetime.datetime.strptime(
+                    report_data.get(constants.REPORT_SUBMISSION_TIME),
+                    "%Y-%m-%dT%H:%M:%S"),
+                month=report_data.get(SaicMeetingReport.REPORT_MONTH),
+                quarter=report_data.get(SaicMeetingReport.REPORT_QUARTER),
+                period=report_data.get(SaicMeetingReport.REPORT_PERIOD),
+                report_data=report_data)
+            report.save()

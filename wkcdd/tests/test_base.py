@@ -34,7 +34,9 @@ from wkcdd.models.county import County
 from wkcdd import constants
 from wkcdd.models import (
     Community,
-    SubCounty
+    SubCounty,
+    MeetingReport,
+    SaicMeetingReport
 )
 
 SETTINGS_FILE = 'test.ini'
@@ -165,6 +167,32 @@ class TestBase(unittest.TestCase):
 
         return report
 
+    def _add_meeting_report(self,
+                            month=3,
+                            quarter='q_2',
+                            period='2013_14',
+                            submission_time=datetime.datetime(2014, 3, 1),
+                            report_data="{'data':test_report}"):
+        report = MeetingReport(month=month,
+                               quarter=quarter,
+                               period=period,
+                               submission_time=submission_time,
+                               report_data=report_data)
+        report.save()
+
+    def _add_saic_meeting_report(self,
+                                 month=3,
+                                 quarter='q_2',
+                                 period='2013_14',
+                                 submission_time=datetime.datetime(2014, 3, 1),
+                                 report_data="{'data':test_report}"):
+        report = SaicMeetingReport(month=month,
+                                   quarter=quarter,
+                                   period=period,
+                                   submission_time=submission_time,
+                                   report_data=report_data)
+        report.save()
+
     def _save_to_db(self, obj):
         with transaction.manager:
             DBSession.add(obj)
@@ -284,6 +312,14 @@ class TestBase(unittest.TestCase):
                          report_data=report_data_4,
                          status=Report.PENDING,
                          submission_time=datetime.datetime(2014, 3, 10))
+        meeting_data = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'MEETING_REPORT.json'))
+        saic_meeting_data = _load_json_fixture(os.path.join(
+            self.test_dir, 'fixtures', 'SAIC_REPORT.json'))
+
+        self._add_meeting_report(report_data=meeting_data)
+        self._add_saic_meeting_report(report_data=saic_meeting_data)
+
         transaction.commit()
 
     def setup_community_test_data(self):
