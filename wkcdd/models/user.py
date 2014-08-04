@@ -1,3 +1,4 @@
+from pyramid.security import Allow
 from sqlalchemy import (
     Column,
     Integer,
@@ -6,7 +7,8 @@ from sqlalchemy import (
 )
 
 from sqlalchemy.orm import synonym
-from wkcdd.models.base import Base
+from sqlalchemy.orm.exc import NoResultFound
+from wkcdd.models.base import Base, BaseModelFactory, DBSession
 
 ADMIN_PERM = 'admin'
 CPC_PERM = 'cpc'
@@ -42,3 +44,21 @@ class User(Base):
         if len(password) > 255:
             return False
         return pwd_context.verify(password, self.pwd)
+
+
+class UserFactory(BaseModelFactory):
+    __acl__ = [
+        (Allow, ADMIN_PERM, 'manage')
+    ]
+
+    def __getitem__(self, item):
+        # try to retrieve the user whose id matches item
+        try:
+            user_id = int(item)
+            user = DBSession.query(User).filter_by(id=user_id).one()
+        except (ValueError, NoResultFound):
+            raise KeyError
+        else:
+            user.__parent__ = self
+            user.__name__ = item
+            return user
