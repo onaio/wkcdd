@@ -1,7 +1,8 @@
 from pyramid.security import (
     Allow,
     Authenticated,
-    ALL_PERMISSIONS
+    ALL_PERMISSIONS,
+    Everyone
 )
 
 from sqlalchemy.orm import (
@@ -17,9 +18,9 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 class RootFactory(object):
     __acl__ = [
-        (Allow, 'g:su', ALL_PERMISSIONS),
+        (Allow, 'admin', ALL_PERMISSIONS),
         (Allow, Authenticated, 'authenticated'),
-        (Allow, 'g:supervisors', 'supervise'),
+        (Allow, Everyone, 'list'),
     ]
 
     def __init__(self, request):
@@ -37,6 +38,9 @@ class BaseModelFactory(object):
 
 
 class BaseModel(object):
+
+    __acl__ = [(Allow, Everyone, 'view')]
+
     @classmethod
     def newest(cls):
         return DBSession.query(cls).order_by(desc(cls.id)).first()

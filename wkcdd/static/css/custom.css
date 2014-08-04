@@ -852,3 +852,7 @@ The Most Extra Small Devices Portrait Mode Only
 #results_indicator_filter_criteria div {
     margin-right: 0.5em;
 }
+
+#login-container {
+    margin-top: 60px;
+}
