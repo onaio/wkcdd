@@ -18,6 +18,7 @@ from wkcdd.models.base import (
 from wkcdd.models.project import ProjectFactory
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.report import ReportFactory
+from wkcdd.models.user import UserFactory
 
 
 def main(global_config, **settings):
@@ -70,6 +71,9 @@ def includeme(config):
                      factory=LocationFactory)
     config.add_route('reports', '/reports/*traverse',
                      factory=ReportFactory)
+    config.add_route('users',
+                     '/users/*traverse',
+                     factory=UserFactory)
 
     config.add_route('export_projects', '/export-projects')
     config.add_route('export_reports', '/export-reports')

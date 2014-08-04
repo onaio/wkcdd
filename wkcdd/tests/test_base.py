@@ -207,7 +207,7 @@ class TestBase(unittest.TestCase):
             pwd=pwd,
             active=active,
             group=group)
-        DBSession.add(user)
+        self._save_to_db(user)
 
     def _create_admin(self):
         self._create_user(username="admin", group=ADMIN_PERM)
