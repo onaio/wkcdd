@@ -10,7 +10,7 @@ ADMIN_PERM = "admin"
 
 def group_finder(userid, request):
     try:
-        user = User.get(userid)
+        user = User.get(User.id == userid)
     except NoResultFound:
         return None
     else:
