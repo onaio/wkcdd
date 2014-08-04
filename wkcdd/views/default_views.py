@@ -33,7 +33,7 @@ def private(request):
     return Response("Private view")
 
 
-@view_config(route_name='supervisors_only', permission="supervise")
+@view_config(route_name='supervisors_only', permission="admin")
 def very_private(request):
     return Response("Very Private view")
 

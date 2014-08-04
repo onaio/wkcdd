@@ -38,6 +38,7 @@ from wkcdd.models import (
     MeetingReport,
     SaicMeetingReport
 )
+from wkcdd.models.user import ADMIN_PERM, User
 
 SETTINGS_FILE = 'test.ini'
 settings = get_appsettings(SETTINGS_FILE)
@@ -492,10 +493,18 @@ class IntegrationTestBase(TestBase):
 
 
 class FunctionalTestBase(IntegrationTestBase):
+    def _create_user(self):
+        transaction.begin()
+        user = User(username="test_user",
+                    pwd="****",
+                    active=True,
+                    group=ADMIN_PERM)
+        user.save()
+        transaction.commit()
 
-    def _login_user(self, userid):
+    def _login_user(self, user):
         policy = self.testapp.app.registry.queryUtility(IAuthenticationPolicy)
-        headers = policy.remember(self.request, userid)
+        headers = policy.remember(self.request, user.id)
         cookie_parts = dict(headers)['Set-Cookie'].split('; ')
         cookie = filter(
             lambda i: i.split('=')[0] == 'auth_tkt', cookie_parts)[0]
