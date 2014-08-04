@@ -2,9 +2,6 @@ from pyramid import testing
 from pyramid.httpexceptions import HTTPFound
 from webob.multidict import MultiDict
 
-from wkcdd.security import pwd_context
-from wkcdd.models.base import DBSession
-from wkcdd.models.user import User, ADMIN_PERM
 from wkcdd.views.auth import login, logout
 
 from wkcdd.tests.test_base import (
@@ -12,21 +9,11 @@ from wkcdd.tests.test_base import (
 
 
 class TestAuth(IntegrationTestBase):
-
-    def _create_user(self):
-        # create the user
-        user = User(
-            username="admin",
-            pwd=pwd_context.encrypt("admin"),
-            active=True,
-            group=ADMIN_PERM)
-        DBSession.add(user)
-
     def test_login(self):
-        self._create_user()
+        self._create_admin()
         payload = MultiDict([
             ('username', 'admin'),
-            ('password', 'admin')
+            ('password', '****')
         ])
         request = testing.DummyRequest(post=payload)
         response = login(request)
