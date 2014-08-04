@@ -1,22 +1,17 @@
 from passlib.context import CryptContext
-
+from sqlalchemy.orm.exc import NoResultFound
+from wkcdd.models.user import GROUPS
+from wkcdd.models.user import User
 
 pwd_context = CryptContext()
 
-USERS = {
-    1: 'admin',
-    2: 'bob',
-    3: 'billy'
-}
-GROUPS = {
-    1: ['g:su', 'u:1'],
-    2: ['g:supervisors', 'u:2'],
-    3: ['g:reporters', 'u:3']
-}
+ADMIN_PERM = "admin"
 
 
 def group_finder(userid, request):
-    if userid in USERS:
-        return GROUPS.get(userid, [])
-    else:
+    try:
+        user = User.get(userid)
+    except NoResultFound:
         return None
+    else:
+        return GROUPS.get(user.group, [])

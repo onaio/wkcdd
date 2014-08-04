@@ -23,15 +23,6 @@ def forbidden(context, request):
     return HTTPForbidden()
 
 
-@view_config(route_name='auth',
-             match_param='action=login')
-@view_config(name='login',
-             context=HTTPForbidden,
-             renderer='login.jinja2')
-def login(request):
-    return Response('Login to proceed')
-
-
 @view_config(route_name='default')
 def home(request):
     return HTTPFound(request.route_url('performance_indicators', traverse=()))
