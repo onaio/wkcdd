@@ -10,3 +10,4 @@ build
 /ansible
 .ropeproject/
 .project
+*.sublime-project
