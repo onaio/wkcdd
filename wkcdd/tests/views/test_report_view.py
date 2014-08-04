@@ -1,6 +1,9 @@
 import os
+import datetime
 
 from pyramid import testing
+
+from webob.multidict import MultiDict
 from wkcdd.tests.test_base import (
     IntegrationTestBase,
     FunctionalTestBase)
@@ -50,22 +53,28 @@ class TestReportViews(IntegrationTestBase):
         self.assertEqual(Report.count(), count)
         self.assertEqual(response.status_code, 202)
 
+    def test_report_submission_approval(self):
+        report = Report(
+            project_code='abc',
+            submission_time=datetime.datetime.now(),
+            month=1,
+            quarter='q_2',
+            period='2013_14',
+            report_data="{'data':'bla'}")
+        report.save()
+        params = MultiDict(
+            {'new_status': 'approved',
+             'reports': '{}'.format(report.id)})
+        self.request.POST = params
+        response = self.report_views.update()
+        self.assertEqual(response.status_code, 302)
+
 
 class TestReportViewsFunctional(FunctionalTestBase):
 
     def test_report_submission_list(self):
         self.setup_test_data()
         url = self.request.route_path('reports', traverse=())
-        response = self.testapp.get(url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_report_submission_approval(self):
-        self.setup_test_data()
-        report = Report.get(Report.status == Report.PENDING)
-        url = self.request.route_path(
-            'reports',
-            traverse=('update'))
-        response = self.testapp.post(
-            url,
-            params={'reports': '{},'.format(report.id)})
-        self.assertEqual(response.status_code, 302)
+        response = self.testapp.get(url, status=401)
+        self.assertEqual(response.status_code, 401)
+        response.mustcontain('<title>Login')

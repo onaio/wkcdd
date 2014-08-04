@@ -29,7 +29,8 @@ class ReportViews(object):
     @view_config(name='',
                  context=ReportFactory,
                  renderer='reports_list.jinja2',
-                 request_method='GET')
+                 request_method='GET',
+                 permission='authenticated')
     def list(self):
         reports = Report.all(Report.status != Report.APPROVED)
         impact_indicator_mapping = get_impact_indicator_list(
@@ -46,7 +47,8 @@ class ReportViews(object):
     @view_config(name='update',
                  context=ReportFactory,
                  check_csrf=False,
-                 request_method='POST')
+                 request_method='POST',
+                 permission='authenticated')
     def update(self):
         status = self.request.POST.get('new_status', 'pending')
         report_ids = self.request.POST.get('reports', '').split(",")
