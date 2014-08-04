@@ -39,7 +39,7 @@ from wkcdd.models import (
     MeetingReport,
     SaicMeetingReport
 )
-from wkcdd.models.user import ADMIN_PERM, User
+from wkcdd.models.user import CPC_PERM, User, ADMIN_PERM
 
 SETTINGS_FILE = 'test.ini'
 settings = get_appsettings(SETTINGS_FILE)
@@ -194,6 +194,23 @@ class TestBase(unittest.TestCase):
                                    submission_time=submission_time,
                                    report_data=report_data)
         report.save()
+
+    def _create_user(self,
+                     username="test_user",
+                     pwd="****",
+                     active=True,
+                     group=CPC_PERM):
+        # create the user
+        pwd = pwd_context.encrypt(pwd)
+        user = User(
+            username=username,
+            pwd=pwd,
+            active=active,
+            group=group)
+        DBSession.add(user)
+
+    def _create_admin(self):
+        self._create_user(username="admin", group=ADMIN_PERM)
 
     def _save_to_db(self, obj):
         with transaction.manager:
@@ -495,14 +512,6 @@ class IntegrationTestBase(TestBase):
 
 
 class FunctionalTestBase(IntegrationTestBase):
-    def _create_user(self):
-        transaction.begin()
-        user = User(username="test_user",
-                    pwd="****",
-                    active=True,
-                    group=ADMIN_PERM)
-        user.save()
-        transaction.commit()
 
     def _login_user(self, user):
         policy = self.testapp.app.registry.queryUtility(IAuthenticationPolicy)
