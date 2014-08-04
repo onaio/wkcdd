@@ -12,7 +12,8 @@ from wkcdd.tests.test_base import (
 
 
 class TestAuth(IntegrationTestBase):
-    def test_login(self):
+
+    def _create_user(self):
         # create the user
         user = User(
             username="admin",
@@ -21,6 +22,8 @@ class TestAuth(IntegrationTestBase):
             group=ADMIN_PERM)
         DBSession.add(user)
 
+    def test_login(self):
+        self._create_user()
         payload = MultiDict([
             ('username', 'admin'),
             ('password', 'admin')
@@ -30,6 +33,18 @@ class TestAuth(IntegrationTestBase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.location, request.route_url(
             'reports', traverse=()))
+
+    def test_bad_login(self):
+        self._create_user()
+        payload = MultiDict([
+            ('username', 'admin'),
+            ('password', 'bad_admin')
+        ])
+        request = testing.DummyRequest(post=payload)
+        response = login(request)
+        flash_message = request.session.values()[0][0]
+        self.assertEqual(flash_message, u"Invalid username or password")
+        self.assertEqual(response, {})
 
     def test_logout(self):
         request = testing.DummyRequest()
