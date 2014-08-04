@@ -14,6 +14,7 @@ from sqlalchemy import engine_from_config
 from webtest import TestApp
 
 from wkcdd import main
+from wkcdd.security import pwd_context
 from wkcdd.models.base import (
     DBSession,
     Base)
@@ -490,6 +491,7 @@ class IntegrationTestBase(TestBase):
     def setUp(self):
         super(IntegrationTestBase, self).setUp()
         self.config.include('wkcdd')
+        pwd_context.load_path('test.ini')
 
 
 class FunctionalTestBase(IntegrationTestBase):

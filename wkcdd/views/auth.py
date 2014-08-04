@@ -14,7 +14,7 @@ from wkcdd.views.helpers import check_post_csrf
 @view_config(name='login',
              context=HTTPForbidden,
              renderer='sign_in.jinja2')
-def sign_in(request):
+def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -41,8 +41,8 @@ def sign_in(request):
 
 
 @view_config(route_name='auth', match_param='action=sign-out')
-def sign_out(request):
+def logout(request):
     headers = forget(request)
     return HTTPFound(
         request.route_url(
-            'performance-indicators', traverse=()), headers=headers)
+            'performance_indicators', traverse=()), headers=headers)
