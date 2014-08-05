@@ -45,6 +45,21 @@ class User(Base):
             return False
         return pwd_context.verify(password, self.pwd)
 
+    @property
+    def appstruct(self):
+        return {
+            'username': self.username,
+            'active': self.active,
+            'group': self.group
+        }
+
+    def update(self, username, pwd, active, group):
+        self.username = username
+        self.pwd = pwd
+        self.active = active
+        self.group = group
+        self.save()
+
 
 class UserFactory(BaseModelFactory):
     __acl__ = [
