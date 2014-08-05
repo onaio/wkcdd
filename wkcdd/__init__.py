@@ -19,6 +19,7 @@ from wkcdd.models.project import ProjectFactory
 from wkcdd.models.location import LocationFactory
 from wkcdd.models.report import ReportFactory
 from wkcdd.models.user import UserFactory
+from wkcdd.views.helpers import get_request_user
 
 
 def main(global_config, **settings):
@@ -55,8 +56,14 @@ def includeme(config):
     config.get_jinja2_environment().filters['format_percent'] = format_percent
     config.get_jinja2_environment().filters['format_value'] = format_value
     config.get_jinja2_environment().filters['humanize'] = humanize
+
+    # request methods
+    config.add_request_method(get_request_user, 'user', reify=True)
+
     config.add_renderer('xlsx', 'wkcdd.renderers.TablibXLSXRenderer')
     config.add_static_view('static', 'static', cache_max_age=3600)
+
+
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',

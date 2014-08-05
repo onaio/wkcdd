@@ -6,6 +6,9 @@ from collections import defaultdict
 
 from pyramid.events import subscriber, NewRequest
 from pyramid.httpexceptions import HTTPBadRequest
+from pyramid.security import authenticated_userid
+
+from sqlalchemy.orm.exc import NoResultFound
 
 from wkcdd import constants
 from wkcdd.libs.utils import (
@@ -20,6 +23,7 @@ from wkcdd.models import (
     Location,
     Report
 )
+from wkcdd.models.user import User
 
 from wkcdd.models.indicator import (
     PercentageIncomeIncreasedIndicator,
@@ -78,6 +82,14 @@ def check_post_csrf(func):
         # fall through if not POST or token is valid
         return func.__call__(context, request)
     return inner
+
+
+def get_request_user(request):
+    user_id = authenticated_userid(request)
+    try:
+        return User.get(User.id == user_id)
+    except NoResultFound:
+        return None
 
 
 def filter_projects_by(criteria):
