@@ -28,7 +28,7 @@
                     <strong>Sign In</strong>
                 </div>
                 <div class="portlet-body">
-                    <form action="{{ request.route_url('auth', action='sign-in') }}" method="post">
+                    <form action="{{ request.route_url('auth', action='login') }}" method="post">
                         <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}" />
                         <div class="body bg-gray">
                             {% set has_error = request.session.peek_flash('error') %}

@@ -26,7 +26,8 @@ requires = [
     'lingua',
     'requests',
     'flake8',
-    'tablib'
+    'tablib',
+    'deform'
 ]
 
 setup(name='wkcdd',
