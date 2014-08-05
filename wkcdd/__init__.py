@@ -63,7 +63,6 @@ def includeme(config):
     config.add_renderer('xlsx', 'wkcdd.renderers.TablibXLSXRenderer')
     config.add_static_view('static', 'static', cache_max_age=3600)
 
-
     config.add_route('auth', '/auth/{action}')
     config.add_route('default', '/')
     config.add_route('projects', '/projects/*traverse',
