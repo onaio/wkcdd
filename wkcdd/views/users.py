@@ -8,7 +8,7 @@ from wkcdd.views.helpers import check_post_csrf
 from wkcdd.views.user_form import UserForm
 
 
-@view_defaults(route_name='users', permission="authenticated")
+@view_defaults(route_name='users', context=User, permission="authenticated")
 class AdminView(BaseClassViews):
 
     @view_config(name='',

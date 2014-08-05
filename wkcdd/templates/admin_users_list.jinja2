@@ -35,8 +35,7 @@
                     <td>
                       <button type="submit" 
                         {% if is_current_user %}disabled="disabled"{% endif %} 
-                        class="btn btn-
-                        {% if user.active %}success{% else %}warning{% endif %}btn-xs"
+                        class="btn btn-{% if user.active %}success{% else %}warning{% endif %} btn-xs"
                         formaction="{{ request.route_url('users', traverse=(user.id, 'toggle-status')) }}"
                         data-toggle="tooltip" 
                         data-placement="left" 
