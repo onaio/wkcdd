@@ -2,7 +2,7 @@ from pyramid import testing
 from pyramid.httpexceptions import HTTPFound
 from webob.multidict import MultiDict
 
-from wkcdd.models.user import User, CPC_PERM
+from wkcdd.models.user import User, CPC_PERM, ADMIN_PERM
 from wkcdd.views.users import AdminView
 from wkcdd.views.user_form import UserForm
 
@@ -67,6 +67,27 @@ class TestUsersView(IntegrationTestBase):
         flash_message = self.request.session.values()[0][0]
         self.assertEqual(
             flash_message, "Please fix the errors indicated below.")
+
+    def test_edit_user_details(self):
+        self._create_admin()
+        admin = User.get(User.username == "admin")
+        self.request.context = admin
+        params = MultiDict([
+            ('username', 'admin'),
+            ('__start__', 'password:mapping'),
+            ('password', 'blabla'),
+            ('password-confirm', 'blabla'),
+            ('__end__', 'password:mapping'),
+            ('active', True),
+            ('group', ADMIN_PERM)])
+        self.request.method = "POST"
+        self.request.POST = params
+        response = self.views.edit()
+
+        self.assertIsInstance(response, HTTPFound)
+        flash_message = self.request.session.values()[0][0]
+        self.assertEqual(
+            flash_message, "Your changes have been saved.")
 
 
 class TestUsersViewFunctional(FunctionalTestBase):

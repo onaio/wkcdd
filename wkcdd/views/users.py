@@ -49,9 +49,35 @@ class AdminView(BaseClassViews):
         return {'form': form}
 
     @view_config(name='edit',
-                 context=UserFactory,
+                 context=User,
                  renderer='user_form.jinja2',
                  decorator=check_post_csrf)
     def edit(self):
         # update user to be either admin or inactive
-        pass
+        user = self.request.context
+        form = Form(
+            UserForm().bind(
+                request=self.request,
+                user=user),
+            buttons=('Save', Button(name='cancel', type='button')),
+            appstruct=user.appstruct)
+        if self.request.method == 'POST':
+            data = self.request.POST.items()
+            try:
+                values = form.validate(data)
+            except ValidationFailure:
+                self.request.session.flash(
+                    u"Please fix the errors indicated below.", "error")
+            else:
+                user.update(
+                    values['username'],
+                    values['password'],
+                    values['active'],
+                    values['group'])
+                self.request.session.flash(
+                    "Your changes have been saved.", 'success')
+                return HTTPFound(
+                    self.request.route_url(
+                        'users', traverse=(user.id, 'edit')))
+
+        return {'form': form}
