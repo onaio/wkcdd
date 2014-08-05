@@ -64,16 +64,18 @@
                   {{ request.user.username }}
                 </a>
                 <ul class="dropdown-menu">
-                  <li>
-                    <a href="{{request.route_url('users', traverse=())}}">
-                      {% trans %} Manage Users {% endtrans %}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="{{request.route_url('users', traverse=('add'))}}">
-                      {% trans %}Add User{% endtrans %}
-                    </a>
-                  </li>
+                  {% if request.user.group == "admin" %}
+                    <li>
+                      <a href="{{request.route_url('users', traverse=())}}">
+                        {% trans %} Manage Users {% endtrans %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{request.route_url('users', traverse=('add'))}}">
+                        {% trans %}Add User{% endtrans %}
+                      </a>
+                    </li>
+                  {% endif %}
                   <li>
                      <a href="{{request.route_url('auth', action='logout')}}">
                         {% trans %} Logout {% endtrans %}
