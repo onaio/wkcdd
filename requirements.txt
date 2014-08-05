@@ -43,3 +43,4 @@ zope.deprecation==4.1.1
 zope.interface==4.1.1
 zope.sqlalchemy==0.7.4
 uWSGI==2.0.6
+deform==2.0a2

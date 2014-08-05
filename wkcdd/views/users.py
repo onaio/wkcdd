@@ -1,8 +1,11 @@
+from deform import Form, ValidationFailure, Button
 from pyramid.view import view_config, view_defaults
+from pyramid.httpexceptions import HTTPFound
 
 from wkcdd.models.user import User, UserFactory
 from wkcdd.views.base import BaseClassViews
 from wkcdd.views.helpers import check_post_csrf
+from wkcdd.views.user_form import UserForm
 
 
 @view_defaults(route_name='users', permission="authenticated")
@@ -19,17 +22,35 @@ class AdminView(BaseClassViews):
 
     @view_config(name='add',
                  context=UserFactory,
-                 renderer='add_users.jinja2',
+                 renderer='user_form.jinja2',
                  decorator=check_post_csrf)
     def add_user(self):
-        # validate form submission
-        # add user
-        # redirect to user admin view
-        pass
+        form = Form(
+            UserForm().bind(
+                request=self.request),
+            buttons=('Save', Button(name='cancel', type='button')))
+
+        if self.request.method == "POST":
+            data = self.request.POST.items()
+            try:
+                values = form.validate(data)
+            except ValidationFailure:
+                self.request.session.flash(
+                    u"Please fix the errors indicated below.", "error")
+            else:
+                # add user
+                user = User(**values)
+                user.save()
+                # redirect to user admin view
+                return HTTPFound(
+                    self.request.route_url('users', traverse=()))
+        # return form
+
+        return {'form': form}
 
     @view_config(name='edit',
                  context=UserFactory,
-                 renderer='add_users.jinja2',
+                 renderer='user_form.jinja2',
                  decorator=check_post_csrf)
     def edit(self):
         # update user to be either admin or inactive

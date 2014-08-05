@@ -1,0 +1,30 @@
+{% extends 'base.jinja2' %}
+{% block title %}Users{% endblock %}
+{% block page_title %}
+    <h3>{{ self.title() }}</h3>
+{% endblock %}
+
+{% block content %}
+<section class="container">
+    {% include 'alerts.jinja2' %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet">
+                <div class="portlet-title">
+                    <strong>User Form</strong>
+                </div>
+                <div class="portlet-body form">
+                    <form class="form-horizontal" method="post">
+                    {% include 'form_inputs.jinja2'%}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <a class="btn btn-default" href="{{ request.route_url('users', traverse=()) }}">Cancel</a>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
