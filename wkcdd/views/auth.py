@@ -40,7 +40,7 @@ def login(request):
     return {}
 
 
-@view_config(route_name='auth', match_param='action=sign-out')
+@view_config(route_name='auth', match_param='action=logout')
 def logout(request):
     headers = forget(request)
     return HTTPFound(
