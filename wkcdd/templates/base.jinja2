@@ -56,6 +56,41 @@
          <img src="{{request.static_url('wkcdd:static/img/menu-toggler.png')}}" alt="" />
          </a>
          <!-- END RESPONSIVE MENU TOGGLER -->
+         <!-- BEGIN USER LOGIN DROPDOWN -->
+         <ul class="nav navbar-nav pull-right">
+            {% if request.user %}
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                  {{ request.user.username }}
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="{{request.route_url('users', traverse=())}}">
+                      {% trans %} Manage Users {% endtrans %}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{request.route_url('users', traverse=('add'))}}">
+                      {% trans %}Add User{% endtrans %}
+                    </a>
+                  </li>
+                  <li>
+                     <a href="{{request.route_url('auth', action='logout')}}">
+                        {% trans %} Logout {% endtrans %}
+                     </a>
+                  </li> 
+                </ul>
+                 
+              </li>
+            {% else %}
+              <li>
+                <a href="{{request.route_url('auth', action='login')}}">
+                  {% trans %} Login {% endtrans %}
+                </a>
+              </li>
+            {% endif %}
+         </ul>
+         <!-- END USER LOGIN DROPDOWN -->
          <!-- END TOP NAVIGATION MENU -->
       </div>
       <!-- END TOP NAVIGATION BAR -->

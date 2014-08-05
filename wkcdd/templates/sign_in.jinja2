@@ -22,10 +22,17 @@
 
     </head>
     <body class="login">
+        <!-- BEGIN LOGO -->
+        <div class="logo">
+            <a href="{{ request.route_url('default') }}">
+                <img src="{{ request.static_url('wkcdd:static/img/wkcdd-logo.png') }}" alt="logo" class="img-responsive logo"/>
+            </a>
+        </div>
+        <!-- END LOGO -->
         <div class="content" id="login-container">
             <div class="portlet" id="login-box">
                 <div class="portlet-title">
-                    <strong>Sign In</strong>
+                    <strong>{% trans %}Sign in{% endtrans %}</strong>
                 </div>
                 <div class="portlet-body">
                     <form action="{{ request.route_url('auth', action='login') }}" method="post">
@@ -48,7 +55,7 @@
                             </div>
                         </div>
                         <div class="footer">
-                            <button type="submit" class="btn bg-olive btn-block">Sign me in</button>
+                            <button type="submit" class="btn btn-primary btn-block">Sign me in</button>
                         </div>
                     </form>
                 </div>
