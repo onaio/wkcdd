@@ -55,7 +55,7 @@ class User(Base):
 
     def update(self, username, pwd, active, group):
         self.username = username
-        self.pwd = pwd
+        self.password = pwd
         self.active = active
         self.group = group
         self.save()
