@@ -197,14 +197,13 @@ class TestBase(unittest.TestCase):
 
     def _create_user(self,
                      username="test_user",
-                     pwd="****",
+                     password="******",
                      active=True,
                      group=CPC_PERM):
         # create the user
-        pwd = pwd_context.encrypt(pwd)
         user = User(
             username=username,
-            pwd=pwd,
+            password=password,
             active=active,
             group=group)
         self._save_to_db(user)
