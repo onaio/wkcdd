@@ -13,7 +13,7 @@ class TestAuth(IntegrationTestBase):
         self._create_admin()
         payload = MultiDict([
             ('username', 'admin'),
-            ('password', '****')
+            ('password', '******')
         ])
         request = testing.DummyRequest(post=payload)
         response = login(request)
