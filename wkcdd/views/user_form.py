@@ -30,11 +30,7 @@ class UserForm(colander.MappingSchema):
 
     def validator(self, node, value):
         exc = colander.Invalid(node, "")
-        valid = True
 
         if value['group'] not in [ADMIN_PERM, CPC_PERM]:
-            valid = False
             exc['group'] = "Enter a valid user type"
-
-        if not valid:
             raise exc
