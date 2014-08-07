@@ -60,5 +60,6 @@ setup(name='wkcdd',
       [console_scripts]
       initialize_wkcdd_db = wkcdd.scripts.initializedb:main
       import_data = wkcdd.scripts.initializedb:import_data
+      create_user = wkcdd.scripts.createuser:main
       """,
       )
