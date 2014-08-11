@@ -3,12 +3,14 @@ from collections import defaultdict
 from sqlalchemy import (
     Column,
     Integer,
+    Float,
     DateTime,
     String,
     Enum,
     desc)
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.sql import func, and_
 
 from wkcdd import constants
 from wkcdd.models.project import Project
@@ -438,3 +440,14 @@ class ReportFactory(BaseModelFactory):
             report.__parent__ = self
             report.__name__ = item
             return report
+
+        def get_performance_indicator_by_period(cls, indicator, period):
+            indicator = 'mproject_performance/m_production_percentage'
+            return DBSession.query(
+                func.sum(Report.report_data[indicator].cast(Float)),
+                Report.quarter, Report.period)\
+                .group_by(Report.period, Report.quarter)\
+                .order_by(Report.period)\
+                .filter(and_(Report.quarter == period.quarter,
+                             Report.period == period.year))\
+                .all()
