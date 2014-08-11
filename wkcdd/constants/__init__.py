@@ -1,6 +1,7 @@
 from wkcdd.libs.utils import translation_string_factory as _
 
 XFORM_ID = '_xform_id_string'
+ONA_ID_KEY = '_id'
 
 PROJECT_NAME = 'p_name'
 PROJECT_TYPE = 'projecttype'

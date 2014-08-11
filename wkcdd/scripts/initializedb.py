@@ -15,7 +15,9 @@ from wkcdd.models.base import (
 
 from wkcdd.libs.import_project_data import (
     fetch_project_registration_data,
-    fetch_report_form_data
+    fetch_report_form_data,
+    fetch_meeting_form_reports,
+    fetch_saic_meeting_form_reports
 )
 from wkcdd.libs.mis_location_integration import read_mis_csv
 
@@ -58,6 +60,8 @@ def import_data(argv=sys.argv):
     DBSession.configure(bind=engine)
     fetch_project_registration_data()
     fetch_report_form_data()
+    fetch_meeting_form_reports()
+    fetch_saic_meeting_form_reports()
 
 
 def mis_encode_locations(argv=sys.argv):

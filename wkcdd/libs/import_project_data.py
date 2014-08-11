@@ -3,6 +3,9 @@ import requests
 import datetime
 import csv
 
+from sqlalchemy import Integer
+from sqlalchemy.orm.exc import NoResultFound
+
 from wkcdd.models import Report, Project
 from wkcdd.models import (
     Community,
@@ -74,19 +77,30 @@ def add_project(project_data, project_code):
 
 
 def populate_reports_table(raw_data, project_report_code):
+    report = None
     for report_data in raw_data:
-        report_submission = Report(
-            project_code=report_data.get(project_report_code),
-            submission_time=datetime.datetime.strptime(
-                report_data.get(constants.REPORT_SUBMISSION_TIME),
-                "%Y-%m-%dT%H:%M:%S"),
-            month=report_data.get(constants.REPORT_MONTH),
-            quarter=report_data.get(constants.REPORT_QUARTER),
-            period=report_data.get(constants.REPORT_PERIOD),
-            status='approved',
-            report_data=report_data
-        )
-        Report.add_report_submission(report_submission)
+        if report_data.get(constants.REPORT_MONTH) and\
+            report_data.get(constants.REPORT_QUARTER) and\
+                report_data.get(constants.REPORT_PERIOD):
+            try:
+                report = Report.get(
+                    Report.report_data[constants.ONA_ID_KEY].
+                    cast(Integer) == report_data[constants.ONA_ID_KEY])
+                report.report_data = report_data
+
+            except NoResultFound:
+                report = Report(
+                    project_code=report_data.get(project_report_code) or "-",
+                    submission_time=datetime.datetime.strptime(
+                        report_data.get(constants.REPORT_SUBMISSION_TIME),
+                        "%Y-%m-%dT%H:%M:%S"),
+                    month=report_data.get(constants.REPORT_MONTH),
+                    quarter=report_data.get(constants.REPORT_QUARTER),
+                    period=report_data.get(constants.REPORT_PERIOD),
+                    status='approved',
+                    report_data=report_data)
+
+            Report.add_report_submission(report)
 
 
 def get_ona_form_list(url='https://ona.io/api/v1/forms'):
@@ -212,15 +226,23 @@ def fetch_meeting_form_reports():
 
     with transaction.manager:
         raw_data = fetch_data(project_report_form)
+        report = None
         for report_data in raw_data:
-            report = MeetingReport(
-                submission_time=datetime.datetime.strptime(
-                    report_data.get(constants.REPORT_SUBMISSION_TIME),
-                    "%Y-%m-%dT%H:%M:%S"),
-                month=report_data.get(constants.REPORT_MONTH),
-                quarter=report_data.get(constants.REPORT_QUARTER),
-                period=report_data.get(constants.REPORT_PERIOD),
-                report_data=report_data)
+            try:
+                report = MeetingReport.get(
+                    MeetingReport.report_data[constants.ONA_ID_KEY].
+                    cast(Integer) == report_data[constants.ONA_ID_KEY])
+                report.report_data = report_data
+            except NoResultFound:
+                report = MeetingReport(
+                    submission_time=datetime.datetime.strptime(
+                        report_data.get(constants.REPORT_SUBMISSION_TIME),
+                        "%Y-%m-%dT%H:%M:%S"),
+                    month=report_data.get(constants.REPORT_MONTH),
+                    quarter=report_data.get(constants.REPORT_QUARTER),
+                    period=report_data.get(constants.REPORT_PERIOD),
+                    report_data=report_data)
+
             report.save()
 
 
@@ -231,13 +253,21 @@ def fetch_saic_meeting_form_reports():
 
     with transaction.manager:
         raw_data = fetch_data(project_report_form)
+        report = None
         for report_data in raw_data:
-            report = SaicMeetingReport(
-                submission_time=datetime.datetime.strptime(
-                    report_data.get(constants.REPORT_SUBMISSION_TIME),
-                    "%Y-%m-%dT%H:%M:%S"),
-                month=report_data.get(SaicMeetingReport.REPORT_MONTH),
-                quarter=report_data.get(SaicMeetingReport.REPORT_QUARTER),
-                period=report_data.get(SaicMeetingReport.REPORT_PERIOD),
-                report_data=report_data)
+            try:
+                report = SaicMeetingReport.get(
+                    SaicMeetingReport.report_data[constants.ONA_ID_KEY].
+                    cast(Integer) == report_data[constants.ONA_ID_KEY])
+                report.report_data = report_data
+            except NoResultFound:
+                report = SaicMeetingReport(
+                    submission_time=datetime.datetime.strptime(
+                        report_data.get(constants.REPORT_SUBMISSION_TIME),
+                        "%Y-%m-%dT%H:%M:%S"),
+                    month=report_data.get(SaicMeetingReport.REPORT_MONTH),
+                    quarter=report_data.get(SaicMeetingReport.REPORT_QUARTER),
+                    period=report_data.get(SaicMeetingReport.REPORT_PERIOD),
+                    report_data=report_data)
+
             report.save()

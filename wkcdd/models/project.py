@@ -171,6 +171,8 @@ class Project(Base):
 
     @classmethod
     def create(cls, **kwargs):
+        project = None
+
         county = County.get_or_create(
             kwargs['county'], None, Location.COUNTY)
         sub_county = SubCounty.get_or_create(
@@ -181,14 +183,28 @@ class Project(Base):
             kwargs['community_name'], constituency, Location.COMMUNITY)
         project_type = ProjectType.get_or_create(kwargs['project_type'])
 
-        project = Project(code=kwargs['project_code'],
-                          name=kwargs['name'],
-                          community_id=community.id,
-                          project_type_id=project_type.id,
-                          sector=kwargs['sector'],
-                          geolocation=kwargs['geolocation'],
-                          project_data=kwargs['project_data'])
-        project.save()
+        project_data = kwargs['project_data']
+        try:
+            project = Project.get(
+                Project.project_data[constants.ONA_ID_KEY].cast(Integer) ==
+                project_data[constants.ONA_ID_KEY])
+            project.code = kwargs['project_code']
+            project.name = kwargs['name']
+            project.community = community
+            project.project_type = project_type
+            project.geolocation = kwargs['geolocation']
+            project.project_data = project_data
+
+        except NoResultFound:
+            project = Project(code=kwargs['project_code'],
+                              name=kwargs['name'],
+                              community=community,
+                              project_type=project_type,
+                              sector=kwargs['sector'],
+                              geolocation=kwargs['geolocation'],
+                              project_data=project_data)
+        else:
+            project.save()
 
     @classmethod
     def get_constituency(cls, community):
