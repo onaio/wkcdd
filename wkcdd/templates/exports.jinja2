@@ -1,0 +1,90 @@
+{% extends 'base.jinja2' %}
+{% block title %}{{ Exports }} {% endblock %}
+{% block page_title %}
+  <h3 class="page-title">
+    {% trans %}Exports{% endtrans %}
+  </h3>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <div class="portlet clearfix">
+            <div class="portlet-title">
+                <div class="caption"><i class="icon-tasks"></i>
+                    {% trans %}Export Projects and Project Indicators{% endtrans %}
+                </div>
+            </div>
+            <div class="portlet-body clearfix">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>
+                            {% trans %}Projects {% endtrans %}
+                        </td>
+                        <td>
+                            <a href="{{request.route_url('export_projects', traverse=())}}" class="btn btn-sm btn-success">
+                            {% trans %}Download all projects as XLSX{% endtrans %}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr rowspan="2">
+                        <td>
+                            {% trans %}Project Indicators{% endtrans %}
+                        </td>
+
+                        <td>
+                            <a href="{{request.route_url('export_reports', traverse=())}}"
+                            class="btn btn-sm btn-success">
+                                {% trans %}Download all reports as XLSX{% endtrans %}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% trans %}Download Project Indicators for a specific period{% endtrans %}
+                        </td>
+                        <td>
+                            <label>
+                                <strong>
+                                    {% trans %}Select a Period {% endtrans %}
+                                </strong>
+                            </label>
+                            <form class="form" role="form" method="GET" action="{{request.route_url('export_reports', traverse=())}}" novalidate="novalidate">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label>{% trans %}Quarter{% endtrans %}</label>
+                                        <select name="quarter" class="form-control select2me">
+                                            <option value="">----</option>
+                                            {% for quarter in quarters| sort %}
+                                                <option value="{{quarter}}">{{quarter | replace('q_', "Quarter ")}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>{% trans %}Year{% endtrans %}</label>
+                                        <select name="year" class="form-control select2me">
+                                            <option value="">----</option>
+                                            {% for year in years| sort %}
+                                                <option value="{{year}}"> {{year | replace('_', " to 20") | replace("-", " to 20")}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="">
+                                        <button type="submit" class="btn btn-sm btn-success"
+                                        data-loading-text="Loading...">
+                                            {% trans %}Download as XLSX{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

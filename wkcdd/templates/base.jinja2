@@ -149,6 +149,16 @@
       <span class="title unapproved">{% trans %}UNAPPROVED<br/>REPORTS {% endtrans %}</span>
       </a>
     </li>
+    <li>
+      <a class="
+          {%if request.path_info_peek() == 'exports' %}
+              selected
+          {%endif%}"
+         href="{{ request.route_url('exports', traverse=()) }}">
+         <img src="{{ request.static_url('wkcdd:static/img/indicator.png') }}"/><br/>
+         <span class="title">{% trans %}MIS EXPORTS{% endtrans %}</span>
+      </a>
+    </li>
 
 	  </ul>
          <!-- END SIDEBAR MENU -->

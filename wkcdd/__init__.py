@@ -81,6 +81,7 @@ def includeme(config):
                      '/users/*traverse',
                      factory=UserFactory)
 
+    config.add_route('exports', '/exports')
     config.add_route('export_projects', '/export-projects')
     config.add_route('export_reports', '/export-reports')
 
