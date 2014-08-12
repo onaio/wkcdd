@@ -422,9 +422,8 @@ class Report(Base):
                                             project_code,
                                             indicator,
                                             period):
-            return DBSession.query(
-                func.sum(Report.report_data[indicator].cast(Float)),
-                Report.quarter, Report.period)\
+            result = DBSession.query(
+                func.sum(Report.report_data[indicator].cast(Float)))\
                 .group_by(Report.period, Report.quarter)\
                 .order_by(Report.period)\
                 .filter(and_(Report.project_code == project_code,
@@ -432,11 +431,13 @@ class Report(Base):
                              Report.period == period.year))\
                 .first()
 
+            return result[0] if result is not None else 0
+
     @classmethod
     def aggregate_project_report_by_period(cls, project, period):
         indicator_mapping = constants.PERFORMANCE_INDICATORS[project.report_id]
 
-        indicators = {}
+        indicators = defaultdict(int)
         for key, ind_key, ind_type in indicator_mapping:
             if ind_type == 'ratio':
                 continue
@@ -444,17 +445,17 @@ class Report(Base):
             if isinstance(ind_key, list):
                 indicator_sum = 0
                 for old_key_inst in ind_key:
-                    _sum, quarter, year = (
+                    _sum = (
                         Report.get_performance_indicator_by_period(
                             project.code, old_key_inst, period))
-                    if _sum:
+                    if _sum is not None:
                         indicator_sum += _sum
             else:
-                indicator_sum, quarter, year = (
+                indicator_sum = (
                     Report.get_performance_indicator_by_period(
                         project.code, ind_key, period))
 
-            indicators[key] = indicator_sum or 0
+            indicators[key] = indicator_sum
 
         return indicators
 
