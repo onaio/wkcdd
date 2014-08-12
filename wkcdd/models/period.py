@@ -1,5 +1,5 @@
-from sqlalchemy import desc
-from wkcdd.models import Report
+from sqlalchemy import desc, and_
+from wkcdd.models import Report, Project
 from wkcdd.models.base import DBSession
 
 
@@ -23,3 +23,18 @@ class Period(object):
             .first()
 
         return Period(result[0], result[1])
+
+    @classmethod
+    def get_periods_for_project(cls, project):
+        results = DBSession.query(Report.quarter, Report.period)\
+            .filter(and_(
+                Project.code == project.code,
+                Report.project_code == Project.code))\
+            .group_by(Report.quarter, Report.period)\
+            .order_by(Report.period, Report.quarter).all()
+
+        periods = []
+        for quarter, year in results:
+            periods.append(Period(quarter=quarter, year=year))
+
+        return periods
