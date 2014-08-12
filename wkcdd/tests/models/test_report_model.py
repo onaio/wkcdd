@@ -674,3 +674,13 @@ class TestReport(TestBase):
         cig_member_ratio = CIGMemberRatioIndicator.get_value(
             self.project_ids, self.period)
         self.assertEqual(cig_member_ratio, 0.2427536231884058)
+
+    def test_aggregate_project_report_by_period(self):
+        self.setup_report_period_test_data()
+        period = Period(quarter='q_1', year='2012_13')
+        project = Project.get(Project.code == '7CWA')
+        indicators = Report.aggregate_project_report_by_period(project, period)
+
+        self.assertEqual(
+            indicators['exp_contribution'],
+            624800.00)

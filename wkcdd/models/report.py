@@ -417,6 +417,47 @@ class Report(Base):
 
         return series_map
 
+    @classmethod
+    def get_performance_indicator_by_period(cls,
+                                            project_code,
+                                            indicator,
+                                            period):
+            return DBSession.query(
+                func.sum(Report.report_data[indicator].cast(Float)),
+                Report.quarter, Report.period)\
+                .group_by(Report.period, Report.quarter)\
+                .order_by(Report.period)\
+                .filter(and_(Report.project_code == project_code,
+                             Report.quarter == period.quarter,
+                             Report.period == period.year))\
+                .first()
+
+    @classmethod
+    def aggregate_project_report_by_period(cls, project, period):
+        indicator_mapping = constants.PERFORMANCE_INDICATORS[project.report_id]
+
+        indicators = {}
+        for key, ind_key, ind_type in indicator_mapping:
+            if ind_type == 'ratio':
+                continue
+
+            if isinstance(ind_key, list):
+                indicator_sum = 0
+                for old_key_inst in ind_key:
+                    _sum, quarter, year = (
+                        Report.get_performance_indicator_by_period(
+                            project.code, old_key_inst, period))
+                    if _sum:
+                        indicator_sum += _sum
+            else:
+                indicator_sum, quarter, year = (
+                    Report.get_performance_indicator_by_period(
+                        project.code, ind_key, period))
+
+            indicators[key] = indicator_sum or 0
+
+        return indicators
+
 
 class ReportError(Exception):
     pass
@@ -440,14 +481,3 @@ class ReportFactory(BaseModelFactory):
             report.__parent__ = self
             report.__name__ = item
             return report
-
-        def get_performance_indicator_by_period(cls, indicator, period):
-            indicator = 'mproject_performance/m_production_percentage'
-            return DBSession.query(
-                func.sum(Report.report_data[indicator].cast(Float)),
-                Report.quarter, Report.period)\
-                .group_by(Report.period, Report.quarter)\
-                .order_by(Report.period)\
-                .filter(and_(Report.quarter == period.quarter,
-                             Report.period == period.year))\
-                .all()
