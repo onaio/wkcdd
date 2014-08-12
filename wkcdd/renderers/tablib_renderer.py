@@ -177,6 +177,8 @@ class TablibRenderer(object):
         # don't aggregate reports without corresponding project ID
 
         projects = value.get('projects')
+        period_args = value.get('period')
+
         title = "MIS Indicator Export"
         headers = []
         rows = []
@@ -193,41 +195,44 @@ class TablibRenderer(object):
                 if not project.reports:
                     continue
 
-                periods = Period.get_periods_for_project(project)
+                if period_args is not None:
+                    periods = [period_args]
+                else:
+                    periods = Period.get_periods_for_project(project)
 
                 for period in periods:
                     indicators = Report.aggregate_project_report_by_period(
                         project, period)
-                    indicator_mapping = (
-                        constants.PERFORMANCE_INDICATOR_REPORTS[
-                            project.report_id])
 
-                    for label, keys in indicator_mapping:
-                        row = []
-                        row.append(project.community.get_mis_code())
-                        row.append(project.code.upper())
+                    if indicators:
+                        indicator_mapping = (
+                            constants.PERFORMANCE_INDICATOR_REPORTS[
+                                project.report_id])
 
-                        # generate indicator key in a fancy way e.g. Community
-                        # Contribution = CC
-                        row.append(label)
+                        for label, keys in indicator_mapping:
+                            row = []
+                            row.append(project.community.get_mis_code())
+                            row.append(project.code.upper())
 
-                        expected_value_key = keys[0]
-                        actual_value_key = keys[1]
+                            row.append(label)
 
-                        if expected_value_key:
-                            row.append(indicators[expected_value_key])
-                        else:
-                            row.append(0)
+                            expected_value_key = keys[0]
+                            actual_value_key = keys[1]
 
-                        if actual_value_key:
-                            row.append(indicators[actual_value_key])
-                        else:
-                            row.append(0)
+                            if expected_value_key:
+                                row.append(indicators[expected_value_key])
+                            else:
+                                row.append(0)
 
-                        row.append(period.quarter)
-                        row.append(period.year)
+                            if actual_value_key:
+                                row.append(indicators[actual_value_key])
+                            else:
+                                row.append(0)
 
-                        rows.append(row)
+                            row.append(period.quarter)
+                            row.append(period.year)
+
+                            rows.append(row)
 
             return title, headers, rows, summary_row
         else:
