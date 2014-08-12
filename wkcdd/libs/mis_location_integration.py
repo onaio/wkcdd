@@ -7,10 +7,11 @@ from wkcdd.models import (
     County,
     SubCounty,
     Constituency,
-    Community)
+    Community,
+    Location)
 
 
-def read_mis_csv():
+def update_locations_with_mis_codes():
     locations_list = []
     with open('data/mis_admin_boundaries.csv', 'rb') as csvfile:
         reader = csv.reader(csvfile)
@@ -29,12 +30,14 @@ def read_mis_csv():
         update_location_domains(SubCounty, sub_county_map)
         update_location_domains(Constituency, constituency_map)
         update_community_locations(community_list)
+        update_locations_without_mis_codes()
 
 
 def update_location_domains(klass, location_codes):
     for code, location_name in location_codes.iteritems():
         try:
-            location = klass.get(klass.name == location_name)
+            location = klass.get(klass.name == location_name,
+                                 klass.mis_code.is_(None))
             location.mis_code = code
             location.save()
         except NoResultFound:
@@ -53,4 +56,24 @@ def update_community_locations(location_list):
             location.save()
         except NoResultFound:
             print "[info] {} location not found".format(community_name)
+            pass
+
+
+def update_locations_without_mis_codes():
+    locations_list = []
+    with open('data/additional_location_mis.csv', 'rbU') as csvfile:
+        reader = csv.reader(csvfile)
+        # Ignore first row
+        reader.next()
+        for row in reader:
+            locations_list.append(row)
+
+    for name, code in locations_list:
+        try:
+            location = Location.get(Location.name == name,
+                                    Location.mis_code.is_(None))
+            location.mis_code = code
+            location.save()
+        except NoResultFound:
+            print "[info] {} location not found".format(name)
             pass

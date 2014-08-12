@@ -19,7 +19,7 @@ from wkcdd.libs.import_project_data import (
     fetch_meeting_form_reports,
     fetch_saic_meeting_form_reports
 )
-from wkcdd.libs.mis_location_integration import read_mis_csv
+from wkcdd.libs.mis_location_integration import update_locations_with_mis_codes
 
 
 def usage(argv):
@@ -67,4 +67,4 @@ def import_data(argv=sys.argv):
 def mis_encode_locations(argv=sys.argv):
     engine = get_engine(argv)
     DBSession.configure(bind=engine)
-    read_mis_csv()
+    update_locations_with_mis_codes()
