@@ -214,8 +214,16 @@ class TablibRenderer(object):
                         expected_value_key = keys[0]
                         actual_value_key = keys[1]
 
-                        row.append(indicators[expected_value_key])
-                        row.append(indicators[actual_value_key])
+                        if expected_value_key:
+                            row.append(indicators[expected_value_key])
+                        else:
+                            row.append(0)
+
+                        if actual_value_key:
+                            row.append(indicators[actual_value_key])
+                        else:
+                            row.append(0)
+
                         row.append(period.quarter)
                         row.append(period.year)
 

@@ -269,7 +269,7 @@ PERFORMANCE_INDICATORS = {
          'mproject_performance/acreage_percentage', 'ratio'),
         ('acreage_bnf_target',
          'mproject_performance/acreage_bnf_target', 'target'),
-        ('acreage_bnf_target',
+        ('acreage_bnf_achievement',
          'mproject_performance/acreage_bnf_achievement', 'actual'),
         ('acreage_bnf_percentage',
             'mproject_performance/acreage_bnf_percentage', 'ratio'),
