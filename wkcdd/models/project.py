@@ -75,6 +75,14 @@ class Project(Base):
         'tailoring_project_registration': 'tailoring'
     }
 
+    sectors_dict = {
+        reg_id: label
+        for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
+
+    report_dict = {
+        reg_id: report_id
+        for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
+
     def __str__(self):
         return self.name
 
@@ -93,10 +101,11 @@ class Project(Base):
 
     @property
     def sector_name(self):
-        sectors_dict = {
-            reg_id: label
-            for reg_id, report_id, label in constants.PROJECT_TYPE_MAPPING}
-        return sectors_dict[self.sector]
+        return self.sectors_dict[self.sector]
+
+    @property
+    def report_id(self):
+        return self.report_dict[self.sector]
 
     @property
     def description(self):
