@@ -7,7 +7,7 @@ from wkcdd.libs.utils import get_impact_indicator_list
 from wkcdd.views.helpers import get_performance_sector_mapping
 from wkcdd import constants
 from wkcdd.models import County
-from wkcdd.models import Project, Report
+from wkcdd.models import Project
 
 from wkcdd.views.impact_indicators import ImpactIndicators
 from wkcdd.views.performance_indicators import PerformanceIndicators
@@ -128,10 +128,10 @@ class TestTablibRendererIntegration(IntegrationTestBase):
 
     def test_generate_project_report_mis_export(self):
         self.setup_report_period_test_data()
-        reports = Report.all()
+        projects = Project.all()
         request = testing.DummyRequest()
         renderer = TablibXLSXRenderer({})
-        data = {'reports': reports,
+        data = {'projects': projects,
                 'is_report_export': True}
         renderer(data, {'request': request})
 

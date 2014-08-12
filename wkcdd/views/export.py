@@ -1,5 +1,4 @@
 from wkcdd.models import Project
-from wkcdd.models import Report
 
 from pyramid.view import view_config
 
@@ -15,9 +14,9 @@ def export_projects(request):
 
 @view_config(route_name='export_reports', renderer="xlsx")
 def export_reports(request):
-    reports = Report.all()
+    projects = Project.all()
 
     return {
-        'reports': reports,
+        'projects': projects,
         'is_report_export': True
     }

@@ -1,6 +1,8 @@
 import tablib
 
 from wkcdd import constants
+from wkcdd.models import Report
+from wkcdd.models.period import Period
 from pyramid.httpexceptions import HTTPBadRequest
 from wkcdd.models.indicator import (
     CDDCAttendanceRatioIndicator,
@@ -167,48 +169,57 @@ class TablibRenderer(object):
             raise ValueError("No projects to generate MIS report")
 
     def generate_mis_project_indicator_reports(self, value):
-        reports = value.get('reports')
+        # Refactor notes
+        # Loop though all projects
+        # if reports are available, aggregate indicator values by quarter
+        # and year
+
+        # don't aggregate reports without corresponding project ID
+
+        projects = value.get('projects')
         title = "MIS Indicator Export"
         headers = []
         rows = []
         summary_row = []
 
-        if reports:
+        if projects:
             # generate MIS reports based on the agreed format.
             headers = ["Community", "ProjectID", "IndicatorCode",
-                       "Expected", "Actual", "Month", "Year"]
+                       "Expected", "Actual", "Quarter", "Year"]
 
-            for report in reports:
-                project = report.project
-
+            for project in projects:
                 # Skip reports without a valid project entry
 
-                if project is None:
+                if not project.reports:
                     continue
 
-                # Add function for retrieving list of report indicator values
-                indicators = report.get_performance_indicators()
-                indicator_mapping = (
-                    constants.PERFORMANCE_INDICATOR_REPORTS[report.form_id])
+                periods = Period.get_periods_for_project(project)
 
-                for label, keys in indicator_mapping:
-                    row = []
-                    row.append(project.community.get_mis_code())
-                    row.append(project.code.upper())
+                for period in periods:
+                    indicators = Report.aggregate_project_report_by_period(
+                        project, period)
+                    indicator_mapping = (
+                        constants.PERFORMANCE_INDICATOR_REPORTS[
+                            project.report_id])
 
-                    # generate indicator key in a fancy way e.g. Community
-                    # Contribution = CC
-                    row.append(label)
+                    for label, keys in indicator_mapping:
+                        row = []
+                        row.append(project.community.get_mis_code())
+                        row.append(project.code.upper())
 
-                    expected_value_key = keys[0]
-                    actual_value_key = keys[1]
+                        # generate indicator key in a fancy way e.g. Community
+                        # Contribution = CC
+                        row.append(label)
 
-                    row.append(indicators[expected_value_key])
-                    row.append(indicators[actual_value_key])
-                    row.append(report.month)
-                    row.append(report.period)
+                        expected_value_key = keys[0]
+                        actual_value_key = keys[1]
 
-                    rows.append(row)
+                        row.append(indicators[expected_value_key])
+                        row.append(indicators[actual_value_key])
+                        row.append(period.quarter)
+                        row.append(period.year)
+
+                        rows.append(row)
 
             return title, headers, rows, summary_row
         else:
