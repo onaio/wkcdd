@@ -38,3 +38,16 @@ class Period(object):
             periods.append(Period(quarter=quarter, year=year))
 
         return periods
+
+    @classmethod
+    def get_periods_available(cls):
+        results = DBSession.query(Report.quarter, Report.period)\
+            .filter(Report.project_code == Project.code)\
+            .group_by(Report.quarter, Report.period)\
+            .order_by(Report.period, Report.quarter).all()
+
+        periods = []
+        for quarter, year in results:
+            periods.append(Period(quarter=quarter, year=year))
+
+        return periods
