@@ -12,6 +12,8 @@ from wkcdd.models.report import (
     Report
 )
 
+from wkcdd.models.meeting import MeetingReport, SaicMeetingReport
+
 from wkcdd.views.reports import ReportViews
 
 
@@ -42,6 +44,26 @@ class TestReportViews(IntegrationTestBase):
         response = self.post_json(report_data)
 
         self.assertEqual(Report.count(), (count + 1))
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.body, 'Saved')
+
+    def test_json_post_for_saic_meeting_report(self):
+        count = SaicMeetingReport.count()
+        report_data = open(os.path.join(
+            self.test_dir, 'fixtures', 'SAIC_REPORT.json'), 'r').read()
+        response = self.post_json(report_data)
+
+        self.assertEqual(SaicMeetingReport.count(), (count + 1))
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.body, 'Saved')
+
+    def test_json_post_for_meeting_report(self):
+        count = MeetingReport.count()
+        report_data = open(os.path.join(
+            self.test_dir, 'fixtures', 'MEETING_REPORT.json'), 'r').read()
+        response = self.post_json(report_data)
+
+        self.assertEqual(MeetingReport.count(), (count + 1))
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.body, 'Saved')
 

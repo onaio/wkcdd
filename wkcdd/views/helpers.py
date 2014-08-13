@@ -40,6 +40,7 @@ from wkcdd.models.indicator import (
     UpdatedProjectRatioIndicator)
 
 from wkcdd.models.report import ReportHandlerError
+from wkcdd.models.meeting import MeetingReport, SaicMeetingReport
 
 from wkcdd.models.helpers import get_children_by_level
 
@@ -315,21 +316,43 @@ def report_submission_handler(payload):
     payload = json.loads(payload)
     try:
         xform_id = payload.get(constants.XFORM_ID)
-        project_report_code = [project_report_code
-                               for project_report_form, project_report_code
-                               in constants.PROJECT_REPORT_FORMS
-                               if project_report_form == xform_id][0]
-        report_submission = Report(
-            project_code=payload.get(project_report_code),
-            submission_time=datetime.datetime.strptime(
-                payload.get(constants.REPORT_SUBMISSION_TIME),
-                "%Y-%m-%dT%H:%M:%S"),
-            month=payload.get(constants.REPORT_MONTH),
-            quarter=payload.get(constants.REPORT_QUARTER),
-            period=payload.get(constants.REPORT_PERIOD),
-            report_data=payload
-        )
-        Report.add_report_submission(report_submission)
+
+        if xform_id == constants.MEETING_REPORT:
+            report = MeetingReport(
+                submission_time=datetime.datetime.strptime(
+                    payload.get(constants.REPORT_SUBMISSION_TIME),
+                    "%Y-%m-%dT%H:%M:%S"),
+                month=payload.get(constants.REPORT_MONTH),
+                quarter=payload.get(constants.REPORT_QUARTER),
+                period=payload.get(constants.REPORT_PERIOD),
+                report_data=payload)
+            report.save()
+        elif xform_id == constants.SAIC_MEETING_REPORT:
+            report = SaicMeetingReport(
+                submission_time=datetime.datetime.strptime(
+                    payload.get(constants.REPORT_SUBMISSION_TIME),
+                    "%Y-%m-%dT%H:%M:%S"),
+                month=payload.get(SaicMeetingReport.REPORT_MONTH),
+                quarter=payload.get(SaicMeetingReport.REPORT_QUARTER),
+                period=payload.get(SaicMeetingReport.REPORT_PERIOD),
+                report_data=payload)
+            report.save()
+        else:
+            project_report_code = [project_report_code
+                                   for project_report_form, project_report_code
+                                   in constants.PROJECT_REPORT_FORMS
+                                   if project_report_form == xform_id][0]
+            report_submission = Report(
+                project_code=payload.get(project_report_code),
+                submission_time=datetime.datetime.strptime(
+                    payload.get(constants.REPORT_SUBMISSION_TIME),
+                    "%Y-%m-%dT%H:%M:%S"),
+                month=payload.get(constants.REPORT_MONTH),
+                quarter=payload.get(constants.REPORT_QUARTER),
+                period=payload.get(constants.REPORT_PERIOD),
+                report_data=payload
+            )
+            Report.add_report_submission(report_submission)
     except (KeyError, IndexError):
         raise ReportHandlerError(
             "'{}' not found in json".format(constants.XFORM_ID))
