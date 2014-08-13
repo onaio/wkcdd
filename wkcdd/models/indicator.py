@@ -7,6 +7,7 @@ from wkcdd.models import (
     Project,
     MeetingReport,
     SaicMeetingReport)
+from wkcdd.models.helpers import get_sub_counties_list
 from wkcdd.models.base import DBSession
 
 
@@ -165,7 +166,6 @@ class InitialAverageMonthlyIncomeIndicator(Indicator):
 
     @classmethod
     def get_value(cls, project_ids, quarters):
-        sub_county = None
         intial_monthly_average_income = {
             'bondo': 6167.16,
             'bungoma': 1758.00,
@@ -179,11 +179,13 @@ class InitialAverageMonthlyIncomeIndicator(Indicator):
             'vihiga': 5511.00
         }
 
-        if project_ids:
-            project = Project.get(Project.id == project_ids[0])
-            sub_county = project.community.constituency.sub_county
+        sub_counties = get_sub_counties_list(project_ids)
+        value = 0
 
-        return intial_monthly_average_income[sub_county.name.lower()]
+        for sub_county in sub_counties:
+            value += intial_monthly_average_income[sub_county.name.lower()]
+
+        return value
 
 
 class CurrentTotalAverageMonthlyIncomeIndicator(Indicator):
