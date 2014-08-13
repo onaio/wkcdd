@@ -492,7 +492,7 @@ class TestReport(TestBase):
 
         self.assertAlmostEqual(
             percentage_income_increased,
-            0.023185932630954146)
+            0.0187492500299988)
 
     def test_calculation_of_total_beneficiaries(self):
         self._result_indicator_setup()
