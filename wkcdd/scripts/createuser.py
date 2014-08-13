@@ -6,8 +6,7 @@ from sqlalchemy import engine_from_config
 
 from pyramid.paster import (
     get_appsettings,
-    setup_logging,
-    )
+    setup_logging)
 
 from wkcdd.security import pwd_context
 from wkcdd.models.base import DBSession
@@ -16,7 +15,7 @@ from wkcdd.models.user import User
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
-    print('usage: %s <config_uri> <username> <password> [nema|wb|env_officer|sm]\n'
+    print('usage: %s <config_uri> <username> <password> [admin|cpc]\n'
           '(example: "%s development.ini john strongpassword")' % (cmd, cmd))
     sys.exit(1)
 
