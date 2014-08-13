@@ -18,7 +18,6 @@ class TestProjectImport(TestBase):
         self.assertEquals(Project.count(), (count + 1))
 
     def test_populate_report_table_with_valid_project(self):
-        self.setup_test_data()
         count = Report.count()
         form, project_code = constants.PROJECT_REPORT_FORMS[1]
         populate_reports_table([self.report_submission[0]], project_code)

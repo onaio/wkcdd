@@ -193,13 +193,14 @@ class Project(Base):
         project_type = ProjectType.get_or_create(kwargs['project_type'])
 
         project_data = kwargs['project_data']
+
         try:
             project = Project.get(
                 Project.project_data[constants.ONA_ID_KEY].cast(Integer) ==
                 project_data[constants.ONA_ID_KEY])
             project.code = kwargs['project_code']
             project.name = kwargs['name']
-            project.community = community
+            project.community_id = community.id
             project.project_type = project_type
             project.geolocation = kwargs['geolocation']
             project.project_data = project_data
@@ -207,7 +208,7 @@ class Project(Base):
         except NoResultFound:
             project = Project(code=kwargs['project_code'],
                               name=kwargs['name'],
-                              community=community,
+                              community_id=community.id,
                               project_type=project_type,
                               sector=kwargs['sector'],
                               geolocation=kwargs['geolocation'],
