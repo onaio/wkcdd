@@ -161,11 +161,32 @@ identified in the CAPs and YAPs"
     count_criteria = [50.0, 50.0]
 
 
-class TotalDirectBeneficiariesIndicator(Indicator):
-    indicator_list = constants.RESULT_INDICATOR_DIRECT_BENEFICIARIES
+class InitialAverageMonthlyIncomeIndicator(Indicator):
+
+    @classmethod
+    def get_value(cls, project_ids, quarters):
+        sub_county = None
+        intial_monthly_average_income = {
+            'bondo': 6167.16,
+            'bungoma': 1758.00,
+            'busia': 2730.54,
+            'butere': 2425.66,
+            'kakamega': 6490.00,
+            'lugari': 2555.60,
+            'mt_elgon': 2357.00,
+            'siaya': 152.81,
+            'teso': 416.00,
+            'vihiga': 5511.00
+        }
+
+        if project_ids:
+            project = Project.get(Project.id == project_ids[0])
+            sub_county = project.community.constituency.sub_county
+
+        return intial_monthly_average_income[sub_county.name.lower()]
 
 
-class TotalAverageMonthlyIncomeIndicator(Indicator):
+class CurrentTotalAverageMonthlyIncomeIndicator(Indicator):
     indicator_list = constants.RESULT_INDICATOR_AVERAGE_MONTHLY_INCOME
 
 
@@ -197,12 +218,17 @@ participating in implementation of the project"
     denomenator_class = TotalCIGMemberIndicator
 
 
+class TotalAverageMonthlyIncomeIndicator(RatioIndicator):
+    numerator_class = CurrentTotalAverageMonthlyIncomeIndicator
+    denomenator_class = TotalCIGMemberIndicator
+
+
 class PercentageIncomeIncreasedIndicator(RatioIndicator):
     DESCRIPTION = "Percentage increase in income of target households \
 members of CIGs (Direct beneficiaries)"
 
     numerator_class = TotalAverageMonthlyIncomeIndicator
-    denomenator_class = TotalDirectBeneficiariesIndicator
+    denomenator_class = InitialAverageMonthlyIncomeIndicator
 
 
 class ExpectedCGAAttendanceIndicator(MeetingReportIndicator):
