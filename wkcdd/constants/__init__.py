@@ -76,6 +76,7 @@ REPORT_QUARTER = 'perfomance_summary/quarter_year'
 REPORT_PERIOD = 'perfomance_summary/year'
 
 MEETING_REPORT = 'meetings_report3'
+SAIC_MEETING_REPORT = 'saic_meetings_complaints_status_report'
 
 PROJECT_REGISTRATION_FORMS = (
     (DAIRY_GOAT_PROJECT_REGISTRATION, DAIRY_GOAT_PROJECT_CODE),
