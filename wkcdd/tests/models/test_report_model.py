@@ -6,7 +6,6 @@ from wkcdd import constants
 from wkcdd.libs import utils
 from wkcdd.models.indicator import (
     TotalAverageMonthlyIncomeIndicator,
-    TotalDirectBeneficiariesIndicator,
     PercentageIncomeIncreasedIndicator,
     TotalBeneficiariesIndicator,
     TotalFemaleBeneficiariesIndicator,
@@ -474,6 +473,7 @@ class TestReport(TestBase):
     def _result_indicator_setup(self):
         self.setup_test_data()
         locations = County.all()
+
         project_ids = []
 
         for location in locations:
@@ -490,7 +490,9 @@ class TestReport(TestBase):
                 self.project_ids,
                 self.period)
 
-        self.assertAlmostEqual(percentage_income_increased, 330.88235294117646)
+        self.assertAlmostEqual(
+            percentage_income_increased,
+            0.0187492500299988)
 
     def test_calculation_of_total_beneficiaries(self):
         self._result_indicator_setup()
@@ -500,19 +502,12 @@ class TestReport(TestBase):
 
         self.assertAlmostEqual(total_beneficiaries, 80.0)
 
-    def test_total_direct_beneficiaries_indicator(self):
-        self._result_indicator_setup()
-        total_beneficiaries = \
-            TotalDirectBeneficiariesIndicator.get_value(
-                self.project_ids, self.period)
-        self.assertEqual(total_beneficiaries, 34)
-
     def test_average_monthly_income_indicator(self):
         self._result_indicator_setup()
         total_beneficiaries = \
             TotalAverageMonthlyIncomeIndicator.get_value(
                 self.project_ids, self.period)
-        self.assertEqual(total_beneficiaries, 11250.0)
+        self.assertEqual(total_beneficiaries, 40.76086956521739)
 
     def test_total_female_beneficiaries_indicator(self):
         self._result_indicator_setup()

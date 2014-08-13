@@ -90,3 +90,10 @@ def get_children_by_level(location_ids, source_klass, target_klass):
     else:
         raise ValueError(
             "Target class cannot be of a greater rank than the source class")
+
+
+def get_sub_counties_list(project_ids):
+    communities = {p.community
+                   for p in Project.all(Project.id.in_(project_ids))}
+    sub_counties = {c.constituency.sub_county for c in communities}
+    return sub_counties
