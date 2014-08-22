@@ -4,7 +4,7 @@ import datetime
 import csv
 
 from sqlalchemy import Integer
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from wkcdd.models import Report, Project
 from wkcdd.models import (
@@ -27,7 +27,6 @@ LATITUDE = 'lat'
 SECTOR = 'sector'
 
 OLD_PROJECT_FILE = 'data/old_projects.csv'
-NEW_PROJECT_FILE = 'data/new_projects.csv'
 
 
 ONA_HEADERS = {
@@ -146,13 +145,19 @@ def add_old_project_data(column_mapping, project_import_rows):
         for row in project_import_rows:
             # create location or get id of existing one
             project_type = row[column_mapping[constants.PROJECT_TYPE]].upper()
+            project_code = row[column_mapping[constants.PROJECT_CODE]]
             sector = row[column_mapping[SECTOR]]
             start_date = row[column_mapping[constants.PROJECT_START_DATE]]
             name = row[column_mapping[constants.PROJECT_NAME]]
 
             # Exclude project_types that are not CAP or YAP
             # or those whose sectors are not defined
-            if project_type in ['CAP', 'YAP'] and sector != 'none' \
+            project_type_criteria = project_type in ['CAP', 'YAP']
+            sector_criteria = sector != 'none'
+            project_code_criteria = project_code != ''
+            if project_type_criteria \
+               and project_code_criteria \
+               and sector_criteria \
                     and start_date:
                 county = County.get_or_create(
                     row[column_mapping[COUNTY]], None, Location.COUNTY)
@@ -189,16 +194,29 @@ def add_old_project_data(column_mapping, project_import_rows):
                         row[column_mapping[constants.PROJECT_TREASURER_PHONE]])
                 }
                 # needs to be generated
-                project = Project(code='',
-                                  name=name,
-                                  community_id=community.id,
-                                  project_type_id=project_type.id,
-                                  sector=sector,
-                                  geolocation="{} {} ".format(
-                                      row[column_mapping[LATITUDE]],
-                                      row[column_mapping[LONGITUDE]]),
-                                  project_data=project_data)
-                project.save()
+                try:
+                    # check if the project exists
+                    project = Project.get(Project.code == project_code)
+
+                    print "[Error] Project {}:{} with \
+                        code: {} already exists".format(
+                        project.id, project.name, project.code)
+                except MultipleResultsFound:
+                    projects = Project.all(Project.code == project_code)
+                    print "[Error] Projects with duplicate ids found:"
+
+                    print [(p.id, p.name) for p in projects]
+                except (NoResultFound):
+                    project = Project(code=project_code,
+                                      name=name,
+                                      community_id=community.id,
+                                      project_type_id=project_type.id,
+                                      sector=sector,
+                                      geolocation="{} {} ".format(
+                                          row[column_mapping[LATITUDE]],
+                                          row[column_mapping[LONGITUDE]]),
+                                      project_data=project_data)
+                    project.save()
 
 
 def import_legacy_data(import_file_url):
@@ -214,6 +232,7 @@ def import_legacy_data(import_file_url):
         column_mapping = {
             header: index
             for index, header in enumerate(column_headers)}
+
         for row in reader:
             project_import_rows.append(row)
 

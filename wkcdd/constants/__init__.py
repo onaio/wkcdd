@@ -5,6 +5,7 @@ ONA_ID_KEY = '_id'
 
 PROJECT_NAME = 'p_name'
 PROJECT_TYPE = 'projecttype'
+PROJECT_CODE = 'project_code'
 COMMUNITY_NAME = 'county'
 
 COUNTY = 'county_counties'
