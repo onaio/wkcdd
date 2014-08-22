@@ -13,11 +13,13 @@ from wkcdd.models.base import (
     Base,
 )
 
+from wkcdd.libs.import_project_data import OLD_PROJECT_FILE
 from wkcdd.libs.import_project_data import (
     fetch_project_registration_data,
     fetch_report_form_data,
     fetch_meeting_form_reports,
-    fetch_saic_meeting_form_reports
+    fetch_saic_meeting_form_reports,
+    import_legacy_data
 )
 from wkcdd.libs.mis_location_integration import update_locations_with_mis_codes
 
@@ -68,3 +70,9 @@ def mis_encode_locations(argv=sys.argv):
     engine = get_engine(argv)
     DBSession.configure(bind=engine)
     update_locations_with_mis_codes()
+
+
+def legacy_import(argv=sys.argv):
+    engine = get_engine(argv)
+    DBSession.configure(bind=engine)
+    import_legacy_data(OLD_PROJECT_FILE)

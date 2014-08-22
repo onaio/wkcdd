@@ -197,15 +197,16 @@ def add_old_project_data(column_mapping, project_import_rows):
                 try:
                     # check if the project exists
                     project = Project.get(Project.code == project_code)
-
-                    print "[Error] Project {}:{} with \
-                        code: {} already exists".format(
-                        project.id, project.name, project.code)
+                    print "----"
+                    print "[Error] Project {}:{} with code: {} already exists"\
+                        .format(project.id, project.name, project.code)
+                    print "----"
                 except MultipleResultsFound:
                     projects = Project.all(Project.code == project_code)
+                    print "----"
                     print "[Error] Projects with duplicate ids found:"
-
                     print [(p.id, p.name) for p in projects]
+                    print "----"
                 except (NoResultFound):
                     project = Project(code=project_code,
                                       name=name,
