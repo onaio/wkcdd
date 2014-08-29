@@ -155,22 +155,28 @@ def add_old_project_data(column_mapping, project_import_rows):
             project_type_criteria = project_type in ['CAP', 'YAP']
             sector_criteria = sector != 'none'
             project_code_criteria = project_code != ''
+
+            format_location = lambda s: s.lower().replace(
+                ".", " ").replace(" ", "_")
+
             if project_type_criteria \
                and project_code_criteria \
                and sector_criteria \
                     and start_date:
                 county = County.get_or_create(
-                    row[column_mapping[COUNTY]], None, Location.COUNTY)
+                    format_location(row[column_mapping[COUNTY]]),
+                    None,
+                    Location.COUNTY)
                 sub_county = SubCounty.get_or_create(
-                    row[column_mapping[SUB_COUNTY]],
+                    format_location(row[column_mapping[SUB_COUNTY]]),
                     county,
                     Location.SUB_COUNTY)
                 constituency = Constituency.get_or_create(
-                    row[column_mapping[CONSTITUENCY]],
+                    format_location(row[column_mapping[CONSTITUENCY]]),
                     sub_county,
                     Location.CONSTITUENCY)
                 community = Community.get_or_create(
-                    row[column_mapping[COMMUNITY]],
+                    format_location(row[column_mapping[COMMUNITY]]),
                     constituency,
                     Location.COMMUNITY)
                 project_type = ProjectType.get_or_create(project_type)

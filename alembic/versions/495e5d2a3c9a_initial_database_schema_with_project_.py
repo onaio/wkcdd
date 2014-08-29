@@ -13,6 +13,7 @@ down_revision = None
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.dialects.postgresql import ENUM
 
 
 def upgrade():
@@ -98,4 +99,5 @@ def downgrade():
     op.drop_table('locations')
     op.drop_index(op.f('ix_reports_project_code'), table_name='reports')
     op.drop_table('reports')
+    ENUM(name="LOCATION_TYPES").drop(op.get_bind(), checkfirst=False)
     # end Alembic commands ###
