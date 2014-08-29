@@ -105,7 +105,17 @@
       <div class="page-sidebar navbar-collapse collapse col-md-3">
          <!-- BEGIN SIDEBAR MENU -->
 	  <ul class="nav-side">
-		<li class="start">
+    <li class="start">
+      <a class="
+          {%if request.path_info_peek() == 'projects' %}
+              selected
+          {%endif%}"
+         href="{{ request.route_url('projects', traverse=('')) }}">
+      <img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
+      <span class="title">{% trans %} PROJECTS {% endtrans %}</span>
+      </a>
+    </li>
+		<li>
 			<a class="
 			    {%if request.matched_route.name == 'performance_indicators' and request.url.find('trends') == -1 %}
                     selected
@@ -129,16 +139,6 @@
       <span class="title">{% trans %} PROJECT <br/>INDICATOR TRENDS {% endtrans %}</span>
       </a>
     </li>
-		<li>
-            <a class="
-                {%if request.path_info_peek() == 'projects' %}
-                    selected
-                {%endif%}"
-               href="{{ request.route_url('projects', traverse=('')) }}">
-			<img src="{{ request.static_url('wkcdd:static/img/projects.png') }}"/><br/>
-			<span class="title">{% trans %} PROJECTS {% endtrans %}</span>
-			</a>
-		</li>
     <li>
             <a class="
                 {%if request.path_info_peek() == 'reports' %}

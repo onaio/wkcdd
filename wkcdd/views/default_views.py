@@ -25,7 +25,7 @@ def forbidden(context, request):
 
 @view_config(route_name='default')
 def home(request):
-    return HTTPFound(request.route_url('performance_indicators', traverse=()))
+    return HTTPFound(request.route_url('projects', traverse=()))
 
 
 @view_config(route_name='private', permission="authenticated")
