@@ -13,7 +13,7 @@ from wkcdd.models.base import (
     Base,
 )
 
-from wkcdd.libs.import_project_data import OLD_PROJECT_FILE
+from wkcdd.libs.import_project_data import OLD_PROJECT_FILE, NEW_PROJECT_FILE
 from wkcdd.libs.import_project_data import (
     fetch_project_registration_data,
     fetch_report_form_data,
@@ -76,3 +76,4 @@ def legacy_import(argv=sys.argv):
     engine = get_engine(argv)
     DBSession.configure(bind=engine)
     import_legacy_data(OLD_PROJECT_FILE)
+    import_legacy_data(NEW_PROJECT_FILE)

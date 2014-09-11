@@ -27,6 +27,7 @@ LATITUDE = 'lat'
 SECTOR = 'sector'
 
 OLD_PROJECT_FILE = 'data/old_projects.csv'
+NEW_PROJECT_FILE = 'data/new_projects.csv'
 
 
 ONA_HEADERS = {
@@ -157,28 +158,47 @@ def add_old_project_data(column_mapping, project_import_rows):
             project_code_criteria = project_code != ''
 
             format_location = lambda s: s.lower().replace(
-                ".", " ").replace(" ", "_")
+                ".", " ").replace(" ", "_").replace("'", "").strip()
 
             if project_type_criteria \
                and project_code_criteria \
                and sector_criteria \
                     and start_date:
-                county = County.get_or_create(
-                    format_location(row[column_mapping[COUNTY]]),
-                    None,
-                    Location.COUNTY)
-                sub_county = SubCounty.get_or_create(
-                    format_location(row[column_mapping[SUB_COUNTY]]),
-                    county,
-                    Location.SUB_COUNTY)
-                constituency = Constituency.get_or_create(
-                    format_location(row[column_mapping[CONSTITUENCY]]),
-                    sub_county,
-                    Location.CONSTITUENCY)
-                community = Community.get_or_create(
-                    format_location(row[column_mapping[COMMUNITY]]),
-                    constituency,
-                    Location.COMMUNITY)
+
+                try:
+                    community = Community.get(
+                        Community.name ==
+                        format_location(row[column_mapping[COMMUNITY]]))
+                except MultipleResultsFound:
+                    sub_county = SubCounty.get(
+                        SubCounty.name ==
+                        format_location(row[column_mapping[SUB_COUNTY]]))
+                    constituency = Constituency.get(
+                        Constituency.name ==
+                        format_location(row[column_mapping[CONSTITUENCY]]),
+                        Constituency.parent_id == sub_county.id)
+                    community = Community.get_or_create(
+                        format_location(row[column_mapping[COMMUNITY]]),
+                        constituency,
+                        Location.COMMUNITY)
+                except NoResultFound:
+                    county = County.get_or_create(
+                        format_location(row[column_mapping[COUNTY]]),
+                        None,
+                        Location.COUNTY)
+                    sub_county = SubCounty.get_or_create(
+                        format_location(row[column_mapping[SUB_COUNTY]]),
+                        county,
+                        Location.SUB_COUNTY)
+                    constituency = Constituency.get_or_create(
+                        format_location(row[column_mapping[CONSTITUENCY]]),
+                        sub_county,
+                        Location.CONSTITUENCY)
+                    community = Community.get_or_create(
+                        format_location(row[column_mapping[COMMUNITY]]),
+                        constituency,
+                        Location.COMMUNITY)
+
                 project_type = ProjectType.get_or_create(project_type)
 
                 project_data = {
