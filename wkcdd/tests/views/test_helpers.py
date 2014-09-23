@@ -232,11 +232,11 @@ class TestHelpers(TestBase):
         self.setup_test_data()
         locations = County.all()
         periods = Report.get_periods_for(locations)
-        month_or_quarter = 2
+        month_or_quarter = "q_1"
         year = '2012_13'
-        month, year = get_default_period(periods, month_or_quarter, year)
+        quarter, year = get_default_period(periods, month_or_quarter, year)
 
-        self.assertEqual(month, '3')
+        self.assertEqual(quarter, 'q_2')
         self.assertEqual(year, '2013_14')
 
     def test_process_trend_parameters_with_invalid_data(self):

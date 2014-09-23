@@ -3,7 +3,7 @@
 <label>{{ period_label or 'Select Report Period:' }} </label>
 <div class="form-group col-xs-6">
    <select name="{{ month_quarter_select_name or 'month_or_quarter'}}" class="form-control select2me">
-      <option value="" data-time-class="month">{% trans %}Month/Quarter{% endtrans %}</option>
+      <option value="" data-time-class="month">{{month_quarter_label or "Month/Quarter"}}</option>
       {% if quarters %}
          {% for quarter in quarters|sort %}
             <option value="{{ quarter }}"

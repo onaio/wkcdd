@@ -475,31 +475,28 @@ def get_default_period(periods,
                        month_or_quarter,
                        year,
                        location_selected=False):
-    if periods['months'] and periods['years']:
+
+    if periods['quarters'] and periods['years']:
         years = list(periods['years'])
         years.sort()
-
-        months = list(periods['months'])
-        months.sort()
-        months = [str(m) for m in months]
 
         quarters = list(periods['quarters'])
         quarters.sort()
 
         year = year if year and year in years else years[-1]
-        # default month is the latest month
+        # default quarter is the latest quarter
         if location_selected:
-            month = (
+            quarter = (
                 month_or_quarter
-                if month_or_quarter and month_or_quarter in (months + quarters)
-                else months[-1])
+                if month_or_quarter and month_or_quarter in quarters
+                else quarters[-1])
         else:
-            month = (
+            quarter = (
                 month_or_quarter
-                if month_or_quarter and month_or_quarter in (months + quarters)
-                else str(Report.get_latest_month_for_year(year)[0]))
+                if month_or_quarter and month_or_quarter in quarters
+                else str(Report.get_latest_quarter_for_year(year)[0]))
 
-        return month, year
+        return quarter, year
     else:
         # values that cannot return any data
         return 0, 0

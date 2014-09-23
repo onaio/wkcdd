@@ -10,10 +10,10 @@
 	<div class="col-xs-12 filter_col">
 		<div class="col-xs-6">
 			{% with month_or_quarter=search_criteria.get('month_or_quarter'),
+					month_quarter_label="Select Quarter",
 				    period=search_criteria.get('period'),
 				    years = filter_criteria.get('years'),
-				    quarters = filter_criteria.get('quarters'), 
-				    months_present = filter_criteria.get('months')%}	 
+				    quarters = filter_criteria.get('quarters')%}	 
 				{% include '/period_selector.jinja2' %}
 			{% endwith %}
 		</div>

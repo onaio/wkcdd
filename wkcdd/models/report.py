@@ -139,6 +139,16 @@ class Report(Base):
         return results
 
     @classmethod
+    def get_latest_quarter_for_year(cls, year):
+        results = DBSession.query(Report.quarter)\
+            .filter(Report.period == year, Report.status == Report.APPROVED)\
+            .group_by(Report.quarter)\
+            .order_by(desc(Report.quarter))\
+            .first()
+
+        return results
+
+    @classmethod
     def get_reports_for_projects(cls, project_ids, *criteria):
         """
         Get the reports for the specified list of projects based on the
